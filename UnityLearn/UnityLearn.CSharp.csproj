@@ -250,6 +250,8 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AddingButton.cs" />
     <Compile Include="Assets\Scripts\ButtonEvent.cs" />
+    <Compile Include="Assets\Scripts\CollisionDemo.cs" />
+    <Compile Include="Assets\Scripts\Coroutine_demo1.cs" />
     <Compile Include="Assets\Scripts\Demo3.cs" />
     <Compile Include="Assets\Scripts\Demo5_getCompent.cs" />
     <Compile Include="Assets\Scripts\Demo6.cs" />
@@ -260,6 +262,7 @@
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
     <Compile Include="Assets\Scripts\Script.cs" />
     <Compile Include="Assets\Scripts\SelfRotation.cs" />
+    <Compile Include="Assets\Scripts\TriggerDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
