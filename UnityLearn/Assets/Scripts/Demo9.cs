@@ -29,5 +29,17 @@ public class Demo9 : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            GameObject obj = GameObject.Find("Cube_1");
+            obj.GetComponent<Transform>().Translate(Vector3.forward * Time.deltaTime*50, Space.World);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            GameObject obj = GameObject.Find("Cube_1");
+            obj.GetComponent<Transform>().Translate(-Vector3.forward * Time.deltaTime * 50, Space.World);
+        }
 	}
 }

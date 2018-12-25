@@ -251,6 +251,7 @@
     <Compile Include="Assets\Scripts\Demo3.cs" />
     <Compile Include="Assets\Scripts\Demo5_getCompent.cs" />
     <Compile Include="Assets\Scripts\Demo6.cs" />
+    <Compile Include="Assets\Scripts\Demo7.cs" />
     <Compile Include="Assets\Scripts\Demo9.cs" />
     <Compile Include="Assets\Scripts\HelloWorld.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
