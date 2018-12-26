@@ -291,13 +291,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="UnityLearn.CSharp.Plugins.csproj">
-      <Project>{E71F50A9-29B7-08BD-14C4-44F341D59699}</Project>
-      <Name>UnityLearn.CSharp.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="UnityLearn.CSharp.csproj">
       <Project>{25DEE7A0-58A0-9841-C4AE-9CC070744946}</Project>
       <Name>UnityLearn.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityLearn.CSharp.Plugins.csproj">
+      <Project>{E71F50A9-29B7-08BD-14C4-44F341D59699}</Project>
+      <Name>UnityLearn.CSharp.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +324,10 @@
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
+    <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

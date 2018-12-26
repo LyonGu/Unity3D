@@ -259,6 +259,7 @@
     <Compile Include="Assets\Scripts\Demo9.cs" />
     <Compile Include="Assets\Scripts\GUI_demo1.cs" />
     <Compile Include="Assets\Scripts\HelloWorld.cs" />
+    <Compile Include="Assets\Scripts\Particle_demo1.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
     <Compile Include="Assets\Scripts\Script.cs" />
@@ -287,6 +288,10 @@
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
+    <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
