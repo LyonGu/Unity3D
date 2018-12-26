@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc8dd63a80a55c49846536e09c3dae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goReceiveObj: {fileID: 0}
+  goReceiveObj: {fileID: 840572355}
 --- !u!4 &1246552438
 Transform:
   m_ObjectHideFlags: 0
