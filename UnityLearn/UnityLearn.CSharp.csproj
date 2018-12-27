@@ -249,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AddingButton.cs" />
+    <Compile Include="Assets\Scripts\BaseNavigation.cs" />
     <Compile Include="Assets\Scripts\ButtonEvent.cs" />
     <Compile Include="Assets\Scripts\CollisionDemo.cs" />
     <Compile Include="Assets\Scripts\Coroutine_demo1.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Assets\Scripts\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\GUI_demo1.cs" />
     <Compile Include="Assets\Scripts\HelloWorld.cs" />
+    <Compile Include="Assets\Scripts\NavmeshObstacleControl.cs" />
     <Compile Include="Assets\Scripts\Particle_demo1.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
