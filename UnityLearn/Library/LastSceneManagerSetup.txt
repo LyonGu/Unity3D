@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/NavMesh_SlopeAndJump.unity
+- path: Assets/Scene/NavMesh_Obstacle.unity
   isLoaded: 1
   isActive: 1
