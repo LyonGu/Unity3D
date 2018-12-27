@@ -23,8 +23,12 @@ public class NavmeshObstacleControl : MonoBehaviour
 {
     private NavMeshObstacle _navMeshObs;    //路径障碍组件
 
+    //private NavMeshObstacle _navMeshObs1;
+
     void Start(){
         _navMeshObs = this.GetComponent<NavMeshObstacle>();
+
+        //_navMeshObs1 = this.GetComponent<NavMeshObstacle>();
     }
 
     void Update(){
@@ -32,6 +36,9 @@ public class NavmeshObstacleControl : MonoBehaviour
             if (_navMeshObs){
                 _navMeshObs.enabled = false;               
                 this.GetComponent<Renderer>().material.color = Color.green;
+
+                //_navMeshObs1.enabled = false;
+                //this.GetComponent<Renderer>().material.color = Color.green;
             }
         }
 

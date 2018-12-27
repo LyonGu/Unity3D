@@ -112,7 +112,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 57a3509edd301ae4bb30628b1c0a8cac, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0c470d3ad4c25d14bb50f25e5c89e19a, type: 2}
 --- !u!1 &391407719
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +541,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!114 &800497579
 MonoBehaviour:
@@ -574,7 +574,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
-  m_WalkableMask: 9
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!23 &800497581
 MeshRenderer:
@@ -727,7 +727,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1
-  m_WalkableMask: 17
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!23 &1375058001
 MeshRenderer:
