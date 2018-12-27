@@ -40,7 +40,7 @@ public class GirlActionByBendTrees : MonoBehaviour {
         {
             velocity *= forwardSpeed; //前进移动速度
         }
-        else if(v <-0.1)
+        else if(v <=-0.1)
         {
             velocity *= backSpeed;
         }
