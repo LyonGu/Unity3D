@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityLearn.CSharp", "UnityL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityLearn.CSharp.Editor.Plugins", "UnityLearn.CSharp.Editor.Plugins.csproj", "{AA4B71DE-3BE5-80C9-67DA-3F694C22C0A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityLearn.CSharp.Editor", "UnityLearn.CSharp.Editor.csproj", "{AE69A0A5-93BD-99D7-A57B-07DC4F004376}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{AA4B71DE-3BE5-80C9-67DA-3F694C22C0A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA4B71DE-3BE5-80C9-67DA-3F694C22C0A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA4B71DE-3BE5-80C9-67DA-3F694C22C0A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE69A0A5-93BD-99D7-A57B-07DC4F004376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE69A0A5-93BD-99D7-A57B-07DC4F004376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE69A0A5-93BD-99D7-A57B-07DC4F004376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE69A0A5-93BD-99D7-A57B-07DC4F004376}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
