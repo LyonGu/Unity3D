@@ -342,6 +342,7 @@
     <Compile Include="Assets\Scripts\SendObj.cs" />
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
+    <Compile Include="Assets\Scripts\WWWDemo1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
