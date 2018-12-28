@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 1947590343
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: bdd245d0ebd3b38bd27e9220b203c90c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6dcaad0a13ca8ec8df27970c98d4c899
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+Assets:
+- Assets/AB_Resources/Prefabs/SpherePink.prefab
+Dependencies:
+- F:/RD_WorkSpaceForEdu/_RD_UnityBookForm0To1/C29_AssetBundle/AssetBundleProject/Assets/StreamingAssets/texturesab

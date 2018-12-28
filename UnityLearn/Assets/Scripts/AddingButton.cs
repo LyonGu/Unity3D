@@ -21,7 +21,7 @@ public class AddingButton : MonoBehaviour {
         Image image = goNewObject.AddComponent<Image>();
         Button btn = goNewObject.AddComponent<Button>();
 
-        //image.overrideSprite = Resources.Load<Sprite>("Resources/Textures/login_select.png");
+        image.overrideSprite = Resources.Load<Sprite>("/Resources/Textures/login_select.png");
 
         //无效尼玛
         //image.overrideSprite = Resources.Load("Textures/DarkFloor.jpg", typeof(Sprite)) as Sprite;//这里就是修改他的图片，

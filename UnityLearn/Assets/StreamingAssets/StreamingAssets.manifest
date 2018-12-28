@@ -1,0 +1,11 @@
+ManifestFileVersion: 0
+CRC: 566132322
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: texturesab
+      Dependencies: {}
+    Info_1:
+      Name: prefabab.ab
+      Dependencies:
+        Dependency_0: texturesab

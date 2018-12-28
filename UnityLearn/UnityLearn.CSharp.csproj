@@ -312,6 +312,7 @@
     <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
     <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\Scripts\AddingButton.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleLoadDemo.cs" />
     <Compile Include="Assets\Scripts\BaseNavigation.cs" />
     <Compile Include="Assets\Scripts\ButtonEvent.cs" />
     <Compile Include="Assets\Scripts\CollisionDemo.cs" />

@@ -354,6 +354,7 @@
     <Compile Include="Assets\Cinemachine\PostFX\Editor\CinemachinePostProcessingEditor.cs" />
     <Compile Include="Assets\Cinemachine\PostFX\Editor\PostFXAutoImport.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\Editor\CinemachineShotEditor.cs" />
+    <Compile Include="Assets\Scripts\Editor\BuildAssetBundle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
