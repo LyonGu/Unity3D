@@ -1,11 +1,11 @@
 ﻿/***
  *
  *  Title: 
- *         第25章:  射线
+ *         第27章:  预加载与对象缓冲池技术
  *
  *  Description:
  *        功能：
- *            学习“射线”基本原理与功能
+ *            (无缓冲池)射击代码实现
  *
  *  Date: 2017
  * 
@@ -17,10 +17,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class RayDemo : MonoBehaviour {
+public class ShottingNoBufferPool: MonoBehaviour
+{    
     public Texture Texture_ShootingCursor;                 //射击瞄准星
     public GameObject G0_CubeOrigianl;                     //射击原型物体
+    public Transform Tran_TargetWallParentPosition;        //靶墙数组父对象
+    public Transform Tran_BulletParentPosition;            //子弹数组父对象
     private Vector3 _VecRayPosion;                         //射线透射的坐标
+
 
 	void Start () {
         //隐藏鼠标。
@@ -28,24 +32,21 @@ public class RayDemo : MonoBehaviour {
         //建立射击目标
         for (int j = 1; j <=5; j++){
             for (int i = 1; i <=5; i++){
-                //克隆一个对象
                 GameObject goClone = (GameObject)Instantiate(G0_CubeOrigianl);
                 goClone.transform.position = new Vector3(G0_CubeOrigianl.transform.position.x +i,
                     G0_CubeOrigianl.transform.position.y+j, G0_CubeOrigianl.transform.position.z);
-                goClone.SetActive(true);
+                //确定子弹的父对象
+                goClone.transform.parent = Tran_TargetWallParentPosition;
             }            
         }
 	}//Start_end
 
-    void OnGUI()
-    {
-
-        // 左上角为原点
+	void OnGUI(){        
         Vector3 vecPos = Input.mousePosition;
-        Rect rect = new Rect(vecPos.x - Texture_ShootingCursor.width /2, Screen.height - vecPos.y - Texture_ShootingCursor.height/2
-            ,Texture_ShootingCursor.width, Texture_ShootingCursor.height);
-        GUI.DrawTexture(rect, Texture_ShootingCursor);
-    }
+        GUI.DrawTexture(new Rect(vecPos.x - Texture_ShootingCursor.width / 2, 
+            Screen.height - vecPos.y - Texture_ShootingCursor.height/2, Texture_ShootingCursor.width, 
+            Texture_ShootingCursor.height), Texture_ShootingCursor);
+	}//OnGUI_end
 	
 	void Update () {
         /* 射线的基本原理 */
@@ -60,7 +61,9 @@ public class RayDemo : MonoBehaviour {
         //如果鼠标点击左键，则发射子弹。
         if(Input.GetMouseButtonDown(0)){
             //创建子弹
-            GameObject goBullet = GameObject.CreatePrimitive(PrimitiveType.Sphere); //创建一个gameobject
+            GameObject goBullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //设置子弹的父对象
+            goBullet.transform.parent = Tran_BulletParentPosition;
             //添加子弹的刚体
             goBullet.AddComponent<Rigidbody>();
             //子弹的位置
@@ -69,7 +72,7 @@ public class RayDemo : MonoBehaviour {
             goBullet.GetComponent<Rigidbody>().AddForce((_VecRayPosion - goBullet.transform.position) * 10F, 
                 ForceMode.Impulse);  
             //添加脚本： 如果子弹超出射线机的范围，则进行销毁。
-            goBullet.AddComponent<DestroyGameobject>();
+            goBullet.AddComponent<DestroyObjNoBufferPool>();
         }
 	}//Update_end
 
