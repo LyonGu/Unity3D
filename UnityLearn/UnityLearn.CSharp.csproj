@@ -321,6 +321,7 @@
     <Compile Include="Assets\Scripts\Demo6.cs" />
     <Compile Include="Assets\Scripts\Demo7.cs" />
     <Compile Include="Assets\Scripts\Demo9.cs" />
+    <Compile Include="Assets\Scripts\DestroyGameobject.cs" />
     <Compile Include="Assets\Scripts\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\GUI_demo1.cs" />
@@ -328,6 +329,8 @@
     <Compile Include="Assets\Scripts\NavmeshObstacleControl.cs" />
     <Compile Include="Assets\Scripts\Particle_demo1.cs" />
     <Compile Include="Assets\Scripts\playerPref_demo.cs" />
+    <Compile Include="Assets\Scripts\RayDemo.cs" />
+    <Compile Include="Assets\Scripts\RayDemo2_CCWalking.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
     <Compile Include="Assets\Scripts\Script.cs" />
@@ -339,7 +342,6 @@
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
-    <None Include="Assets\Demigiant\DOTween\Editor\DOTweenUpgradeManager.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />

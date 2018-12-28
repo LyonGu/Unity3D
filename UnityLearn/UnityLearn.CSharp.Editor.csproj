@@ -289,24 +289,21 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
-    <Reference Include="DOTweenUpgradeManager">
-      <HintPath>Assets\Demigiant\DOTween\Editor\DOTweenUpgradeManager.dll</HintPath>
+    <Reference Include="DOTween">
+      <HintPath>Assets\Demigiant\DOTween\DOTween.dll</HintPath>
     </Reference>
     <Reference Include="DOTweenEditor">
       <HintPath>Assets\Demigiant\DOTween\Editor\DOTweenEditor.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween">
-      <HintPath>Assets\Demigiant\DOTween\DOTween.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="UnityLearn.CSharp.Plugins.csproj">
-      <Project>{E71F50A9-29B7-08BD-14C4-44F341D59699}</Project>
-      <Name>UnityLearn.CSharp.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="UnityLearn.CSharp.csproj">
       <Project>{25DEE7A0-58A0-9841-C4AE-9CC070744946}</Project>
       <Name>UnityLearn.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="UnityLearn.CSharp.Plugins.csproj">
+      <Project>{E71F50A9-29B7-08BD-14C4-44F341D59699}</Project>
+      <Name>UnityLearn.CSharp.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="UnityLearn.CSharp.Editor.Plugins.csproj">
       <Project>{AA4B71DE-3BE5-80C9-67DA-3F694C22C0A1}</Project>
@@ -362,7 +359,6 @@
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
-    <None Include="Assets\Demigiant\DOTween\Editor\DOTweenUpgradeManager.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
