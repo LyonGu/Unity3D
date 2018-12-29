@@ -17,14 +17,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
+using UnityEditor; //引入unity编辑器 命名空间
 using UnityEngine;
 
 public class BuildAssetBundle{
     /// <summary>
     /// 打包生成所有AssetBundles
     /// </summary>
-    [MenuItem("AssetBundleTools/BuildAllAssetBundles")]
+    [MenuItem("AssetBundleTools/BuildAllAssetBundles")] // 在Unity菜单栏中定义一个标签
     public static void BuildAllAB()
     {
         //(打包)AB的输出路径
