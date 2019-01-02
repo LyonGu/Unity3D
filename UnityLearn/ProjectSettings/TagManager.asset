@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SphereTag
   - CapsuleTag
+  - player
   layers:
   - Default
   - TransparentFX

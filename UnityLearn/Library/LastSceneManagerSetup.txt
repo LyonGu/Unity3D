@@ -1,4 +1,4 @@
 sceneSetups:
-- path: "E:/hxp/books/2018\u5E74Unity\u4E66\u7C4D\u4ECE0\u52301\u7B2C\u4E8C\u7248\u672C\u4E0B\u8F7D\u8D44\u6599/C30_AssetBundleFramework/ABToolsFramework/Assets/Scenes/ScenesTest1_BaseABTest.unity"
+- path: Assets/Scene/UGUI.unity
   isLoaded: 1
   isActive: 1

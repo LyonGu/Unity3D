@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class AddingButton : MonoBehaviour {
 
+    public Image testImag;
+
     public GameObject goParent;
 	// Use this for initialization
 	void Start () {
@@ -21,7 +23,7 @@ public class AddingButton : MonoBehaviour {
         Image image = goNewObject.AddComponent<Image>();
         Button btn = goNewObject.AddComponent<Button>();
 
-        image.overrideSprite = Resources.Load<Sprite>("/Resources/Textures/login_select.png");
+        image.overrideSprite = Resources.Load<Sprite>("Textures/login_select");//不用写Asset/Resources,不用加后缀 Textures/login_select.png 就不行
 
         //无效尼玛
         //image.overrideSprite = Resources.Load("Textures/DarkFloor.jpg", typeof(Sprite)) as Sprite;//这里就是修改他的图片，
@@ -31,6 +33,11 @@ public class AddingButton : MonoBehaviour {
         btn.onClick.AddListener(ProcessSomething);
 
         //image.color = Color.red;
+
+        //Image img_t = (Image)GameObject.FindGameObjectWithTag("player");
+
+        testImag.overrideSprite = Resources.Load<Sprite>("Textures/Floor"); //不用写Asset/Resources,不用加后缀 Textures/Floor.png 就不行
+       
 	}
 	
 	// Update is called once per frame
