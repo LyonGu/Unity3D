@@ -29,14 +29,24 @@ public class AddingButton : MonoBehaviour {
         //image.overrideSprite = Resources.Load("Textures/DarkFloor.jpg", typeof(Sprite)) as Sprite;//这里就是修改他的图片，
 
   
-        //btn监听事件
-        btn.onClick.AddListener(ProcessSomething);
+        //btn监听事件,添加不带参数的回调
+        //btn.onClick.AddListener(ProcessSomething);
 
         //image.color = Color.red;
 
         //Image img_t = (Image)GameObject.FindGameObjectWithTag("player");
 
         testImag.overrideSprite = Resources.Load<Sprite>("Textures/Floor"); //不用写Asset/Resources,不用加后缀 Textures/Floor.png 就不行
+
+        //添加带参数的回调
+        btn.onClick.AddListener(
+            delegate()
+                {
+                    OnClickBtn3(3);
+                }
+            );
+
+
        
 	}
 	
@@ -48,5 +58,10 @@ public class AddingButton : MonoBehaviour {
     void ProcessSomething()
     {
         print("button 动态添加");
+    }
+
+    void OnClickBtn3(int i)
+    {
+        print("button 动态添加带参数的回调"+"i:"+i);
     }
 }

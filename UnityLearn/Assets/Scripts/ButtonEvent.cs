@@ -9,7 +9,8 @@ public class ButtonEvent : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+        Button btn = gameObject.GetComponent<Button>();
+        btn.interactable = false;
 	}
 	
 	// Update is called once per frame
@@ -17,9 +18,9 @@ public class ButtonEvent : MonoBehaviour {
 		
 	}
 
-    public void DisplayInfo()
+    public void DisplayInfo(int i)
     {
-        Debug.Log("Button 被击中了！！！！！");
+        Debug.Log("Button 被击中了！！！！！"+"i:"+i);
     }
 
     public void DisplayInfoByText()
