@@ -46,6 +46,10 @@ public class CSLua : MonoBehaviour {
         luaEnv.AddLoader(MyCustomLoader);
         luaEnv.DoString("require 'main'");//直接引用lua文件，推荐使用这种方式
 
+        //GameObject  game = GameObject.Find("Game");
+        //GameObject hello = new GameObject("HelloWorld");
+        //hello.transform.parent = game.transform;
+
     }
 
     //引用非Resources目录下的lua文件，不用后缀是txt
