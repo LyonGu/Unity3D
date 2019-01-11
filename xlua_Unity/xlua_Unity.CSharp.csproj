@@ -290,6 +290,8 @@
     <Compile Include="Assets\XLua\Tutorial\LuaCallCSharp\LuaCallCs.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\Lua\test2.lua.txt" />
+    <None Include="Assets\Resources\test1.lua.txt" />
     <None Include="Assets\XLua\CHANGELOG.txt" />
     <None Include="Assets\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
     <None Include="Assets\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
