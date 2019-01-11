@@ -4,3 +4,5 @@ xlua_Unity/Library/
 xlua_Unity/Temp/
 *.meta
 *.suo
+tolua_unity/Library/
+tolua_unity/Temp/
