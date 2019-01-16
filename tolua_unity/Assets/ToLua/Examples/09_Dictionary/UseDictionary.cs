@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using LuaInterface;
 
+//TestAccount这个类要在CustomSetting.cs里添加导出，生成绑定文件
+/*
+在CustomSetting.cs中添加需要导出的类或者委托，类加入到customTypeList列表，委托加入到customDelegateList列表 
+通过设置saveDir变量更改导出目录,默认生成在Assets/Source/Generate/下,点击菜单Lua->Generate All,生成绑定文件
+
+*/
 public sealed class TestAccount
 {
     public int id;
