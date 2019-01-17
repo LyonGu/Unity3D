@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scene/NavMesh_Obstacle.unity
-    guid: 32f89c2da03ae5c4cb5b16a314201210
+    path: Assets/Scene/HelloWorld.unity
+    guid: 59d45c41c382ae6478a8020cee02b27a
