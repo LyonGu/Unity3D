@@ -67,12 +67,12 @@ public class PlayerCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Global.CurrentGameState == GameState.Playing)
+		//if(Global.CurrentGameState == GameState.Playing)
         {
             //键盘输入检测
             InputInfoByKeyboard();
             //判断英雄(左中右)位置,播放动画
-
+            JudgeHeroPosition();
 
             //无敌状态速度加倍
             if (Global.HeroMagState == HeroMagicState.Invincible)
@@ -85,6 +85,7 @@ public class PlayerCtrl : MonoBehaviour {
             }
 
             //英雄前进移动处理，包含（跳跃、翻滚等动作处理）
+            MoveForwardProcess();
 
         }
 	}
@@ -132,7 +133,7 @@ public class PlayerCtrl : MonoBehaviour {
         switch(_CurrentHeroPos)
         {
             case CurrentPosition.Middle:
-                //英雄中间位置-->左边位置
+                //英雄右边->中间跳
                 if (_CurDirectionInput == DirectionInput.Left)
                 {
                     //主角是否在地上
@@ -150,7 +151,7 @@ public class PlayerCtrl : MonoBehaviour {
                     //播放移动音频
                     //todo....
                 }
-                //英雄中间位置-->右边位置
+                //英雄左边位置-->中间位置
                 else if (_CurDirectionInput == DirectionInput.Right)
                 {
                     if (_CC.isGrounded)
@@ -164,13 +165,96 @@ public class PlayerCtrl : MonoBehaviour {
                     //播放移动音频
                     //todo....
                 }
+                //插值位移处理
+                transform.position = Vector3.Lerp(transform.position,
+                    new Vector3(Global.HeroZeroPos.x, transform.position.y, transform.position.z), Global.HeroLerpMultipe * Time.deltaTime);
                 break;
             case CurrentPosition.Left:
+                //左边->中间
+                if (_CurDirectionInput == DirectionInput.Right)
+                {
+                    if (_CC.isGrounded)
+                    {
+                        _Animation.Stop();
+                        _playerAnimeMgr.DelAnimationPlayState = _playerAnimeMgr.TurnRight;
+                    }
+                  
+                    _CurrentHeroPos = CurrentPosition.Middle;
+                    //播放移动音频
+                    //todo....
+                }
+                //插值位移处理
+                transform.position = Vector3.Lerp(transform.position,
+                    new Vector3(Global.LeftTrackX, transform.position.y, transform.position.z), Global.HeroLerpMultipe * Time.deltaTime);
+
                 break;
             case CurrentPosition.Right:
+                //英雄右边位置-->中间位置
+                if (_CurDirectionInput == DirectionInput.Left)
+                {
+                    if (_CC.isGrounded)
+                    {
+                        //停止当前动画播放
+                        _Animation.Stop();
+                        //播放“左移”动画                    
+                        _playerAnimeMgr.DelAnimationPlayState = _playerAnimeMgr.TurnLeft;
+                    }
+                    _CurrentHeroPos = CurrentPosition.Middle;
+                    //播放移动音频
+                    //todo....
+                }
+
+                //插值位移处理
+                transform.position = Vector3.Lerp(transform.position,
+                    new Vector3(Global.RightTrackX, transform.position.y, transform.position.z), Global.HeroLerpMultipe * Time.deltaTime);
                 break;
             default:
                 break;
         }
+    }
+
+    //英雄前进移动处理，包含（跳跃、翻滚等动作处理）
+    private void MoveForwardProcess()
+    {
+        //地面
+        if (_CC.isGrounded)
+        {
+            _VecMoving = Vector3.zero;
+            switch (_CurDirectionInput)
+            {
+                case DirectionInput.Up:
+                    //播放“跳跃”动画                    
+                    _playerAnimeMgr.DelAnimationPlayState = _playerAnimeMgr.Jump;
+                    _VecMoving.y += Global.JumpPower;
+                    //“跳跃”音频
+                    //todo...
+                    break;
+                case DirectionInput.Down:
+                    //停止当前动画播放
+                    _Animation.Stop();
+                    //播放“俯身翻滚”动画                    
+                    _playerAnimeMgr.DelAnimationPlayState = _playerAnimeMgr.Roll;
+                    //“俯身翻滚”音频
+                    //todo...
+                    break;
+            }
+        }
+        //空中
+        else
+        {
+            if (_CurDirectionInput == DirectionInput.Down)
+            {
+                //快速下落
+                _VecMoving.y -= Global.Gravity * Global.HeroLerpMultipe;
+            }
+        }
+
+        /* 综合移动处理 */
+        _VecMoving.z = 0;
+        _VecMoving += this.transform.TransformDirection(Vector3.forward * Global.PlayerCurRunSpeed);
+        //重力模拟
+        _VecMoving.y -= Global.Gravity * Time.deltaTime;
+        //角色控制器移动
+        _CC.Move(_VecMoving * Time.deltaTime);
     }
 }

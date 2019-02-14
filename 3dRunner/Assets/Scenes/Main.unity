@@ -274,7 +274,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 421552681}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.315441, y: -3.451821, z: 3.7683527}
+  m_LocalPosition: {x: 13, y: -3.451821, z: 3.7683527}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1930792208}
@@ -794,6 +794,8 @@ GameObject:
   - component: {fileID: 1206271913}
   - component: {fileID: 1206271912}
   - component: {fileID: 1206271911}
+  - component: {fileID: 1206271914}
+  - component: {fileID: 1206271915}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -813,7 +815,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 1.17
-  m_Radius: 0.22
+  m_Radius: 0.24
   m_SlopeLimit: 70
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -840,7 +842,7 @@ Animation:
   - {fileID: 7400014, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
   - {fileID: 7400000, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!4 &1206271913
@@ -850,7 +852,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1206271910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.06, y: 0, z: -1.1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 304094695}
@@ -859,6 +861,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1206271914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206271910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89da719b9f1773745a0011cba350cbd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1206271915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206271910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c54ebf0e7e463a4b83afaa6862a1b24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Runing:
+    AnimaClip: {fileID: 7400000, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 1
+  TurnLeftClip:
+    AnimaClip: {fileID: 7400008, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 1
+  TurnRightClip:
+    AnimaClip: {fileID: 7400010, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 1
+  Jumping:
+    AnimaClip: {fileID: 7400002, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 1
+  Rolling:
+    AnimaClip: {fileID: 7400012, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 1
+  DeadClip:
+    AnimaClip: {fileID: 7400014, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
+    ClipPlaySpeed: 10
 --- !u!1 &1238899273
 GameObject:
   m_ObjectHideFlags: 0

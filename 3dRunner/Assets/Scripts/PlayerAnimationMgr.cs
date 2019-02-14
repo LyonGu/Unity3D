@@ -30,7 +30,7 @@ public class PlayerAnimationMgr : MonoBehaviour {
     public AnimationClipSet Runing, TurnLeftClip, TurnRightClip, Jumping, Rolling, DeadClip;
 
     //英雄动画组件（播放动画）
-    public Animation _HeroAnimation;
+    private Animation _HeroAnimation;
 
 
 	// Use this for initialization
