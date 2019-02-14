@@ -240,6 +240,8 @@
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\PlayerAnimationMgr.cs" />
     <Compile Include="Assets\Scripts\PlayerCtrl.cs" />
+    <Compile Include="Assets\Scripts\Props\BasePropItem.cs" />
+    <Compile Include="Assets\Scripts\ScenesCreateMgr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Models\Model\Player\Vampire-InGame\AnimationFrame.txt" />
