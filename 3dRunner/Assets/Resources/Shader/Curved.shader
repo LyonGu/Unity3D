@@ -42,7 +42,7 @@ Shader "Custom/Curved" {
 			half4 frag (v2f i) : COLOR0
 			{
 			  	half4 col = tex2D(_MainTex, i.uv.xy);
-			  	col *= UNITY_LIGHTMODEL_AMBIENT*_Brightness;
+			  	col *= UNITY_LIGHTMODEL_AMBIENT*1.5;
 				return col;
 			}
 			ENDCG
