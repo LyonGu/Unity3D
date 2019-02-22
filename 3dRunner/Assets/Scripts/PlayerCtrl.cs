@@ -257,4 +257,6 @@ public class PlayerCtrl : MonoBehaviour {
         //角色控制器移动
         _CC.Move(_VecMoving * Time.deltaTime);
     }
+
+
 }

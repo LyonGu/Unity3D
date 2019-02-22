@@ -64,11 +64,16 @@ public class ScenesCreateMgr : BasePropItem {
         CreateBuildings();
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    void Update()
+    {
+        if (Global.IsCreateBuildings == true)
+        {
+            CreateProps();
+            CreateBuildings();
+            Global.IsCreateBuildings = false;
+        }
+    }
 
     /// <summary>
     /// 生成道具预设
@@ -86,8 +91,93 @@ public class ScenesCreateMgr : BasePropItem {
             _IsProduceCoin = false;
             floZLengthNumber = Global.ZposByCurrentBuilds + 30F + i * Global.ZLengthEveryFloor;
 
-            //生成金币道具
-            ProduceCoins(base.GetRandomNum(2, 4), new Vector3(Global.LeftTrackX, _PropRefPostion.position.y, floZLengthNumber));
+            //左边跑道
+            switch (base.GetRandomNum(0,3))
+            {
+                case 0:
+                    if(!_IsProduceCoin)
+                    {
+                        //生成金币道具
+                        ProduceCoins(base.GetRandomNum(2, 4), new Vector3(Global.LeftTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                        _IsProduceCoin = true;
+                    }
+                    break;
+                case 1:
+                    //生成障碍物道具
+                    ProduceObstaclesProp(new Vector3(Global.LeftTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                    //生成魔法道具
+                    ProduceMagicProp(new Vector3(Global.LeftTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    if (!_IsProduceCoin)
+                    {
+                        //生成金币道具
+                        ProduceCoins(base.GetRandomNum(3, 4), new Vector3(Global.LeftTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                        _IsProduceCoin = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            //中间跑道
+            switch (base.GetRandomNum(0, 3))
+            {
+                case 0:
+                    if (!_IsProduceCoin)
+                    {
+                        //生成金币道具
+                        ProduceCoins(base.GetRandomNum(3, 4), new Vector3(0f, _PropRefPostion.position.y, floZLengthNumber));
+                        _IsProduceCoin = true;
+                    }
+                    break;
+                case 1:
+                    //生成障碍物道具
+                    ProduceObstaclesProp(new Vector3(0F, _PropRefPostion.position.y, floZLengthNumber));
+                    //生成魔法道具
+                    ProduceMagicProp(new Vector3(0F, _PropRefPostion.position.y, floZLengthNumber));
+                    break;
+                case 2:
+                    if (!_IsProduceCoin)
+                    {
+                        //生成金币道具
+                        ProduceCoins(base.GetRandomNum(3, 4), new Vector3(0f, _PropRefPostion.position.y, floZLengthNumber));
+                        _IsProduceCoin = true;
+                    }
+                    break;
+                case 3:
+                    //空内容
+                    break;
+                default:
+                    break;
+            }
+            //右边跑道
+            switch (base.GetRandomNum(0, 2))
+            {
+                case 1:
+                    if (!_IsProduceCoin)
+                    {
+                        //生成金币道具
+                        ProduceCoins(base.GetRandomNum(2, 4), new Vector3(Global.RightTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                        _IsProduceCoin = true;
+                    }
+                    break;
+                case 0:
+                    //生成障碍物道具
+                    ProduceObstaclesProp(new Vector3(Global.RightTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                    //生成魔法道具
+                    ProduceMagicProp(new Vector3(Global.RightTrackX, _PropRefPostion.position.y, floZLengthNumber));
+                    break;
+                case 2:
+                    //这里就是什么也不生成，空场地。
+                    break;
+                default:
+                    break;
+            }
+
+          
         }
     }
 
@@ -101,6 +191,7 @@ public class ScenesCreateMgr : BasePropItem {
             //确定父子节点
             if (ParentNodeByBuildPrefab != null)
             {
+                //加入到父节点里,坐标就是new Vector3(0,0,Global.ZposByCurrentBuilds + Global.ZLengthByBuildPrefab*i) ==》相对于父节点坐标
                 goBuildingClone.transform.parent = ParentNodeByBuildPrefab;
             }
 
@@ -137,6 +228,53 @@ public class ScenesCreateMgr : BasePropItem {
             base.ClonePrefabs(CoinPrefabs, new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), ParentNodeByProp);
         }
     }
+
+    /// <summary>
+    /// 生成障碍物道具
+    /// </summary>
+    /// <param name="pos"></param>
+    private void ProduceObstaclesProp(Vector3 pos)
+    {
+        //参数检查
+        if (ObstaclesPrefabsArray == null || ParentNodeByProp == null || pos == Vector3.zero)
+        {
+            Debug.LogError(GetType() + "/ProduceObstaclesProp()/参数有误， 请检查。");
+            return;
+        }
+        else if (ObstaclesPrefabsArray.Length < 3)
+        {
+            Debug.Log(GetType() + "/ProduceObstaclesProp()/障碍物道具数量少， 请检查。");
+            return;
+        }
+        base.ClonePrefabs(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], pos, ParentNodeByProp);
+    }
+
+    /// <summary>
+    /// 生成魔法道具
+    /// </summary>
+    /// <param name="pos"></param>
+    private void ProduceMagicProp(Vector3 pos)
+    {
+        //参数检查
+        if (MagicProPrefabsArray == null || pos == Vector3.zero)
+        {
+            Debug.LogError(GetType() + "/ProduceMagicProp()/参数有误， 请检查。");
+            return;
+        }
+        else if (MagicProPrefabsArray.Length < 2)
+        {
+            Debug.Log(GetType() + "/魔法道具数量少， 请检查。");
+            return;
+        }
+
+        //六分之一的概率
+        if (base.GetProbability(6))
+        {
+            //Z轴添加一个偏移量，是保证与障碍物道具保持一定距离。
+            base.ClonePrefabs(MagicProPrefabsArray[base.GetRandomNum(0, 2)], new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), ParentNodeByProp);
+        }
+    }
+
 
 }
 

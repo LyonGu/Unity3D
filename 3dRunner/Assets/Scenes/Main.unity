@@ -150,7 +150,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400326, guid: efb5880d19cb74bb98f6bf190a33e09f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -15.24
+      value: -12.76
       objectReference: {fileID: 0}
     - target: {fileID: 400326, guid: efb5880d19cb74bb98f6bf190a33e09f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -158,7 +158,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400326, guid: efb5880d19cb74bb98f6bf190a33e09f, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 6.6832952
+      value: 32.3
       objectReference: {fileID: 0}
     - target: {fileID: 400326, guid: efb5880d19cb74bb98f6bf190a33e09f, type: 2}
       propertyPath: m_LocalRotation.x
@@ -499,8 +499,15 @@ MonoBehaviour:
     type: 2}
   CoinPrefabs: {fileID: 1973819045197166, guid: 06809bbb40845864ca476fb05389f69f,
     type: 2}
-  ObstaclesPrefabsArray: []
-  MagicProPrefabsArray: []
+  ObstaclesPrefabsArray:
+  - {fileID: 100000, guid: 346960ba2fcc04b1fa5491729216b5e8, type: 2}
+  - {fileID: 100000, guid: 3e9b386cd233c4f469bfa385474b352f, type: 2}
+  - {fileID: 100000, guid: deb1dd20b0f6048bf964d75ccbfed363, type: 2}
+  - {fileID: 100000, guid: ebd66764aa27a4694a99e132d4b90789, type: 2}
+  MagicProPrefabsArray:
+  - {fileID: 100002, guid: e2820074a4d3b4051aec93b94a4df45f, type: 2}
+  - {fileID: 100002, guid: 50cc6b079e6f74910902371be2050c99, type: 2}
+  - {fileID: 100002, guid: b5fafb9511f7d4ec59a8ddb5cfd96a4c, type: 2}
   ParentNodeByProp: {fileID: 1155299544}
   _PropRefPostion: {fileID: 1081355132}
 --- !u!1 &620707444
@@ -887,7 +894,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1155299543}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.25, y: 0, z: -4.83}
+  m_LocalPosition: {x: -1.25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1437476681}
@@ -1019,7 +1026,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1206271910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 20}
+  m_LocalPosition: {x: 0, y: 0, z: 17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 304094695}
