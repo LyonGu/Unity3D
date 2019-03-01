@@ -197,7 +197,7 @@ public class ScenesCreateMgr : BasePropItem {
 
             if (i == 1)
             {
-                //感觉没什么用
+                //场景的预设点 触发器
                 GameObject goBuildTriggerPosClone = Instantiate(BuildingCreatePrefab,
                         new Vector3(0, 0, Global.ZposByCurrentBuilds + Global.ZLengthByBuildPrefab * i), Quaternion.identity);
                 goBuildTriggerPosClone.transform.parent = ParentNodeByBuildPrefab;
