@@ -41,8 +41,8 @@ public class GameMgr : MonoBehaviour {
         //游戏运行状态
         Global.CurrentGameState = GameState.Prepare;
         //播放背景音乐
-        AudioManager.SetAudioBackgroundVolumns(0.2F);
-        AudioManager.PlayBackground(AudioBG);
+        //AudioManager.SetAudioBackgroundVolumns(0.2F);
+        //AudioManager.PlayBackground(AudioBG);
 
         //得到UI界面管理器脚本对象
         if (UIMgrObj == null)

@@ -37,32 +37,31 @@ public class HeroParticleEffect : BasePropItem{
     //英雄对魔法道具的触发检测
     void OnTriggerEnter(Collider col)
     { 
-        if(col.tag.Equals(Global.PropTagName))
+        //if(col.tag.Equals(Global.PropTagName))
         {
             //吸引魔法
-            //吸引魔法
-            if (col.gameObject.name.Equals(Global.Item_Magnet))
+            if (col.gameObject.tag.Equals(Global.Tag_Magnet))
             {
                 //print("吸引魔法");
                 StartEffect(GoParticlePrefab_Magnet,new Vector3(0,1,0));
                 ProcessMagnetItem();
             }
             //加倍分数魔法
-            else if (col.gameObject.name.Equals(Global.Item_Multiply))
+            else if (col.gameObject.tag.Equals(Global.Tag_Multiply))
             {
                 //print("加倍魔法");
                 StartEffect(GoParticlePrefab_ScoreDouble, new Vector3(0, 1, 0));
                 ProcessDoubleScore();
             }
             //无敌魔法(加速)
-            else if (col.gameObject.name.Equals(Global.Item_Sprint))
+            else if (col.gameObject.tag.Equals(Global.Tag_Sprint))
             {
                 //print("无敌魔法");
                 StartEffect(GoParticlePrefab_SpeedDouble, new Vector3(0, 1, 0));
                 ProcessInvincible();
             }
             //收集奖励魔法(即：金币)
-            else if (col.gameObject.name.Equals(Global.Coin))
+            else if (col.gameObject.tag.Equals(Global.Tag_Coin))
             {
                 //print("金币魔法");
                 StartEffect(GoParticlePrefab_CollectFlash, new Vector3(0, 0.5F, 0));

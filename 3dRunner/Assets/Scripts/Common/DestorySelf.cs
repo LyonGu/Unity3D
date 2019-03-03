@@ -49,13 +49,15 @@ public class DestorySelf: BasePropItem
         }
     }
 
-    private void Start()
-    {
-        if (DestType == DestroyType.TimeTirrer)
-        {
-            StartDestorySelf();
-        }
-    }
+
+    //使用对象缓冲池，需要禁用Start() 方法
+    //private void Start()
+    //{
+    //    if (DestType == DestroyType.TimeTirrer)
+    //    {
+    //        StartDestorySelf();
+    //    }
+    //}
 
     /// <summary>
     /// 得到奖励

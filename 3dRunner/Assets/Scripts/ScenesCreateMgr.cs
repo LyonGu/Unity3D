@@ -21,6 +21,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using kernal;
 
 
 public class ScenesCreateMgr : BasePropItem {
@@ -225,7 +226,12 @@ public class ScenesCreateMgr : BasePropItem {
 
         for (int i = 0; i < produceNum; i++)
         {
-            base.ClonePrefabs(CoinPrefabs, new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), ParentNodeByProp, 0, Global.Coin);
+            //传统方式
+            //base.ClonePrefabs(CoinPrefabs, new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), ParentNodeByProp, 0, Global.Coin);
+
+            //使用缓冲池技术(产生)
+            PoolManager.PoolsArray["PropItemPools"].GetGameObjectByPool(CoinPrefabs,
+                new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), Quaternion.identity);
         }
     }
 
@@ -246,7 +252,9 @@ public class ScenesCreateMgr : BasePropItem {
             Debug.Log(GetType() + "/ProduceObstaclesProp()/障碍物道具数量少， 请检查。");
             return;
         }
-        base.ClonePrefabs(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], pos, ParentNodeByProp,0, "Obstacle");
+        //base.ClonePrefabs(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], pos, ParentNodeByProp,0, "Obstacle");
+        //使用缓冲池技术(产生)
+        PoolManager.PoolsArray["PropItemPools"].GetGameObjectByPool(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], new Vector3(pos.x, pos.y, pos.z), Quaternion.identity);
     }
 
     /// <summary>
@@ -271,8 +279,11 @@ public class ScenesCreateMgr : BasePropItem {
         if (base.GetProbability(6))
         {
             //Z轴添加一个偏移量，是保证与障碍物道具保持一定距离。
-            GameObject goOrigin = MagicProPrefabsArray[base.GetRandomNum(0, 2)];
-            base.ClonePrefabs(goOrigin, new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), ParentNodeByProp, 0, goOrigin.name);
+            //GameObject goOrigin = MagicProPrefabsArray[base.GetRandomNum(0, 2)];
+            //base.ClonePrefabs(goOrigin, new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), ParentNodeByProp, 0, goOrigin.name);
+
+            PoolManager.PoolsArray["PropItemPools"].GetGameObjectByPool(MagicProPrefabsArray[base.GetRandomNum(0, 2)],
+                  new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), Quaternion.identity);
         }
     }
 

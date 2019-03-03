@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Item
+  - Ground
+  - Tag_Coin
+  - Tag_Magnet
+  - Tag_Multiply
+  - Tag_Sprint
   layers:
   - Default
   - TransparentFX

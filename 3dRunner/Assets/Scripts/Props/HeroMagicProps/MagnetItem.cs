@@ -33,16 +33,39 @@ public class MagnetItem : BasePropItem{
     private Transform _HeroTran = null;
 
 
-	// Use this for initialization
-	void Start () {
+    /// <summary>
+    /// 启用脚本(采用对象缓冲池，增加的方法)
+    /// </summary>
+    public void OnEnable()
+    {
         _HeroTran = GameObject.FindGameObjectWithTag(Global.HeroTagName).transform;
-        if(_HeroTran == null)
-        {
+        if (_HeroTran == null)
             Debug.LogError(GetType() + "/Start()/_HeroTran 查找不到，请检查！");
-        }
         //启动本道具与英雄距离检查协程
         InvokeRepeating("CheckLengthByHero", 2F, 0.2F);
-	}
+    }
+
+    /// <summary>
+    /// 禁用脚本(采用对象缓冲池，增加的方法)
+    /// </summary>
+    public void OnDisable()
+    {
+        if (this.IsInvoking("CheckLengthByHero"))
+        {
+            CancelInvoke("CheckLengthByHero");
+        }
+    }
+
+	// Use this for initialization
+    //void Start () {
+    //    _HeroTran = GameObject.FindGameObjectWithTag(Global.HeroTagName).transform;
+    //    if(_HeroTran == null)
+    //    {
+    //        Debug.LogError(GetType() + "/Start()/_HeroTran 查找不到，请检查！");
+    //    }
+    //    //启动本道具与英雄距离检查协程
+    //    InvokeRepeating("CheckLengthByHero", 2F, 0.2F);
+    //}
 
     // 检查与英雄的距离
     private void CheckLengthByHero()
@@ -76,9 +99,4 @@ public class MagnetItem : BasePropItem{
         yield return null;
     }
 
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
