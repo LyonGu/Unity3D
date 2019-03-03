@@ -245,6 +245,8 @@
     <Compile Include="Assets\Scripts\PlayerCtrl.cs" />
     <Compile Include="Assets\Scripts\Props\BasePropItem.cs" />
     <Compile Include="Assets\Scripts\Props\CreateBuildTriggerPos.cs" />
+    <Compile Include="Assets\Scripts\Props\HeroMagicProps\HeroParticleEffect.cs" />
+    <Compile Include="Assets\Scripts\Props\HeroMagicProps\MagnetItem.cs" />
     <Compile Include="Assets\Scripts\Props\NormalProps\AwardObj.cs" />
     <Compile Include="Assets\Scripts\Props\NormalProps\MoveingObj.cs" />
     <Compile Include="Assets\Scripts\Props\NormalProps\RotateObj.cs" />

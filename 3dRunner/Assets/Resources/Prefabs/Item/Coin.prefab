@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 54877716119033418}
   - component: {fileID: 114202159671516182}
   - component: {fileID: 114289118838401532}
+  - component: {fileID: 114888123177607590}
   - component: {fileID: 114142545422707690}
   - component: {fileID: 114204471226359936}
   m_Layer: 9
@@ -258,3 +259,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DestType: 0
   DestroyDelayTime: 0
+--- !u!114 &114888123177607590
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1973819045197166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8018b1fe7ce6043bd5b4db1bb23f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxMagnetLength: 5
+  MinPropDestroyLength: 0.5
