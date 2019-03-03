@@ -49,6 +49,9 @@ public class PlayerCtrl : MonoBehaviour {
 
     private Animation _Animation;
 
+    private bool _isInput = false;
+    private Vector3 _originPos;
+
 
 
 	// Use this for initialization
@@ -92,38 +95,81 @@ public class PlayerCtrl : MonoBehaviour {
 
     //键盘输入检测
     private void InputInfoByKeyboard()
-    { 
-        if(Input.anyKeyDown)
+    {
+        //if (Input.anyKeyDown)
+        //{
+        //    _IsKeyboardPress = true;
+        //}
+
+        //if (_IsKeyboardPress)
+        //{
+        //    if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
+        //    {
+        //        _CurDirectionInput = DirectionInput.Up;
+        //    }
+        //    else if (Input.GetKey(KeyCode.S))
+        //    {
+        //        _CurDirectionInput = DirectionInput.Down;
+        //    }
+        //    else if (Input.GetKey(KeyCode.A))
+        //    {
+        //        _CurDirectionInput = DirectionInput.Left;
+        //    }
+        //    else if (Input.GetKey(KeyCode.D))
+        //    {
+        //        _CurDirectionInput = DirectionInput.Right;
+        //    }
+
+        //    _IsKeyboardPress = false;
+        //}
+        //else
+        //{
+        //    _CurDirectionInput = DirectionInput.None;
+        //}
+
+
+        //改成鼠标输入检测
+        //接触触摸
+        if (Input.GetMouseButtonDown(0) && !_isInput)
         {
-            _IsKeyboardPress = true;
+            _isInput = true;
+            _originPos = Input.mousePosition;
+
         }
-
-        if (_IsKeyboardPress)
+        //持续接触
+        if (Input.GetMouseButton(0) && _isInput)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
-            {
-                _CurDirectionInput = DirectionInput.Up;
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                _CurDirectionInput = DirectionInput.Down;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                _CurDirectionInput = DirectionInput.Left;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                _CurDirectionInput = DirectionInput.Right;
-            }
+            Vector3 pos = Input.mousePosition - _originPos;
+            float angleY = Mathf.Acos(Vector3.Dot(pos.normalized, Vector3.up)) * Mathf.Rad2Deg;
+            float angleX = Mathf.Acos(Vector3.Dot(pos.normalized, Vector3.right)) * Mathf.Rad2Deg;
 
-            _IsKeyboardPress = false;
+            if (pos.magnitude >= 10)
+            {
+                if (angleY <= 45)
+                {
+                    _CurDirectionInput = DirectionInput.Up;
+                }
+                else if (angleY >= 135)
+                {
+                    _CurDirectionInput = DirectionInput.Down;
+                }
+                else if (angleX <= 45)
+                {
+                    _CurDirectionInput = DirectionInput.Right;
+                }
+                else if (angleX >= 135)
+                {
+                    _CurDirectionInput = DirectionInput.Left;
+                }
+
+                _isInput = false;
+            }
         }
         else
         {
             _CurDirectionInput = DirectionInput.None;
         }
-    
+
     }
 
 
