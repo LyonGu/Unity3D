@@ -67,7 +67,7 @@ public class PlayerCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//if(Global.CurrentGameState == GameState.Playing)
+		if(Global.CurrentGameState == GameState.Playing)
         {
             //键盘输入检测
             InputInfoByKeyboard();
