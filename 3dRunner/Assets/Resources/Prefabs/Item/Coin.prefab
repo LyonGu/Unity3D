@@ -56,6 +56,10 @@ GameObject:
   - component: {fileID: 33122759370372938}
   - component: {fileID: 65758390768325084}
   - component: {fileID: 54877716119033418}
+  - component: {fileID: 114202159671516182}
+  - component: {fileID: 114289118838401532}
+  - component: {fileID: 114142545422707690}
+  - component: {fileID: 114204471226359936}
   m_Layer: 9
   m_Name: Coin
   m_TagString: Item
@@ -113,6 +117,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -128,6 +133,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -203,3 +209,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8577f49d468a244a987e71648e1cec18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114142545422707690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1973819045197166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f934d3f9d75396d49ab8f03d1e49fe97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FloRotationSpeed: 2
+--- !u!114 &114202159671516182
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1973819045197166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e279b3aa3e59d94b80af7b5d871f335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScoreNum: 1
+--- !u!114 &114204471226359936
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1973819045197166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74d75f66d0ba01c40a7d9ccecfc2c76d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioEffectName: coin
+--- !u!114 &114289118838401532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1973819045197166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a6ed45114c8534380b25a1bb63f0f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestType: 0
+  DestroyDelayTime: 0

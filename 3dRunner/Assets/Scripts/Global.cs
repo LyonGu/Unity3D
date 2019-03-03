@@ -77,7 +77,7 @@ public enum HeroMagicState
 public delegate void AnimationPlayStateHandle();
 #endregion
 
-//结构体类型定义
+//结构体类型定义 自定义数据结构序列化
 /// <summary>
 /// 动画剪辑组
 /// </summary>

@@ -237,11 +237,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Common\AudioEffect.cs" />
+    <Compile Include="Assets\Scripts\Common\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\Common\DestorySelf.cs" />
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\PlayerAnimationMgr.cs" />
     <Compile Include="Assets\Scripts\PlayerCtrl.cs" />
     <Compile Include="Assets\Scripts\Props\BasePropItem.cs" />
     <Compile Include="Assets\Scripts\Props\CreateBuildTriggerPos.cs" />
+    <Compile Include="Assets\Scripts\Props\NormalProps\AwardObj.cs" />
+    <Compile Include="Assets\Scripts\Props\NormalProps\MoveingObj.cs" />
+    <Compile Include="Assets\Scripts\Props\NormalProps\RotateObj.cs" />
+    <Compile Include="Assets\Scripts\Props\ObstacleObj.cs" />
     <Compile Include="Assets\Scripts\ScenesCreateMgr.cs" />
   </ItemGroup>
   <ItemGroup>
