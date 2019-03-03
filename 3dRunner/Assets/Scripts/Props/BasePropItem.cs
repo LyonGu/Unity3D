@@ -75,7 +75,7 @@ public class BasePropItem : MonoBehaviour {
     /// <param name="displayPos">显示方位</param>
     /// <param name="parentNode">父对象节点(默认无父对象)</param>
     /// <param name="destoryTime">销毁时间(默认不销毁)</param>
-    public void ClonePrefabs(GameObject goPrefab, Vector3 displayPos, Transform parentNode = null, int destoryTime = 0)
+    public void ClonePrefabs(GameObject goPrefab, Vector3 displayPos, Transform parentNode = null, int destoryTime = 0,string name = "")
     {
         //参数检查
         if (goPrefab == null || displayPos == Vector3.zero)
@@ -85,6 +85,10 @@ public class BasePropItem : MonoBehaviour {
 
 
         GameObject goClone = Instantiate(goPrefab, displayPos,Quaternion.identity);
+        if (!name.Equals(""))
+        {
+            goClone.name = name;
+        }
         if (parentNode!=null)
         {
             //父节点定义

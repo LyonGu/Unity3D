@@ -140,17 +140,13 @@ public class Global {
 
     /* 小型道具数值 */
     //道具Tag名称
-    //public static string PropTagName = "Item";   
+    public static string PropTagName = "Item";   
     //魔法道具名称
-    //public static string Item_Magnet = "Item_Magnet(Clone)";
-    //public static string Item_Multiply = "Item_Multiply(Clone)";
-    //public static string Item_Sprint = "Item_Sprint(Clone)";
-    //public static string Coin = "Coin(Clone)";  
 
     //使用对象缓冲池后，所有魔法道具，必须使用Tag 来做判断。
-    public static string Tag_Magnet = "Tag_Magnet";
-    public static string Tag_Multiply = "Tag_Multiply";
-    public static string Tag_Sprint = "Tag_Sprint";
-    public static string Tag_Coin = "Tag_Coin";     
+    public static string Item_Magnet = "Item_Magnet";
+    public static string Item_Multiply = "Item_Multiply";
+    public static string Item_Sprint = "Item_Sprint";
+    public static string Coin = "Coin";      
 	
 }

@@ -1260,6 +1260,7 @@ GameObject:
   - component: {fileID: 1206271911}
   - component: {fileID: 1206271914}
   - component: {fileID: 1206271915}
+  - component: {fileID: 1206271916}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1365,6 +1366,26 @@ MonoBehaviour:
   DeadClip:
     AnimaClip: {fileID: 7400014, guid: a22acf5978bf54cceb26900f39a9eb9d, type: 3}
     ClipPlaySpeed: 10
+--- !u!114 &1206271916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206271910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7abd4c06dbe14d4cbf184036e3ff4a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IntervalTime: 6
+  GoParticlePrefab_CollectFlash: {fileID: 100002, guid: d02538a6a7fa43c44a7ed5d93006cb44,
+    type: 2}
+  GoParticlePrefab_Magnet: {fileID: 100000, guid: ca539480878663b4da7725810c50b967,
+    type: 2}
+  GoParticlePrefab_ScoreDouble: {fileID: 100000, guid: 03db29cdd38d9cf40931d718cecf6b73,
+    type: 2}
+  GoParticlePrefab_SpeedDouble: {fileID: 100000, guid: 28c3c0015178e384f9b7b1b3d2f2f99d,
+    type: 2}
 --- !u!1 &1238899273
 GameObject:
   m_ObjectHideFlags: 0

@@ -225,7 +225,7 @@ public class ScenesCreateMgr : BasePropItem {
 
         for (int i = 0; i < produceNum; i++)
         {
-            base.ClonePrefabs(CoinPrefabs, new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), ParentNodeByProp);
+            base.ClonePrefabs(CoinPrefabs, new Vector3(pos.x, pos.y, pos.z + i * Global.IntervalOfCoins), ParentNodeByProp, 0, Global.Coin);
         }
     }
 
@@ -246,7 +246,7 @@ public class ScenesCreateMgr : BasePropItem {
             Debug.Log(GetType() + "/ProduceObstaclesProp()/障碍物道具数量少， 请检查。");
             return;
         }
-        base.ClonePrefabs(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], pos, ParentNodeByProp);
+        base.ClonePrefabs(ObstaclesPrefabsArray[base.GetRandomNum(0, 3)], pos, ParentNodeByProp,0, "Obstacle");
     }
 
     /// <summary>
@@ -271,7 +271,8 @@ public class ScenesCreateMgr : BasePropItem {
         if (base.GetProbability(6))
         {
             //Z轴添加一个偏移量，是保证与障碍物道具保持一定距离。
-            base.ClonePrefabs(MagicProPrefabsArray[base.GetRandomNum(0, 2)], new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), ParentNodeByProp);
+            GameObject goOrigin = MagicProPrefabsArray[base.GetRandomNum(0, 2)];
+            base.ClonePrefabs(goOrigin, new Vector3(pos.x, pos.y, pos.z + Global.IntervalOfProp), ParentNodeByProp, 0, goOrigin.name);
         }
     }
 
