@@ -58,6 +58,8 @@
 			fixed4 frag(v2f o): SV_Target 
 			{
 				fixed3 color;
+
+				fixed3 worldNormal = normalize(o.worldNormal);
 				//环境光照
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 
@@ -66,10 +68,10 @@
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(o.worldPos));
 
 				//计算漫反射
-				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(o.worldNormal, worldLightDir));
+				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLightDir));
 
 				//获取反射方向向量
-				//fixed3 reflectDir = normalize(reflect(-worldLightDir,o.worldNormal));
+				//fixed3 reflectDir = normalize(reflect(-worldLightDir,worldNormal));
 
 				//获取视觉方向: 摄像机的位置-世界空间的顶点位置
 				float3 worldPos = o.worldPos;
@@ -82,7 +84,7 @@
 				fixed3 halfDir = normalize(worldLightDir + viewDir);
 
 				//计算高光:用dot(半法线，法线)
-				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(saturate(dot(halfDir, o.worldNormal)),_Gloss);
+				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(saturate(dot(halfDir, worldNormal)),_Gloss);
 
 
 				//最终光照结果

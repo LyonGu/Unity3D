@@ -252,6 +252,7 @@
     <None Include="Assets\Shaders\Chapter6\DiffuseVertexLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\SpecularPixelLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\SpecularVertexLevel.shader" />
+    <None Include="Assets\Shaders\Chapter7\SingleTexture.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
