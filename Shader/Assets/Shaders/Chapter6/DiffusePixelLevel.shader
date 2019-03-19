@@ -55,6 +55,7 @@
 				//光的方向
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);
 
+				//_Diffuse理解为材质的颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLight));
 
 				fixed3 color = ambient + diffuse;

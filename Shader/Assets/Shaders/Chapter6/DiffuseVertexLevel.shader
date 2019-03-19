@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_Diffuse ("Diffuse", Color)	 = (1.0,1.0,1.0,1.0)
+		_Diffuse ("Diffuse", Color)	 = (1.0,1.0,1.0,1.0) 
 	}
 	SubShader
 	{
@@ -46,7 +46,8 @@
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);
 
 				//计算漫反射 saturate类似于 math.max ==>避免计算值为负值
-				//dot(法线方向，光源方向)
+				//dot(法线方向，光源方向) 
+				//_Diffuse理解为材质的颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLight));
 
 				o.color = ambient + diffuse;

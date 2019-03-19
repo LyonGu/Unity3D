@@ -57,7 +57,8 @@
 
 				//半兰伯特光照模型 不用max操作防止为负值
 				fixed halfLambert = dot(worldNormal, worldLight) * 0.5 + 0.5;
-
+				
+				//_Diffuse理解为材质的颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * halfLambert;
 
 				fixed3 color = ambient + diffuse;
