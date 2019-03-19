@@ -246,6 +246,7 @@
     <None Include="Assets\Shaders\Chapter5\SimpleShader_2.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_3.shader" />
     <None Include="Assets\Shaders\Chapter6\Blinn-Phong.shader" />
+    <None Include="Assets\Shaders\Chapter6\Blinn-PhongUse Built-in Functions.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffuseHalfLambert.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffusePixelLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffuseVertexLevel.shader" />
