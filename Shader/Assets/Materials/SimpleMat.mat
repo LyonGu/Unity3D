@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SimpleMat
-  m_Shader: {fileID: 4800000, guid: 695b28119aff6a448989d7a77ba0d142, type: 3}
+  m_Shader: {fileID: 4800000, guid: f2d89eca4c5c22f4f963c397c32c6a74, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -72,5 +72,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.6911765, g: 0.17279412, b: 0.17279412, a: 1}
+    - _Color: {r: 0.5514706, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
