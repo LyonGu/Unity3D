@@ -1,6 +1,8 @@
-﻿Shader "Shaders/Chapter8/AlphaBlendMat"
+﻿Shader "Shaders/Chapter8/AlphaBlendZWrite"
 {
-	//alpha混合
+	//alpha混合：开启深度写入
+	//用两个pass，第一个pass开启深度写入，不输出颜色，仅仅为了写入深度值
+	//第二个pass 进行正常的混合
 	Properties
 	{
 		_Color ("Color Tint", Color) 			= (1,1,1,1)
@@ -11,6 +13,17 @@
 	{
 		//在subShader里定义tags,对所有的pass都生效
 		Tags {"Queue" = "Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+
+		// Extra pass that renders to depth buffer only
+		//ColorMask设置颜色通道的写掩码，ColorMask为0是表示该pass不写入任何颜色通道，即不会输出任何颜色
+		//这个pass仅仅写入深度缓冲
+		Pass {
+			ZWrite On
+			ColorMask 0  
+
+		}
+		
+
 		Pass
 		{
 			Tags { "LightMode"="ForwardBase" }
