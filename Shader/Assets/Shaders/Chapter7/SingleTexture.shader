@@ -3,7 +3,7 @@
 	//Blinn-Phong模型：用半法量方向来代替反射方向计算高光 （phong光照模型的进阶版）
 	Properties
 	{
-		_Color 		("Color Tint", Color) 		= (1.0,1.0,1.0,1.0)
+		_Color 		("Color Tint", Color) 		= (1.0,1.0,1.0,1.0) //理解为顶点颜色
 		_MainTex 	("Main Tex", 2D) 			= "white" {}
 		_Specular 	("Specular", Color) 		= (1.0,1.0,1.0,1.0)
 		_Gloss 		("Gloss", Range(8.0,256)) 	= 20
@@ -60,7 +60,7 @@
 
 				o.uv = i.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
-				//调用内置函数
+				//调用内置函数,一定要声明_MainTex_ST变量才能调用
 				//o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 
 				return o;
