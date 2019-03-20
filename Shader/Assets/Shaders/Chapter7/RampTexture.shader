@@ -60,8 +60,7 @@
 			}
 
 			fixed4 frag(v2f i) : SV_Target{
-				fixed4 color;
-
+			
 				fixed3 worldNormal 	= normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 
