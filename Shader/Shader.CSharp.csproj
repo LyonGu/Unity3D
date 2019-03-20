@@ -247,13 +247,14 @@
     <None Include="Assets\Shaders\Chapter5\SimpleShader_3.shader" />
     <None Include="Assets\Shaders\Chapter6\Blinn-Phong.shader" />
     <None Include="Assets\Shaders\Chapter6\Blinn-PhongUse Built-in Functions.shader" />
-    <None Include="Assets\Shaders\Chapter6\DiffuseHalfLambert.shader" />
+    <None Include="Assets\Shaders\Chapter6\DiffusePiexlHalfLambert.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffusePixelLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffuseVertexLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\SpecularPixelLevel.shader" />
     <None Include="Assets\Shaders\Chapter6\SpecularVertexLevel.shader" />
     <None Include="Assets\Shaders\Chapter7\NormalMapTangentSpaceMat.shader" />
     <None Include="Assets\Shaders\Chapter7\NormalMapWorldSpaceMat.shader" />
+    <None Include="Assets\Shaders\Chapter7\RampTexture.shader" />
     <None Include="Assets\Shaders\Chapter7\SingleTexture.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />

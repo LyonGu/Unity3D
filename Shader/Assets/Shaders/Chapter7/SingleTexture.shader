@@ -77,7 +77,7 @@
 				//光的方向
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(o.worldPos));
 
-				// 采样颜色
+				// 采样颜色 _MainTex类似于漫反射贴图
 				fixed3 albedo = tex2D(_MainTex, o.uv).rgb * _Color.rgb;
 
 				//环境光照

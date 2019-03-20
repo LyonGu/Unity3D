@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter6/DiffuseHalfLambert"
+﻿Shader "Shaders/Chapter6/DiffusePiexlHalfLambert"
 {
 	Properties
 	{
