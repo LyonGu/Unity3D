@@ -257,6 +257,7 @@
     <None Include="Assets\Shaders\Chapter7\RampTexture.shader" />
     <None Include="Assets\Shaders\Chapter7\SingleTexture.shader" />
     <None Include="Assets\Shaders\Chapter7\Specular_NormalMapMat.shader" />
+    <None Include="Assets\Shaders\Chapter8\AlphaBlendMat.shader" />
     <None Include="Assets\Shaders\Chapter8\AlphaTestMat.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
