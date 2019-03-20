@@ -1,31 +1,22 @@
-﻿Shader "Shaders/Chapter8/AlphaBlendMat"
+﻿Shader "Shaders/Chapter8/AlphaTestBothSidedMat"
 {
-	//alpha混合：关闭深度写入
-	//正常混合：				Blend SrcAlpha OneMinusSrcAlpha 
-	//柔和相加：				Blend OneMinusDstColor One 
-	//正片叠底（图像变暗）：	Blend DstColor Zero 
-	//两倍相乘：				Blend DstColor SrcColor 
-	//滤色（变亮）：			Blend One OneMinusSrcAlpha 
-	//线性减淡：				Blend One One 
+	//单纯进行alpha测试，关闭了背面剔除，可以看到立方体内部
 	Properties
 	{
-		_Color ("Color Tint", Color) 			= (1,1,1,1)
-		_MainTex ("Main Tex", 2D) 	 			= "white" {}
-		_AlphaScale ("Alpha Scale", Range(0,1))	= 1
+		_Color ("Color Tint", Color) 		= (1,1,1,1)
+		_MainTex ("Main Tex", 2D) 	 		= "white" {}
+		_Cutoff ("Alpha Cutoff", Range(0,1))= 0.5
 	}
 	SubShader
 	{
 		//在subShader里定义tags,对所有的pass都生效
-		Tags {"Queue" = "Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+		Tags {"Queue" = "AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 		Pass
 		{
 			Tags { "LightMode"="ForwardBase" }
 
-			ZWrite Off //关闭深度写入
-
-			//设置混合因子
-			//源颜色用SrcAlpha, 已经存在缓冲区里的颜色用OneMinusSrcAlpha
-			Blend SrcAlpha OneMinusSrcAlpha 
+			// 关闭背面剔除
+			Cull Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -37,7 +28,7 @@
 			fixed4 		_Color;
 			sampler2D 	_MainTex;
 			float4 		_MainTex_ST;
-			fixed 		_AlphaScale;
+			fixed 		_Cutoff;
 
 			struct a2v{
 				float4 vertex:  POSITION; 	//模型顶点坐标==》得到世界坐标
@@ -75,14 +66,21 @@
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
 
 				fixed4 texColor = tex2D(_MainTex, v.uv);
-	
+				// Alpha test
+				clip (texColor.a - _Cutoff);
+
+				// Equal to 
+				//if ((texColor.a - _Cutoff) < 0.0) {
+				//		discard;
+				//}
+
 				fixed3 albedo = texColor.rgb * _Color.rgb;
 
 				fixed3 ambient =  UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
 
 				fixed3 diffuse = _LightColor0 * albedo * max(dot(worldNormal, worldLightDir),0);
 
-				return fixed4(ambient + diffuse, texColor.a * _AlphaScale);
+				return fixed4(ambient + diffuse, 1.0);
 			}
 
 			
