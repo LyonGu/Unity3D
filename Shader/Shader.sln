@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shader.CSharp", "Shader.CSharp.csproj", "{BBE707BC-0576-55E3-7687-8798F09C95CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shader.CSharp.Editor", "Shader.CSharp.Editor.csproj", "{7EAE3D4A-CA3C-FC3B-492A-D0A26FB15C12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{BBE707BC-0576-55E3-7687-8798F09C95CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBE707BC-0576-55E3-7687-8798F09C95CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBE707BC-0576-55E3-7687-8798F09C95CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAE3D4A-CA3C-FC3B-492A-D0A26FB15C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAE3D4A-CA3C-FC3B-492A-D0A26FB15C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAE3D4A-CA3C-FC3B-492A-D0A26FB15C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAE3D4A-CA3C-FC3B-492A-D0A26FB15C12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
