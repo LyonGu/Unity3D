@@ -1,6 +1,7 @@
 ﻿Shader "Shaders/Chapter9/ForwardRenderingShadowAttenuationInfunction"
 {
 	//两个Pass,第一个pass为ForwardBase,第二个pass为ForwardAdd
+	//BassPass只会执行一次，一个additional Pass会根据影响该物体的其他逐像素光源数目被调用多次
 	Properties
 	{
 		_Diffuse ("Diffuse", Color) = (1,1,1,1)

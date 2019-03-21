@@ -268,6 +268,9 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_alphaBlend.shader" />
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_alphaTest.shader" />
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_attenuation_Infunction.shader" />
+    <None Include="Assets\Shaders\Common\BumpedDiffuse.shader" />
+    <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
+    <None Include="Assets\Shaders\Common\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
