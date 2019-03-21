@@ -262,6 +262,7 @@
     <None Include="Assets\Shaders\Chapter8\AlphaBlendZWrite.shader" />
     <None Include="Assets\Shaders\Chapter8\AlphaTestBothSidedMat.shader" />
     <None Include="Assets\Shaders\Chapter8\AlphaTestMat.shader" />
+    <None Include="Assets\Shaders\Chapter9\ForwardRendering.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
