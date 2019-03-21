@@ -98,6 +98,9 @@
 			//开启这个编译命令，是为了让Unity自动赋予shader需要的光照计算变量
 			#pragma multi_compile_fwdadd
 
+			//为点光源与聚光添加阴影
+			#pragma multi_compile_fwdadd_fullshadows
+
 			#pragma vertex vert
 			#pragma fragment frag
 
