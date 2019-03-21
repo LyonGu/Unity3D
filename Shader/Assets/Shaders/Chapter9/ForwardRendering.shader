@@ -67,7 +67,7 @@
 
 				//平行光没有衰减，所以这里设置成1.0
 				fixed atten = 1.0;
-				fixed3 color = (ambient + diffuse + specular) * atten;
+				fixed3 color = ambient + (diffuse + specular) * atten;
 
 				return fixed4(color, 1.0);
 			}

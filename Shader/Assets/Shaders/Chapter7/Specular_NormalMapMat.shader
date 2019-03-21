@@ -6,8 +6,8 @@
 		_MainTex 		("Main Tex", 2D) 			= "white" {}
 		_BumpMap 		("Normal Map", 2D) 			= "white" {}
 		_BumpScale 		("Bump Scale", float) 		= 1.0
-		_SpecularMap 	("Normal Map", 2D) 			= "white" {}
-		_SpecularScale 	("Bump Scale", float) 		= 1.0
+		_SpecularMap 	("Specular Map", 2D) 			= "white" {}
+		_SpecularScale 	("Specular Scale", float) 		= 1.0
 		_Specular		("Specular", Color)			= (1.0,1.0,1.0,1.0)
 		_Gloss			("Gloss", Range(8.0,256))	= 20
 
