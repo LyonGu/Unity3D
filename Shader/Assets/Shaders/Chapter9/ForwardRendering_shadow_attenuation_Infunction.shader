@@ -57,10 +57,9 @@
 			fixed4 frag(v2f v): SV_Target{
 				fixed3 worldNormal = normalize(v.worldNormal);
 
-				//因为这个pass 只处理平行光 一般会用内置方法UnityWorldSpaceLightDir(o.worldPos)
-				fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
-
-				//环境光
+				// 一般会用内置方法UnityWorldSpaceLightDir(o.worldPos)
+				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
+			
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(dot(worldNormal,worldLightDir),0);
