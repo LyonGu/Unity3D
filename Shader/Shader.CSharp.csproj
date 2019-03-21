@@ -240,6 +240,7 @@
     <Compile Include="Assets\Scripts\Chapter5\ColorPicker.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\Chapter10\Fresnel.shader" />
     <None Include="Assets\Shaders\Chapter10\Reflection.shader" />
     <None Include="Assets\Shaders\Chapter10\Refraction.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />

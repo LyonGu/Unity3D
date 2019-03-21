@@ -11,6 +11,9 @@
 	SubShader
 	{
 		//在subShader里定义tags,对所有的pass都生效
+		//Queue ：渲染队列
+		//IgnoreProjector： 不受投影器的影响
+		//RenderType： 把shader归入到提前定义好的渲染组
 		Tags {"Queue" = "Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 
 		//第一个pass，正面剔除，关闭深度写入

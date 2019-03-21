@@ -1,19 +1,14 @@
-﻿Shader "Shaders/Chapter10/Reflection"
+﻿Shader "Shaders/Chapter10/Fresnel"
 {
+	//菲涅尔效应
 	Properties
 	{
-		_Color ("Color Tint", Color) = (1,1,1,1)
-
-		//反射颜色
-		_ReflectColor ("Reflection Color", Color) = (1,1,1,1) 
-
-		//材质的反射程度
-		_ReflectAmount ("Reflect Amount", Range(0,1)) = 1
-		_Cubemap ("Reflection Cubmap", Cube) = "_Skybox" {}
+		_Color ("Color Tint", Color) = (1, 1, 1, 1)
+		_FresnelScale ("Fresnel Scale", Range(0, 1)) = 0.5
+		_Cubemap ("Reflection Cubemap", Cube) = "_Skybox" {}
 	}
 	SubShader
 	{
-		
 		Tags { "RenderType"="Opaque" "Queue"="Geometry"}
 		Pass
 		{
@@ -29,8 +24,7 @@
 			#include "AutoLight.cginc"
 
 			fixed4 _Color;
-			fixed4 _ReflectColor;
-			fixed _ReflectAmount;
+			fixed _FresnelScale;
 			samplerCUBE _Cubemap;
 
 			struct a2v{
@@ -39,13 +33,12 @@
 			};
 
 			struct v2f{
-
 				float4 pos : SV_POSITION;
 				float3 worldPos : TEXCOORD0;
-				float3 worldNormal : TEXCOORD1;
-				float3 worldViewDir : TEXCOORD2;
-				float3 worldRefl : TEXCOORD3;
-				SHADOW_COORDS(4)
+  				fixed3 worldNormal : TEXCOORD1;
+  				fixed3 worldViewDir : TEXCOORD2;
+  				fixed3 worldRefl : TEXCOORD3;
+ 	 			SHADOW_COORDS(4)
 			};
 
 			v2f vert(a2v i){
@@ -76,13 +69,15 @@
 
 
 				// Use the reflect dir in world space to access the cubemap
-				fixed3 reflection = texCUBE(_Cubemap, o.worldRefl).rgb * _ReflectColor.rgb;
+				fixed3 reflection = texCUBE(_Cubemap, o.worldRefl).rgb;
+				
+				fixed fresnel = _FresnelScale + (1 - _FresnelScale) * pow(1 - dot(worldViewDir, worldNormal), 5);
 
 				//计算衰减以及阴影值
 				UNITY_LIGHT_ATTENUATION(atten, o, o.worldPos);
 
 				// Mix the diffuse color with the reflected color
-				fixed3 color = ambient + lerp(diffuse, reflection, _ReflectAmount) * atten;
+				fixed3 color = ambient + lerp(diffuse, reflection, saturate(fresnel)) * atten;
 
 				return fixed4(color, 1.0);
 
