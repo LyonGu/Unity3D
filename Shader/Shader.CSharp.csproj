@@ -265,6 +265,7 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering.shader" />
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_Shadow.shader" />
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_Texture.shader" />
+    <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_attenuation_Infunction.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

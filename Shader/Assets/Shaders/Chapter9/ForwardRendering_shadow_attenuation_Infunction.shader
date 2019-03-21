@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter9/ForwardRenderingShadow"
+﻿Shader "Shaders/Chapter9/ForwardRenderingShadowAttenuationInfunction"
 {
 	//两个Pass,第一个pass为ForwardBase,第二个pass为ForwardAdd
 	Properties
@@ -39,7 +39,7 @@
 				float4 pos : SV_POSITION;
 				float3 worldNormal: TEXCOORD0;
 				float3 worldPos: TEXCOORD1;
-				SHADOW_COORDS(2)  //声明一个用于阴影纹理采样的坐标，2就是下一个采样纹理的索引值 TEXCOORD2
+				SHADOW_COORDS(2)  //声明一个用于阴影纹理采样的坐标
 			};
 
 			v2f vert(a2v i){
@@ -71,13 +71,13 @@
 
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0,dot(worldNormal,halfDir)),_Gloss);
 
-				//平行光没有衰减，所以这里设置成1.0
-				fixed atten = 1.0;
-
 				//使用内置宏得到阴影值
-				fixed shadow = SHADOW_ATTENUATION(v);
+				//fixed shadow = SHADOW_ATTENUATION(v);
 
-				fixed3 color = ambient + (diffuse + specular) * atten * shadow;
+				//同时计算衰减值和阴影值 atten就包含了阴影值 理解为atten = atten *shadow
+				UNITY_LIGHT_ATTENUATION(atten, v, v.worldPos);
+
+				fixed3 color = ambient + (diffuse + specular) * atten;
 
 				return fixed4(color, 1.0);
 			}
@@ -129,15 +129,8 @@
 
 			fixed4 frag(v2f v): SV_Target{
 				fixed3 worldNormal = normalize(v.worldNormal);
-
-				//根据光源的类型计算光的方向
 				//内置方法UnityWorldSpaceLightDir(o.worldPos)里已经区分了
-				#ifdef USING_DIRECTIONAL_LIGHT
-					//平行光光源
-					fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
-				#else
-					fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz - v.worldPos.xyz);
-				#endif
+				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
 
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(dot(worldNormal,worldLightDir),0);
 
@@ -147,23 +140,8 @@
 
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0,dot(worldNormal,halfDir)),_Gloss);
 
-				//根据光源类型计算衰减值: 平行光没有衰减 点光源和聚光有衰减
-				#ifdef USING_DIRECTIONAL_LIGHT
-					fixed atten = 1.0; //平行光没有衰减，所以这里设置成1.0
-				#else
-					#if defined (POINT)
-						//点光源
-						float3 lightCoord = mul(unity_WorldToLight, float4(v.worldPos, 1)).xyz;
-				        fixed atten = tex2D(_LightTexture0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
-					#elif defined (SPOT)
-						//聚光
-						float4 lightCoord = mul(unity_WorldToLight, float4(v.worldPos, 1));
-				        fixed atten = (lightCoord.z > 0) * tex2D(_LightTexture0, lightCoord.xy / lightCoord.w + 0.5).w * tex2D(_LightTextureB0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
-					#else
-						//其他光源
-					   fixed atten = 1.0;
-					#endif
-				#endif
+				//使用了内置函数就不用判断光源的类型来分别计算了
+				UNITY_LIGHT_ATTENUATION(atten, v, v.worldPos);
 
 				//只计算漫反射和高光，不计算环境光
 				fixed3 color = (diffuse + specular) * atten;
