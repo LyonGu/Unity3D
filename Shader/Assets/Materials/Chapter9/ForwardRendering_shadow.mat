@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: ForwardRendering_texture
-  m_Shader: {fileID: 4800000, guid: 0cec3966f6dcd7340b29c764d87b4dbc, type: 3}
+  m_Name: ForwardRendering_shadow
+  m_Shader: {fileID: 4800000, guid: 8ba0c7e4bf19cff4b97d961b5de3baa3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,7 +19,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: fb7364a89ab4a114a89a472f8a4c189e, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -32,10 +32,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DiffuseMap:
-        m_Texture: {fileID: 2800000, guid: 987c676a3fac2524b871781701f8fbb8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -58,16 +54,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecularMap:
-        m_Texture: {fileID: 2800000, guid: abbe972051d82d24fbf65e4d32640994, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Gloss: 21
+    - _Gloss: 83
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -77,7 +69,6 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularScale: 3
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
@@ -85,4 +76,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Diffuse: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Specular: {r: 0.42647058, g: 0.4013841, b: 0.4013841, a: 1}
+    - _Specular: {r: 1, g: 1, b: 1, a: 1}
