@@ -248,6 +248,7 @@
     <None Include="Assets\Shaders\Chapter10\Refraction.shader" />
     <None Include="Assets\Shaders\Chapter11\Billboard.shader" />
     <None Include="Assets\Shaders\Chapter11\ImageSequenceAnimation.shader" />
+    <None Include="Assets\Shaders\Chapter11\VertexAnimationWithShadow.shader" />
     <None Include="Assets\Shaders\Chapter11\Water.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />
