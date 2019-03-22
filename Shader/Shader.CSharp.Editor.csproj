@@ -305,6 +305,7 @@
     <None Include="Assets\Shaders\Chapter10\Mirror.shader" />
     <None Include="Assets\Shaders\Chapter10\Reflection.shader" />
     <None Include="Assets\Shaders\Chapter10\Refraction.shader" />
+    <None Include="Assets\Shaders\Chapter11\Billboard.shader" />
     <None Include="Assets\Shaders\Chapter11\ImageSequenceAnimation.shader" />
     <None Include="Assets\Shaders\Chapter11\Water.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
