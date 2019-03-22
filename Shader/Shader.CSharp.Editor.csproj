@@ -318,6 +318,7 @@
     <None Include="Assets\Shaders\Chapter12\BrightnessSaturationAndContrast.shader" />
     <None Include="Assets\Shaders\Chapter12\EdgeDetection.shader" />
     <None Include="Assets\Shaders\Chapter12\GaussianBlur.shader" />
+    <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_1.shader" />
