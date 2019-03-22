@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Chapter11\Translating.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\Bloom.cs" />
     <Compile Include="Assets\Scripts\Chapter12\BrightnessSaturationAndContrast.cs" />
     <Compile Include="Assets\Scripts\Chapter12\EdgeDetection.cs" />
     <Compile Include="Assets\Scripts\Chapter12\GaussianBlur.cs" />
@@ -259,6 +260,7 @@
     <None Include="Assets\Shaders\Chapter11\ImageSequenceAnimation.shader" />
     <None Include="Assets\Shaders\Chapter11\VertexAnimationWithShadow.shader" />
     <None Include="Assets\Shaders\Chapter11\Water.shader" />
+    <None Include="Assets\Shaders\Chapter12\Bloom.shader" />
     <None Include="Assets\Shaders\Chapter12\BrightnessSaturationAndContrast.shader" />
     <None Include="Assets\Shaders\Chapter12\EdgeDetection.shader" />
     <None Include="Assets\Shaders\Chapter12\GaussianBlur.shader" />
