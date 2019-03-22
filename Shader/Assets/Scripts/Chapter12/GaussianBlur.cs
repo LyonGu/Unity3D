@@ -79,6 +79,7 @@ public class GaussianBlur : PostEffectsBase
             RenderTexture buffer0 = RenderTexture.GetTemporary(rtW, rtH, 0);
             buffer0.filterMode = FilterMode.Bilinear;
 
+            //把src图像数据缩放后存到buffer0中，调用所有的Pass
             Graphics.Blit(src, buffer0);
 
             for (int i = 0; i < iterations; i++)
@@ -87,22 +88,27 @@ public class GaussianBlur : PostEffectsBase
 
                 RenderTexture buffer1 = RenderTexture.GetTemporary(rtW, rtH, 0);
 
-                // Render the vertical pass
+                // Render the vertical pass，使用第一个pass（序号为0）处理buffer0的数据，然后把数据传到buffer1缓冲区中
                 Graphics.Blit(buffer0, buffer1, material, 0);
 
+                //释放buffer0缓冲区数据，操作完之后一定要解绑，跟opengl的vao和vbo一样
                 RenderTexture.ReleaseTemporary(buffer0);
                 buffer0 = buffer1;
+
+                //再次分配一块缓冲区
                 buffer1 = RenderTexture.GetTemporary(rtW, rtH, 0);
 
-                // Render the horizontal pass
+                // Render the horizontal pass使用第二个pass（序号为1）处理buffer0的数据，然后把数据传到buffer1缓冲区中
+                //这里的buffer0就是上一个pass处理过的缓冲区数据了
                 Graphics.Blit(buffer0, buffer1, material, 1);
 
                 RenderTexture.ReleaseTemporary(buffer0);
                 buffer0 = buffer1;
             }
 
+            //把buffer0，绘制到dest，其实就是一个屏幕大小的矩形
             Graphics.Blit(buffer0, dest);
-            RenderTexture.ReleaseTemporary(buffer0);
+            RenderTexture.ReleaseTemporary(buffer0);  //最后一定要解绑
         }
         else
         {

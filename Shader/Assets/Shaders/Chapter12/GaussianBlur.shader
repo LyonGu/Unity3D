@@ -66,6 +66,8 @@
 		ZTest Always Cull Off ZWrite Off
 		
 		Pass {
+
+			//给这个pass定义一个名字，可以在其他shader里调用
 			NAME "GAUSSIAN_BLUR_VERTICAL"
 			
 			CGPROGRAM
@@ -77,6 +79,7 @@
 		}
 		
 		Pass {  
+			//给这个pass定义一个名字，可以在其他shader里调用
 			NAME "GAUSSIAN_BLUR_HORIZONTAL"
 			
 			CGPROGRAM  

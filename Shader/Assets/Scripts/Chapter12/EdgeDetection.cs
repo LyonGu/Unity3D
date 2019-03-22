@@ -34,7 +34,7 @@ public class EdgeDetection : PostEffectsBase
             material.SetColor("_EdgeColor", edgeColor);
             material.SetColor("_BackgroundColor", backgroundColor);
 
-            //把屏幕纹理src传进shader里_MainTex属性
+            //把屏幕纹理src传进shader里_MainTex属性，绘制到dest，其实就是一个屏幕大小的矩形
             Graphics.Blit(src, dest, material);
         }
         else
