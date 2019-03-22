@@ -79,7 +79,7 @@ public class GaussianBlur : PostEffectsBase
             RenderTexture buffer0 = RenderTexture.GetTemporary(rtW, rtH, 0);
             buffer0.filterMode = FilterMode.Bilinear;
 
-            //把src图像数据缩放后存到buffer0中，调用所有的Pass
+            //把src图像数据缩放后存到buffer0中，因为没有传材质，只是单纯的初始化buffer0
             Graphics.Blit(src, buffer0);
 
             for (int i = 0; i < iterations; i++)
