@@ -1,4 +1,4 @@
-﻿Shader "Unity Shaders Book/Common/Bumped Specular" {
+﻿Shader "Shaders/Common/Bumped Specular" {
 	Properties {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
