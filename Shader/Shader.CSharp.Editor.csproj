@@ -314,6 +314,7 @@
     <None Include="Assets\Shaders\Chapter5\SimpleShader_1.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_2.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_3.shader" />
+    <None Include="Assets\Shaders\Chapter5\SimpleShader_4.shader" />
     <None Include="Assets\Shaders\Chapter6\Blinn-Phong.shader" />
     <None Include="Assets\Shaders\Chapter6\Blinn-PhongUse Built-in Functions.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffusePiexlHalfLambert.shader" />
