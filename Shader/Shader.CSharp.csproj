@@ -293,6 +293,8 @@
     <Compile Include="Assets\Scripts\Chapter13\FogWithDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Chapter13\MotionBlurWithDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Chapter5\ColorPicker.cs" />
+    <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
+    <Compile Include="Assets\Scripts\Helpers\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\Helpers\Rotating.cs" />
     <Compile Include="Assets\Scripts\Helpers\SetPropertyAttribute.cs" />
   </ItemGroup>
@@ -338,6 +340,13 @@
     <None Include="Assets\PostProcessing\Resources\Shaders\Uber.shader" />
     <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
     <None Include="Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
+    <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
     <None Include="Assets\Shaders\Chapter10\Fresnel.shader" />
     <None Include="Assets\Shaders\Chapter10\GlassRefraction.shader" />
     <None Include="Assets\Shaders\Chapter10\Mirror.shader" />

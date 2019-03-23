@@ -29,6 +29,7 @@ public class MotionBlur : PostEffectsBase {
 				DestroyImmediate(accumulationTexture);
 				accumulationTexture = new RenderTexture(src.width, src.height, 0);
 				accumulationTexture.hideFlags = HideFlags.HideAndDontSave;
+                //把src图像数据缩放后存到buffer0中，因为没有传材质，只是单纯的初始化buffer0
 				Graphics.Blit(src, accumulationTexture);
 			}
 
