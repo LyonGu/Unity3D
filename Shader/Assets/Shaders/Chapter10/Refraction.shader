@@ -50,18 +50,24 @@
 				SHADOW_COORDS(4)
 			};
 
-			v2f vert(a2v i){
+			v2f vert(a2v v){
 				v2f o;
-				o.pos = UnityObjectToClipPos(i.vertex);
-				o.worldNormal = UnityObjectToWorldNormal(i.normal);
+				o.pos = UnityObjectToClipPos(v.vertex);
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
-				o.worldPos = mul(unity_ObjectToWorld, i.vertex).xyz;
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 				o.worldViewDir = UnityWorldSpaceViewDir(o.worldPos);
 
 				//计算折射向量 reflect(-视线方向，法线方向)
 				o.worldRefr = refract(-normalize(o.worldViewDir), normalize(o.worldNormal), _RefractRatio);
 
+				//使用TRANSFER_SHADOW 注意：
+					// 1 必须保证a2v中顶点坐标名为vertex 
+					// 2 顶点着色器的输入形参名必须为v
+					// 3 v2f的顶点变量名必须为pos
+
+					//总结下：a2v中必须要有vertex表示顶点位置 v2f中必须有pos表是裁剪空间的位置 形参必须得是v
 				TRANSFER_SHADOW(o);
 				return o;
 

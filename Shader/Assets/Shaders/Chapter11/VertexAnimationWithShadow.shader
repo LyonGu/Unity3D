@@ -93,7 +93,7 @@
 				offset.yzw = float3(0.0, 0.0, 0.0);
 				offset.x = sin(_Frequency * _Time.y + v.vertex.x * _InvWaveLength + v.vertex.y * _InvWaveLength + v.vertex.z * _InvWaveLength) * _Magnitude;
 				v.vertex = v.vertex + offset;
-
+				
 				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
 				
 				return o;

@@ -65,6 +65,12 @@
                 o.TtoW1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);  
                 o.TtoW2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);  
   				
+  				//使用TRANSFER_SHADOW 注意：
+					// 1 必须保证a2v中顶点坐标名为vertex 
+					// 2 顶点着色器的输入形参名必须为v
+					// 3 v2f的顶点变量名必须为pos
+
+					//总结下：a2v中必须要有vertex表示顶点位置 v2f中必须有pos表是裁剪空间的位置 形参必须得是v
   				TRANSFER_SHADOW(o);
 			 	
 			 	return o;
@@ -153,6 +159,12 @@
 			  	o.TtoW1 = float4(worldTangent.y, worldBinormal.y, worldNormal.y, worldPos.y);
 			  	o.TtoW2 = float4(worldTangent.z, worldBinormal.z, worldNormal.z, worldPos.z);  
 			 	
+			 	//使用TRANSFER_SHADOW 注意：
+					// 1 必须保证a2v中顶点坐标名为vertex 
+					// 2 顶点着色器的输入形参名必须为v
+					// 3 v2f的顶点变量名必须为pos
+
+					//总结下：a2v中必须要有vertex表示顶点位置 v2f中必须有pos表是裁剪空间的位置 形参必须得是v
 			 	TRANSFER_SHADOW(o);
 			 	
 			 	return o;

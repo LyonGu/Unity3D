@@ -42,13 +42,20 @@
 				SHADOW_COORDS(2)  //声明一个用于阴影纹理采样的坐标，2就是下一个采样纹理的索引值 TEXCOORD2
 			};
 
-			v2f vert(a2v i){
+			v2f vert(a2v v){
 				v2f o;
-				o.pos = UnityObjectToClipPos(i.vertex);
-				o.worldNormal = UnityObjectToWorldNormal(i.normal);
-				o.worldPos = mul(unity_ObjectToWorld, i.vertex).xyz;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 				//计算声明的阴影纹理坐标
+
+				//使用TRANSFER_SHADOW 注意：
+					// 1 必须保证a2v中顶点坐标名为vertex 
+					// 2 顶点着色器的输入形参名必须为v
+					// 3 v2f的顶点变量名必须为pos
+
+					//总结下：a2v中必须要有vertex表示顶点位置 v2f中必须有pos表是裁剪空间的位置 形参必须得是v
 			 	TRANSFER_SHADOW(o);
 
 				return o;
