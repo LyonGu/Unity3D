@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SpecularPixelLevelMat
-  m_Shader: {fileID: 4800000, guid: 1a0a734aa8d366f45a0f6b5414b369ce, type: 3}
-  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_Name: BumpedDiffuse
+  m_Shader: {fileID: 4800000, guid: 49aacf21ebac04f4da838b6fc982da24, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -19,7 +19,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 5cc32e667b3dc174ebd102cd7b6d2b0d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 62ea63551f14847d18f8f258f74e14d8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -39,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f9c6074c5a78e71448f9efd3013cadda, type: 3}
+        m_Texture: {fileID: 2800000, guid: d938a66d993e948deaed0109b1217675, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -59,7 +59,6 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Gloss: 8
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -74,6 +73,4 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Diffuse: {r: 0.7941176, g: 0.1342993, b: 0.1342993, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Specular: {r: 1, g: 1, b: 1, a: 1}

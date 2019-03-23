@@ -58,6 +58,7 @@
 				o.worldViewDir = UnityWorldSpaceViewDir(o.worldPos);
 
 				//计算反射向量 reflect(-视线方向，法线方向)
+				// == reflect(-光的方向，法线方向)
 				o.worldRefl = reflect(-o.worldViewDir, o.worldNormal);
 
 				//使用TRANSFER_SHADOW 注意：

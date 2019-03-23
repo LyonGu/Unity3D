@@ -77,6 +77,7 @@
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {
+
 				float3 worldPos = float3(i.TtoW0.w, i.TtoW1.w, i.TtoW2.w);
 				fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
