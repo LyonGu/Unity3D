@@ -1,4 +1,4 @@
-﻿Shader "Unity Shaders Book/Common/Bumped Diffuse" {
+﻿Shader "Shaders/Common/BumpedDiffuse" {
 	Properties {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
