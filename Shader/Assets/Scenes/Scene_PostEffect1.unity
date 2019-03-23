@@ -758,7 +758,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
   m_LocalRotation: {x: 0.26870626, y: -0.0010068553, z: -0.011848272, w: 0.9631488}
-  m_LocalPosition: {x: 0, y: 5.71, z: -16.97}
+  m_LocalPosition: {x: -0.64, y: 4.96, z: -16.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -826,16 +826,16 @@ MonoBehaviour:
   edgesOnly: 0
   edgeColor: {r: 0.5585849, g: 0.88235295, b: 0.5320069, a: 1}
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  sampleDistance: 0.65
-  sensitivityDepth: 3.43
-  sensitivityNormals: 0
+  sampleDistance: 1
+  sensitivityDepth: 0.5
+  sensitivityNormals: 0.5
 --- !u!114 &1838242762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5826f83d1151954287986ed07d0d08e, type: 3}
   m_Name: 
@@ -1049,6 +1049,10 @@ Prefab:
     - target: {fileID: 400326, guid: 4a8b1747bab456d44bc659d857e8385d, type: 3}
       propertyPath: m_LocalScale.z
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100326, guid: 4a8b1747bab456d44bc659d857e8385d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4a8b1747bab456d44bc659d857e8385d, type: 3}
