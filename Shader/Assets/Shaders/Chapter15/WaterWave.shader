@@ -1,11 +1,11 @@
-﻿Shader "Shaders/Chapter15/WaterWave"
+Shader "Shaders/Chapter15/WaterWave"
 {
 	Properties
 	{
 		_Color ("Main Color", Color) = (0, 0.15, 0.115, 1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 
-		//法线图或者高度图
+		//法线图或者高度图 噪点图
 		_WaveMap ("Wave Map", 2D) = "bump" {}
 
 		//环境贴图

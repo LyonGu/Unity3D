@@ -100,7 +100,7 @@
 
 				fixed4 frag(v2f o):SV_Target{
 					
-					//透明图直接丢弃像素
+					//透明图直接丢弃
 					fixed4 textureColor = tex2D(_MainTex, o.uvMainTex);
 					float a = textureColor.a;
 					if (a < 0.1) {

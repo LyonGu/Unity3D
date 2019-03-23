@@ -293,6 +293,7 @@
     <Compile Include="Assets\Scripts\Chapter13\FogWithDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Chapter13\MotionBlurWithDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Chapter15\BurnHelper.cs" />
+    <Compile Include="Assets\Scripts\Chapter15\FogWithNoise.cs" />
     <Compile Include="Assets\Scripts\Chapter5\ColorPicker.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlBaseActionControl.cs" />
@@ -367,6 +368,7 @@
     <None Include="Assets\Shaders\Chapter13\MotionBlurWithDepthTexture.shader" />
     <None Include="Assets\Shaders\Chapter14\ToonShading.shader" />
     <None Include="Assets\Shaders\Chapter15\Dissolve.shader" />
+    <None Include="Assets\Shaders\Chapter15\FogWithNoise.shader" />
     <None Include="Assets\Shaders\Chapter15\WaterWave.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />

@@ -1032,6 +1032,7 @@ GameObject:
   - component: {fileID: 1838242755}
   - component: {fileID: 1838242754}
   - component: {fileID: 1838242753}
+  - component: {fileID: 1838242758}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1109,6 +1110,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 36.713, y: -5.847, z: -4.5490003}
+--- !u!114 &1838242758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1838242752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5826f83d1151954287986ed07d0d08e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogShader: {fileID: 0}
+  fogDensity: 1
+  fogColor: {r: 1, g: 1, b: 1, a: 1}
+  fogStart: 0
+  fogEnd: 2
+  noiseTexture: {fileID: 0}
+  fogXSpeed: 0.1
+  fogYSpeed: 0.1
+  noiseAmount: 1
 --- !u!1 &1970020300
 GameObject:
   m_ObjectHideFlags: 0
