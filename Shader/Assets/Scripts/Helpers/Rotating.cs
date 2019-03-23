@@ -13,6 +13,6 @@ public class Rotating : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float angle = Time.deltaTime * speed;
-		transform.Rotate(new Vector3(angle, angle, angle));
+		transform.Rotate(new Vector3(0, angle, 0));
 	}
 }

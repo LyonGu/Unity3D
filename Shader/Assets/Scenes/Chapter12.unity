@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gaussianBlurShader: {fileID: 4800000, guid: 27ee0436d3099394e9a03977aba590ac, type: 3}
-  iterations: 0
+  iterations: 2
   blurSpread: 1.05
   downSample: 2
 --- !u!114 &424957488
