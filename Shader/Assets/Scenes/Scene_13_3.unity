@@ -681,6 +681,8 @@ GameObject:
   - component: {fileID: 1838242753}
   - component: {fileID: 1838242758}
   - component: {fileID: 1838242760}
+  - component: {fileID: 1838242759}
+  - component: {fileID: 1838242761}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -764,16 +766,31 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0abeaa60fa8094b838d0612e65658ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fogShader: {fileID: 4800000, guid: 614a560f42bec904c8322487a40d77b7, type: 3}
-  fogDensity: 1.2
+  fogDensity: 0.69
   fogColor: {r: 0.6997255, g: 0.7058823, b: 0.6955017, a: 1}
-  fogStart: -1.5
+  fogStart: 0
   fogEnd: 3
+--- !u!114 &1838242759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1838242752}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b54da0b6d1ab249bc683a3a7ac7f1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  edgeDetectShader: {fileID: 4800000, guid: d19af569a02eea348bb2541e3e5bcaf7, type: 3}
+  edgesOnly: 0
+  edgeColor: {r: 0, g: 0, b: 0, a: 1}
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1838242760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,6 +807,24 @@ MonoBehaviour:
   endPoint: {x: 0, y: 6, z: -10}
   lookAt: {x: 0, y: -0.4, z: -1.5}
   pingpong: 1
+--- !u!114 &1838242761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1838242752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6cf85ac5d7b144daf3c4f58d07bd58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  edgeDetectShader: {fileID: 4800000, guid: dc955a4462180de42aaa42b0a5c7cfeb, type: 3}
+  edgesOnly: 0
+  edgeColor: {r: 0, g: 0, b: 0, a: 1}
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  sampleDistance: 1
+  sensitivityDepth: 1
+  sensitivityNormals: 1
 --- !u!1 &1927954593
 GameObject:
   m_ObjectHideFlags: 0

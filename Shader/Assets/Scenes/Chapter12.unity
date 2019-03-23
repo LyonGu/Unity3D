@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edgeDetectShader: {fileID: 4800000, guid: d19af569a02eea348bb2541e3e5bcaf7, type: 3}
-  edgesOnly: 0.182
+  edgesOnly: 0
   edgeColor: {r: 0, g: 0, b: 0, a: 1}
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &424957487
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 424957480}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60e849f8785bc0a429beaa791f270b88, type: 3}
   m_Name: 
