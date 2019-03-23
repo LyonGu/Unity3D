@@ -389,6 +389,7 @@
     <None Include="Assets\Shaders\Chapter12\EdgeDetection.shader" />
     <None Include="Assets\Shaders\Chapter12\GaussianBlur.shader" />
     <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
+    <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />
     <None Include="Assets\Shaders\Chapter13\MotionBlurWithDepthTexture.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />
