@@ -46,33 +46,93 @@
 				float3 viewDir 	: TEXCOORD2;
 			};
 
-			v2f vert(a2v i){
+			float4x4 inverse(float4x4 input) {
+				#define minor(a,b,c) determinant(float3x3(input.a, input.b, input.c))
+				
+				float4x4 cofactors = float4x4(
+				     minor(_22_23_24, _32_33_34, _42_43_44), 
+				    -minor(_21_23_24, _31_33_34, _41_43_44),
+				     minor(_21_22_24, _31_32_34, _41_42_44),
+				    -minor(_21_22_23, _31_32_33, _41_42_43),
+				    
+				    -minor(_12_13_14, _32_33_34, _42_43_44),
+				     minor(_11_13_14, _31_33_34, _41_43_44),
+				    -minor(_11_12_14, _31_32_34, _41_42_44),
+				     minor(_11_12_13, _31_32_33, _41_42_43),
+				    
+				     minor(_12_13_14, _22_23_24, _42_43_44),
+				    -minor(_11_13_14, _21_23_24, _41_43_44),
+				     minor(_11_12_14, _21_22_24, _41_42_44),
+				    -minor(_11_12_13, _21_22_23, _41_42_43),
+				    
+				    -minor(_12_13_14, _22_23_24, _32_33_34),
+				     minor(_11_13_14, _21_23_24, _31_33_34),
+				    -minor(_11_12_14, _21_22_24, _31_32_34),
+				     minor(_11_12_13, _21_22_23, _31_32_33)
+				);
+				#undef minor
+				return transpose(cofactors) / determinant(input);
+			}
+
+
+			v2f vert(a2v v){
 				v2f o;
-				o.pos = UnityObjectToClipPos(i.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 
 				//实际上_MainTex 和 _BumoMap使用同一组纹理坐标
-				o.uv.xy = i.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
-				o.uv.zw = i.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
+				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
 
 				
-				//法线贴图中的法线向量在切线空间中，法线永远指着正z方向
-				//直接使用TBN矩阵：这个矩阵可以把切线坐标空间的向量转换到世界坐标空间
-				//TBN矩阵的逆矩阵：把世界坐标空间的向量转换到切线坐标空间
+				//我们要得出从世界空间到切线空间的转换矩阵TBN，然后把世界空间下的光方向和视觉方向
+				//都转到切线空间，所以我们可以先求出TBN的逆矩阵，即从切线空间到世界空间的转换矩阵TBN_I
 
+				///
+				/// Note that the code below can handle both uniform and non-uniform scales
+				///
+
+				//考虑了非线性缩放和线性缩放
+
+				//构建一个从切线空间到世界空间的矩阵，因为用的都是世界空间的信息，所以只能转到世界空间
+				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);  
+				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);  
 				//计算副切线
-				float3 binormal = cross(normalize(i.normal),normalize(i.tangent.xyz)) * i.tangent.w;
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w; 
 
-				//构建TBN矩阵：从模型空间转到切线空间
-				//i.normal信息是模型空间的法线信息，所以只能够能从模型空间转向切线空间的矩阵
+				/*
+				float4x4 tangentToWorld = float4x4(worldTangent.x, worldBinormal.x, worldNormal.x, 0.0,
+												   worldTangent.y, worldBinormal.y, worldNormal.y, 0.0,
+												   worldTangent.z, worldBinormal.z, worldNormal.z, 0.0,
+												   0.0, 0.0, 0.0, 1.0);
+				// The matrix that transforms from world space to tangent space is inverse of tangentToWorld
 
-				float3x3 rotation = float3x3(i.tangent.xyz, binormal, i.normal);
+				//取反操作，得到TBN
+				float3x3 worldToTangent = inverse(tangentToWorld);
+				*/
+				
+				//wToT = the inverse of tToW = the transpose of tToW as long as tToW is an orthogonal matrix.
+				float3x3 worldToTangent = float3x3(worldTangent, worldBinormal, worldNormal);
 
-				//把光的方向转到切线空间
-				o.lightDir = mul(rotation, ObjSpaceLightDir(i.vertex)).xyz;
+				// Transform the light and view dir from world space to tangent space
+				o.lightDir = mul(worldToTangent, WorldSpaceLightDir(v.vertex));
+				o.viewDir = mul(worldToTangent, WorldSpaceViewDir(v.vertex));
 
-				//把视觉方向转到切线空间
-				o.viewDir = mul(rotation, ObjSpaceViewDir(i.vertex)).xyz;
-
+				///
+				/// Note that the code below can only handle uniform scales, not including non-uniform scales
+				/// 
+				// 下面的代码考虑非线性缩放
+				// Compute the binormal
+//				float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) ) * v.tangent.w;
+//				// Construct a matrix which transform vectors from object space to tangent space
+//				float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
+				// Or just use the built-in macro
+//				TANGENT_SPACE_ROTATION;
+//				
+//				// Transform the light direction from object space to tangent space
+//				o.lightDir = mul(rotation, normalize(ObjSpaceLightDir(v.vertex))).xyz;
+//				// Transform the view direction from object space to tangent space
+//				o.viewDir = mul(rotation, normalize(ObjSpaceViewDir(v.vertex))).xyz;
+				
 				return o;
 
 			}
