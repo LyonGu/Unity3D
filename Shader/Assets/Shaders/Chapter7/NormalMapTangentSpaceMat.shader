@@ -120,7 +120,7 @@
 				///
 				/// Note that the code below can only handle uniform scales, not including non-uniform scales
 				/// 
-				// 下面的代码考虑非线性缩放
+				// 下面的代码未考虑非线性缩放
 				// Compute the binormal
 //				float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) ) * v.tangent.w;
 //				// Construct a matrix which transform vectors from object space to tangent space

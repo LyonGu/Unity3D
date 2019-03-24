@@ -103,14 +103,13 @@
 					//透明图直接丢弃
 					fixed4 textureColor = tex2D(_MainTex, o.uvMainTex);
 					float a = textureColor.a;
-					if (a < 0.1) {
-						discard;
-					}
+					clip (a - 0.1);
+				
 					//得到噪点值
 					fixed3 burn = tex2D(_BurnMap, o.uvBurnMap).rgb;
 
 					//如果 如果burn.r<_BurnAmount 就丢弃
-					clip(burn.r - _BurnAmount);
+					clip(burn.r - _BurnAmount-0.1);
 
 					float3 tangentLightDir = normalize(o.lightDir);
 					fixed3 tangentNormal = UnpackNormal(tex2D(_BumpMap, o.uvBumpMap));

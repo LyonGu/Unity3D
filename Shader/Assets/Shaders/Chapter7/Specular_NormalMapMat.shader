@@ -51,31 +51,17 @@
 				float3 viewDir 	: TEXCOORD2;
 			};
 
-			v2f vert(a2v i){
+			v2f vert(a2v v){
 				v2f o;
-				o.pos = UnityObjectToClipPos(i.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 
 				//实际上_MainTex 和 _BumoMap使用同一组纹理坐标
-				o.uv.xy = i.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
-				
-				//法线贴图中的法线向量在切线空间中，法线永远指着正z方向
-				//直接使用TBN矩阵：这个矩阵可以把切线坐标空间的向量转换到世界坐标空间
-				//TBN矩阵的逆矩阵：把世界坐标空间的向量转换到切线坐标空间
-
-				//计算副切线
-				float3 binormal = cross(normalize(i.normal),normalize(i.tangent.xyz)) * i.tangent.w;
-
-				//构建TBN矩阵：从模型空间转到切线空间
-				//i.normal信息是模型空间的法线信息，所以只能够能从模型空间转向切线空间的矩阵
-
-				float3x3 rotation = float3x3(i.tangent.xyz, binormal, i.normal);
-				
-				//把光的方向转到切线空间
-				o.lightDir = mul(rotation, ObjSpaceLightDir(i.vertex)).xyz;
-
-				//把视觉方向转到切线空间
-				o.viewDir = mul(rotation, ObjSpaceViewDir(i.vertex)).xyz;
+				//从模型空间转到切线空间 有问题 ，未考虑非线性缩放，参考NormalMapTangentSpaceMat代码
+				TANGENT_SPACE_ROTATION;
+				o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex)).xyz;
+				o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex)).xyz;
 
 				return o;
 			}
