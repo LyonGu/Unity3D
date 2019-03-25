@@ -401,6 +401,8 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_attenuation_Infunction.shader" />
     <None Include="Assets\Shaders\Common\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
+    <None Include="Assets\Shaders\Common\OutLine.shader" />
+    <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
