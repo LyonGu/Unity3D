@@ -47,7 +47,7 @@
 	            {
 	                float4 pos   : SV_POSITION;
 	                fixed4 color    : COLOR;       //顶点颜色
-	                float2 texcoord  : TEXCOORD0;
+	                float2 uv[5]  : TEXCOORD0;
 	            };
 
 			
@@ -55,26 +55,33 @@
 	            {
 	                v2f o;
 	                o.pos = UnityObjectToClipPos(v.vertex);
-	                o.texcoord = v.texcoord;
+	                float2 uv = v.texcoord;
+	                o.uv[0] = uv;
 	                o.color = v.color * _Color;
 	                #ifdef PIXELSNAP_ON
 	                	o.pos = UnityPixelSnap (o.pos);
 	                #endif
+
+	                //提前把领边UV坐标给拿到
+	                o.uv[1] = uv + _MainTex_TexelSize.xy * half2(0, _LineWidth);
+					o.uv[2] = uv + _MainTex_TexelSize.xy * half2(0, -_LineWidth);
+					o.uv[3] = uv + _MainTex_TexelSize.xy * half2(_LineWidth, 0);
+					o.uv[4] = uv + _MainTex_TexelSize.xy * half2(-_LineWidth, 0);
 	                return o;
 	            }
 			
 
 			 	fixed4 frag(v2f o) : SV_Target
 	            {
-	            	fixed4 tex = tex2D(_MainTex, o.texcoord);
+	            	fixed4 tex = tex2D(_MainTex, o.uv[0]);
 	            	fixed a = tex.a;
 					clip(a-0.1);
 	                fixed4 c = tex * o.color;
 	                
-              		fixed4 pixelUp = tex2D(_MainTex, o.texcoord + fixed2(0, _MainTex_TexelSize.y*_LineWidth));  
-                    fixed4 pixelDown = tex2D(_MainTex, o.texcoord - fixed2(0, _MainTex_TexelSize.y*_LineWidth));  
-                    fixed4 pixelRight = tex2D(_MainTex, o.texcoord + fixed2(_MainTex_TexelSize.x*_LineWidth, 0));  
-                    fixed4 pixelLeft = tex2D(_MainTex, o.texcoord - fixed2(_MainTex_TexelSize.x*_LineWidth, 0)); 
+              		fixed4 pixelUp    = tex2D(_MainTex, o.uv[1]);  
+                    fixed4 pixelDown  = tex2D(_MainTex, o.uv[2]);  
+                    fixed4 pixelRight = tex2D(_MainTex, o.uv[3]);  
+                    fixed4 pixelLeft  = tex2D(_MainTex, o.uv[4]); 
 
                     //step(parm1,parm2)  parm2>parm1 返回1 否则返回0
                     float bOut = step((1-_CheckAccuracy),pixelUp.a*pixelDown.a*pixelRight.a*pixelLeft.a);
