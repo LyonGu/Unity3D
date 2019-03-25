@@ -436,6 +436,7 @@
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
+    <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
     <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
