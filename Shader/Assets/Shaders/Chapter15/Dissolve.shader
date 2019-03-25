@@ -5,7 +5,7 @@
 		//消融程度
 		_BurnAmount ("Burn Amount", Range(0.0,1.0)) = 0.0
 		//燃烧时线宽
-		_LineWidth ("Burn Line Width", Range(0.0,0.2)) = 0.1
+		_LineWidth ("Burn Line Width", Range(0.0,0.5)) = 0.2
 
 		//漫反射贴图
 		_MainTex ("Base (RGB)", 2D) = "white" {}
