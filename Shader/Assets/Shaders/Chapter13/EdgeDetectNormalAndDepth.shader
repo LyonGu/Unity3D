@@ -1,104 +1,99 @@
-﻿Shader "Shaders/Chapter13/EdgeDetectionNormalsAndDepth" {
-	Properties {
-		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_EdgeOnly ("Edge Only", Float) = 1.0
-		_EdgeColor ("Edge Color", Color) = (0, 0, 0, 1)
-		_BackgroundColor ("Background Color", Color) = (1, 1, 1, 1)
-		_SampleDistance ("Sample Distance", Float) = 1.0
-		_Sensitivity ("Sensitivity", Vector) = (1, 1, 1, 1)
+Shader "Shaders/Chapter13/MotionBlurWithDepthTexture"
+{
+	Properties
+	{
+		_MainTex ("Base (RGB)", 2D) = "white" {}  //一定要有_MainTex属性
+		_BlurSize ("Blur Size", Float) = 1.0
 	}
-	SubShader {
+	SubShader
+	{
+		Tags { "RenderType"="Opaque" }
 		CGINCLUDE
-		
-		#include "UnityCG.cginc"
-		
-		sampler2D _MainTex;
-		half4 _MainTex_TexelSize; //么个纹素的大小 1/512，一般用于对领域像素采样
-		fixed _EdgeOnly;
-		fixed4 _EdgeColor;
-		fixed4 _BackgroundColor;
-		float _SampleDistance;
-		half4 _Sensitivity;
-		
-		sampler2D _CameraDepthNormalsTexture; //unity自带 深度+法线纹理
-		
-		struct v2f {
-			float4 pos : SV_POSITION;
-			half2 uv[5]: TEXCOORD0;
-		};
-		  
-		v2f vert(appdata_img v) {
-			v2f o;
-			o.pos = UnityObjectToClipPos(v.vertex);
+
+			#include "UnityCG.cginc"
 			
-			half2 uv = v.texcoord;
-			o.uv[0] = uv;
+			sampler2D _MainTex;
+			half4 _MainTex_TexelSize;
+			half _BlurSize;
+
+			//虽然Properties里没有声明属性，但是也能自己添加，外部可以传进来
+			//_CameraDepthTexture是Unity专门用来存储深度信息的贴图
+			sampler2D _CameraDepthTexture;
+			float4x4 _CurrentViewProjectionInverseMatrix;
+			float4x4 _PreviousViewProjectionMatrix;
 			
-			#if UNITY_UV_STARTS_AT_TOP
-			if (_MainTex_TexelSize.y < 0)
-				uv.y = 1 - uv.y;
-			#endif
-			
-			//在顶点着色器里存储要采样的邻域纹理坐标，比放到像素着色器里效率高
-			o.uv[1] = uv + _MainTex_TexelSize.xy * half2(1,1) * _SampleDistance;
-			o.uv[2] = uv + _MainTex_TexelSize.xy * half2(-1,-1) * _SampleDistance;
-			o.uv[3] = uv + _MainTex_TexelSize.xy * half2(-1,1) * _SampleDistance;
-			o.uv[4] = uv + _MainTex_TexelSize.xy * half2(1,-1) * _SampleDistance;
-					 
-			return o;
-		}
-		
-		//center 深度法线信息 ：xy视觉空间下法线信息 zw深度信息，都是线性的
-		half CheckSame(half4 center, half4 sample) {
-			half2 centerNormal = center.xy;
-			float centerDepth = DecodeFloatRG(center.zw);
-			half2 sampleNormal = sample.xy;
-			float sampleDepth = DecodeFloatRG(sample.zw);
-			
-			// difference in normals
-			// do not bother decoding normals - there's no need here
-			half2 diffNormal = abs(centerNormal - sampleNormal) * _Sensitivity.x;
-			int isSameNormal = (diffNormal.x + diffNormal.y) < 0.1;
-			// difference in depth
-			float diffDepth = abs(centerDepth - sampleDepth) * _Sensitivity.y;
-			// scale the required threshold by the distance
-			int isSameDepth = diffDepth < 0.1 * centerDepth;
-			
-			// return:
-			// 1 - if normals and depth are similar enough
-			// 0 - otherwise
-			return isSameNormal * isSameDepth ? 1.0 : 0.0;
-		}
-		
-		fixed4 fragRobertsCrossDepthAndNormal(v2f i) : SV_Target {
-			half4 sample1 = tex2D(_CameraDepthNormalsTexture, i.uv[1]);
-			half4 sample2 = tex2D(_CameraDepthNormalsTexture, i.uv[2]);
-			half4 sample3 = tex2D(_CameraDepthNormalsTexture, i.uv[3]);
-			half4 sample4 = tex2D(_CameraDepthNormalsTexture, i.uv[4]);
-			
-			half edge = 1.0;
-			
-			edge *= CheckSame(sample1, sample2);
-			edge *= CheckSame(sample3, sample4);
-			
-			fixed4 withEdgeColor = lerp(_EdgeColor, tex2D(_MainTex, i.uv[0]), edge);
-			fixed4 onlyEdgeColor = lerp(_EdgeColor, _BackgroundColor, edge);
-			
-			return lerp(withEdgeColor, onlyEdgeColor, _EdgeOnly);
-		}
-		
+			struct v2f {
+				float4 pos : SV_POSITION;
+				half2 uv : TEXCOORD0;
+				half2 uv_depth : TEXCOORD1; //深度纹理的采样坐标
+			};
+
+			v2f vert(appdata_img v) {
+				v2f o;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				
+				o.uv = v.texcoord;
+				o.uv_depth = v.texcoord;
+				
+				#if UNITY_UV_STARTS_AT_TOP
+				if (_MainTex_TexelSize.y < 0)
+					o.uv_depth.y = 1 - o.uv_depth.y;
+				#endif
+						 
+				return o;
+			}
+
+			fixed4 frag(v2f i) : SV_Target {
+				// SAMPLE_DEPTH_TEXTURE从深度贴图里采样出深度信息，这里的深度信息是非线性的
+				// 因为在投影矩阵下会有裁剪操作
+				float d = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv_depth);
+				#if defined(UNITY_REVERSED_Z)
+					d = 1.0 - d;
+				#endif
+
+				// 把UV坐标转换到[-1,1] ？？？？？
+				float4 H = float4(i.uv.x * 2 - 1, i.uv.y * 2 - 1, d * 2 - 1, 1);
+
+				// 把像素坐标H转到世界空间
+				float4 D = mul(_CurrentViewProjectionInverseMatrix, H);
+
+				// 进行透视化处理
+				float4 worldPos = D / D.w;
+				
+				// Current viewport position 
+				float4 currentPos = H;
+				// Use the world position, and transform by the previous view-projection matrix.  
+				float4 previousPos = mul(_PreviousViewProjectionMatrix, worldPos);
+				// Convert to nonhomogeneous points [-1,1] by dividing by w.
+				previousPos /= previousPos.w;
+				
+				// Use this frame's position and last frame's to compute the pixel velocity.
+				float2 velocity = (currentPos.xy - previousPos.xy)/2.0;
+				
+				float2 uv = i.uv;
+				float4 c = tex2D(_MainTex, uv);
+				uv += velocity * _BlurSize;
+				for (int it = 1; it < 3; it++, uv += velocity * _BlurSize) {
+					float4 currentColor = tex2D(_MainTex, uv);
+					c += currentColor;
+				}
+				c /= 3;
+				
+				return fixed4(c.rgb, 1.0);
+			}
+
 		ENDCG
-		
-		Pass { 
+
+		Pass {      
 			ZTest Always Cull Off ZWrite Off
-			
-			CGPROGRAM      
+			    	
+			CGPROGRAM  
 			
 			#pragma vertex vert  
-			#pragma fragment fragRobertsCrossDepthAndNormal
-			
+			#pragma fragment frag  
+			  
 			ENDCG  
 		}
-	} 
+	}
 	FallBack Off
 }

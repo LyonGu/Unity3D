@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter8/AlphaTestMat"
+Shader "Shaders/Chapter8/AlphaTestMat"
 {
 	//单纯进行alpha测试
 	Properties
@@ -43,6 +43,8 @@
 				v2f o;
 				o.pos = UnityObjectToClipPos(i.vertex);
 
+				fixed4 texColor = tex2D(_MainTex, i.texcoord);
+
 				//世界空间法线
 				float3 worldNormal = UnityObjectToWorldNormal(i.normal);
 				o.worldNormal = worldNormal;
@@ -57,7 +59,7 @@
 			}
 
 			fixed4 frag(v2f v): SV_Target{
-
+				float4 clipPos = v.pos;
 				fixed3 worldNormal = normalize(v.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
 
