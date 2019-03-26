@@ -23,10 +23,6 @@ public class SpriteAnimatin : MonoBehaviour {
     public Sprite _sprite;
 
     private SpriteAnimatinManger _manger;
- 
-
-
-	// Use this for initialization
 
     void Awake()
     {
@@ -97,10 +93,6 @@ public class SpriteAnimatin : MonoBehaviour {
         StartCoroutine("PlayAnimationForwardIEnum");
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     private IEnumerator PlayAnimationForwardIEnum()
     {
@@ -158,5 +150,15 @@ public class SpriteAnimatin : MonoBehaviour {
     public void setSpeed(float speed)
     {
         _speed = speed;
+    }
+
+    public void stop()
+    {
+        _isStop = true;
+    }
+
+    public void setLoop(bool isLoop)
+    {
+        _isLoop = isLoop
     }
 }
