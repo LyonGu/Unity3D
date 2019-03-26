@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -159,6 +159,6 @@ public class SpriteAnimatin : MonoBehaviour {
 
     public void setLoop(bool isLoop)
     {
-        _isLoop = isLoop
+        _isLoop = isLoop;
     }
 }
