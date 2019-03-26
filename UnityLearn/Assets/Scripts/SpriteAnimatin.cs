@@ -114,7 +114,7 @@ public class SpriteAnimatin : MonoBehaviour {
                 _render.sprite = getCurrentSprite(index);
                 index++;
             }
-            yield return new WaitForSeconds(_interval * 1/_speed);//等待间隔  控制动画播放速度
+            yield return new WaitForSeconds(_interval * 1.0F/_speed);//等待间隔  控制动画播放速度
         }
     }
 
