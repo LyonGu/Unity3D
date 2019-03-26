@@ -1,0 +1,9 @@
+version: 2
+importPivots: 1
+tpsheetFileNames:
+- Assets/Resources/Plist/guanyu.tpsheet
+textureFileNames:
+- Assets/Resources/Plist/guanyu.png
+normalmapFileNames:
+- 
+enableDebugOutput: 0

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/Animation.unity
+- path: Assets/Scene/SpriteAnimation.unity
   isLoaded: 1
   isActive: 1

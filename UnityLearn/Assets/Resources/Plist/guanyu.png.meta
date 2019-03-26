@@ -1,0 +1,676 @@
+fileFormatVersion: 2
+guid: e4363e54d0150514b8b903830949dabd
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: guanyu_01_01_00
+    21300002: guanyu_01_01_01
+    21300004: guanyu_01_01_02
+    21300006: guanyu_01_01_03
+    21300008: guanyu_01_01_04
+    21300010: guanyu_01_01_05
+    21300012: guanyu_01_01_06
+    21300014: guanyu_01_01_07
+    21300016: guanyu_01_01_08
+    21300018: guanyu_01_01_09
+    21300020: guanyu_01_01_10
+    21300022: guanyu_01_01_11
+    21300024: guanyu_01_01_12
+    21300026: guanyu_01_01_13
+    21300028: guanyu_01_01_14
+    21300030: guanyu_01_01_15
+    21300032: guanyu_01_01_16
+    21300034: guanyu_01_01_17
+    21300036: guanyu_01_01_18
+    21300038: guanyu_01_01_19
+    21300040: guanyu_03_01_00
+    21300042: guanyu_03_01_01
+    21300044: guanyu_03_01_02
+    21300046: guanyu_03_01_03
+    21300048: guanyu_03_01_04
+    21300050: guanyu_03_01_05
+    21300052: guanyu_03_01_06
+    21300054: guanyu_03_01_07
+    21300056: guanyu_03_01_08
+    21300058: guanyu_03_01_09
+    21300060: guanyu_03_01_10
+    21300062: guanyu_03_01_11
+    21300064: guanyu_03_01_12
+    21300066: guanyu_03_01_13
+    21300068: guanyu_03_01_14
+    21300070: guanyu_03_01_15
+    21300072: guanyu_03_01_16
+    21300074: guanyu_03_01_17
+    21300076: guanyu_03_01_18
+    21300078: guanyu_03_01_19
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: guanyu_01_01_00
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 1586
+        width: 205
+        height: 225
+      alignment: 9
+      pivot: {x: 0.6780488, y: 0.32}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_01
+      rect:
+        serializedVersion: 2
+        x: 612
+        y: 1108
+        width: 195
+        height: 243
+      alignment: 9
+      pivot: {x: 0.6666667, y: 0.28806585}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_02
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 912
+        width: 191
+        height: 226
+      alignment: 9
+      pivot: {x: 0.65968585, y: 0.32743362}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_03
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 1531
+        width: 186
+        height: 231
+      alignment: 9
+      pivot: {x: 0.6505376, y: 0.32034633}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_04
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 670
+        width: 178
+        height: 232
+      alignment: 9
+      pivot: {x: 0.64606744, y: 0.34051725}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_05
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 880
+        width: 184
+        height: 226
+      alignment: 9
+      pivot: {x: 0.6576087, y: 0.30530974}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_06
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 1291
+        width: 190
+        height: 238
+      alignment: 9
+      pivot: {x: 0.66842103, y: 0.33193278}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_07
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 1100
+        width: 192
+        height: 236
+      alignment: 9
+      pivot: {x: 0.671875, y: 0.33050847}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_08
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 1353
+        width: 204
+        height: 231
+      alignment: 9
+      pivot: {x: 0.6813725, y: 0.32467532}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_09
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 1338
+        width: 199
+        height: 238
+      alignment: 9
+      pivot: {x: 0.6834171, y: 0.3277311}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_10
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 1578
+        width: 205
+        height: 235
+      alignment: 9
+      pivot: {x: 0.68292683, y: 0.32340425}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_11
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 1140
+        width: 199
+        height: 219
+      alignment: 9
+      pivot: {x: 0.6834171, y: 0.29223743}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_12
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 1813
+        width: 210
+        height: 234
+      alignment: 9
+      pivot: {x: 0.6952381, y: 0.32051283}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_13
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1356
+        width: 204
+        height: 228
+      alignment: 9
+      pivot: {x: 0.6960784, y: 0.2850877}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_14
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1586
+        width: 209
+        height: 231
+      alignment: 9
+      pivot: {x: 0.6937799, y: 0.3116883}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_15
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 1361
+        width: 202
+        height: 223
+      alignment: 9
+      pivot: {x: 0.6930693, y: 0.28699553}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_16
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 1815
+        width: 211
+        height: 232
+      alignment: 9
+      pivot: {x: 0.70616114, y: 0.31896552}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_17
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1819
+        width: 212
+        height: 228
+      alignment: 9
+      pivot: {x: 0.6981132, y: 0.31578946}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_18
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 1819
+        width: 212
+        height: 228
+      alignment: 9
+      pivot: {x: 0.7028302, y: 0.32456142}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_01_01_19
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 1586
+        width: 206
+        height: 231
+      alignment: 9
+      pivot: {x: 0.69417477, y: 0.32467532}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_00
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 436
+        width: 176
+        height: 232
+      alignment: 9
+      pivot: {x: 0.6306818, y: 0.31465518}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_01
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 904
+        width: 185
+        height: 233
+      alignment: 9
+      pivot: {x: 0.61621624, y: 0.3004292}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_02
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1139
+        width: 196
+        height: 215
+      alignment: 9
+      pivot: {x: 0.6020408, y: 0.21860465}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_03
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 517
+        width: 156
+        height: 224
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16517857}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_04
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 664
+        width: 178
+        height: 246
+      alignment: 9
+      pivot: {x: 0.3483146, y: 0.14227642}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_05
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 837
+        width: 180
+        height: 261
+      alignment: 9
+      pivot: {x: 0.42222223, y: 0.12260536}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_06
+      rect:
+        serializedVersion: 2
+        x: 809
+        y: 1023
+        width: 184
+        height: 266
+      alignment: 9
+      pivot: {x: 0.42391303, y: 0.11278196}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_07
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 743
+        width: 175
+        height: 278
+      alignment: 9
+      pivot: {x: 0.41714287, y: 0.118705034}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_08
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 1764
+        width: 168
+        height: 283
+      alignment: 9
+      pivot: {x: 0.42261904, y: 0.14134276}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_09
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 570
+        width: 166
+        height: 265
+      alignment: 9
+      pivot: {x: 0.43975905, y: 0.109433964}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_10
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 382
+        width: 162
+        height: 280
+      alignment: 9
+      pivot: {x: 0.41358024, y: 0.15357143}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_11
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 79
+        width: 131
+        height: 301
+      alignment: 9
+      pivot: {x: 0.4427481, y: 0.21262458}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_12
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 646
+        width: 167
+        height: 232
+      alignment: 9
+      pivot: {x: 0.61676645, y: 0.32327586}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_13
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 278
+        width: 135
+        height: 237
+      alignment: 9
+      pivot: {x: 0.56296295, y: 0.33333334}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_14
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 278
+        width: 137
+        height: 237
+      alignment: 9
+      pivot: {x: 0.54744524, y: 0.30379745}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_15
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 132
+        width: 129
+        height: 251
+      alignment: 9
+      pivot: {x: 0.5426357, y: 0.30278885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_16
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 129
+        width: 141
+        height: 254
+      alignment: 9
+      pivot: {x: 0.58156025, y: 0.30708662}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_17
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 385
+        width: 152
+        height: 259
+      alignment: 9
+      pivot: {x: 0.5855263, y: 0.3011583}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_18
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 172
+        width: 157
+        height: 262
+      alignment: 9
+      pivot: {x: 0.6178344, y: 0.2977099}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: guanyu_03_01_19
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 118
+        width: 154
+        height: 262
+      alignment: 9
+      pivot: {x: 0.5974026, y: 0.27480915}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
