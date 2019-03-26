@@ -41,7 +41,7 @@ public class SpriteAnimatinManger
         Object[] _atlas = _cacheMap[file];
         if (_atlas != null)
         {
-            for (int i = 1; i < _atlas.Length; i++)
+            for (int i = 0; i < _atlas.Length; i++)
             {
                 unloadAsset(_atlas[i]);
             }
