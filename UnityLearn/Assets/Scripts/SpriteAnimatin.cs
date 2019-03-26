@@ -42,7 +42,7 @@ public class SpriteAnimatin : MonoBehaviour {
 
     public Object[] addFileResource(string file)
     {
-         Object[] _atlas = _manger.LoadPlistResource(file);
+         Object[] _atlas = _manger.loadPlistResource(file);
          _file = _atlas[0].name;
          return _atlas;
     }

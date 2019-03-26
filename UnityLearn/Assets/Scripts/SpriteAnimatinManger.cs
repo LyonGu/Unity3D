@@ -25,7 +25,7 @@ public class SpriteAnimatinManger
         return _instance;
     }
 
-    public Object[] LoadPlistResource(string file)
+    public Object[] loadPlistResource(string file)
     {
         if (!_cacheMap.ContainsKey(file))
         {
