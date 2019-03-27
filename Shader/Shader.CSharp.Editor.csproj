@@ -523,6 +523,7 @@
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Surface\BasicDiffuse.shader" />
+    <None Include="Assets\Shaders\Surface\BasicDiffuseCustomLight.shader" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
