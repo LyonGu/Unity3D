@@ -593,6 +593,68 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &1960008812
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -1.123
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -4.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302342, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d7079656cd57c7d4da2d101772c8b092, type: 2}
+    - target: {fileID: 115882, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_Name
+      value: BasicDiffuseHalfLambert_RampTex2
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 460734, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: eaded31d9ef434e60bcdeded5e7a1768, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1964564853
 Prefab:
   m_ObjectHideFlags: 0
