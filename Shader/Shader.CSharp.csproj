@@ -323,7 +323,6 @@
     <Compile Include="Assets\Scripts\ShowNormals.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Cookbook\Chapter 01\Shaders\ErrorShader.shader" />
     <None Include="Assets\Cookbook\Chapter 01\Shaders\StandardDiffuse.shader" />
     <None Include="Assets\Cookbook\Chapter 01\Shaders\StandardDiffuse2.shader" />
     <None Include="Assets\Cookbook\Chapter 01\Shaders\StandardDiffuse3.shader" />
@@ -496,6 +495,8 @@
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Surface\BasicDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseCustomLight.shader" />
+    <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert.shader" />
+    <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex.shader" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

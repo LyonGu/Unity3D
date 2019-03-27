@@ -1,4 +1,4 @@
-﻿Shader "CookBookCustom/BasicDiffuseCustomLight" {
+﻿Shader "CookBookCustom/BasicDiffuseHalfLambert" {
 	Properties {
 	
 		//_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -41,6 +41,9 @@
 		inline fixed4 LightingBasicDiffus(SurfaceOutput s, fixed3 lightDir, fixed atten)
 		{
 			float difLight = max(0, dot (s.Normal, lightDir));
+
+			//半兰伯特光照模型
+			difLight = difLight * 0.5 + 0.5;
        	  	fixed4 col;
        	  	col.rgb = s.Albedo * _LightColor0.rgb * (difLight * atten * 2);
        	  	col.a = s.Alpha;

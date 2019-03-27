@@ -1,7 +1,7 @@
-﻿Shader "CookBookCustom/BasicDiffuseCustomLight" {
+﻿Shader "CookBookCustom/BasicDiffuseHalfLambert_RampTex" {
 	Properties {
 	
-		//_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_RampTex ("Ramp Texture", 2D) = "white" {}
 		_EmissiveColor ("Emissive Color", Color) = (1,1,1,1)
 		_AmbientColor ("Ambient Color", Color) = (1,1,1,1)
 		_MySliderValue  ("This is a Slider", Range(0,10)) = 2.5
@@ -24,9 +24,10 @@
 		fixed4 _EmissiveColor;
 		fixed4 _AmbientColor;
 		fixed  _MySliderValue;
+		sampler2D _RampTex;
 
 		struct Input {
-			float2 uv_MainTex;
+			float2 uv_RampTex;
 		};
 
 		void surf (Input IN, inout SurfaceOutput  o) {
@@ -41,8 +42,14 @@
 		inline fixed4 LightingBasicDiffus(SurfaceOutput s, fixed3 lightDir, fixed atten)
 		{
 			float difLight = max(0, dot (s.Normal, lightDir));
+
+			//半兰伯特光照模型
+			float hLambert = difLight * 0.5 + 0.5;
+
+			float3 ramp = tex2D(_RampTex, fixed2(hLambert,hLambert)).rgb;
+
        	  	fixed4 col;
-       	  	col.rgb = s.Albedo * _LightColor0.rgb * (difLight * atten * 2);
+       	  	col.rgb = s.Albedo * _LightColor0.rgb * (ramp);
        	  	col.a = s.Alpha;
        	  	return col;
 		}
