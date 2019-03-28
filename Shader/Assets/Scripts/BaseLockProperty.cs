@@ -14,12 +14,13 @@ public class BaseLockProperty : MonoBehaviour
     }
 
 
-    void OnGUI()
+    void Update()
     {
         GetComponent<Renderer>().GetPropertyBlock(_propertyBlock);
         onChangePropertys();
         GetComponent<Renderer>().SetPropertyBlock(_propertyBlock);
     }
+
 
     virtual public void onChangePropertys()
     { 
