@@ -436,6 +436,7 @@
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex2.shader" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
+    <None Include="Assets\Shaders\Surface\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVsAdvance.shader" />
     <None Include="Assets\Shaders\Surface\TextureBlending.shader" />
