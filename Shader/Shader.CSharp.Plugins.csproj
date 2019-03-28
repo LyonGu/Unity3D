@@ -438,6 +438,7 @@
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVsAdvance.shader" />
+    <None Include="Assets\Shaders\Surface\TextureBlending.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
