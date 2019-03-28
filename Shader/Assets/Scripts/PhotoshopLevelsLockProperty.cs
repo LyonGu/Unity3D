@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[ExecuteInEditMode]
 public class PhotoshopLevelsLockProperty : BaseLockProperty
 {
-
 
     public float _inBlack;
     public float _inGamma;
@@ -15,10 +16,6 @@ public class PhotoshopLevelsLockProperty : BaseLockProperty
 
     public float _isAlphaTest;
 
-    public override void intPropertys()
-    {
-        
-    }
     public override void onChangePropertys()
     {
 
@@ -31,4 +28,5 @@ public class PhotoshopLevelsLockProperty : BaseLockProperty
 
         _propertyBlock.SetFloat("_isAlphaTest", _isAlphaTest);
     }
+
 }

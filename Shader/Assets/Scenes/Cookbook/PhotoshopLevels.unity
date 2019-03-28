@@ -300,10 +300,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f36d0731a7b3c684ea61f12c258b1c04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inBlack: 3
-  _inGamma: 2
-  _inWhite: 255
-  _outWhite: 255
+  _inBlack: 5.25
+  _inGamma: 7.34
+  _inWhite: 256.69
+  _outWhite: 257.3
   _outBlack: 0
   _isAlphaTest: 1
 --- !u!1 &1236028177

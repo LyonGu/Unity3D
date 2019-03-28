@@ -27,9 +27,5 @@ public class BaseLockProperty : MonoBehaviour
     
     }
 
-    virtual public void intPropertys()
-    { 
-    
-    }
 
 }
