@@ -44,20 +44,6 @@
             o.tan2 = mul(rotation, UNITY_MATRIX_IT_MV[1].xyz);
 		}
 
-
-		//自定义光照函数
-		inline fixed4 LightingUnlit (SurfaceOutput s, fixed3 lightDir, fixed atten)
-		{
-			fixed4 c = fixed4(1,1,1,1);
-			c.rgb = s.Albedo;
-			c.a = s.Alpha;
-			return c;
-
-		}
-
-
-		
-
 		void surf (Input IN, inout SurfaceOutput  o) {
 
 			float3 normals = UnpackNormal(tex2D(_NormalMap, IN.uv_NormalMap));
@@ -75,6 +61,18 @@
 			o.Alpha = c.a;
 
 		}
+
+		//自定义光照函数
+		inline fixed4 LightingUnlit (SurfaceOutput s, fixed3 lightDir, fixed atten)
+		{
+			fixed4 c = fixed4(1,1,1,1);
+			c.rgb = s.Albedo;
+			c.a = s.Alpha;
+			return c;
+
+		}
+
+
 		ENDCG
 	}
 	FallBack "Diffuse"
