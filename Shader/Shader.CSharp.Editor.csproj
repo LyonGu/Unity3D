@@ -493,6 +493,7 @@
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\MaskedReflection.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
+    <None Include="Assets\Shaders\Surface\NormalMappedReflection.shader" />
     <None Include="Assets\Shaders\Surface\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVsAdvance.shader" />
