@@ -431,6 +431,7 @@
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex2.shader" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
+    <None Include="Assets\Shaders\Surface\Cloth.shader" />
     <None Include="Assets\Shaders\Surface\LitSphereshadingmodel.shader" />
     <None Include="Assets\Shaders\Surface\LogoFlash.shader" />
     <None Include="Assets\Shaders\Surface\MaskedReflection.shader" />
