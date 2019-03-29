@@ -10,7 +10,7 @@
 		//漫反射贴图
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		//法线贴图
-		_BumpMap ("Normal Map", 2D) = "white" {}
+		_BumpMap ("Normal Map", 2D) = "bump" {}
 
 		//火焰边缘的两种颜色
 		_BurnFirstColor ("Burn First Color", Color) = (1,0,0,1)

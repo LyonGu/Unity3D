@@ -129,6 +129,7 @@
 					UNITY_LIGHT_ATTENUATION(atten, o, o.worldPos);
 
 					fixed3 finalColor = lerp(ambient + diffuse * atten, burnColor, t * step(0.0001, _BurnAmount));
+
 					return fixed4(finalColor, 1);
 
 				}
