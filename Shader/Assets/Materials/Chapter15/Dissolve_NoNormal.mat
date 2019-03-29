@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Dissolve_NoNormal
-  m_Shader: {fileID: 4800000, guid: 9a774b3731a67cd4295897b21d0c1798, type: 3}
+  m_Shader: {fileID: 4800000, guid: c73a7d323a939ea41ab6d8f828c17bb9, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -18,6 +18,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 5cc32e667b3dc174ebd102cd7b6d2b0d, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -59,11 +63,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - PixelSnap: 0
     - _BumpScale: 1
     - _BurnAmount: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EnableExternalAlpha: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -80,5 +86,7 @@ Material:
     m_Colors:
     - _BurnFirstColor: {r: 0.8897059, g: 0.6463452, b: 0.28130406, a: 1}
     - _BurnSecondColor: {r: 1, g: 0.35172415, b: 0, a: 1}
-    - _Color: {r: 0.35450906, g: 0.6102941, b: 0.47269934, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
