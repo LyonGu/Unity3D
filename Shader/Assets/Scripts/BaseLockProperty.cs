@@ -16,9 +16,13 @@ public class BaseLockProperty : MonoBehaviour
 
     void Update()
     {
-        GetComponent<Renderer>().GetPropertyBlock(_propertyBlock);
-        onChangePropertys();
-        GetComponent<Renderer>().SetPropertyBlock(_propertyBlock);
+        if (_propertyBlock != null)
+        {
+            GetComponent<Renderer>().GetPropertyBlock(_propertyBlock);
+            onChangePropertys();
+            GetComponent<Renderer>().SetPropertyBlock(_propertyBlock);
+        }
+       
     }
 
 
