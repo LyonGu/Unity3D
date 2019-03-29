@@ -491,6 +491,7 @@
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex2.shader" />
     <None Include="Assets\Shaders\Surface\BumpedDiffuse.shader" />
+    <None Include="Assets\Shaders\Surface\LogoFlash.shader" />
     <None Include="Assets\Shaders\Surface\MaskedReflection.shader" />
     <None Include="Assets\Shaders\Surface\NormalExtrusion.shader" />
     <None Include="Assets\Shaders\Surface\NormalMappedReflection.shader" />
@@ -499,6 +500,7 @@
     <None Include="Assets\Shaders\Surface\ScrollingUVsAdvance.shader" />
     <None Include="Assets\Shaders\Surface\SimpleReflection.shader" />
     <None Include="Assets\Shaders\Surface\TextureBlending.shader" />
+    <None Include="Assets\Shaders\Surface\TranspantObject.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
