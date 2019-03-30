@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Transparent
-  m_Shader: {fileID: 4800000, guid: ea65058b3a13e4146b96548437e1630a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 81d13d82f90b44deda655cc7ab391f8c, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
