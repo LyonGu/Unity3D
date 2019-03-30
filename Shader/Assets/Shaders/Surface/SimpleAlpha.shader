@@ -16,7 +16,7 @@
 
 		CGPROGRAM
 		
-		//开启透明通道 alpha是代表alpha混合意思  alphaTest才是代表alpha测试 效率低
+		//开启透明通道 alpha是代表alpha混合意思  alphatest才是代表alpha测试 效率低
 		#pragma surface surf Lambert alpha
 		
 		#pragma target 3.0

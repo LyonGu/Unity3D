@@ -1,4 +1,4 @@
-﻿hader "CookBookCustom/OptimizedBumpedDiffuse" {
+﻿shader "CookBookCustom/OptimizedBumpedDiffuse" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_NormalMap ("Normal Map", 2D) = "bump" {}
@@ -12,6 +12,7 @@
 
 		sampler2D _MainTex;
 		sampler2D _NormalMap;
+		#include "Lighting.cginc"
 
 		struct Input {
 			half2 uv_MainTex;
