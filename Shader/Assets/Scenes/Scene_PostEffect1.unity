@@ -687,6 +687,7 @@ GameObject:
   - component: {fileID: 1838242763}
   - component: {fileID: 1838242765}
   - component: {fileID: 1838242764}
+  - component: {fileID: 1838242766}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -757,13 +758,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_LocalRotation: {x: 0.26870626, y: -0.0010068553, z: -0.011848272, w: 0.9631488}
-  m_LocalPosition: {x: -0.64, y: 4.96, z: -16.35}
+  m_LocalRotation: {x: 0.18093298, y: 0.00006356828, z: -0.011890806, w: 0.9834236}
+  m_LocalPosition: {x: -1.05, y: 4.44, z: -16.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 31.170002, y: -0.55600005, z: -1.565}
+  m_LocalEulerAnglesHint: {x: 20.847, y: -0.256, z: -1.4330001}
 --- !u!114 &1838242758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,7 +818,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c6cf85ac5d7b144daf3c4f58d07bd58, type: 3}
   m_Name: 
@@ -861,10 +862,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloomShader: {fileID: 4800000, guid: 04bb30cd8d671864ab39f9266e256791, type: 3}
-  iterations: 3
-  blurSpread: 0.6
-  downSample: 2
-  luminanceThreshold: 0.6
+  iterations: 4
+  blurSpread: 1.41
+  downSample: 4
+  luminanceThreshold: 0.31
 --- !u!114 &1838242764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -877,8 +878,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   briSatConShader: {fileID: 4800000, guid: 84e6672b07cafe9478242f0b84efe673, type: 3}
-  brightness: 0.92
-  saturation: 1.29
+  brightness: 1.01
+  saturation: 1.73
   contrast: 1.15
 --- !u!114 &1838242765
 MonoBehaviour:
@@ -893,8 +894,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gaussianBlurShader: {fileID: 4800000, guid: 27ee0436d3099394e9a03977aba590ac, type: 3}
   iterations: 2
-  blurSpread: 0.41
+  blurSpread: 0.69
   downSample: 1
+--- !u!114 &1838242766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1838242752}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca8cefe34e2a4069a9eba8dc742bb3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grayShader: {fileID: 4800000, guid: ba7baa3c3a8814e8b91c66418ce76466, type: 3}
+  _LuminosityAmount: 1
 --- !u!1001 &1897048793
 Prefab:
   m_ObjectHideFlags: 0
@@ -904,7 +918,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400326, guid: 4a8b1747bab456d44bc659d857e8385d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 400326, guid: 4a8b1747bab456d44bc659d857e8385d, type: 3}
       propertyPath: m_LocalPosition.y
