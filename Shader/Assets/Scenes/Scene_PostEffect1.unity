@@ -688,6 +688,7 @@ GameObject:
   - component: {fileID: 1838242765}
   - component: {fileID: 1838242764}
   - component: {fileID: 1838242766}
+  - component: {fileID: 1838242767}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -909,6 +910,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayShader: {fileID: 4800000, guid: ba7baa3c3a8814e8b91c66418ce76466, type: 3}
   _LuminosityAmount: 1
+--- !u!114 &1838242767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1838242752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5877657a2d5c88b4da3c3d25f155d955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curShader: {fileID: 4800000, guid: 54f3b6f5f233446468a385a3fc132f59, type: 3}
+  blendTexture: {fileID: 2800000, guid: fbd2c366dcfa9a841938a0b46119510b, type: 3}
+  blendOpacity: 0.73
 --- !u!1001 &1897048793
 Prefab:
   m_ObjectHideFlags: 0
