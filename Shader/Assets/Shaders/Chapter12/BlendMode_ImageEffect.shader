@@ -47,6 +47,14 @@
 				
 				return o;
 			}
+
+			fixed OverlayBlendMode(fixed basePixel, fixed blendPixel) {
+				if (basePixel < 0.5) {
+					return (2.0 * basePixel * blendPixel);
+				} else {
+					return (1.0 - 2.0 * (1.0 - basePixel) * (1.0 - blendPixel));
+				}
+			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
@@ -62,10 +70,18 @@
 				fixed4 blendedAdd = renderTex + blendTex;
 
 				// 滤镜:两层图像的像素值取互补数，然后将它们相乘，最后再去互补数
-				fixed4 blendedScreen = 1.0 - ((1.0 - renderTex) * (1.0 - blendTex));
+				//fixed4 blendedScreen = 1.0 - ((1.0 - renderTex) * (1.0 - blendTex));
+
+
+				//叠加效果
+				fixed4 blendedImage = renderTex;
+				
+				blendedImage.r = OverlayBlendMode(renderTex.r, blendTex.r);
+				blendedImage.g = OverlayBlendMode(renderTex.g, blendTex.g);
+				blendedImage.b = OverlayBlendMode(renderTex.b, blendTex.b);
 
 				
-				fixed4 blendColor = blendedScreen;
+				fixed4 blendColor = blendedImage;
 				// Adjust amount of Blend Mode with a lerp
 				renderTex = lerp(renderTex, blendColor,  _Opacity);
 				
