@@ -682,10 +682,10 @@ GameObject:
   - component: {fileID: 1838242758}
   - component: {fileID: 1838242760}
   - component: {fileID: 1838242759}
-  - component: {fileID: 1838242761}
   - component: {fileID: 1838242762}
   - component: {fileID: 1838242763}
   - component: {fileID: 1838242765}
+  - component: {fileID: 1838242761}
   - component: {fileID: 1838242764}
   - component: {fileID: 1838242766}
   - component: {fileID: 1838242767}
@@ -820,18 +820,18 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c6cf85ac5d7b144daf3c4f58d07bd58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   edgeDetectShader: {fileID: 4800000, guid: dc955a4462180de42aaa42b0a5c7cfeb, type: 3}
   edgesOnly: 0
-  edgeColor: {r: 0.5585849, g: 0.88235295, b: 0.5320069, a: 1}
+  edgeColor: {r: 0.44097358, g: 1, b: 0.2205882, a: 1}
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  sampleDistance: 1
-  sensitivityDepth: 0.5
-  sensitivityNormals: 0.5
+  sampleDistance: 0.5
+  sensitivityDepth: 1.81
+  sensitivityNormals: 0.41
 --- !u!114 &1838242762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,7 +931,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1838242752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7039a0b75c08a4648a6dfd071ed8a849, type: 3}
   m_Name: 
