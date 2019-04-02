@@ -13,8 +13,8 @@
         //Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 
         //Cull Off
-       // ZWrite Off
-        Blend One OneMinusSrcAlpha
+        //ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass {
             CGPROGRAM
@@ -58,7 +58,7 @@
         	{  
                 fixed4 color = tex2D (_MainTex, i.uv);
                 //fixed4 color1 = _Color1 * _Color2; //（r1*r2,g1*g2,b1*b2,a1*a2） ==> 但是alpha通道只有开启混合才有效
-                color.a *= _TransVal; //alpha通道其实主要是用来起混合作用的，不开启的话其实没什么作用
+                color.a = _TransVal; //alpha通道其实主要是用来起混合作用的，不开启的话其实没什么作用
 
         		return color;
 
