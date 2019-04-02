@@ -13,7 +13,7 @@
         //Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 
         //Cull Off
-        //ZWrite Off
+        ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
 
         Pass {
