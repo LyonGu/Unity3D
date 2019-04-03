@@ -961,11 +961,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterWaveShader: {fileID: 4800000, guid: d6a45ecaa58cac44f99bff84ed07f5a0, type: 3}
-  distanceFactor: 60
+  distanceFactor: 40
   timeFactor: -30
-  totalFactor: 0.3
-  waveWidth: 1
-  waveSpeed: 0.3
+  totalFactor: 0.6
+  waveWidth: 0.5
+  waveSpeed: 0.5
   isLoop: 0
 --- !u!1001 &1897048793
 Prefab:
