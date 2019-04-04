@@ -1,6 +1,12 @@
 # Unity3D
 
 1 光照模型添加带有纹理得到完整例子 shaders/commmon中的BumpedDiffuse和BumpedSpecular 只是不带高光贴图的
+以下几种情况贴图
+{
+	1 只带漫反射贴图
+	2 漫反射 + 法线  ==》ok
+	3 漫反射 + 法线 +  高光
+}
 
 2 opengl里一些2d的常见shader用Unity实现一遍
 
