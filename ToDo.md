@@ -22,6 +22,9 @@
 	elseif 不支持高光 and 不支持漫反射 then
 	      1 只带漫反射贴图
 	end 
+
+
+	阴影 todo
 }
 
 2 opengl里一些2d的常见shader用Unity实现一遍
