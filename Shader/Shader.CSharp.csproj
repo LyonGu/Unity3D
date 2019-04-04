@@ -483,6 +483,7 @@
     <None Include="Assets\Shaders\Common\OutLine.shader" />
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
+    <None Include="Assets\Shaders\Common\RimLight.shader" />
     <None Include="Assets\Shaders\Surface\BaseTranspantObjectTest.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseCustomLight.shader" />
