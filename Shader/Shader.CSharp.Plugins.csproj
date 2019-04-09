@@ -391,6 +391,7 @@
     <None Include="Assets\Shaders\Chapter12\ImageEffect_Gray.shader" />
     <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
     <None Include="Assets\Shaders\Chapter12\OldFilmEffect.shader" />
+    <None Include="Assets\Shaders\Chapter12\OutLinePostEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\WaterWaveEffect.shader" />
     <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
     <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />
@@ -432,7 +433,12 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_attenuation_Infunction.shader" />
     <None Include="Assets\Shaders\Common\BaseSprite.shader" />
     <None Include="Assets\Shaders\Common\BumpedDiffuse.shader" />
+    <None Include="Assets\Shaders\Common\BumpedDiffuse_NoLight.shader" />
+    <None Include="Assets\Shaders\Common\BumpedDiffuse_NoNormalMap.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
+    <None Include="Assets\Shaders\Common\BumpedSpecular_NoNormal.shader" />
+    <None Include="Assets\Shaders\Common\BumpedSpecular_NormalMapSpecularMap.shader" />
+    <None Include="Assets\Shaders\Common\Normal.shader" />
     <None Include="Assets\Shaders\Common\OutLine.shader" />
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
