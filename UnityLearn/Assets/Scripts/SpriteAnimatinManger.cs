@@ -31,7 +31,8 @@ public class SpriteAnimatinManger
         {
             //加载整一张图集，此方法会返回一个Object[]，里面包含了图集的纹理 Texture2D和图集下的全部Sprite
             Object[] _atlas = Resources.LoadAll("Plist/" + file);
-            _cacheMap[file] = _atlas;
+            //_cacheMap[file] = _atlas;
+            _cacheMap.Add(file, _atlas);
         }
         return _cacheMap[file];
     }
@@ -45,7 +46,8 @@ public class SpriteAnimatinManger
             {
                 unloadAsset(_atlas[i]);
             }
-            _cacheMap[file] = null;
+            //_cacheMap[file] = null;
+            _cacheMap.Remove(file);
         }
     }
 
