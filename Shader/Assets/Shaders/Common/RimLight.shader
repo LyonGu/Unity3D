@@ -110,7 +110,7 @@ Shader "Shaders/Common/RimLight" {
                 color = ambient + diffuse + specular;
 
                 //计算视线方向与法线方向的夹角，夹角越大，dot值越接近0，说明视线方向越偏离该点，也就是平视，该点越接近边缘
-                float rim = 1 - max(0, dot(worldViewDir, worldNormal));
+                float rim = 1 - max(0, dot(worldViewDir, worldNormal)); //这里有些模型法线导出居然是反向的
 
                 //计算rimLight
                 fixed3 rimColor = _RimColor * pow(rim, 1 / _RimPower);
