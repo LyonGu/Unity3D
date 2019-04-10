@@ -29,6 +29,8 @@ public class OutLinePostEffect : PostEffectsBase
     public int downSample = 2;
 
 
+    //是否开启柔和效果
+    public bool _isSoft = true;
     //
     [Range(0.0f, 1.0f)]
     public float _Outline = 0.1f;
@@ -133,6 +135,13 @@ public class OutLinePostEffect : PostEffectsBase
 
             ////轮廓的纹理数据设置到shader里
             material.SetTexture("_BlurTex", buffer_lunkuo);
+
+            material.SetInt("_soft", System.Convert.ToInt32(_isSoft));
+            if (!_isSoft)
+            {
+                material.SetColor("_OutlineColor", _OutlineColor);
+            }
+            
             Graphics.Blit(src, dest, material, 3);
             RenderTexture.ReleaseTemporary(buffer_lunkuo);
       
@@ -226,8 +235,12 @@ public class OutLinePostEffect : PostEffectsBase
             additionalCam.targetTexture = renderTexture;
 
             //设置全局颜色
-            Shader.SetGlobalColor("_OutlinePrePassLineColor", _OutlineColor);
-            Shader.SetGlobalFloat("_OutlinePrePassOutline",_Outline);
+            if (_isSoft)
+            {
+                Shader.SetGlobalColor("_OutlinePrePassLineColor", _OutlineColor);
+                Shader.SetGlobalFloat("_OutlinePrePassOutline", _Outline);
+            }
+  
             additionalCam.RenderWithShader(outLinePreShader, "");
         }
     }

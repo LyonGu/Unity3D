@@ -12,6 +12,7 @@ Shader "Shaders/Chapter12/OutlinePrePass"
 		//描边使用两个Pass，第一个pass沿法线挤出一点，只输出描边的颜色
 		Pass
 		{	
+			Cull Front
 			CGPROGRAM
 				#include "UnityCG.cginc"
 

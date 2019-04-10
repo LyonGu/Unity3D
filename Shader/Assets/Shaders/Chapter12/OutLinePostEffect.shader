@@ -7,13 +7,14 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
 		_OutlineColor ("Outline Color", Color) = (1, 0, 0, 1)
 		_BlurSize ("Blur Size", Float) = 1.0
 		_blurTex ("Bloom (RGB)", 2D) = "black" {}
+		_soft  ("Soft effect", Range(0,1)) = 1
 	
 	}
     SubShader {
 		Tags { "RenderType"="Opaque" "Queue"="Geometry"}
 		
 		ZTest Always Cull Off ZWrite Off
-		
+
 		//高斯模糊处理
 		//第1个pass, 序号为0 , 使用其他shader里的pass
 		UsePass "Shaders/Chapter12/GaussianBlur/GAUSSIAN_BLUR_VERTICAL"
@@ -82,6 +83,9 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
 			sampler2D _MainTex;
 			float4 _MainTex_TexelSize;
 			sampler2D _BlurTex;
+			float4 _OutlineColor;
+
+			fixed _soft;
 	
 
 			struct a2v {
@@ -108,7 +112,19 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
 			float4 frag(v2f i) : SV_Target { 
 				fixed4 colorMain = tex2D(_MainTex, i.uv);
 				fixed4 colorBlur = tex2D(_BlurTex, i.uv);
-				return colorBlur + colorMain;        
+
+				fixed4 final;
+				if(_soft==1)
+				{
+					//柔和效果
+					final = (colorMain + colorBlur);
+				}
+				else
+				{	
+					//硬描边效果
+					final = colorMain * (1 - all(colorBlur.rgb)) + _OutlineColor * any(colorBlur.rgb);//0.01,1,1
+				}
+				return final;        
 			}
 			
 			ENDCG
