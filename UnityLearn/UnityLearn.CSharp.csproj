@@ -345,6 +345,9 @@
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatin.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatinManger.cs" />
+    <Compile Include="Assets\Scripts\test.cs" />
+    <Compile Include="Assets\Scripts\test1.cs" />
+    <Compile Include="Assets\Scripts\TestManger.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
     <Compile Include="Assets\Scripts\WWWDemo1.cs" />
   </ItemGroup>

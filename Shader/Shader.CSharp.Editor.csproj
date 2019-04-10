@@ -442,10 +442,13 @@
     <None Include="Assets\Shaders\Chapter12\BlendMode_ImageEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\Bloom.shader" />
     <None Include="Assets\Shaders\Chapter12\BrightnessSaturationAndContrast.shader" />
+    <None Include="Assets\Shaders\Chapter12\DistortPostEffect.shader" />
+    <None Include="Assets\Shaders\Chapter12\DistortPostEffectScreen.shader" />
     <None Include="Assets\Shaders\Chapter12\Distort_GrabPass.shader" />
     <None Include="Assets\Shaders\Chapter12\EdgeDetection.shader" />
     <None Include="Assets\Shaders\Chapter12\GaussianBlur.shader" />
     <None Include="Assets\Shaders\Chapter12\ImageEffect_Gray.shader" />
+    <None Include="Assets\Shaders\Chapter12\MaskObjPrepass.shader" />
     <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
     <None Include="Assets\Shaders\Chapter12\OldFilmEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutLinePostEffect.shader" />
