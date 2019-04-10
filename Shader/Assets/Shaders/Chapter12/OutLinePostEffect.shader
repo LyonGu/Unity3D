@@ -12,48 +12,16 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
     SubShader {
 		Tags { "RenderType"="Opaque" "Queue"="Geometry"}
 		
-		//第一个pass使用描边，使轮廓向法线方向外扩
-		Pass {
-			NAME "OUTLINE"
-			
-			CGPROGRAM
-			
-			#pragma vertex vert
-			#pragma fragment frag
-			
-			#include "UnityCG.cginc"
+		ZTest Always Cull Off ZWrite Off
 		
-			fixed4 _OutlineColor;
-			struct a2v {
-				float4 vertex : POSITION;
-			}; 
-			
-			struct v2f {
-			    float4 pos : SV_POSITION;
-			    float2 uv :TEXCOORD0;
-			};
-			
-			v2f vert (a2v v) {
-				v2f o;
-				o.pos = UnityObjectToClipPos(v.vertex);
-				return o;
-			}
-			
-			float4 frag(v2f i) : SV_Target { 
-				return float4(_OutlineColor.rgb, 1);               
-			}
-			
-			ENDCG
-		}
-
 		//高斯模糊处理
-		//第二个pass, 序号为1 , 使用其他shader里的pass
+		//第1个pass, 序号为0 , 使用其他shader里的pass
 		UsePass "Shaders/Chapter12/GaussianBlur/GAUSSIAN_BLUR_VERTICAL"
 		
-		//第三个pass, 序号为2 , 使用其他shader里的pass
+		//第2个pass, 序号为1 , 使用其他shader里的pass
 		UsePass "Shaders/Chapter12/GaussianBlur/GAUSSIAN_BLUR_HORIZONTAL"
 		
-		//第四个pass，抠图，利用原图减去模糊图
+		//第3个pass，抠图，利用原图减去模糊图
 		Pass {
 			
 			CGPROGRAM
@@ -101,7 +69,7 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
 		}
 
 
-		//第五个pass，用抠图纹理与原图纹理叠加
+		//第4个pass，用抠图纹理与原图纹理叠加
 		Pass {
 			
 			CGPROGRAM
@@ -140,7 +108,7 @@ Shader "Shaders/Chapter12/OutLinePostEffect" {
 			float4 frag(v2f i) : SV_Target { 
 				fixed4 colorMain = tex2D(_MainTex, i.uv);
 				fixed4 colorBlur = tex2D(_BlurTex, i.uv);
-				return colorBlur * colorMain;        
+				return colorBlur + colorMain;        
 			}
 			
 			ENDCG

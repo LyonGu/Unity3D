@@ -396,6 +396,7 @@
     <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
     <None Include="Assets\Shaders\Chapter12\OldFilmEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutLinePostEffect.shader" />
+    <None Include="Assets\Shaders\Chapter12\OutlinePrePass.shader" />
     <None Include="Assets\Shaders\Chapter12\WaterWaveEffect.shader" />
     <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
     <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />
