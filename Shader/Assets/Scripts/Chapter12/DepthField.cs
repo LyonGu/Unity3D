@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+
+    大部分的景深效果是前景清晰，远景模糊，这也是景深的标准用法，
+    不过有时候也有需要近景模糊，远景清晰的效果，或者前后都模糊，中间焦点位置清晰，
+    在实现上我们通过像素点深度到达焦点的距离作为参数，在清晰和模糊图像之间插值，先计算远景的，
+    结果与模糊图片再进行插值，得到最终的效果。
+    
+*/
+
 public class DepthField : PostEffectsBase {
 
 	public Shader depthFieldShader;
@@ -25,7 +34,7 @@ public class DepthField : PostEffectsBase {
 
     [Range(0.0f, 100.0f)]
     public float nearBlurScale = 0.0f;
-    
+
     [Range(0.0f, 1000.0f)]
     public float farBlurScale = 50.0f;
 
