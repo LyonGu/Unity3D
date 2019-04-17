@@ -323,6 +323,7 @@
     <Compile Include="Assets\Scripts\Chapter12\PassthoughEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\PostEffectsBase.cs" />
     <Compile Include="Assets\Scripts\Chapter12\RadialBlurEffect.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\RotationDistortEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\WaterWaveEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter13\EdgeDetectNormalsAndDepth.cs" />
     <Compile Include="Assets\Scripts\Chapter13\FogWithDepthTexture.cs" />
@@ -460,6 +461,7 @@
     <None Include="Assets\Shaders\Chapter12\OutlinePrePass.shader" />
     <None Include="Assets\Shaders\Chapter12\Passthough.shader" />
     <None Include="Assets\Shaders\Chapter12\RadialBlurEffect.shader" />
+    <None Include="Assets\Shaders\Chapter12\RotationDistortEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\WaterWaveEffect.shader" />
     <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
     <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />

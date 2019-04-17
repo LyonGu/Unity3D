@@ -3,48 +3,43 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class PassthoughEffect : PostEffectsBase{
+public class RotationDistortEffect : PostEffectsBase{
 
-    public Shader passthoughShader;
-    private Material passthoughMaterial;
+    public Shader rotationDistortShader;
+    private Material rotationDistortMaterial;
 
 
     public Material material
     {
         get {
-            passthoughMaterial = CheckShaderAndCreateMaterial(passthoughShader, passthoughMaterial);
-            return passthoughMaterial;
+            rotationDistortMaterial = CheckShaderAndCreateMaterial(rotationDistortShader, rotationDistortMaterial);
+            return rotationDistortMaterial;
         }
     }
 
-    //扭曲强度
-    [Range(0, 1)]
-    public float distortFactor = 0.0f;
+    //收缩强度
+    [Range(0, 20.0f)]
+    public float distortFactor = 1.0f;
     //扭曲中心（0-1）屏幕空间，默认为中心点
     public Vector2 distortCenter = new Vector2(0.5f, 0.5f);
-
     //噪声图
     public Texture NoiseTexture = null;
     //屏幕扰动强度
     [Range(0, 2.0f)]
     public float distortStrength = 1.0f;
-
-    //屏幕收缩总时间
-    public float passThoughTime = 1.0f;
+ 
+    //屏幕扭曲时间
+    public float passThoughTime = 3.0f;
     //当前时间
     private float currentTime = 0.0f;
     //曲线控制权重
-    public float curveFactor = 0.2f;
-    //屏幕收缩效果曲线控制
-    public AnimationCurve curve;
-
-
+    public float rotationCurveFactor = 10.0f;
+    //屏幕全传效果曲线控制
+    public AnimationCurve rotationCurve;
     //扰动曲线系数
-    public float distortCurveFactor = 1.0f;
+    public float distortCurveFactor = 0.1f;
     //屏幕扰动效果曲线控制
     public AnimationCurve distortCurve;
-
-    private float _maxPass = 0.3f;
 
     public void Start()
     {
@@ -71,14 +66,8 @@ public class PassthoughEffect : PostEffectsBase{
         {
             currentTime += Time.deltaTime;
             float t = currentTime / passThoughTime;
-
-            float test1 = (float)(Mathf.Round(curve.Evaluate(t) * 100))/100;
-            float test2 = (float)(Mathf.Round(distortCurve.Evaluate(t) * 100)) / 100;
-            result1 = result1 + test1 + ",";
-            result2 = result2 + test2 + ",";
-           
             //根据时间占比在曲线（0，1）区间采样，再乘以权重作为收缩系数
-            distortFactor = curve.Evaluate(t) * curveFactor;
+            distortFactor = rotationCurve.Evaluate(t) * rotationCurveFactor;
             distortStrength = distortCurve.Evaluate(t) * distortCurveFactor;
             yield return null;
             //结束时强行设置为0
@@ -87,8 +76,8 @@ public class PassthoughEffect : PostEffectsBase{
 
         }
 
-        //CreateOrOPenFile("config/1.txt", result1);
-        //CreateOrOPenFile("config/2.txt", result2);
+        //CreateOrOPenFile("config/3.txt", result1);
+        //CreateOrOPenFile("config/4.txt", result2);
 
     }
 
@@ -99,25 +88,7 @@ public class PassthoughEffect : PostEffectsBase{
     {
         if (material != null)
         {
-            currentTime += Time.deltaTime;
-            float t = currentTime / passThoughTime;
-            //distortFactor = Mathf.Lerp(0, 1, t * curveFactor);
-
-            //if (currentTime >= passThoughTime*0.5)
-            //{
-            //    distortStrength = Mathf.Lerp(0, 1, t * distortCurveFactor);
-            //}
             
-
-            //if (currentTime >= passThoughTime)
-            //{
-            //    distortFactor = 0;
-            //    distortStrength = 0;
-            //}
-
-
-          
-
             //设置shader属性值
             material.SetTexture("_NoiseTex", NoiseTexture);
             material.SetFloat("_DistortFactor", distortFactor);
