@@ -386,6 +386,8 @@
     <None Include="Assets\Shaders\Chapter12\BlendMode_ImageEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\Bloom.shader" />
     <None Include="Assets\Shaders\Chapter12\BrightnessSaturationAndContrast.shader" />
+    <None Include="Assets\Shaders\Chapter12\DepthOfField.shader" />
+    <None Include="Assets\Shaders\Chapter12\DepthTest.shader" />
     <None Include="Assets\Shaders\Chapter12\DistortPostEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\DistortPostEffectScreen.shader" />
     <None Include="Assets\Shaders\Chapter12\Distort_GrabPass.shader" />
@@ -397,6 +399,8 @@
     <None Include="Assets\Shaders\Chapter12\OldFilmEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutLinePostEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutlinePrePass.shader" />
+    <None Include="Assets\Shaders\Chapter12\Passthough.shader" />
+    <None Include="Assets\Shaders\Chapter12\RadialBlurEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\WaterWaveEffect.shader" />
     <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
     <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />

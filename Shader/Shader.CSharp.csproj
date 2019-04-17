@@ -309,6 +309,8 @@
     <Compile Include="Assets\Scripts\Chapter11\Translating.cs" />
     <Compile Include="Assets\Scripts\Chapter12\Bloom.cs" />
     <Compile Include="Assets\Scripts\Chapter12\BrightnessSaturationAndContrast.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\DepthField.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\DepthTest.cs" />
     <Compile Include="Assets\Scripts\Chapter12\DistortEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\DistortEffectByCamera.cs" />
     <Compile Include="Assets\Scripts\Chapter12\EdgeDetection.cs" />
@@ -318,7 +320,9 @@
     <Compile Include="Assets\Scripts\Chapter12\MotionBlur.cs" />
     <Compile Include="Assets\Scripts\Chapter12\OldFilmEffect1.cs" />
     <Compile Include="Assets\Scripts\Chapter12\OutLinePostEffect.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\PassthoughEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\PostEffectsBase.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\RadialBlurEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\WaterWaveEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter13\EdgeDetectNormalsAndDepth.cs" />
     <Compile Include="Assets\Scripts\Chapter13\FogWithDepthTexture.cs" />
@@ -441,6 +445,8 @@
     <None Include="Assets\Shaders\Chapter12\BlendMode_ImageEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\Bloom.shader" />
     <None Include="Assets\Shaders\Chapter12\BrightnessSaturationAndContrast.shader" />
+    <None Include="Assets\Shaders\Chapter12\DepthOfField.shader" />
+    <None Include="Assets\Shaders\Chapter12\DepthTest.shader" />
     <None Include="Assets\Shaders\Chapter12\DistortPostEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\DistortPostEffectScreen.shader" />
     <None Include="Assets\Shaders\Chapter12\Distort_GrabPass.shader" />
@@ -452,6 +458,8 @@
     <None Include="Assets\Shaders\Chapter12\OldFilmEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutLinePostEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\OutlinePrePass.shader" />
+    <None Include="Assets\Shaders\Chapter12\Passthough.shader" />
+    <None Include="Assets\Shaders\Chapter12\RadialBlurEffect.shader" />
     <None Include="Assets\Shaders\Chapter12\WaterWaveEffect.shader" />
     <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
     <None Include="Assets\Shaders\Chapter13\FogWithDepthTexture.shader" />
