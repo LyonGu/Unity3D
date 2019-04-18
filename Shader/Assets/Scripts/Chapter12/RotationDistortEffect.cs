@@ -66,6 +66,12 @@ public class RotationDistortEffect : PostEffectsBase{
         {
             currentTime += Time.deltaTime;
             float t = currentTime / passThoughTime;
+
+            float test1 = (float)(Mathf.Round(rotationCurve.Evaluate(t) * 100)) / 100;
+            float test2 = (float)(Mathf.Round(distortCurve.Evaluate(t) * 100)) / 100;
+            result1 = result1 + test1 + ",";
+            result2 = result2 + test2 + ",";
+
             //根据时间占比在曲线（0，1）区间采样，再乘以权重作为收缩系数
             distortFactor = rotationCurve.Evaluate(t) * rotationCurveFactor;
             distortStrength = distortCurve.Evaluate(t) * distortCurveFactor;
@@ -76,8 +82,8 @@ public class RotationDistortEffect : PostEffectsBase{
 
         }
 
-        //CreateOrOPenFile("config/3.txt", result1);
-        //CreateOrOPenFile("config/4.txt", result2);
+        CreateOrOPenFile("config/3.txt", result1);
+        CreateOrOPenFile("config/4.txt", result2);
 
     }
 
