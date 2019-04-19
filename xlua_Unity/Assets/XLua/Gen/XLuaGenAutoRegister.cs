@@ -178,6 +178,8 @@ namespace XLua.CSObjectWrap
             wrapInit0(luaenv, translator);
             
             
+            translator.AddInterfaceBridgeCreator(typeof(XluaPro.CallLuaTableByInterface.IGameLanguage), XluaProCallLuaTableByInterfaceIGameLanguageBridge.__Create);
+            
             translator.AddInterfaceBridgeCreator(typeof(InvokeLua.ICalc), InvokeLuaICalcBridge.__Create);
             
             translator.AddInterfaceBridgeCreator(typeof(XLuaTest.IExchanger), XLuaTestIExchangerBridge.__Create);

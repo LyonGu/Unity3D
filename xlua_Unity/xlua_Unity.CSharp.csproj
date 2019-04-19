@@ -242,6 +242,7 @@
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaFunctionByLuaFun.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByClass.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByDic.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByInterface.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByLuaTable.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CSLua.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByFile.cs" />
@@ -315,6 +316,7 @@
     <Compile Include="Assets\XLua\Gen\UnityEngineWWWWrap.cs" />
     <Compile Include="Assets\XLua\Gen\WrapPusher.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaGenAutoRegister.cs" />
+    <Compile Include="Assets\XLua\Gen\XluaProCallLuaTableByInterfaceIGameLanguageBridge.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaTestIExchangerBridge.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaTestMyStructWrap.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaTestNoGcWrap.cs" />
