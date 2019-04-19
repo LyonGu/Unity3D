@@ -58,7 +58,88 @@ xluaCallCSharp:xluaCallCSharp1()  --调用共有方法 成功
 local num = xluaCallCSharp:xluaCallCSharp3(2)
 print("num=======",num)
 
+--调用属性字段
+local childAge1 = xluaCallCSharp.childAge1
+print("childAge1=======",childAge1)
+-- local name = xluaCallCSharp.name　--name为私有属性，返回为nil或者报错
+-- print("name=======",name)
+
+--调用父类的方法和属性
+local parentAge = xluaCallCSharp.parentAge
+print("parentAge=======",parentAge)
+
+xluaCallCSharp:xluaCallCSharp1Parent()
+xluaCallCSharp:xluaCallCSharp3Parent(20)
+
+--测试调用C#方法重载
+local result1 = xluaCallCSharp:xluaCallCSharp3(20)
+local result2 = xluaCallCSharp:xluaCallCSharp3("hexinpng")
+print("result1=======",result1)
+print("result2=======",result2)
 
 
+local testFunc = function ()
+	print("传了一个方法进去========")
+end
+
+--测试C#中带有params 关键字的方法 传入方法没成功
+-- xluaCallCSharp:xluaCallCSharp4(20,"hexinpng",68, testFunc)
 
 
+--测试lua调用C#中带有结构体参数的方法
+--定义一个表
+local myStructTable={
+	x="C#语言",
+	y="lua语言",
+
+	-- 传入方法没法调用，因为struct
+	test = function ()
+		print("传了一个方法进去========")
+	end
+}
+xluaCallCSharp:xluaCallCSharp5(myStructTable)
+
+
+--测试lua调用C#中带有接口参数的方法
+--定义一个表
+local myInterfaceTable=
+{
+	x=1000,
+	y=300,
+
+	Speak=function()
+		print("lua中 Speak 方法被调用!")
+	end,
+
+	SpeakSelf=function(self)
+		print("lua中 SpeakSelf 方法被调用!")
+	end
+}
+
+xluaCallCSharp:xluaCallCSharp6(myInterfaceTable)
+
+
+--定义lua调用C#中带有委托参数的方法
+--定义函数
+myDelegate=function(num)
+	print("lua 中对应委托方法。参数num="..num)
+end
+xluaCallCSharp:xluaCallCSharp7(myDelegate)
+xluaCallCSharp:xluaCallCSharp8(myInterfaceTable, myDelegate)
+--[====[
+	
+	总结下
+	1 使用接口或者而委托可以传入lua函数作为参数回调
+	2 使用接口或者而委托可以使用表来作为参数，特别方便
+
+
+]====]
+
+
+--接收C#多返回数值
+local num1=10
+local num2=20
+local res1,res2,res3=xluaCallCSharp:xluaCallCSharp9(num1,num2)
+print("res1="..res1)  --输出结果： 110
+print("res2="..res2)  --输出结果： 3000
+print("res3="..res3)  --输出结果： 999

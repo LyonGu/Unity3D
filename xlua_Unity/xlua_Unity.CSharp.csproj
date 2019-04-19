@@ -257,6 +257,7 @@
     <Compile Include="Assets\Resources\scripts\CSharp\XluaCallCSharp.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\XluaCallCSharpClass.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\XluaCallCSharpMonoBehaviour.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\XluaCallCSharpParentClass.cs" />
     <Compile Include="Assets\XLua\Examples\01_Helloworld\Helloworld.cs" />
     <Compile Include="Assets\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
     <Compile Include="Assets\XLua\Examples\04_LuaObjectOrented\InvokeLua.cs" />
@@ -324,6 +325,7 @@
     <Compile Include="Assets\XLua\Gen\UnityEngineWaitForSecondsWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineWWWWrap.cs" />
     <Compile Include="Assets\XLua\Gen\WrapPusher.cs" />
+    <Compile Include="Assets\XLua\Gen\XluaCallCSharpClassMyInterfaceBridge.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaGenAutoRegister.cs" />
     <Compile Include="Assets\XLua\Gen\XluaProCallLuaTableByInterfaceIGameLanguageBridge.cs" />
     <Compile Include="Assets\XLua\Gen\XluaProCallLuaTableByInterfaceIgameUserBridge.cs" />
