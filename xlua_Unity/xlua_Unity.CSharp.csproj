@@ -242,7 +242,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CSLua.cs" />
+    <Compile Include="Assets\Resources\scripts\CSLua.cs" />
+    <Compile Include="Assets\Resources\scripts\RunLuaByFile.cs" />
+    <Compile Include="Assets\Resources\scripts\RunLuaByRequire.cs" />
+    <Compile Include="Assets\Resources\scripts\RunLuaBySelfDefLoader.cs" />
     <Compile Include="Assets\XLua\Examples\01_Helloworld\Helloworld.cs" />
     <Compile Include="Assets\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
     <Compile Include="Assets\XLua\Examples\04_LuaObjectOrented\InvokeLua.cs" />
@@ -290,8 +293,7 @@
     <Compile Include="Assets\XLua\Tutorial\LuaCallCSharp\LuaCallCs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\Lua\test2.lua.txt" />
-    <None Include="Assets\Resources\test1.lua.txt" />
+    <None Include="Assets\Resources\SimpleLua.lua.txt" />
     <None Include="Assets\XLua\CHANGELOG.txt" />
     <None Include="Assets\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
     <None Include="Assets\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
