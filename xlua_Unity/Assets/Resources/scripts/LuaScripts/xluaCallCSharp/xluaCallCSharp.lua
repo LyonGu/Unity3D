@@ -130,7 +130,7 @@ xluaCallCSharp:xluaCallCSharp8(myInterfaceTable, myDelegate)
 	
 	总结下
 	1 使用接口或者而委托可以传入lua函数作为参数回调
-	2 使用接口或者而委托可以使用表来作为参数，特别方便
+	2 使用接口可以使用表来作为参数，特别方便
 
 
 ]====]
