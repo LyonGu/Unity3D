@@ -5,4 +5,6 @@ require "CSharpCallxLua.CallLuaByGlableVar"
 require "CSharpCallxLua.CallLuaFunctionByLuaFun"
 require "CSharpCallxLua.CallLuaTable"
 
+require "xluaCallCSharp.xluaCallCSharp"
+
 

@@ -22,6 +22,10 @@ gameUser={
 
 	Calulation=function(age,num1,num2)--说明：age 这里命名可以任意，表示当前对象（即：gameUser）
 		return age.age+num1+num2
+	end,
+
+	getDatas = function(self, age, num1,num2)
+		return age+1, num1+1, num2+1
 	end
 }
 

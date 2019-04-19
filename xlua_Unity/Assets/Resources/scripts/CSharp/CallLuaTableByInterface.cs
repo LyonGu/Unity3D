@@ -47,6 +47,25 @@ namespace XluaPro
             gameLan.str1 = "我是修改后的内容";
             env.DoString("print('修改后gameLanguage.str1='..gameLanguage.str1)");
 
+            //使用接口调用复杂表
+            IgameUser gameUser = env.Global.Get<IgameUser>("gameUser");
+            Debug.Log("[使用接口]gameUser.name=" + gameUser.name);
+            Debug.Log("[使用接口]gameUser.age=" + gameUser.age);
+            Debug.Log("[使用接口]gameUser.ID=" + gameUser.ID);
+
+            gameUser.Speak();
+            gameUser.Walking();
+
+            int result = gameUser.Calulation(20,1,1);
+            Debug.Log("[使用接口]result=" + result);
+
+            int result1 = 0;
+            int result2 = 0;
+            int result3 = 0;
+            gameUser.getDatas(20, 1, 1, out result1, out result2, out result3);
+            Debug.Log(string.Format("[使用接口]多返回值= res1={0},res2={1},res3={2}", result1, result2, result3));
+
+
         }
 
 
@@ -80,6 +99,22 @@ namespace XluaPro
             string str2 { get; set; }
             string str3 { get; set; }
             string str4 { get; set; }
+        }
+
+
+        [CSharpCallLua]
+        public interface IgameUser
+        {
+            string name { get; set; }
+            int age { get; set; }
+            string ID { get; set; }
+
+            void Speak();
+            void Walking();
+            int Calulation(int age, int num1, int num2);
+
+            void getDatas(int age, int num1, int num2, out int result1, out int result2, out int result3);
+       
         }
 
 
