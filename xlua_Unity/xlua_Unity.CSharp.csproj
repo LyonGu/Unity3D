@@ -242,10 +242,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Resources\scripts\CSLua.cs" />
-    <Compile Include="Assets\Resources\scripts\RunLuaByFile.cs" />
-    <Compile Include="Assets\Resources\scripts\RunLuaByRequire.cs" />
-    <Compile Include="Assets\Resources\scripts\RunLuaBySelfDefLoader.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaByGlableVar.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaFunctionByLuaFun.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByClass.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByDic.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByLuaTable.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CSLua.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByFile.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByRequire.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\RunLuaBySelfDefLoader.cs" />
     <Compile Include="Assets\XLua\Examples\01_Helloworld\Helloworld.cs" />
     <Compile Include="Assets\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
     <Compile Include="Assets\XLua\Examples\04_LuaObjectOrented\InvokeLua.cs" />
