@@ -7,11 +7,17 @@ public class GUIEasyTouchInspector : Editor {
 
 	GUIStyle paddingStyle1;
 
-	public GUIEasyTouchInspector(){
+    //public GUIEasyTouchInspector(){
 
-		paddingStyle1 = new GUIStyle();
-		paddingStyle1.padding = new RectOffset(15,0,0,0);
-	}
+    //    paddingStyle1 = new GUIStyle();
+    //    paddingStyle1.padding = new RectOffset(15,0,0,0);
+    //}
+
+    public void OnEnable()
+    {
+        paddingStyle1 = new GUIStyle();
+        paddingStyle1.padding = new RectOffset(15, 0, 0, 0);
+    }
 	
 	public override void OnInspectorGUI(){
 			
