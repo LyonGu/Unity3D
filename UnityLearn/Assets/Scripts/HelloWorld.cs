@@ -34,7 +34,7 @@ public class HelloWorld : MonoBehaviour {
 
         if(Input.GetMouseButtonDown(0))
         {
-            Vector2 t = Input.mousePosition;
+            Vector2 t = Input.mousePosition; //获取的仅仅是屏幕坐标
             print("t pos:" + t.x + "," + t.y);
 
             //跟随移动需要转换坐标
