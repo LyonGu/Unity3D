@@ -185,7 +185,7 @@ MonoBehaviour:
   showGesture: 1
   showTwoFinger: 1
   showSecondFinger: 1
-  secondFingerTexture: {fileID: 0}
+  secondFingerTexture: {fileID: 2800000, guid: d3686533aff0e2b4bac7a2a7faf73f7a, type: 3}
 --- !u!1 &222234846
 GameObject:
   m_ObjectHideFlags: 0

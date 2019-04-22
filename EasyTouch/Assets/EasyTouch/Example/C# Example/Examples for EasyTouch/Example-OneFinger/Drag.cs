@@ -41,7 +41,8 @@ public class Drag : MonoBehaviour {
 			gameObject.GetComponent<Renderer>().material.color = new Color( Random.Range(0.0f,1.0f),  Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f));
 		
 			// the world coordinate from touch for z=5
-			Vector3 position = gesture.GetTouchToWordlPoint(5);
+            //Vector3 position = gesture.GetTouchToWordlPoint(5);
+			Vector3 position = gesture.GetTouchToWordlPoint(transform.position.z);
 			
 			
 			deltaPosition = position - transform.position;
@@ -55,9 +56,11 @@ public class Drag : MonoBehaviour {
 		if (gesture.pickObject == gameObject){
 			
 			// the world coordinate from touch for z=5
-			Vector3 position = gesture.GetTouchToWordlPoint(5);
-			
-			transform.position = position - deltaPosition;
+            //Vector3 position = gesture.GetTouchToWordlPoint(5);
+            Vector3 position = gesture.GetTouchToWordlPoint(transform.position.z);
+
+            //transform.position = position - deltaPosition;
+            transform.position = position;
 			
 			// Get the drag angle
 			float angle = gesture.GetSwipeOrDragAngle();
@@ -71,7 +74,7 @@ public class Drag : MonoBehaviour {
 	
 		// Verification that the action on the object
 		if (gesture.pickObject == gameObject){
-			transform.position= new Vector3(3f,1.8f,-5f);
+			//transform.position= new Vector3(3f,1.8f,-5f);
 			gameObject.GetComponent<Renderer>().material.color = Color.white;
 			textMesh.text="Drag me";
 		}
