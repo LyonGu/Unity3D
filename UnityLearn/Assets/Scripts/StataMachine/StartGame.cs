@@ -23,12 +23,6 @@ public class StartGame : MonoBehaviour {
         BaseEnitity enitity = new PlayerEnitity();
         _enitityDic.Add(enitity._id, enitity);
 
-        //状态机设置
-        BaseState state = new PlayerIdleState(enitity);
-        StateMachine stateMachine = new StateMachine(enitity);
-        stateMachine.setCurrentState(state);
-        enitity.setStateMachine(stateMachine);
-        
         //初始化显示对象
         enitity.initGameObject();
         

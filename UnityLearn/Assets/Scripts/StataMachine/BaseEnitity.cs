@@ -29,6 +29,11 @@ public class BaseEnitity  {
         _id = GlobalParams.gameObjId;
         GlobalParams.gameObjId++;
 
+        //创建状态机
+        StateMachine stateMachine = new StateMachine(this);
+        setStateMachine(stateMachine);
+
+        //注册消息机制
         MessageDispatcher.getInstance().registerEntity(this);
     }
 

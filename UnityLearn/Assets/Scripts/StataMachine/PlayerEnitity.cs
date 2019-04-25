@@ -15,7 +15,9 @@ public class PlayerEnitity:BaseEnitity  {
         _mode = new PlayerMode();
         _mode._file = "Models/SwordsMan/GreateWarrior";
 
-        
+        //状态机设置
+        BaseState state = new PlayerIdleState(this);
+        _stateMachine.setCurrentState(state);
 
     }
     override public void initGameObject()

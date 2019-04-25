@@ -30,7 +30,7 @@ public class PlayerIdleState : PlayerState
 
     override public void excute(params object[] values)
     {
-        //Debug.Log("玩家excute================");
+        Debug.Log("玩家excute================");
     }
 
 
