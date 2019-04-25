@@ -381,6 +381,7 @@
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatin.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatinManger.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseEnitity.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseMode.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseState.cs" />
