@@ -36,7 +36,8 @@ public class BaseState  {
         //子类必须重载
     }
 
-    public bool onMessage(BaseEnitity enitity, Message msg)
+    //重载不同的消息处理逻辑
+    virtual public bool onMessage(BaseEnitity enitity, Message msg)
     {
         return true;
     }

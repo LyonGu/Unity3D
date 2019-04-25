@@ -5,14 +5,14 @@ using System;
 
 public class Message  {
 
-    public int _messageId;                              //消息ID
+    public MessageCustomType _messageId;                              //消息ID
     public int _senderId;                               //发送者ID
     public int _reviererId;                             //接收者ID
     public DateTime _dispatchTime;                           //发送时间
     public Dictionary<string, object> _extraInfo;       //额外参数
 
 
-    public Message(int messageId, int senderId, int reviererId, DateTime dispatchTime, Dictionary<string, object> extraInfo)
+    public Message(MessageCustomType messageId, int senderId, int reviererId, DateTime dispatchTime, Dictionary<string, object> extraInfo)
     {
         _messageId = messageId;
         _senderId = senderId;
@@ -24,7 +24,7 @@ public class Message  {
 
 
 //消息ID统一管理
-public enum MessageType
+public enum MessageCustomType
 { 
     msg1 = 1000,
     msg2 = 1001,

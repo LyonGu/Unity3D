@@ -80,19 +80,21 @@ public class StateMachine  {
     }
 
     //消息处理
-    public void handleMessage(Message msg)
+    public bool handleMessage(Message msg)
     {
         //当前状态先监听
         if (_curState != null)
         {
-            _curState.onMessage(_enitity, msg);
+              return _curState.onMessage(_enitity, msg);
         }
 
         //全局状态监听
         if (_globalState != null)
         {
-            _globalState.onMessage(_enitity, msg);
+              return _globalState.onMessage(_enitity, msg);
         }
+
+        return false;
         
     }
 

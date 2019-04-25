@@ -382,9 +382,14 @@
     <Compile Include="Assets\Scripts\SpriteAnimatin.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatinManger.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseEnitity.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\BaseMode.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseState.cs" />
     <Compile Include="Assets\Scripts\StataMachine\Message.cs" />
     <Compile Include="Assets\Scripts\StataMachine\MessageDispatcher.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\PlayerEnitity.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\PlayerMode.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\PlayerState.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\StartGame.cs" />
     <Compile Include="Assets\Scripts\StataMachine\StateMachine.cs" />
     <Compile Include="Assets\Scripts\test.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
