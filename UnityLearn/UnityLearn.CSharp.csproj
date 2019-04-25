@@ -381,6 +381,11 @@
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatin.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatinManger.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\BaseEnitity.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\BaseState.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\Message.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\MessageDispatcher.cs" />
+    <Compile Include="Assets\Scripts\StataMachine\StateMachine.cs" />
     <Compile Include="Assets\Scripts\test.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\TestManger.cs" />
