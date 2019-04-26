@@ -74,7 +74,7 @@ public class StartGame : MonoBehaviour {
         //    Debug.Log("_objList=========" + v.t + "/" + v.name);
         //}
 
-        StartCoroutine("updateGame");
+        //StartCoroutine("updateGame");
 	}
 
     //public int compare(ListObj obj1, ListObj obj2)
@@ -128,9 +128,32 @@ public class StartGame : MonoBehaviour {
     //        //totalTime = 1.0f;
     //    }
 
-
-        
     //}
+
+    void FixedUpdate()
+    {
+        //使用逻辑时间
+        GlobalParams.frameCount++;
+        GlobalParams.totalTime += GlobalParams.interval;
+        {
+            foreach (KeyValuePair<int, BaseEnitity> obj in _enitityDic)
+            {
+
+                int id = obj.Key;
+                BaseEnitity enitity = obj.Value;
+                enitity._stateMachine.update(GlobalParams.interval);
+            }
+
+            //消息发送
+            _msgDispatcher.dispatchDelayedMessages();
+
+            //事件调用
+            GlobalParams.update(GlobalParams.totalTime);
+
+            //totalTime = 1.0f;
+        }
+
+    }
     IEnumerator updateGame()
     {
         while (true)

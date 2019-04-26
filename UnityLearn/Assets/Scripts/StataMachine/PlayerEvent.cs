@@ -25,6 +25,6 @@ public class PlayerEvent : MonoBehaviour {
 
     public void PrintEvent(int i)
     {
-        Debug.Log("PrintEvent: " + i + " called at: " + GlobalParams.totalTime + " 当前帧数：" + GlobalParams.frameCount);
+        Debug.Log("PrintEvent: " + i + " called at: " + GlobalParams.totalTime + " 当前帧数：" + GlobalParams.frameCount + " 当前时间:"+ Time.time);
     }
 }
