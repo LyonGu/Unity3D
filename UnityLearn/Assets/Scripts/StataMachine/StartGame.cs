@@ -103,13 +103,14 @@ public class StartGame : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-    //void Update () {
+    //void Update()
+    //{
     //    //totalTime -= Time.deltaTime;
     //    //if (totalTime <= 0.0f)
 
     //    //使用逻辑时间
     //    GlobalParams.frameCount++;
-    //    GlobalParams.totalTime += GlobalParams.interval;
+    //    GlobalParams.totalTime += Time.deltaTime;
     //    {
     //        foreach (KeyValuePair<int, BaseEnitity> obj in _enitityDic)
     //        {
@@ -134,7 +135,7 @@ public class StartGame : MonoBehaviour {
     {
         //使用逻辑时间
         GlobalParams.frameCount++;
-        GlobalParams.totalTime += GlobalParams.interval;
+        GlobalParams.totalTime += Time.deltaTime;
         {
             foreach (KeyValuePair<int, BaseEnitity> obj in _enitityDic)
             {

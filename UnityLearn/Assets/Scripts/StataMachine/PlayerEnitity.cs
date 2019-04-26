@@ -163,7 +163,7 @@ public class PlayerEnitity:BaseEnitity  {
 
                     if (animatinName == "Attack2")
                     {
-                        AddAnimationEvent(state.clip, 27, "PrintEvent");
+                        AddAnimationEvent(state.clip, 89, "PrintEvent");
                        
                         //方法1：通过发消息实现 不太方便 需要注册，主要针对于状态，得再攻击状态里注册消息
                         //Dictionary<string, object> exInfo = new Dictionary<string, object>();
@@ -177,7 +177,7 @@ public class PlayerEnitity:BaseEnitity  {
                         //方法2：调用注册事件回调
                         float frameRate = clip.frameRate; //1秒都少帧
                         float frameInterval = 1.0f / frameRate;
-                        int frameIndex = 27;
+                        int frameIndex = 89;
                         float time = frameIndex * frameInterval;
                         float p = GlobalParams.totalTime + time;
                         Debug.Log("注册时间：" + GlobalParams.totalTime + " / 预测回调时间：" + p + " 当前帧数：" + GlobalParams.frameCount + " 等待时间:" + time);
