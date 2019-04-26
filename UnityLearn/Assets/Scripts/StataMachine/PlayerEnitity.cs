@@ -38,7 +38,7 @@ public class PlayerEnitity:BaseEnitity  {
         //状态机设置
         //changeState(playerIdleState);
         _stateMachine.setCurrentState(playerIdleState);
-
+        
         _animationNameList = new List<string>();
         
      
@@ -72,6 +72,8 @@ public class PlayerEnitity:BaseEnitity  {
                 AnimationClip clip = Resources.Load<AnimationClip>(path);
                 _animation.AddClip(clip, clipName);
             }
+
+            _gameObject.AddComponent<PlayerEvent>(); //动画帧事件要放到一个与Animation同级的脚本里
             changeAniamtion(_animationNameList[0], 1.0f, true);
             //测试代码
             addBtnListener();
@@ -92,6 +94,8 @@ public class PlayerEnitity:BaseEnitity  {
         //点击按钮切换不同的状态
         string name = btn.name;
         int stateIndex = 0;
+        bool[] isLoopArr = { true, true ,false, false};
+        float[] speedArr = { 1.0f, 1.0f, 1.0f, 1.0f };
         for (int i = 0; i < _animationNameList.Count; i++)
         {
             if (name.Equals(_animationNameList[i]))
@@ -105,11 +109,13 @@ public class PlayerEnitity:BaseEnitity  {
 
         //切换状态
         BaseState state = _stateList[stateIndex];
-        changeState(state);
+        float speed = speedArr[stateIndex];
+        bool isloop = isLoopArr[stateIndex];
+        changeState(state, name, speed, isloop);
 
         //切换动作
-        string animatinName = name;
-        changeAniamtion(animatinName);
+        //string animatinName = name;
+        //changeAniamtion(animatinName);
         
     }
 
@@ -119,7 +125,7 @@ public class PlayerEnitity:BaseEnitity  {
 
         /*
          * AnimationClip:
-                frameRate  帧率
+                frameRate  帧率:1秒多少帧
          *      length     长度（秒）
          *      AddEvent 添加帧事件
          *      
@@ -152,8 +158,34 @@ public class PlayerEnitity:BaseEnitity  {
                         _animation.wrapMode = WrapMode.Once;
                     }
 
-                    
+                    //Debug.Log(state.name+ "/ frameRate:" + state.clip.frameRate + "/ length:"+state.length);
+
+
+                    if (animatinName == "Attack2")
+                    {
+                        AddAnimationEvent(state.clip, 90, "PrintEvent");
+                       
+                        //方法1：通过发消息实现 不太方便 需要注册，主要针对于状态，得再攻击状态里注册消息
+                        //Dictionary<string, object> exInfo = new Dictionary<string, object>();
+                        //float frameRate = clip.frameRate; //1秒都少帧
+                        //float frameInterval = 1.0f / frameRate;
+                        //int frameIndex = 27;
+                        //float time = frameIndex * frameInterval * 1000;
+                        //exInfo.Add("msgParams", "测试消息1========");
+                        //MessageDispatcher.getInstance().dispatchMessages(time, 0, 0, MessageCustomType.msg1, exInfo);
+
+                        //方法2：调用注册事件回调
+                        //float frameRate = clip.frameRate; //1秒都少帧
+                        //float frameInterval = 1.0f / frameRate;
+                        //int frameIndex = 90;
+                        //float time = frameIndex * frameInterval;
+                        //float p = GlobalParams.totalTime + time;
+                        //Debug.Log("注册时间：" + GlobalParams.totalTime + " / 预测回调时间：" + p + " 当前帧数：" + GlobalParams.frameCount + " 等待时间:" + time);
+                        //DelayCall delayCall = new DelayCall(time, GlobalParams.frameCount, testEvent, this);
+                        //GlobalParams.addDelayCall(delayCall);
+                    }
                     _animation.CrossFade(animatinName);
+                    //_animation.Play(animatinName);
                     break;
                 }
             }
@@ -164,6 +196,31 @@ public class PlayerEnitity:BaseEnitity  {
         
     }
 
+    public void testEvent(BaseEnitity eniity)
+    {
+        Debug.Log("testEvent======成功回调========" + GlobalParams.totalTime + " 当前帧数：" + GlobalParams.frameCount);
+
+    }
+
+
+
+    public void AddAnimationEvent(AnimationClip clip, int frameIndex, string funcName)
+    {
+        float frameRate = clip.frameRate; //1秒都少帧
+        float frameInterval = 1.0f / frameRate;
+        float time = frameIndex * frameInterval;
+        AnimationEvent evt = new AnimationEvent();
+
+
+        float len = clip.length;
+
+        evt.intParameter = 12345;
+        evt.time = time;
+        evt.functionName = funcName;
+
+        Debug.Log("clip length:"+ len+ " AddAnimationEvent======回调等待时间:" + time +" 当前逻辑时间:" + GlobalParams.totalTime + " 当前帧数：" + GlobalParams.frameCount);
+        clip.AddEvent(evt);
+    }
 
     //以下是测试代码
     public void addBtnListener()
@@ -181,5 +238,7 @@ public class PlayerEnitity:BaseEnitity  {
         }
 
     }
+
+  
 
 }

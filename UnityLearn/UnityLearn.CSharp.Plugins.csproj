@@ -314,6 +314,7 @@
     <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
+    <None Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\ToolResources\EffectShader\FXMaker_Mask Additive Tint.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />

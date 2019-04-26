@@ -25,6 +25,17 @@ public class PlayerState : BaseState {
     {
        
     }
+
+    override public void enter(params object[] values)
+    {
+        //切换动作
+        string animatinName = (string)values[0];
+        float speed = (float)values[1];
+        bool isLoop = (bool)values[2];
+        PlayerEnitity enitity = (PlayerEnitity)_enitity;
+        enitity.changeAniamtion(animatinName, speed, isLoop);
+
+    } 
 }
 
 
@@ -40,7 +51,9 @@ public class PlayerIdleState : PlayerState
 
     override public  void enter(params object[] values)
     {
-       
+        //切换动作
+        base.enter(values);
+        //changeAniamtion(animatinName);
         
     }
 
@@ -86,7 +99,7 @@ public class PlayerRunState : PlayerState
 
     override public void enter(params object[] values)
     {
-
+        base.enter(values);
 
     }
 
@@ -117,7 +130,7 @@ public class PlayerAttackState : PlayerState
 
     override public void enter(params object[] values)
     {
-
+        base.enter(values);
 
     }
 
@@ -149,7 +162,7 @@ public class PlayerDeadState : PlayerState
 
     override public void enter(params object[] values)
     {
-
+        base.enter(values);
 
     }
 
