@@ -60,10 +60,10 @@ public class AssetBundleLoad : MonoBehaviour {
             Debug.LogError(GetType() + "/LoadPrefabFramAB()/输入的参数不合法，请检查");
         }
 
-        using (WWW www = new WWW(ABURL))
+        using (WWW www = new WWW(ABURL)) //使用using语法，当www对象离开using大括号时就自动卸载了
         {
             yield return www;
-            AssetBundle ab = www.assetBundle;
+            AssetBundle ab = www.assetBundle;  //下载ab包
             if (ab != null)
             {
                 if (assetName == "")
@@ -85,7 +85,7 @@ public class AssetBundleLoad : MonoBehaviour {
                     //实例化指定资源
                     if (showTransfrom != null)
                     {
-                        GameObject goCloneObj = (GameObject)Instantiate(ab.LoadAsset(assetName));
+                        GameObject goCloneObj = (GameObject)Instantiate(ab.LoadAsset(assetName));  //加载ab包
                         goCloneObj.transform.localPosition = showTransfrom.localPosition;
                         goCloneObj.name = assetName;
                     }
@@ -141,6 +141,28 @@ public class AssetBundleLoad : MonoBehaviour {
                 ab.Unload(false);
             }
             else
+            {
+                Debug.LogError(GetType() + "/LoadNonObjectFromAB()/WWW 下载错误，请检查 URL: " + ABURL + " 错误信息:" + www.error);
+            }
+        }
+    }
+
+
+
+    //加载AB包（不提取资源）
+    IEnumerator LoadFromAB(string ABURL)
+    {
+        //参数检查
+        if (string.IsNullOrEmpty(ABURL))
+        {
+            Debug.LogError(GetType() + "/LoadFromAB()/输入的参数不合法，请检查");
+        }
+
+        using (WWW www = new WWW(ABURL))
+        {
+            yield return www;
+            AssetBundle ab = www.assetBundle;
+            if (ab == null)
             {
                 Debug.LogError(GetType() + "/LoadNonObjectFromAB()/WWW 下载错误，请检查 URL: " + ABURL + " 错误信息:" + www.error);
             }
