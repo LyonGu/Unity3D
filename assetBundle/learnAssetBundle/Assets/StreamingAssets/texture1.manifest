@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3864968921
+CRC: 1673750430
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -12,6 +12,6 @@ ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 Assets:
-- Assets/Res/unitychan_tile6.png
-- Assets/Res/unitychan_tile3.png
+- Assets/Res/Textures/unitychan_tile6.png
+- Assets/Res/Textures/unitychan_tile3.png
 Dependencies: []
