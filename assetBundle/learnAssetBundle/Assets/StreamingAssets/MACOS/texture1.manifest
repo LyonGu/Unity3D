@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 2599316420
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: dfc3d0bef2e4d1b78ec10c0b805fa07d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: c73412a662fd4e4f36af34cbdf078b85
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Res/Textures/unitychan_tile6.png
+- Assets/Res/Textures/unitychan_tile3.png
+Dependencies: []
