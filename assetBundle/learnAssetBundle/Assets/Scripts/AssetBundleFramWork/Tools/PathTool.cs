@@ -90,6 +90,8 @@ public class PathTool {
 			//Windows 主平台
 			case RuntimePlatform.WindowsPlayer:
 			case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.OSXPlayer:
+			case RuntimePlatform.OSXEditor:
 				strReturnWWWPath = "file://" + GetABOutPath();
 				break;
 			//Android 平台
