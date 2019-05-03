@@ -11,7 +11,7 @@ using UnityEngine;
 public class AssetLoader: System.IDisposable {
 	
 	//当前Assetbundle
-	private BuildAssetBundle _currentAssetBundle;
+	private AssetBundle _currentAssetBundle;
 
 	//缓存容器集合 哈希表
 	private Hashtable _htTable;
@@ -69,20 +69,20 @@ public class AssetLoader: System.IDisposable {
  
         public void Dispose()
         {
-            _CurrentAssetBundle.Unload(false);
+            _currentAssetBundle.Unload(false);
         }
 
         /// 释放当前AssetBundle内存镜像资源,且释放内存资源。
         public void DisposeALL()
         {
-            _CurrentAssetBundle.Unload(true);
+            _currentAssetBundle.Unload(true);
         }
 
 
         /// 查询当前AssetBundle中包含的所有资源名称。
         public string[] RetriveAllAssetName()
         {
-            return _CurrentAssetBundle.GetAllAssetNames();
+            return _currentAssetBundle.GetAllAssetNames();
         }
 	
 }
