@@ -23,7 +23,19 @@ public class BuildAssetBundle  {
         }
 
         //打包生成
-        //BuildPipeline.BuildAssetBundles(strABoutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-        BuildPipeline.BuildAssetBundles(strABoutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
+        string strReturnPlatformPath = string.Empty;
+		switch (Application.platform)
+		{
+
+			case RuntimePlatform.WindowsEditor:
+                BuildPipeline.BuildAssetBundles(strABoutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
+                break;
+			case RuntimePlatform.OSXEditor:
+				BuildPipeline.BuildAssetBundles(strABoutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
+				break;
+			default:
+				break;
+		}
+        
     }
 }
