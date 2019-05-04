@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,7 +100,7 @@ public class PathTool {
 				break;
 			//IOS 平台
 			case RuntimePlatform.IPhonePlayer:
-				strReturnWWWPath = GetABOutPath();
+				strReturnWWWPath = GetABOutPath()+"/Raw/";
 				break;
 			default:
 				break;
