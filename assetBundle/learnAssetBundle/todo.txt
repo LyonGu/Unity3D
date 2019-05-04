@@ -1,0 +1,4 @@
+1 测试非GameObjec资源加载: texture,material,sprite,图集，音频，动画
+2 测试复杂预设，依赖关系
+2 内存的管理与释放
+3 完善框架
