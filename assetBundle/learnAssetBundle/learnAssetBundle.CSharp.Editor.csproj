@@ -297,7 +297,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Editor\BuildAssetBundle.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\AutoSetLabels.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\BuildAssetBundle.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\DeleteAssetBundle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

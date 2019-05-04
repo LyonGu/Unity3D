@@ -53,7 +53,7 @@ public class PathTool {
 	}
 
 	/// 获取平台的名称
-	private static string GetPlatformName()
+	public static string GetPlatformName()
 	{
 		string strReturnPlatformName = string.Empty;
 
