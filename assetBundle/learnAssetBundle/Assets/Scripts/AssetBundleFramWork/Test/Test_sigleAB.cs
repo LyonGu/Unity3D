@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class Test_sigleAB : MonoBehaviour {
 
+
+    //非GameObject资源测试
+    public GameObject goCubeChangeTexture1;
+
+    private string _URL1;
+    private string _assetTexName1;
+
 	//引用类
         private SingleABLoader _LoadObj = null;
         /*  依赖AB包名称  */
-        private string _ABDependName1 = "scence_1/textures.ab"; //贴图AB包
-        private string _ABDependName2 = "scence_1/materials.ab";//材质AB包
+        private string _ABDependName1 = "scene_1/textures.ab"; //贴图AB包
+        private string _ABDependName2 = "scene_1/materials.ab";//材质AB包
         //AB包名称
         private string _ABName1 = "scene_1/prefabs.ab";
         //AB包中资源名称
@@ -19,11 +26,21 @@ public class Test_sigleAB : MonoBehaviour {
         #region 简单（无依赖包）预设的加载
         private void Start()
         {
-           _LoadObj = new SingleABLoader(_ABName1, LoadComplete);
-           //加载AB包
-           StartCoroutine(_LoadObj.LoadAssetBundle());
+            //非GameObject资源测试 ==》ok
+            _URL1 = PathTool.GetWWWPath() + "/scene_1/textures.ab"; // 
 
-		   //依赖包
+            //AB包内部资源名称，就是原始资源的名称
+            _assetTexName1 = "unitychan_tile6";
+            StartCoroutine(LoadNoeObjectFramAB(_URL1, goCubeChangeTexture1, _assetTexName1));
+            //_LoadObj = new SingleABLoader(_ABDependName1, LoadComplete);
+            //StartCoroutine(_LoadObj.LoadNoeObjectFramAB(_URL1, goCubeChangeTexture1, _assetTexName1));
+
+
+           //加载非依赖AB包 ok
+           //_LoadObj = new SingleABLoader(_ABName1, LoadComplete);
+           //StartCoroutine(_LoadObj.LoadAssetBundle());
+
+		    //依赖包 ==>ok 
 			SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1, LoadDependComplete1);
             //加载AB依赖包
             StartCoroutine(_LoadDependObj.LoadAssetBundle());
@@ -87,6 +104,39 @@ public class Test_sigleAB : MonoBehaviour {
                 Debug.Log("释放镜像内存资源，与内存资源");
                 //_LoadObj.Dispose();//释放镜像内存资源
                 _LoadObj.DisposeALL();//释放镜像内存资源，与内存资源
+            }
+        }
+
+        IEnumerator LoadNoeObjectFramAB(string ABURL, GameObject goShowObj, string assetName)
+        {
+            //参数检查
+            if (string.IsNullOrEmpty(ABURL) || goShowObj == null)
+            {
+                Debug.LogError(GetType() + "/LoadNonObjectFromAB()/输入的参数不合法，请检查");
+            }
+
+            using (WWW www = new WWW(ABURL))
+            {
+                yield return www;
+                AssetBundle ab = www.assetBundle;
+                if (ab != null)
+                {
+                    if (assetName == "")
+                    {
+                        goShowObj.GetComponent<Renderer>().material.mainTexture = (Texture)ab.mainAsset;
+                    }
+                    else
+                    {
+                        goShowObj.GetComponent<Renderer>().material.mainTexture = (Texture)ab.LoadAsset(assetName);
+                    }
+
+                    //卸载资源(只卸载AB包本身)
+                    ab.Unload(false);
+                }
+                else
+                {
+                    Debug.LogError(GetType() + "/LoadNonObjectFromAB()/WWW 下载错误，请检查 URL: " + ABURL + " 错误信息:" + www.error);
+                }
             }
         }
 }
