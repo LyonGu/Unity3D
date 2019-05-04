@@ -244,6 +244,7 @@
     <Compile Include="Assets\Scripts\AssetBundleFramWork\AssetLoader.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\MultiABMgr.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\SingleABLoader.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleFramWork\Test\Test_framwork.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Test\Test_sigleAB.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Tools\ABDefine.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Tools\PathTool.cs" />

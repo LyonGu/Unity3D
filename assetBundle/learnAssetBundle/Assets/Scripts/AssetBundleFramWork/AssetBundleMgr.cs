@@ -46,7 +46,7 @@ public class AssetBundleMgr:MonoBehaviour
     /// <param name="abName">AssetBundle 包名称</param>
     /// <param name="loadAllCompleteHandle">委托： 调用是否完成</param>
     /// <returns></returns>
-    public IEnumerator LoadAssetBundlePack(string scenesName, string abName, DelLoadComplete loadAllCompleteHandle)
+    public IEnumerator LoadAssetBundlePack(string scenesName, string abName, DelLoadComplete loadAllCompleteHandle = null)
     {
         //参数检查
         if (string.IsNullOrEmpty(scenesName) || string.IsNullOrEmpty(abName))
@@ -95,7 +95,7 @@ public class AssetBundleMgr:MonoBehaviour
     /// <param name="assetName">资源名称</param>
     /// <param name="isCache">是否使用缓存</param>
     /// <returns></returns>
-    public UnityEngine.Object LoadAsset(string scenesName, string abName, string assetName  ,bool isCache)
+    public UnityEngine.Object LoadAsset(string scenesName, string abName, string assetName ,bool isCache = true)
     {
         if (_DicAllScenes.ContainsKey(scenesName))
         {
