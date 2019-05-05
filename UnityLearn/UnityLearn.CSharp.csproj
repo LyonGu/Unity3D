@@ -343,6 +343,7 @@
     <Compile Include="Assets\Resources\ParticleProps\IGSoft_Resources\Scripts\NcEffect\NcUvAnimation.cs" />
     <Compile Include="Assets\Resources\ParticleProps\SkillThunders\thunderDestory.cs" />
     <Compile Include="Assets\Scripts\AddingButton.cs" />
+    <Compile Include="Assets\Scripts\AltasTest.cs" />
     <Compile Include="Assets\Scripts\AssetBundleLoadDemo.cs" />
     <Compile Include="Assets\Scripts\BaseNavigation.cs" />
     <Compile Include="Assets\Scripts\ButtonEvent.cs" />
