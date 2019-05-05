@@ -106,9 +106,15 @@ public class Test_sigleAB : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.A))
             {
                 _LoadObj.UnLoadAsset(_texObj, true);  //释放资源内存
-                _tmpObj = null;
+               
                 _LoadObj.UnLoadAsset(_tmpObj,true);
-                //Destroy(_gameObj);
+                /*
+                 * // 只能释放对应的预设体，不能删除预设引用的材质以及材质中的贴图
+                     _tmpObj = null;
+                    Resources.UnloadUnusedAssets();
+                 */
+
+                Destroy(_gameObj); //*********************释放克隆体的内存，而且还是释放了克隆体所使用的资源
                 Debug.Log("释放镜像内存资源，与内存资源");
                 
                  //_LoadObj.Dispose();//释放镜像内存资源

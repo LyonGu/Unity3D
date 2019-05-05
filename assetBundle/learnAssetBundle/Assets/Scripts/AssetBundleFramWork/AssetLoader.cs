@@ -60,6 +60,7 @@ public class AssetLoader: System.IDisposable {
 			Resources.UnloadAsset(asset); //不在Resoucers目录下的资源也能删除
             if (isRemoveUnUseAssets)
             {
+                asset = null;
                 Resources.UnloadUnusedAssets();
             }
             return true;
