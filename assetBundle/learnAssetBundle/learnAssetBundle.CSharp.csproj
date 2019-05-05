@@ -239,7 +239,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AssetBundleFramWork\ABManifestLoader.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\ABRelation.cs" />
-    <Compile Include="Assets\Scripts\AssetBundleFramWork\AssetBundleLoad_fram.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\AssetBundleMgr.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\AssetLoader.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\MultiABMgr.cs" />

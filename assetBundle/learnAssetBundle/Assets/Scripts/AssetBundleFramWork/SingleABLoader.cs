@@ -71,11 +71,11 @@ public class SingleABLoader : System.IDisposable {
 
 	
 	/// 卸载（AB包中）资源
-	public void UnLoadAsset(UnityEngine.Object asset)
+	public void UnLoadAsset(UnityEngine.Object asset,bool isRemoveUnUseAssets = false)
 	{
 		if (_AssetLoader != null)
 		{
-			_AssetLoader.UnLoadAsset(asset);
+            _AssetLoader.UnLoadAsset(asset, isRemoveUnUseAssets);
 		}
 		else {
 			Debug.LogError(GetType()+ "/UnLoadAsset()/参数 _AssetLoader==Null , 请检查！");

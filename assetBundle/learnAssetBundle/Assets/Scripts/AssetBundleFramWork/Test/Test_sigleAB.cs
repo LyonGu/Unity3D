@@ -10,6 +10,9 @@ public class Test_sigleAB : MonoBehaviour {
 
     private string _URL1;
     private string _assetTexName1;
+    private Texture _texObj;
+    private GameObject _gameObj;
+    private Object _tmpObj;
 
 	//引用类
         private SingleABLoader _LoadObj = null;
@@ -86,8 +89,9 @@ public class Test_sigleAB : MonoBehaviour {
         {
             //加载AB包中的资源
             UnityEngine.Object tmpObj = _LoadObj.LoadAsset(_AssetName1, false);
+            _tmpObj = tmpObj;
             //克隆对象
-            Instantiate(tmpObj);
+            _gameObj = (GameObject)Instantiate(tmpObj);
 
             /*  查询包中的资源*/
             string[] strArray = _LoadObj.RetrivalAllAssetName();
@@ -101,9 +105,15 @@ public class Test_sigleAB : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
+                _LoadObj.UnLoadAsset(_texObj, true);  //释放资源内存
+                _tmpObj = null;
+                _LoadObj.UnLoadAsset(_tmpObj,true);
+                //Destroy(_gameObj);
                 Debug.Log("释放镜像内存资源，与内存资源");
-                //_LoadObj.Dispose();//释放镜像内存资源
-                _LoadObj.DisposeALL();//释放镜像内存资源，与内存资源
+                
+                 //_LoadObj.Dispose();//释放镜像内存资源
+                _LoadObj.DisposeALL();//释放镜像内存资源，与内存资源（gameObject）
+                
             }
         }
 
@@ -127,7 +137,8 @@ public class Test_sigleAB : MonoBehaviour {
                     }
                     else
                     {
-                        goShowObj.GetComponent<Renderer>().material.mainTexture = (Texture)ab.LoadAsset(assetName);
+                        _texObj = (Texture)ab.LoadAsset(assetName);
+                        goShowObj.GetComponent<Renderer>().material.mainTexture = _texObj;
                     }
 
                     //卸载资源(只卸载AB包本身)

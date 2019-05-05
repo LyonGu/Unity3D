@@ -53,11 +53,15 @@ public class AssetLoader: System.IDisposable {
 	}
 
 	//卸载指定资源(非GameObject) todo测试
-	public bool UnLoadAsset(Object asset)
+	public bool UnLoadAsset(Object asset, bool isRemoveUnUseAssets = false)
 	{
 		if(asset != null)
 		{
-			Resources.UnloadAsset(asset);
+			Resources.UnloadAsset(asset); //不在Resoucers目录下的资源也能删除
+            if (isRemoveUnUseAssets)
+            {
+                Resources.UnloadUnusedAssets();
+            }
             return true;
 		}
 		Debug.LogError(GetType()+ "/UnLoadAsset()/参数 asset==null ,请检查！");
@@ -69,10 +73,10 @@ public class AssetLoader: System.IDisposable {
  
         public void Dispose()
         {
-            _currentAssetBundle.Unload(false);
+            _currentAssetBundle.Unload(false); 
         }
 
-        /// 释放当前AssetBundle内存镜像资源,且释放内存资源。
+        /// 释放当前AssetBundle内存镜像资源,且释放内存资源（gameObject内存）。
         public void DisposeALL()
         {
             _currentAssetBundle.Unload(true);
