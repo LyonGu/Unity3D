@@ -51,21 +51,21 @@
 					d = 1.0 - d;
 				#endif
 
-				// 把UV坐标转换到[-1,1] ？？？？？
+				// 把UV坐标转换到[-1,1]  当前像素的NDC坐标
 				float4 H = float4(i.uv.x * 2 - 1, i.uv.y * 2 - 1, d * 2 - 1, 1);
 
 				// 把像素坐标H转到世界空间
 				float4 D = mul(_CurrentViewProjectionInverseMatrix, H);
 
-				// 进行透视化处理
-				float4 worldPos = D / D.w;
+				// 进行透视化处理 ？？？？？？这里为什么要除w分量 ==》为了方便计算
+				float4 worldPos = D / D.w; //这里除不除w分量从效果上看不出什么区别
 				
-				// Current viewport position 
-				float4 currentPos = H;
+				// Current viewport position 当前像素的NDC坐标
+				float4 currentPos = H;  
 				// Use the world position, and transform by the previous view-projection matrix.  
-				float4 previousPos = mul(_PreviousViewProjectionMatrix, worldPos);
+				float4 previousPos = mul(_PreviousViewProjectionMatrix, worldPos); //仅仅得到了裁剪空间的坐标[-w,w]
 				// Convert to nonhomogeneous points [-1,1] by dividing by w.
-				previousPos /= previousPos.w;
+				previousPos /= previousPos.w;  //经过透视除法之后才能得到NDC坐标
 				
 				// Use this frame's position and last frame's to compute the pixel velocity.
 				float2 velocity = (currentPos.xy - previousPos.xy)/2.0;
