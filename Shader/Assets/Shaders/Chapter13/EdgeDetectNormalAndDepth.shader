@@ -51,9 +51,9 @@ Shader "Shaders/Chapter13/EdgeDetectionNormalsAndDepth" {
 		//center 深度法线信息 ：xy视觉空间下法线信息 zw深度信息，都是线性的
 		half CheckSame(half4 center, half4 sample) {
 			half2 centerNormal = center.xy;
-			float centerDepth = DecodeFloatRG(center.zw);
+			float centerDepth = DecodeFloatRG(center.zw); //得到线性深度值
 			half2 sampleNormal = sample.xy;
-			float sampleDepth = DecodeFloatRG(sample.zw);
+			float sampleDepth = DecodeFloatRG(sample.zw); //得到线性深度值
 			
 			// difference in normals
 			// do not bother decoding normals - there's no need here

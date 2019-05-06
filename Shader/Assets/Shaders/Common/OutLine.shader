@@ -17,7 +17,7 @@
 		
 
 		Pass {
-			NAME "OUTLINE"
+			NAME "OUTLINE2D"
 			
 			CGPROGRAM
 			

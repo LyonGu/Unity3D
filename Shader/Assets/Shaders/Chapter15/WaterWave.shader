@@ -72,7 +72,7 @@ Shader "Shaders/Chapter15/WaterWave"
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);
 				
-				//通过ComputeGrabScreenPos方法抓取屏幕的采样坐标[0,1]
+				//通过ComputeGrabScreenPos方法抓取屏幕坐标，需要除以w分量后标准化视口坐标
 				o.scrPos = ComputeGrabScreenPos(o.pos);
 				
 				//得到采样坐标
@@ -101,7 +101,7 @@ Shader "Shaders/Chapter15/WaterWave"
 				fixed3 bump2 = UnpackNormal(tex2D(_WaveMap, i.uv.zw - speed)).rgb;
 				fixed3 bump = normalize(bump1 + bump2);
 				
-				// Compute the offset in tangent space
+				// Compute the offset in tangent space 之所以选择切线空间下计算偏移量，是因为该空间下的法线可以反映顶点局部空间下的法线方向
 				float2 offset = bump.xy * _Distortion * _RefractionTex_TexelSize.xy;
 				i.scrPos.xy = offset * i.scrPos.z + i.scrPos.xy;
 				fixed3 refrCol = tex2D( _RefractionTex, i.scrPos.xy/i.scrPos.w).rgb;

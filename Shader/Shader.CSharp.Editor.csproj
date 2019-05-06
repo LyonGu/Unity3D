@@ -506,6 +506,7 @@
     <None Include="Assets\Shaders\Common\BumpedSpecular_NormalMapSpecularMap.shader" />
     <None Include="Assets\Shaders\Common\Normal.shader" />
     <None Include="Assets\Shaders\Common\OutLine.shader" />
+    <None Include="Assets\Shaders\Common\OutLine3D.shader" />
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Common\RimLight.shader" />
