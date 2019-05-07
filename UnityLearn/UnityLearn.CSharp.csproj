@@ -370,8 +370,8 @@
     <Compile Include="Assets\Scripts\RayDemo.cs" />
     <Compile Include="Assets\Scripts\RayDemo2_CCWalking.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
-    <Compile Include="Assets\Scripts\ResoucesManager.cs" />
     <Compile Include="Assets\Scripts\ResourceMemeroyMsg.cs" />
+    <Compile Include="Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
     <Compile Include="Assets\Scripts\Script.cs" />
     <Compile Include="Assets\Scripts\SelfRotation.cs" />
@@ -395,6 +395,7 @@
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\TestDictionary.cs" />
     <Compile Include="Assets\Scripts\TestManger.cs" />
+    <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
     <Compile Include="Assets\Scripts\WWWDemo1.cs" />
   </ItemGroup>
