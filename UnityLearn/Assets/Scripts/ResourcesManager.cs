@@ -3,6 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+/*
+ 
+ 1 Resources.UnloadAsset() 只能释放非"GameObjet"类型资源，“GameObject”类型资源需要使用Resources.UnloadUnusedAssets();
+		2 Resources.UnloadAsset() 
+		{
+			texture,shader,audioClip,animationClip, 这几种类型直接调用就能释放
+			
+			释放sprite
+			{
+				无引用：先释放对应的纹理，再释放自身
+					Texture tex = _sprObj1.texture;
+		            Resources.UnloadAsset(tex);
+		            Resources.UnloadAsset(_sprObj1); //单纯是靠引用计数来删除的
+
+	            有引用: 先把引用删除，再释放对应的纹理，最后释放自身
+		            _sp1.GetComponent<SpriteRenderer>().sprite = null;// Destroy(_sp1);
+					Texture tex = _sprObj.texture;
+	            	Resources.UnloadAsset(tex);
+					Resources.UnloadAsset(_sprObj1);
+			}
+
+			释放材质
+			{
+				无引用：直接释放
+				有引用：先删除引用，再释放
+					_cube.GetComponent<Renderer>().material = null;//Destroy(_cube);
+            		Resources.UnloadAsset(_materialObj);
+			}
+
+			释放带贴图的材质
+			{
+				无引用
+					Texture tex = _materialTexObj.mainTexture; //只释放主贴图
+		            Resources.UnloadAsset(tex);  //一定要先释放贴图再释放材质
+		            Resources.UnloadAsset(_materialTexObj); 
+
+		        有引用：
+			        _cube.GetComponent<Renderer>().material = null;//Destroy(_cube)
+		            Texture tex = _materialTexObj.mainTexture;
+		            Resources.UnloadAsset(tex);
+		            Resources.UnloadAsset(_materialTexObj); 
+
+			}
+		}
+
+		3 释放预设体 必须使用Resources.UnloadUnusedAssets():
+		{
+			//一定要删除引用再调用Resources.UnloadUnusedAssets()方法
+			 _prefabObj = null; 
+            Resources.UnloadUnusedAssets();
+		}
+
+		4 不管里全局变量还是局部变量，不删除资源，会一直保存在内存中
+        _sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
+        //Sprite t_sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
+ 
+ 
+ 
+ 
+ */
 public enum ResourceType 
 {
    //非GameObject类型
@@ -236,17 +296,42 @@ public class ResourcesManager  {
 
     private void unLoadResouce(ResourceObj resObj)
     {
-        int index = (int)resObj.type;
+        ResourceType type = resObj.type;
+        int index = (int)type;
         string path = resObj.pathName;
 
         //当引用计数小于0的时候才卸载资源
         _resourcesList[index].Remove(path);
         Object obj = resObj.obj;
-        Resources.UnloadAsset(obj);
-        if (resObj.type == ResourceType.Prefab)
+       
+       
+        if (type == ResourceType.Prefab)
         {
             obj = null;
             Resources.UnloadUnusedAssets();
+        }
+        else
+        {
+            if (type == ResourceType.Texture || type == ResourceType.Shader || type == ResourceType.AudioClip || type == ResourceType.AnimationClip)
+            {
+                Resources.UnloadAsset(obj);
+            }
+            else if (type == ResourceType.Sprite)
+            {
+                //先把关联贴图删除再删除sprite
+                Sprite sp = (Sprite)obj;
+                Texture tex = sp.texture;
+                Resources.UnloadAsset(tex);
+                Resources.UnloadAsset(sp);
+            }
+            else if (type == ResourceType.Material)
+            {
+                //先把关联贴图删除再删除material,暂时只支持删除主贴图
+                Material ma = (Material)obj;
+                Texture tex = ma.mainTexture;
+                Resources.UnloadAsset(tex);
+                Resources.UnloadAsset(ma);
+            }
         }
     }
 

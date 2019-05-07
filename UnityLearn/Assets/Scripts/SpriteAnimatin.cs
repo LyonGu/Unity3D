@@ -36,22 +36,30 @@ public class SpriteAnimatin : MonoBehaviour {
         _render = GetComponent<SpriteRenderer>();
     }
 
-    public Object[] addFileResource(string file)
+    public List<Sprite> addFileResource(string file)
     {
-         Object[] _atlas = _manger.loadPlistResource(file);
+         List<AltasObj> _atlas = _manger.loadPlistResource(file);
          _file = _atlas[0].name;
-         return _atlas;
+         List<Sprite> spList = new List<Sprite>();
+         for (int i = 1; i < _atlas.Count; i++)
+         {
+             AltasObj altasObj = _atlas[i];
+             Sprite sp = (Sprite)altasObj.obj;
+             spList.Add(sp);
+
+         }
+         return spList;
     }
 	void Start () {
         _render.sprite = _sprite;
 
-        Object[] _atlas = addFileResource(_filePath);
+        List<Sprite> _atlas = addFileResource(_filePath);
 
         Dictionary<int, List<Sprite>> dict = null;
         List<Sprite> list = null;
-        for (int i = 1; i < _atlas.Length; i++)
+        for (int i = 0; i < _atlas.Count; i++)
         {
-            Sprite s = (Sprite)_atlas[i];
+            Sprite s = _atlas[i];
             string name = s.name;
 
             string[] str = name.Split('_');
