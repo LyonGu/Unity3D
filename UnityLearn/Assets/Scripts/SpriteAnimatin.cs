@@ -22,11 +22,11 @@ public class SpriteAnimatin : MonoBehaviour {
     //初始化显示精灵帧
     public Sprite _sprite;
 
-    private SpriteAnimatinManger _manger;
+    private AltasManager _manger;
 
     void Awake()
     {
-        _manger = SpriteAnimatinManger.getInstance();
+        _manger = AltasManager.getInstance();
 
         //精灵帧容器  动作组 方向 精灵帧
         _spritesContainer = new Dictionary<int, Dictionary<int, List<Sprite>>>();

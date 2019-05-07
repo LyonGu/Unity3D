@@ -83,7 +83,7 @@ public class ResourceObj
 {
     public Object obj;
     public ResourceType type;
-    public List<string> viewList;       //属于哪个界面 :一对多的关系(一个界面还可以引用多次)
+    public List<string> refList;       //属于哪个界面 :一对多的关系(一个界面还可以引用多次)
     public string pathName;             //资源的路径
     public int refCount = 0;            //资源的引用计数
 
@@ -96,22 +96,22 @@ public class ResourceObj
         obj = rObj;
         type = rtype;
         pathName = rPahName;
-        viewList = new List<string>();
+        refList = new List<string>();
         isMaterailCustom = customMaterail;
         isShaderCustom = customShader;
     }
 
-    public void addRefCount(string viewName)
+    public void addRefCount(string refKey)
     {
         refCount++;
-        viewList.Add(viewName);
+        refList.Add(refKey);
        
     }
 
-    public void reduceRefCount(string viewName)
+    public void reduceRefCount(string refKey)
     {
         refCount--;
-        viewList.Remove(viewName);//相同的元素也只会删除一个
+        refList.Remove(refKey);//相同的元素也只会删除一个
     }
 
 }

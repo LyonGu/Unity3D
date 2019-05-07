@@ -44,6 +44,7 @@ public class TestResourceMsg : MonoBehaviour {
 
 
     private string resourceRefKey = "TestResourceMsg";
+    private string plistName = "guanyu";
 
 
     private ResourcesManager _resMgr;
@@ -52,6 +53,7 @@ public class TestResourceMsg : MonoBehaviour {
     void Awake()
     {
         _resMgr = ResourcesManager.getInstance();
+        _spAltasMgr = SpriteAnimatinManger.getInstance();
     }
 	// Use this for initialization
 	void Start () {
@@ -137,7 +139,9 @@ public class TestResourceMsg : MonoBehaviour {
         //_prefabObj = Resources.Load<GameObject>("Prefabs/Cube");
        // _gameObj = Instantiate(_prefabObj);
 
-        testResMsgFram();
+        //testResMsgFram();
+
+        testAltasMsgFram();
         
     }
 
@@ -170,6 +174,16 @@ public class TestResourceMsg : MonoBehaviour {
 
     }
 
+    //图集资源测试
+    void testAltasMsgFram()
+    {
+        
+        //加载plist后，内存中会有一份texture，还会有所有的sprite
+        _spAltasMgr.loadPlistResource(plistName);
+        //Sprite sp = _spAltasMgr.getSingleSpriteResource(plistName, "guanyu_01_01_00");
+        //_sp1.GetComponent<SpriteRenderer>().sprite = sp;
+    }
+
     void releaseResourceByFram()
     {
         _resMgr.removeResouce(ResourceType.Texture, "unitychan_tile3", resourceRefKey);        //ok
@@ -180,7 +194,21 @@ public class TestResourceMsg : MonoBehaviour {
         _resMgr.removeResouce(ResourceType.AudioClip, "button", resourceRefKey);               //ok 
         _resMgr.removeResouce(ResourceType.AnimationClip, "avoid", resourceRefKey);            //ok 
         _resMgr.removeResouce(ResourceType.Prefab, "Cube", resourceRefKey);                    //ok
-    } 
+    }
+
+    void releaseAltasResourceByFram()
+    {
+        //图集没有被引用，直接调用_spAltasMgr.removePlistResource，会删除对应texture以及sprite
+        //_spAltasMgr.removePlistResource(plistName);
+        //_spAltasMgr.removeAllPlistResource();
+
+        //图集被引用了，首先得删除引用 再删除plist
+        //如果不删除引用，则只会删除图集里其他未使用的sprite，纹理和被引用的sprite不会被删除
+        //_sp1.GetComponent<SpriteRenderer>().sprite = null;
+        //_spAltasMgr.removePlistResource(plistName);
+
+        //_spAltasMgr.removeAllPlistResource();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -220,7 +248,11 @@ public class TestResourceMsg : MonoBehaviour {
             //_prefabObj = null;
             //Resources.UnloadUnusedAssets(); 
 
-            releaseResourceByFram();
+            //使用resourcesMsg框架测试
+            //releaseResourceByFram();
+
+            //使用spriteFramManerger框架测试
+            releaseAltasResourceByFram();
 
            
         }

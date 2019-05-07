@@ -29,27 +29,27 @@ public class AltasObj
  *  1 使用Resources.LoadAll方法
  
  */
-public class SpriteAnimatinManger
+public class AltasManager
 {
 
 
-    private static SpriteAnimatinManger _instance = null;
+    private static AltasManager _instance = null;
 
     private Dictionary<string, List<AltasObj>> _cacheMap = null;
 
     private Dictionary<string, Dictionary<string, AltasObj>> _cacheMapDic = null;
-	// Use this for initialization
+    // Use this for initialization
 
-    public SpriteAnimatinManger()
+    public AltasManager()
     {
         _cacheMap = new Dictionary<string, List<AltasObj>>();
         _cacheMapDic = new Dictionary<string, Dictionary<string, AltasObj>>();
     }
-    static public SpriteAnimatinManger getInstance()
+    static public AltasManager getInstance()
     {
         if (_instance == null)
         {
-            _instance = new SpriteAnimatinManger();
+            _instance = new AltasManager();
         }
         return _instance;
     }
@@ -62,8 +62,8 @@ public class SpriteAnimatinManger
             Object[] _atlas = Resources.LoadAll("Plist/" + file);
 
             List<AltasObj> list = new List<AltasObj>();
-            
-            
+
+
             Dictionary<string, AltasObj> dict = new Dictionary<string, AltasObj>();
             _cacheMapDic.Add(file, dict);
             _cacheMap.Add(file, list);
@@ -95,7 +95,7 @@ public class SpriteAnimatinManger
         if (list != null)
         {
             AltasObj altasObj = null;
-            for (int i = 0; i <list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 altasObj = list[i];
                 unloadAsset(altasObj.obj);
@@ -105,7 +105,7 @@ public class SpriteAnimatinManger
             {
                 _cacheMap.Remove(file);
             }
-            
+
             if (_cacheMapDic.ContainsKey(file))
             {
                 _cacheMapDic.Remove(file);
@@ -126,7 +126,7 @@ public class SpriteAnimatinManger
             _cacheMap.Clear();
             _cacheMapDic.Clear();
         }
-        
+
     }
 
     //获取单个资源
@@ -134,12 +134,12 @@ public class SpriteAnimatinManger
     {
         AltasObj altasObj = null;
         if (_cacheMapDic != null)
-        { 
-            if(_cacheMapDic.ContainsKey(file))
+        {
+            if (_cacheMapDic.ContainsKey(file))
             {
                 altasObj = _cacheMapDic[file][name];
             }
-            
+
         }
         return altasObj;
     }
@@ -149,13 +149,13 @@ public class SpriteAnimatinManger
     {
         Texture tex = null;
         if (_cacheMapDic != null)
-        { 
-            if(_cacheMapDic.ContainsKey(file))
+        {
+            if (_cacheMapDic.ContainsKey(file))
             {
                 AltasObj altasObj = _cacheMapDic[file][file];
                 tex = (Texture)altasObj.obj;
             }
-            
+
         }
         return tex;
     }
@@ -182,5 +182,5 @@ public class SpriteAnimatinManger
     }
 
 
-       
+
 }
