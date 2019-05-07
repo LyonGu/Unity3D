@@ -59,7 +59,7 @@ using UnityEngine;
         _sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
         //Sprite t_sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
  
- 
+        5 Resources.UnloadAsset ==>不管资源是否在Resources文件下，都会被调用删除逻辑
  
  
  */
@@ -87,12 +87,18 @@ public class ResourceObj
     public string pathName;             //资源的路径
     public int refCount = 0;            //资源的引用计数
 
-    public ResourceObj(Object rObj, ResourceType rtype, string rPahName)
+    //为了跟Unity自身的材质和shader区分，加标记
+    public bool isMaterailCustom ;   
+    public bool isShaderCustom;
+
+    public ResourceObj(Object rObj, ResourceType rtype, string rPahName, bool customMaterail, bool customShader)
     {
         obj = rObj;
         type = rtype;
         pathName = rPahName;
         viewList = new List<string>();
+        isMaterailCustom = customMaterail;
+        isShaderCustom = customShader;
     }
 
     public void addRefCount(string viewName)
@@ -131,7 +137,7 @@ public class ResourcesManager  {
     private ResourcesManager()
     { 
         _resourcesList = new List<Dictionary<string, ResourceObj>>();
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i <= count; i++)
         {
             Dictionary<string, ResourceObj> dict = new Dictionary<string, ResourceObj>();
             _resourcesList.Add(dict);
@@ -195,7 +201,7 @@ public class ResourcesManager  {
      *  多个界面以后用多个不同资源         --》ok
      */
     //获取一个资源
-    public Object getResouce(ResourceType type, string name, string viewName)
+    public Object getResouce(ResourceType type, string name, string viewName, bool materailCustom = true, bool shaderCustom = true)
     {
         int index = (int)type;
         string path = getResourceKey(type, name);
@@ -206,8 +212,17 @@ public class ResourcesManager  {
         }
         else
         {
-            Object obj = Resources.Load<Object>(path);
-            resObj = new ResourceObj(obj, type, path);
+            Object obj = null;
+            if (type == ResourceType.Sprite)
+            {
+                obj = Resources.Load<Sprite>(path);
+            }
+            else
+            {
+                obj = Resources.Load<Object>(path);
+            }
+
+            resObj = new ResourceObj(obj, type, path, materailCustom, shaderCustom);
             _resourcesList[index].Add(path, resObj);
         }
         //引用管理
@@ -252,7 +267,7 @@ public class ResourcesManager  {
 
     }
 
-    //删除一个资源
+    //删除一个资源 (shader和材质只删除自定义的)
     public void removeResouce(ResourceType type, string name, string viewName)
     {
         int index = (int)type;
@@ -304,7 +319,7 @@ public class ResourcesManager  {
         _resourcesList[index].Remove(path);
         Object obj = resObj.obj;
        
-       
+        
         if (type == ResourceType.Prefab)
         {
             obj = null;
@@ -314,7 +329,19 @@ public class ResourcesManager  {
         {
             if (type == ResourceType.Texture || type == ResourceType.Shader || type == ResourceType.AudioClip || type == ResourceType.AnimationClip)
             {
-                Resources.UnloadAsset(obj);
+                if (type != ResourceType.Shader)
+                {
+                    Resources.UnloadAsset(obj);
+                }
+                else
+                {
+                    bool isCustomShader = resObj.isShaderCustom;
+                    if (isCustomShader)
+                    {
+                        Resources.UnloadAsset(obj);
+                    }
+                }
+                
             }
             else if (type == ResourceType.Sprite)
             {
@@ -322,15 +349,36 @@ public class ResourcesManager  {
                 Sprite sp = (Sprite)obj;
                 Texture tex = sp.texture;
                 Resources.UnloadAsset(tex);
-                Resources.UnloadAsset(sp);
+                Resources.UnloadAsset(obj);
             }
             else if (type == ResourceType.Material)
             {
-                //先把关联贴图删除再删除material,暂时只支持删除主贴图
-                Material ma = (Material)obj;
-                Texture tex = ma.mainTexture;
-                Resources.UnloadAsset(tex);
-                Resources.UnloadAsset(ma);
+                bool isCustomMaterial = resObj.isMaterailCustom;
+                bool isCustomShader = resObj.isShaderCustom;
+               
+                if (isCustomMaterial)
+                {
+                    Material ma = (Material)obj;
+
+                    //先把关联贴图删除再删除material,暂时只支持删除主贴图
+                    Texture tex = ma.mainTexture;
+                    if (tex != null)
+                    {
+                        Resources.UnloadAsset(tex);
+                    }
+
+                    //把相关shader也删除
+                    if (isCustomShader)
+                    {
+                        Shader shader = ma.shader;
+                        if (shader != null)
+                        {
+                            Resources.UnloadAsset(shader);
+                        }
+                    }
+                    Resources.UnloadAsset(obj);
+                }
+
             }
         }
     }

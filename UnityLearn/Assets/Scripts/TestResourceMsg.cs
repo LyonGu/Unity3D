@@ -43,6 +43,7 @@ public class TestResourceMsg : MonoBehaviour {
     public GameObject _sp1;
 
 
+    private string resourceRefKey = "TestResourceMsg";
 
 
     private ResourcesManager _resMgr;
@@ -82,7 +83,7 @@ public class TestResourceMsg : MonoBehaviour {
         //_sprObj = Resources.Load<Sprite>("Textures/Floor");
 
         //不管里全局变量还是局部变量，不删除资源，会一直保存在内存中
-        _sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
+        //_sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
         //Sprite t_sprObj1 = Resources.Load<Sprite>("Textures/login_select"); //不删除，会一直存在内存中
         /*
          * 同一个资源既可以是texture也可以sprite
@@ -136,15 +137,50 @@ public class TestResourceMsg : MonoBehaviour {
         //_prefabObj = Resources.Load<GameObject>("Prefabs/Cube");
        // _gameObj = Instantiate(_prefabObj);
 
-        testResMsg();
+        testResMsgFram();
         
     }
 
     //测试资源管理框架
-    public void testResMsg()
+    public void testResMsgFram()
     { 
-    
+        //texture
+        Texture tex = (Texture)_resMgr.getResouce(ResourceType.Texture, "unitychan_tile3", resourceRefKey);
+
+        //sprite 散图
+        Sprite sp = (Sprite)_resMgr.getResouce(ResourceType.Sprite, "login_select", resourceRefKey);
+
+        //material
+        Material ma = (Material)_resMgr.getResouce(ResourceType.Material, "Blue", resourceRefKey);
+
+        //material_tex
+        Material ma_tex = (Material)_resMgr.getResouce(ResourceType.Material, "Moon", resourceRefKey, true, false);
+
+        //shader
+        Shader shader = (Shader)_resMgr.getResouce(ResourceType.Shader, "SimpleShader", resourceRefKey, false, true);
+
+        //audioClip
+        AudioClip audioClip = (AudioClip)_resMgr.getResouce(ResourceType.AudioClip, "button", resourceRefKey);
+
+        //animationClip
+        AnimationClip animationClip = (AnimationClip)_resMgr.getResouce(ResourceType.AnimationClip, "avoid", resourceRefKey);
+
+        //prefab
+        GameObject prefab = (GameObject)_resMgr.getResouce(ResourceType.Prefab, "Cube", resourceRefKey);
+
     }
+
+    void releaseResourceByFram()
+    {
+        _resMgr.removeResouce(ResourceType.Texture, "unitychan_tile3", resourceRefKey);        //ok
+        _resMgr.removeResouce(ResourceType.Sprite, "login_select", resourceRefKey);            //ok
+        _resMgr.removeResouce(ResourceType.Material, "Blue", resourceRefKey);                  //ok
+        _resMgr.removeResouce(ResourceType.Material, "Moon", resourceRefKey);                  //ok 
+        _resMgr.removeResouce(ResourceType.Shader, "SimpleShader", resourceRefKey);            //ok 
+        _resMgr.removeResouce(ResourceType.AudioClip, "button", resourceRefKey);               //ok 
+        _resMgr.removeResouce(ResourceType.AnimationClip, "avoid", resourceRefKey);            //ok 
+        _resMgr.removeResouce(ResourceType.Prefab, "Cube", resourceRefKey);                    //ok
+    } 
 	
 	// Update is called once per frame
 	void Update () {
@@ -183,6 +219,9 @@ public class TestResourceMsg : MonoBehaviour {
             //释放预设体
             //_prefabObj = null;
             //Resources.UnloadUnusedAssets(); 
+
+            releaseResourceByFram();
+
            
         }
 	}
