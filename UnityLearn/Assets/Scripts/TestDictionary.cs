@@ -55,6 +55,12 @@ public class TestDictionary : MonoBehaviour {
 
         obj.name = "hxp22222";
 
+        //测试下，引用的比较是否是比较引用指向的内存 ==>测试ok，是比较指向的内存
+        if (dict[1] == list[0])
+        {
+            int a22 = 100;
+        }
+
         int a = 10;
 
         //测试2，删除GameObject的时候，是否也会删除对应资源内存(texture,material...) ==>删除gameObject，对应的资源内存不会删除
@@ -85,6 +91,8 @@ public class TestDictionary : MonoBehaviour {
 
 
         //测试下资源框架
+
+        //
 
 
 }

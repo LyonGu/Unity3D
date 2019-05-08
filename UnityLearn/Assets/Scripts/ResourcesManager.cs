@@ -181,6 +181,11 @@ public class ResourcesManager  {
             ResourceObj resObj = _resourcesList[index][path];
             resObj.addRefCount(viewName);
         }
+        else
+        {
+            //ResourceObj resObj = new ResourceObj(obj, type, path, materailCustom, shaderCustom);
+            //_resourcesList[index].Add(path, resObj);
+        }
     }
 
     //手动减少引用计数
@@ -201,10 +206,10 @@ public class ResourcesManager  {
      *  多个界面以后用多个不同资源         --》ok
      */
     //获取一个资源
-    public Object getResouce(ResourceType type, string name, string viewName, bool materailCustom = true, bool shaderCustom = true)
+    public Object getResouce(ResourceType type, string name, string refKey, bool materailCustom = true, bool shaderCustom = true)
     {
         int index = (int)type;
-        string path = getResourceKey(type, name);
+        string path = getResourceKey(type, name); //永远是正确路径
         ResourceObj resObj = null;
         if (_resourcesList[index].ContainsKey(path))
         {
@@ -212,25 +217,141 @@ public class ResourcesManager  {
         }
         else
         {
+            
             Object obj = null;
             if (type == ResourceType.Sprite)
             {
                 obj = Resources.Load<Sprite>(path);
+
+                //考虑相关资源的嵌套也加入引用管理
+                Sprite sp = (Sprite)obj;
+                Texture tex = sp.texture;
+                if (tex != null)
+                {
+                    string path_tex = path; //精灵的path和texture一样
+                    int index_tex = (int)ResourceType.Texture;
+                    //被引用类型_名字_被引用上一层标记
+                    string tex_refKey = "Sprite_" + sp.name + "_" + refKey;
+                    if (_resourcesList[index_tex].ContainsKey(path_tex))
+                    {
+                        //如果包含，引用计数+1
+                        ResourceObj texObj = _resourcesList[index_tex][path_tex];
+
+                        texObj.addRefCount(tex_refKey); //把引用标识标记为精灵
+                    }
+                    else
+                    {
+                        ResourceObj texObj = new ResourceObj(tex, ResourceType.Texture, path_tex, materailCustom, shaderCustom);
+                        _resourcesList[index_tex].Add(path_tex, texObj);
+                        texObj.addRefCount(tex_refKey);
+                    }
+                }
+                
+
             }
             else
             {
                 obj = Resources.Load<Object>(path);
+
+                if (type == ResourceType.Material)
+                {
+                    Material ma = (Material)obj;
+
+                    //暂时只判断主纹理
+                    Texture tex = ma.mainTexture;
+                    if (tex != null)
+                    {
+                        //判断该纹理是否已经加入缓存
+                        ResourceObj tex_resObj = getCacheByTexture(tex);
+                        if (tex_resObj != null)
+                        {
+                            //已经存在缓中，则引用计数+1
+                            //被引用类型_名字_被引用上一层标记
+                            string tex_refKey = "Material_" + ma.name + "_" + refKey;
+                            tex_resObj.addRefCount(tex_refKey);
+                        }
+                        else
+                        {
+                            //无法获取到tex对应的路径，这里先以名字存储，然后在后续加入同一张纹理时，把名字改过来
+                            int index_tex = (int)ResourceType.Texture;
+                            string path_tex = "FirstAdd_" + tex.name + "_texture";
+                            ResourceObj texObj = new ResourceObj(tex, ResourceType.Texture, path_tex, materailCustom, shaderCustom);
+                            _resourcesList[index_tex].Add(path_tex, texObj);
+                        }
+
+                    }
+
+                    //判断嵌入shader是否要加入引用管理
+                    if (shaderCustom)
+                    { 
+                        //todo
+                    }
+                }
+                else if (type == ResourceType.Texture)
+                { 
+                    //加入纹理的时候判断下，是否有第一次加入 但路径不对的
+                    Texture tex_obj = (Texture)obj;
+                    ResourceObj tex_resObj = getCacheByTexture(tex_obj);
+                    if (tex_resObj != null)
+                    { 
+                        //修改成正确的名字
+                        string pre_name = tex_resObj.pathName;
+                        tex_resObj.pathName = path;
+                        _resourcesList[index].Remove(pre_name); //删除之前错误引用
+                        _resourcesList[index].Add(path, tex_resObj);// 更新成正确的引用
+                    }
+                }
             }
 
             resObj = new ResourceObj(obj, type, path, materailCustom, shaderCustom);
             _resourcesList[index].Add(path, resObj);
         }
         //引用管理
-        resObj.addRefCount(viewName);
+        resObj.addRefCount(refKey);
 
         //页面资源管理
-        addViewCache(viewName, resObj);
+        addViewCache(refKey, resObj);
         return resObj.obj;
+    }
+
+    private ResourceObj getCacheByTexture(Texture targetTex)
+    {
+        bool isCache = false;
+        //遍历所有的纹理缓存，利用引用对象对比
+        int index = (int)ResourceType.Texture;
+        Dictionary<string, ResourceObj> dict = _resourcesList[index];
+
+        foreach (KeyValuePair<string, ResourceObj> kv in dict)
+        {
+            ResourceObj vResObj = kv.Value;
+            Texture tex = (Texture)vResObj.obj;
+            if (targetTex == tex)
+            {
+                isCache = true;
+                return vResObj;
+            }
+        }
+        return null;
+    }
+    public bool isCacheTexture(Texture targetTex)
+    {
+        bool isCache = false;
+
+        //遍历所有的纹理缓存，利用引用对象对比
+        int index = (int)ResourceType.Texture;
+        Dictionary<string, ResourceObj> dict = _resourcesList[index];
+
+        foreach (KeyValuePair<string, ResourceObj> kv in dict)
+        {
+            ResourceObj resObj = kv.Value;
+            Texture tex = (Texture)resObj.obj;
+            if (targetTex == tex)
+            {
+                isCache = true;
+                break;
+            }
+        }
+        return isCache;
     }
 
     private void addViewCache(string viewName, ResourceObj resObj)

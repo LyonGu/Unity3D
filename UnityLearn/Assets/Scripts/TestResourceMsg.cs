@@ -18,6 +18,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,12 +49,12 @@ public class TestResourceMsg : MonoBehaviour {
 
 
     private ResourcesManager _resMgr;
-    private SpriteAnimatinManger _spAltasMgr; //图集管理
+    private AltasManager _spAltasMgr; //图集管理
     
     void Awake()
     {
         _resMgr = ResourcesManager.getInstance();
-        _spAltasMgr = SpriteAnimatinManger.getInstance();
+        _spAltasMgr = AltasManager.getInstance();
     }
 	// Use this for initialization
 	void Start () {
@@ -139,9 +140,9 @@ public class TestResourceMsg : MonoBehaviour {
         //_prefabObj = Resources.Load<GameObject>("Prefabs/Cube");
        // _gameObj = Instantiate(_prefabObj);
 
-        //testResMsgFram();
+        testResMsgFram();
 
-        testAltasMsgFram();
+       // testAltasMsgFram();
         
     }
 
@@ -149,28 +150,35 @@ public class TestResourceMsg : MonoBehaviour {
     public void testResMsgFram()
     { 
         //texture
-        Texture tex = (Texture)_resMgr.getResouce(ResourceType.Texture, "unitychan_tile3", resourceRefKey);
+        Texture tex = (Texture)_resMgr.getResouce(ResourceType.Texture, "2/cursor2", resourceRefKey);
+
+        string path = AssetDatabase.GetAssetPath(tex);
 
         //sprite 散图
         Sprite sp = (Sprite)_resMgr.getResouce(ResourceType.Sprite, "login_select", resourceRefKey);
 
-        //material
-        Material ma = (Material)_resMgr.getResouce(ResourceType.Material, "Blue", resourceRefKey);
+        ////material
+        //Material ma = (Material)_resMgr.getResouce(ResourceType.Material, "Blue", resourceRefKey);
 
-        //material_tex
-        Material ma_tex = (Material)_resMgr.getResouce(ResourceType.Material, "Moon", resourceRefKey, true, false);
+        ////material_tex
+        //Material ma_tex = (Material)_resMgr.getResouce(ResourceType.Material, "Moon", resourceRefKey, true, false);
 
-        //shader
-        Shader shader = (Shader)_resMgr.getResouce(ResourceType.Shader, "SimpleShader", resourceRefKey, false, true);
+        ////shader
+        //Shader shader = (Shader)_resMgr.getResouce(ResourceType.Shader, "SimpleShader", resourceRefKey, false, true);
 
-        //audioClip
-        AudioClip audioClip = (AudioClip)_resMgr.getResouce(ResourceType.AudioClip, "button", resourceRefKey);
+        ////audioClip
+        //AudioClip audioClip = (AudioClip)_resMgr.getResouce(ResourceType.AudioClip, "button", resourceRefKey);
 
-        //animationClip
-        AnimationClip animationClip = (AnimationClip)_resMgr.getResouce(ResourceType.AnimationClip, "avoid", resourceRefKey);
+        ////animationClip
+        //AnimationClip animationClip = (AnimationClip)_resMgr.getResouce(ResourceType.AnimationClip, "avoid", resourceRefKey);
 
-        //prefab
-        GameObject prefab = (GameObject)_resMgr.getResouce(ResourceType.Prefab, "Cube", resourceRefKey);
+        ////prefab
+        //GameObject prefab = (GameObject)_resMgr.getResouce(ResourceType.Prefab, "Cube", resourceRefKey);
+
+        //测试isCacheTexture接口
+        //Texture ttex = sp.texture;
+        //bool isCache = _resMgr.isCacheTexture(ttex); //测试通过
+        //int a = 10;
 
     }
 
