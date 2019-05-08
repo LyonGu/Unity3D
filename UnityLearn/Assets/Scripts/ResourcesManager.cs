@@ -211,6 +211,7 @@ public class ResourcesManager  {
         int index = (int)type;
         string path = getResourceKey(type, name); //永远是正确路径
         ResourceObj resObj = null;
+        bool isNeedAdd = true; //控制主资源是否加入引用计数管理，例如材质中包含贴图和shader，材质就属于主资源
         if (_resourcesList[index].ContainsKey(path))
         {
             resObj = _resourcesList[index][path];
@@ -231,7 +232,7 @@ public class ResourcesManager  {
                     string path_tex = path; //精灵的path和texture一样
                     int index_tex = (int)ResourceType.Texture;
                     //被引用类型_名字_被引用上一层标记
-                    string tex_refKey = "Sprite_" + sp.name + "_" + refKey;
+                    string tex_refKey = "Sprite_" + sp.name;
                     if (_resourcesList[index_tex].ContainsKey(path_tex))
                     {
                         //如果包含，引用计数+1
@@ -251,32 +252,34 @@ public class ResourcesManager  {
             }
             else
             {
+                //主资源
                 obj = Resources.Load<Object>(path);
-
+                
                 if (type == ResourceType.Material)
                 {
                     Material ma = (Material)obj;
 
                     //暂时只判断主纹理
-                    Texture tex = ma.mainTexture;
-                    if (tex != null)
+                    Texture ref_tex = ma.mainTexture;
+                    if (ref_tex != null)
                     {
                         //判断该纹理是否已经加入缓存
-                        ResourceObj tex_resObj = getCacheByTexture(tex);
+                        ResourceObj tex_resObj = getCacheByTexture(ref_tex);
+                        string tex_refKey = "Material_" + ma.name;
                         if (tex_resObj != null)
                         {
                             //已经存在缓中，则引用计数+1
                             //被引用类型_名字_被引用上一层标记
-                            string tex_refKey = "Material_" + ma.name + "_" + refKey;
                             tex_resObj.addRefCount(tex_refKey);
                         }
                         else
                         {
                             //无法获取到tex对应的路径，这里先以名字存储，然后在后续加入同一张纹理时，把名字改过来
                             int index_tex = (int)ResourceType.Texture;
-                            string path_tex = "FirstAdd_" + tex.name + "_texture";
-                            ResourceObj texObj = new ResourceObj(tex, ResourceType.Texture, path_tex, materailCustom, shaderCustom);
-                            _resourcesList[index_tex].Add(path_tex, texObj);
+                            string path_tex = "FirstAdd_" + ref_tex.name + "_texture";
+                            ResourceObj ref_texObj = new ResourceObj(ref_tex, ResourceType.Texture, path_tex, materailCustom, shaderCustom);
+                            _resourcesList[index_tex].Add(path_tex, ref_texObj);
+                            ref_texObj.addRefCount(tex_refKey);
                         }
 
                     }
@@ -284,7 +287,28 @@ public class ResourcesManager  {
                     //判断嵌入shader是否要加入引用管理
                     if (shaderCustom)
                     { 
-                        //todo
+  
+                        Shader ref_shader = ma.shader;
+                        if (ref_shader != null)
+                        { 
+                            //判断缓存中是否有shader资源
+                            string shader_refKey = "Material_" + ma.name;
+                            ResourceObj ref_resObj = getCacheByShader(ref_shader);
+                            if (ref_resObj != null)
+                            {
+                                //添加引用计数
+                                ref_resObj.addRefCount(shader_refKey);
+                            }
+                            else
+                            {
+                                //无法获取到shader对应的路径，这里先以名字存储，然后在后续加入同一shader时，把名字改过来
+                                int index_shader = (int)ResourceType.Shader;
+                                string path_shader = "FirstAdd_" + ref_shader.name + "_shader";
+                                ResourceObj shaderObj = new ResourceObj(ref_shader, ResourceType.Shader, path_shader, materailCustom, shaderCustom);
+                                _resourcesList[index_shader].Add(path_shader, shaderObj);
+                                ref_resObj.addRefCount(shader_refKey);
+                            }
+                        }
                     }
                 }
                 else if (type == ResourceType.Texture)
@@ -299,18 +323,43 @@ public class ResourcesManager  {
                         tex_resObj.pathName = path;
                         _resourcesList[index].Remove(pre_name); //删除之前错误引用
                         _resourcesList[index].Add(path, tex_resObj);// 更新成正确的引用
+
+                        isNeedAdd = false;
+                    }
+                }
+                else if (type == ResourceType.Shader)
+                {
+                    //加入纹理的时候判断下，是否有第一次加入 但路径不对的
+                    Shader shader_obj = (Shader)obj;
+                    ResourceObj shader_resObj = getCacheByShader(shader_obj);
+                    if (shader_resObj != null)
+                    {
+                        //修改成正确的名字
+                        string pre_name = shader_resObj.pathName;
+                        shader_resObj.pathName = path;
+                        _resourcesList[index].Remove(pre_name); //删除之前错误引用
+                        _resourcesList[index].Add(path, shader_resObj);// 更新成正确的引用
+
+                        isNeedAdd = false;
                     }
                 }
             }
 
-            resObj = new ResourceObj(obj, type, path, materailCustom, shaderCustom);
-            _resourcesList[index].Add(path, resObj);
-        }
-        //引用管理
-        resObj.addRefCount(refKey);
+            if (isNeedAdd)
+            {
+                resObj = new ResourceObj(obj, type, path, materailCustom, shaderCustom);
+                _resourcesList[index].Add(path, resObj);
+            }
 
-        //页面资源管理
-        addViewCache(refKey, resObj);
+        }
+        if (isNeedAdd)
+        {
+            //引用管理
+            resObj.addRefCount(refKey);
+
+            //页面资源管理
+            addViewCache(refKey, resObj);
+        }
         return resObj.obj;
     }
 
@@ -333,6 +382,28 @@ public class ResourcesManager  {
         }
         return null;
     }
+
+    private ResourceObj getCacheByShader(Shader targetShader)
+    {
+        bool isCache = false;
+        //遍历所有的纹理缓存，利用引用对象对比
+        int index = (int)ResourceType.Shader;
+        Dictionary<string, ResourceObj> dict = _resourcesList[index];
+
+        ResourceObj vResObj = null;
+        Shader shader = null;
+        foreach (KeyValuePair<string, ResourceObj> kv in dict)
+        {
+            vResObj = kv.Value;
+            shader = (Shader)vResObj.obj;
+            if (targetShader == shader)
+            {
+                isCache = true;
+                return vResObj;
+            }
+        }
+        return null;
+    }
     public bool isCacheTexture(Texture targetTex)
     {
         bool isCache = false;
@@ -340,11 +411,12 @@ public class ResourcesManager  {
         //遍历所有的纹理缓存，利用引用对象对比
         int index = (int)ResourceType.Texture;
         Dictionary<string, ResourceObj> dict = _resourcesList[index];
-
+        ResourceObj resObj = null;
+        Texture tex = null;
         foreach (KeyValuePair<string, ResourceObj> kv in dict)
         {
-            ResourceObj resObj = kv.Value;
-            Texture tex = (Texture)resObj.obj;
+            resObj = kv.Value;
+            tex = (Texture)resObj.obj;
             if (targetTex == tex)
             {
                 isCache = true;
@@ -469,7 +541,22 @@ public class ResourcesManager  {
                 //先把关联贴图删除再删除sprite
                 Sprite sp = (Sprite)obj;
                 Texture tex = sp.texture;
-                Resources.UnloadAsset(tex);
+
+                //判断该纹理是否还存在引用
+                ResourceObj tex_resObj = getCacheByTexture(tex);
+                if (tex_resObj != null)
+                {
+                    string ref_key = "Sprite_" + sp.name;
+                    tex_resObj.reduceRefCount(ref_key);
+                    if (tex_resObj.refCount <= 0)
+                    {
+                        Resources.UnloadAsset(tex);
+                    }
+                }
+                else
+                {
+                    Resources.UnloadAsset(tex);
+                }
                 Resources.UnloadAsset(obj);
             }
             else if (type == ResourceType.Material)
@@ -485,7 +572,22 @@ public class ResourcesManager  {
                     Texture tex = ma.mainTexture;
                     if (tex != null)
                     {
-                        Resources.UnloadAsset(tex);
+                        //判断该纹理是否还存在引用
+                        ResourceObj tex_resObj = getCacheByTexture(tex);
+                        if (tex_resObj != null)
+                        {
+                            string ref_key = "Material_" + ma.name;
+                            tex_resObj.reduceRefCount(ref_key);
+                            if (tex_resObj.refCount <= 0)
+                            {
+                                Resources.UnloadAsset(tex);
+                            }
+                        }
+                        else
+                        {
+                            Resources.UnloadAsset(tex);
+                        }
+
                     }
 
                     //把相关shader也删除
@@ -494,7 +596,22 @@ public class ResourcesManager  {
                         Shader shader = ma.shader;
                         if (shader != null)
                         {
-                            Resources.UnloadAsset(shader);
+                            //判断该shader是否还存在引用
+                            ResourceObj shader_resObj = getCacheByShader(shader);
+                            if (shader_resObj != null)
+                            {
+                                string ref_key = "Material_" + ma.name;
+                                shader_resObj.reduceRefCount(ref_key);
+                                if (shader_resObj.refCount <= 0)
+                                {
+                                    Resources.UnloadAsset(shader);
+                                }
+                            }
+                            else
+                            {
+                                Resources.UnloadAsset(shader);
+                            }
+                            
                         }
                     }
                     Resources.UnloadAsset(obj);
