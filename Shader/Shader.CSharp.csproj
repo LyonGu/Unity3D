@@ -332,6 +332,7 @@
     <Compile Include="Assets\Scripts\Helpers\SetPropertyAttribute.cs" />
     <Compile Include="Assets\Scripts\LockProperty.cs" />
     <Compile Include="Assets\Scripts\PhotoshopLevelsLockProperty.cs" />
+    <Compile Include="Assets\Scripts\PostEffectHelp.cs" />
     <Compile Include="Assets\Scripts\ShowNormals.cs" />
     <Compile Include="Assets\Shaders\Surface\SwapCubemaps1.cs" />
     <Compile Include="Assets\Shaders\Surface\WaterFlow.cs" />
