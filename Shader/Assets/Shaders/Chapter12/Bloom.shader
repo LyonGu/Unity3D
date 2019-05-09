@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter12/Bloom"
+Shader "Shaders/Chapter12/Bloom"
 {
 	Properties
 	{
