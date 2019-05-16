@@ -295,7 +295,7 @@ Transform:
   m_LocalPosition: {x: -1.04, y: 0.61, z: -6.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1767378094}
+  - {fileID: 1475697311}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -480,15 +480,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1767378093
+--- !u!1 &1475697310
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 1767378094}
-  - component: {fileID: 1767378095}
+  - component: {fileID: 1475697311}
+  - component: {fileID: 1475697312}
   m_Layer: 0
   m_Name: outLineCam
   m_TagString: Untagged
@@ -496,12 +496,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1767378094
+--- !u!4 &1475697311
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1767378093}
+  m_GameObject: {fileID: 1475697310}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -509,12 +509,12 @@ Transform:
   m_Father: {fileID: 856867428}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1767378095
+--- !u!20 &1475697312
 Camera:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1767378093}
+  m_GameObject: {fileID: 1475697310}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -558,7 +558,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4166231970944478, guid: 43165e4b505cf50488f97dc730c2a38a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.54
+      value: -0.473
       objectReference: {fileID: 0}
     - target: {fileID: 4166231970944478, guid: 43165e4b505cf50488f97dc730c2a38a, type: 2}
       propertyPath: m_LocalPosition.z

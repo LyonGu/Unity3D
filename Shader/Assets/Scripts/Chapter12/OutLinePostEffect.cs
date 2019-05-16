@@ -131,8 +131,7 @@ public class OutLinePostEffect : PostEffectsBase
             Graphics.Blit(renderTexture, buffer_lunkuo, material, 2); 
             RenderTexture.ReleaseTemporary(buffer0);
 
-            Graphics.Blit(buffer_lunkuo, dest);
-
+           
             ////轮廓的纹理数据设置到shader里
             material.SetTexture("_BlurTex", buffer_lunkuo);
 

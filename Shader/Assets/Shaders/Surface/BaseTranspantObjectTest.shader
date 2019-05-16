@@ -9,7 +9,7 @@ Shader "Common/BaseTranspantObjectTest" {
     	Tags { "Queue"="Transparent" "RenderType"="Transparent" }
     
         CGPROGRAM
-        //使用alpha测试
+        //使用alpha混合
         #pragma surface surf Lambert alpha exclude_path:prepass noforwardadd
 		#pragma target 3.0
 
