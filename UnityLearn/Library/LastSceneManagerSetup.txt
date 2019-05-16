@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/ResoucesMangager.unity
+- path: Assets/Scene/TestMaterialShader.unity
   isLoaded: 1
   isActive: 1
