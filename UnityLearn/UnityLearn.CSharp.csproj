@@ -373,6 +373,7 @@
     <Compile Include="Assets\Scripts\playerPref_demo.cs" />
     <Compile Include="Assets\Scripts\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Pools.cs" />
+    <Compile Include="Assets\Scripts\PositonConvert.cs" />
     <Compile Include="Assets\Scripts\RayDemo.cs" />
     <Compile Include="Assets\Scripts\RayDemo2_CCWalking.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
@@ -400,6 +401,7 @@
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\TestDictionary.cs" />
     <Compile Include="Assets\Scripts\TestManger.cs" />
+    <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
     <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
     <Compile Include="Assets\Scripts\WWWDemo1.cs" />
@@ -420,6 +422,7 @@
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
+    <None Include="Assets\Resources\Shaders\Blue.shader" />
     <None Include="Assets\Resources\Shaders\RampTexture.shader" />
     <None Include="Assets\Resources\Shaders\SimpleShader.shader" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
