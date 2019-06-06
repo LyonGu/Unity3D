@@ -88,7 +88,7 @@
 			}; 
 		
 			struct v2f {
-				float4 pos : POSITION;
+				float4 pos : SV_POSITION;
 				float2 uv : TEXCOORD0;
 				float3 worldNormal : TEXCOORD1;
 				float3 worldPos : TEXCOORD2;
