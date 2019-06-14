@@ -59,6 +59,9 @@
 
 				//计算反射向量 reflect(-视线方向，法线方向)
 				// == reflect(-光的方向，法线方向)
+
+				//o.worldViewDir 这个是 viewpos - worldPos
+				//reflect需要从viewpos指向worldPos的方向 所以是--o.worldViewDir
 				o.worldRefl = reflect(-o.worldViewDir, o.worldNormal);
 
 				//使用TRANSFER_SHADOW 注意：
@@ -74,7 +77,7 @@
 
 			fixed4 frag(v2f o): SV_Target{
 				fixed3 worldNormal = normalize(o.worldNormal);
-				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(o.worldPos));	
+				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(o.worldPos));	// lightPos - worldPos 从点指向光源的方向
 				fixed3 worldViewDir = normalize(o.worldViewDir);
 
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
