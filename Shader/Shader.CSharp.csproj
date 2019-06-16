@@ -317,6 +317,7 @@
     <Compile Include="Assets\Scripts\Chapter12\OutLinePostEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\PassthoughEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\PostEffectsBase.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\PostEffectsBaseNoCamera.cs" />
     <Compile Include="Assets\Scripts\Chapter12\RadialBlurEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\RotationDistortEffect.cs" />
     <Compile Include="Assets\Scripts\Chapter12\WaterWaveEffect.cs" />
@@ -326,6 +327,8 @@
     <Compile Include="Assets\Scripts\Chapter15\BurnHelper.cs" />
     <Compile Include="Assets\Scripts\Chapter15\FogWithNoise.cs" />
     <Compile Include="Assets\Scripts\Chapter5\ColorPicker.cs" />
+    <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferRT.cs" />
+    <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\Helpers\Rotating.cs" />
@@ -510,6 +513,8 @@
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\Shaders\Common\ReadMe.txt" />
     <None Include="Assets\Shaders\Common\RimLight.shader" />
+    <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
+    <None Include="Assets\Shaders\Common\RimLightNoMaskNoSpecuMap.shader" />
     <None Include="Assets\Shaders\Surface\BaseTranspantObjectTest.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseCustomLight.shader" />
