@@ -430,6 +430,7 @@
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
+    <None Include="Assets\Scripts\CommandBuffer\OutlinePrePass.shader" />
     <None Include="Assets\Shaders\Chapter10\Fresnel.shader" />
     <None Include="Assets\Shaders\Chapter10\GlassRefraction.shader" />
     <None Include="Assets\Shaders\Chapter10\Mirror.shader" />
