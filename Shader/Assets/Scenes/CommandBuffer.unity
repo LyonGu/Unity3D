@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.574817, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -699,9 +699,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outLinePreShader: {fileID: 4800000, guid: 4fab825114aeb1e4cb12d144c109faba, type: 3}
   outLineShader: {fileID: 4800000, guid: 45e74266d05a0464c914dd4cc6ddffa8, type: 3}
-  downSample: 5
-  iteration: 3
-  blurSpread: 2.09
+  downSample: 8
+  iteration: 2
+  blurSpread: 0.2
   outLineColor: {r: 0, g: 1, b: 0, a: 1}
   outLineStrength: 0
   targetObject: {fileID: 233206490}

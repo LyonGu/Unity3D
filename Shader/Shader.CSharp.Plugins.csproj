@@ -452,6 +452,9 @@
     <None Include="Assets\Shaders\Common\RimLight.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMaskNoSpecuMap.shader" />
+    <None Include="Assets\Shaders\Surface\BRDF.shader" />
+    <None Include="Assets\Shaders\Surface\BaseSpecaular.shader" />
+    <None Include="Assets\Shaders\Surface\BaseSpecaularMap.shader" />
     <None Include="Assets\Shaders\Surface\BaseTranspantObjectTest.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuse.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseCustomLight.shader" />
