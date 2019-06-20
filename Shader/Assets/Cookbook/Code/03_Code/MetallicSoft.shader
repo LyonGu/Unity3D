@@ -56,7 +56,7 @@ Shader "CookbookShaders/Chapter03/MetallicSoft"
 			float3 spec = float3(fresnel * G * roughness * roughness) * _SpecPower;
 			
 			float4 c;
-			c.rgb = (s.Albedo * _LightColor0.rgb * NdotL)+  (spec * _SpecularColor.rgb) * (atten * 2.0f);
+			c.rgb = (s.Albedo * _LightColor0.rgb * NdotL) * atten +  (spec * _SpecularColor.rgb) * atten;
 			c.a = s.Alpha;
 			return c;
 		}

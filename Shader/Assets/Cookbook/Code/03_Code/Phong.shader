@@ -38,7 +38,7 @@ Shader "CookbookShaders/Chapter03/Phong"
 
 			//Create final color
 			fixed4 c;
-			c.rgb = (s.Albedo * _LightColor0.rgb * diff) + ( _SpecularColor.rgb *_LightColor0.rgb * spec) * (atten * 2);
+			c.rgb = (s.Albedo * _LightColor0.rgb * diff) * atten + ( _SpecularColor.rgb *_LightColor0.rgb * spec) * atten;
 			c.a = 1.0;
 			return c;
 		}

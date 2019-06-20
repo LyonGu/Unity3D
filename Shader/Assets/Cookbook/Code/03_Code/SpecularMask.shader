@@ -33,9 +33,10 @@ Shader "CookbookShaders/Chapter03/SpecularMask"
 			fixed3 Normal;
 			fixed3 Emission;
 			fixed3 SpecularColor;
-			half Specular;
+			fixed SpecMask;
 			fixed Gloss;
 			fixed Alpha;
+
 		};
 				
 		inline fixed4 LightingCustomPhong (SurfaceCustomOutput s, fixed3 lightDir, half3 viewDir, fixed atten)
@@ -45,12 +46,12 @@ Shader "CookbookShaders/Chapter03/SpecularMask"
 			float3 reflectionVector = normalize(2.0 * s.Normal * diff - lightDir);
 			
 			//Calculate the Phong specular
-			float spec = pow(max(0.0f,dot(reflectionVector, viewDir)), _SpecPower) * s.Specular;
-			float3 finalSpec = s.SpecularColor * spec * _SpecularColor.rgb;
+			float spec = pow(max(0.0f,dot(reflectionVector, viewDir)), _SpecPower) * s.SpecMask;
+			float3 finalSpec = s.SpecularColor * spec;
 			
 			//Create final color
 			fixed4 c;
-			c.rgb = (s.Albedo * _LightColor0.rgb * diff) + (_LightColor0.rgb * finalSpec);
+			c.rgb = (s.Albedo * _LightColor0.rgb * diff) * atten + (_LightColor0.rgb * finalSpec) * atten;
 			c.a = s.Alpha;
 			return c;
 		}
@@ -66,12 +67,12 @@ Shader "CookbookShaders/Chapter03/SpecularMask"
 		{
 			//Get the color information from the textures
 			float4 c = tex2D (_MainTex, IN.uv_MainTex) * _MainTint;
-			float4 specMask = tex2D(_SpecularMask, IN.uv_SpecularMask) * _SpecularColor;
+			float4 specMask = tex2D(_SpecularMask, IN.uv_SpecularMask);
 			
 			//Set the parameters in the Output Struct
 			o.Albedo = c.rgb;
-			o.Specular = specMask.r;
-			o.SpecularColor = specMask.rgb;
+			o.SpecMask = specMask.r;
+			o.SpecularColor = _SpecularColor.rgb;
 			o.Alpha = c.a;
 		}
 		ENDCG

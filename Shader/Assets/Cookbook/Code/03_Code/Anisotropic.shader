@@ -5,8 +5,8 @@ Shader "CookbookShaders/Chapter03/Anisotropic"
 		_MainTint ("Diffuse Tint", Color) = (1,1,1,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_SpecularColor ("specular Color", Color) = (1,1,1,1)
-		_Specular ("Specular Amount", Range(0,1)) = 0.5
-		_SpecPower ("Specular Power", Range(0,1)) = 0.5
+		_Specular ("Specular Amount", Range(0,10)) = 0.5
+		_SpecPower ("Specular Power", Range(0,10)) = 0.5
 		_AnisoDir ("Anisotropic Direction", 2D) = "" {}
 		_AnisoOffset ("Anisotropic Offset", Range(-1,1)) = -0.2
 	}
@@ -45,12 +45,12 @@ Shader "CookbookShaders/Chapter03/Anisotropic"
 			float NdotL = saturate(dot(s.Normal, lightDir));
 			
 			fixed HdotA = dot(normalize(s.Normal + s.AnisoDirection), halfVector);
-			float aniso = max(0, sin(radians((HdotA + _AnisoOffset) * 180f)));
+			float aniso = max(0, sin(radians((HdotA + _AnisoOffset) * 180.0)));
 			
 			float spec = saturate(pow(aniso, s.Gloss * 128) * s.Specular);
 			
 			fixed4 c;
-			c.rgb = ((s.Albedo * _LightColor0.rgb * NdotL) + (_LightColor0.rgb * _SpecularColor.rgb * spec)) * (atten * 2);
+			c.rgb = (s.Albedo * _LightColor0.rgb * NdotL)* atten + (_LightColor0.rgb * _SpecularColor.rgb * spec) * atten;
 			c.a = 1.0;
 			return c;
 		}

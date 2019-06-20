@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Phong
-  m_Shader: {fileID: 4800000, guid: 1c7ee4bfd05753e49be1687d9f6b7e38, type: 3}
+  m_Name: MetallicSoft
+  m_Shader: {fileID: 4800000, guid: bc355a583ee36614f894f720fa4e3726, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -54,11 +54,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RoughnessTex:
+        m_Texture: {fileID: 2800000, guid: c105a21d8a7688149b309b081458fad4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Fresnel: 0.148
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -66,9 +71,9 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Roughness: 1
     - _SmoothnessTextureChannel: 0
-    - _SpecHardness: 3.72
-    - _SpecPower: 9.9
+    - _SpecPower: 7.7
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
