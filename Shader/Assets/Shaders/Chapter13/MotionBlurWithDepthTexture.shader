@@ -54,7 +54,7 @@
 				// 把UV坐标转换到[-1,1]  当前像素的NDC坐标
 				float4 H = float4(i.uv.x * 2 - 1, i.uv.y * 2 - 1, d * 2 - 1, 1);
 
-				// 把像素坐标H转到世界空间
+				// 把NDC坐标H转到世界空间
 				float4 D = mul(_CurrentViewProjectionInverseMatrix, H);
 
 				// 进行透视化处理 ？？？？？？这里为什么要除w分量 ==》为了方便计算
