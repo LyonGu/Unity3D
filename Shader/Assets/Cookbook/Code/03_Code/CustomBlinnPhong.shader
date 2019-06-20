@@ -33,7 +33,7 @@ Shader "CookbookShaders/Chapter03/CustomBlinnPhong"
 			float spec = pow (NdotH, _SpecPower);
 			
 			float4 c;
-			c.rgb = (s.Albedo * _LightColor0.rgb * diff) + (_LightColor0.rgb * _SpecularColor.rgb * spec) * (atten * 2);
+			c.rgb = (s.Albedo * _LightColor0.rgb * diff) + (_SpecularColor.rgb * _LightColor0.rgb *  spec) * (atten * 2);
 			c.a = s.Alpha;
 			return c;
 		}

@@ -71,7 +71,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _inBlack: 0
+    - _inBlack: 141
     - _inGamma: 2
     - _inWhite: 255
     - _isAlphaTest: 1
