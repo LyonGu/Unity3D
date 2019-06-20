@@ -43,7 +43,7 @@
 			float difLight = max(0, dot (s.Normal, lightDir));
 
 			//半兰伯特光照模型
-			difLight = difLight * 0.5 + 0.5;
+			difLight = difLight * 0.5 + 0.5; //从0-1变成 0.5-1
        	  	fixed4 col;
        	  	col.rgb = s.Albedo * _LightColor0.rgb * (difLight * atten * 2);
        	  	col.a = s.Alpha;
