@@ -27,7 +27,7 @@ Shader "Shaders/Chapter12/OutlinePrePass"
 				v2f vert(appdata_full v)
 				{	
 					v2f o;
-					//把顶点和法线都转到世界空间下
+					//把顶点和法线都转到观察空间下
 					float4 pos = float4(UnityObjectToViewPos(v.vertex), 1.0);
 					float3 normal = mul((float3x3)UNITY_MATRIX_IT_MV, v.normal);  
 
