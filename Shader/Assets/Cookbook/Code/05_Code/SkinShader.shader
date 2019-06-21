@@ -24,7 +24,7 @@ Shader "CookbookShaders/Chapter05/SkinShader"
 		CGPROGRAM
 		#pragma surface surf SkinShader
 		#pragma target 3.0
-		#pragma only_renderers d3d9
+		//#pragma only_renderers d3d9
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
@@ -73,7 +73,8 @@ Shader "CookbookShaders/Chapter05/SkinShader"
 			
 			//Create Fresnel and Rim lighting
 			float fresnel = saturate(pow(1-dot(viewDir, halfVec),5.0));
-			fresnel += _FresnelVal * (1 - fresnel);
+			fresnel += _FresnelVal * (1 - fresnel); 
+
 			float rim = saturate(pow(1-dot(viewDir, s.BlurredNormals),_RimPower)) * fresnel;
 			
 			//Create Spec 
@@ -102,9 +103,9 @@ Shader "CookbookShaders/Chapter05/SkinShader"
 			
 			//apply all our information to our SurfaceOutput
 			o.Normal = normals;
-			o.BlurredNormals = normalBlur;
+			o.BlurredNormals = normalBlur; //模糊法线
 			o.Albedo = c.rgb * _MainTint;
-			o.Curvature = curvature; 
+			o.Curvature = curvature;  //曲率
 			o.Specular = _SpecWidth;
 			o.Gloss = _SpecIntensity;
 			o.Alpha = c.a;
