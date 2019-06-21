@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SimpleReflection
-  m_Shader: {fileID: 4800000, guid: fe72d43225729ea48b8388f65f2f0f0f, type: 3}
+  m_Name: FresnelReflect
+  m_Shader: {fileID: 4800000, guid: b211bda965d690741b3d1638e4bd12e3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -70,8 +70,10 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ReflAmount: 1
+    - _ReflectionAmount: 1
+    - _RimPower: 1.24
     - _SmoothnessTextureChannel: 0
+    - _SpecPower: 0.379
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
@@ -80,3 +82,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainTint: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}

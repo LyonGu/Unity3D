@@ -29,7 +29,7 @@ public class RenderCubemapWizard : ScriptableWizard
         DestroyImmediate(go);
     }
 
-    [MenuItem("GameObject/Render into Cubemap")]
+    [MenuItem("Tools/Render into Cubemap")]
     static void RenderCubemap()
     {
         ScriptableWizard.DisplayWizard<RenderCubemapWizard>(

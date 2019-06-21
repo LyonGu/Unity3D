@@ -32,7 +32,7 @@
 		float3 worldRefl 世界坐标系反射向量（未修改Normal变量时要用此变量）
 		float3 worldNormal 世界坐标系法线方向 （未修改Normal变量时要用此变量）
 		float3 worldRefl; INTERNAL_DATA 世界坐标系反射向量（修改了Normal变量时使用此方式声明），使用的时候要用WorldReflectionVector (IN, o.Normal)去包装下
-		float3 worldNormal; INTERNAL_DATA 世界坐标系反射向量（修改了Normal变量时使用此方式声明
+		float3 worldNormal; INTERNAL_DATA 世界坐标系法线向量（修改了Normal变量时使用此方式声明
 
 		*/
 		struct Input {
@@ -45,7 +45,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _MainTint;
-			o.Emission = texCUBE(_Cubemap, IN.worldRefl).rgb * _ReflAmount; //自发光属性？？
+			o.Emission = texCUBE(_Cubemap, IN.worldRefl).rgb * _ReflAmount; //最后颜色会加上自发光颜色
 			o.Albedo = c.rgb;
 			o.Alpha = c.a;
 		}
