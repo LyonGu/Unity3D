@@ -28,7 +28,7 @@ Shader "CookbookShaders/Chapter04/NormalMappedReflection"
 			float2 uv_MainTex;
 			float2 uv_NormalMap;
 			float3 worldRefl;
-			INTERNAL_DATA
+			INTERNAL_DATA   //使用法线贴图里的法线一定要加这个，WorldReflectionVector
 		};
 
 		void surf (Input IN, inout SurfaceOutput o) 

@@ -58,6 +58,8 @@ Shader "CookbookShaders/Chapter05/DiffuseConvolution"
 			float3 normals = UnpackNormal(tex2D(_BumpMap, IN.uv_AOMap)).rgb;
 			o.Normal = normals;
 			
+			//使用世界法线从一个卷积后的立方体贴图上检索出颜色
+			//这里使用的立方体贴图是卷积后带模糊的，用软件生成的
 			float3 diffuseVal = texCUBE(_CubeMap, WorldNormalVector(IN, o.Normal)).rgb;
 			
 			o.Albedo = (c.rgb * diffuseVal) * _MainTint;
