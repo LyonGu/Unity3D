@@ -32,6 +32,7 @@ Shader "Cookbook/Chapter07/VertexHeightMapBlend"
 		
 		void vert (inout appdata_full v, out Input o)
 		{
+			UNITY_INITIALIZE_OUTPUT(Input,o);
 			o.vertColor = v.color.rgb;
 		}
 

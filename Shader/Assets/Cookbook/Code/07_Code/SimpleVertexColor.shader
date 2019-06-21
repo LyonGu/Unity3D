@@ -18,11 +18,13 @@ Shader "Cookbook/Chapter07/SimpleVertexColor"
 		struct Input 
 		{
 			float2 uv_MainTex;
-			float4 vertColor;
+			float4 vertColor;  //input里添加了自定义变量，一定要初始化
 		};
 		
 		void vert(inout appdata_full v, out Input o)
 		{
+			//一定要初始化
+			UNITY_INITIALIZE_OUTPUT(Input,o);
 			o.vertColor = v.color;
 		}
 

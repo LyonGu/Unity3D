@@ -12,6 +12,7 @@ Shader "Cookbook/Chapter06/SimpleAlpha"
 		LOD 200
 		
 		CGPROGRAM
+		//透明度混合
 		#pragma surface surf Lambert alpha
 
 		sampler2D _MainTex;
@@ -27,7 +28,7 @@ Shader "Cookbook/Chapter06/SimpleAlpha"
 			half4 c = tex2D (_MainTex, IN.uv_MainTex);
 			
 			o.Albedo = c.rgb;
-			o.Alpha = c.b * _TransVal;
+			o.Alpha = c.b * _TransVal; //o.Alpha控制透明度
 		}
 		ENDCG
 	} 

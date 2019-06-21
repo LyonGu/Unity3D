@@ -15,9 +15,10 @@ Shader "Cookbook/Chapter07/VertexAnimation"
 	{
 		Tags { "RenderType"="Opaque" }
 		LOD 200
-		
+		Cull off
 		CGPROGRAM
 		#pragma surface surf Lambert vertex:vert
+
 
 		sampler2D _MainTex;
 		float4 _ColorA;
@@ -36,6 +37,7 @@ Shader "Cookbook/Chapter07/VertexAnimation"
 		
 		void vert(inout appdata_full v, out Input o)
 		{
+			UNITY_INITIALIZE_OUTPUT(Input,o);
 			float time = _Time * _Speed;
 			float waveValueA = sin(time + v.vertex.x * _Frequency) * _Amplitude;
 			

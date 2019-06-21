@@ -12,6 +12,7 @@ Shader "Cookbook/Chapter06/CutoffShader"
 		LOD 200
 		
 		CGPROGRAM
+		//透明度测试，用变量_Cutoff来做判断
 		#pragma surface surf Lambert alphatest:_Cutoff
 
 		sampler2D _MainTex;
