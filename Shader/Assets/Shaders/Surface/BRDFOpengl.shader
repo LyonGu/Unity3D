@@ -104,7 +104,7 @@
 		    F0 = lerp(F0, s.Albedo, _Metallic);
 		    
 
-
+		    //Cook-Torrance BRDF模型
 			float NDF = DistributionGGX(normal, h, _Roughness);               		//正态分布函数，有多少反射光线与h向量相同
 	        float G   = GeometrySmith(normal, viewDir, lightDir, _Roughness);       //几何函数， 高光中的遮挡部分
 	        fixed3 F  = fresnelSchlick(clamp(dot(h, lightDir), 0.0, 1.0), F0);     	//菲涅尔方程
