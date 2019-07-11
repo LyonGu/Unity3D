@@ -593,6 +593,8 @@
     <None Include="Assets\Shaders\Common\RimLight.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMaskNoSpecuMap.shader" />
+    <None Include="Assets\Shaders\Dissove\DissoveBase.shader" />
+    <None Include="Assets\Shaders\Dissove\DissoveBaseNoIf.shader" />
     <None Include="Assets\Shaders\Surface\BRDF.shader" />
     <None Include="Assets\Shaders\Surface\BRDFOpengl.shader" />
     <None Include="Assets\Shaders\Surface\BRDFOpenglMap.shader" />
