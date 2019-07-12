@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: DissoveSpead
-  m_Shader: {fileID: 4800000, guid: 733170f3f8ecd6a438613658513fc90f, type: 3}
+  m_Name: DissoveSpeadTop
+  m_Shader: {fileID: 4800000, guid: 5630d001ed1cd1c4185092d4dae800d0, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -66,7 +66,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DissolveEdge: 0.8
-    - _DissolveThreshold: 0.005
+    - _DissolveThreshold: 0
     - _DstBlend: 0
     - _FlyFactor: 1
     - _FlyThreshold: 0.307

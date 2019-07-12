@@ -40,6 +40,8 @@ Shader "Dissove/DissoveSpread"
 	v2f vert(appdata_base v)
 	{
 		v2f o;
+
+		//在模型空间沿法线方向扩散
 		v.vertex.xyz += v.normal * saturate(_DissolveThreshold - _FlyThreshold) * _FlyFactor;
 		o.pos = UnityObjectToClipPos(v.vertex);
 		o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
