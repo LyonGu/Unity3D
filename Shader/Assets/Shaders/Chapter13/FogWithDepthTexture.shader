@@ -65,6 +65,8 @@
 			#endif
 			
 			//射线信息
+			//求得视锥体对应四个边界射线的值，这个操作在vertex阶段进行，由于我们的后处理实际上就是渲染了一个Quad，上下左右四个顶点，
+			//把这个射线传递给pixel阶段时，就会自动进行插值计算，也就是说在顶点阶段的方向值到pixel阶段就变成了逐像素的射线方向。
 			o.interpolatedRay = _FrustumCornersRay[index];
 				 	 
 			return o;
