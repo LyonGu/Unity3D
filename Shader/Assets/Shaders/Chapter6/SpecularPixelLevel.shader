@@ -42,7 +42,7 @@
 				o.pos = UnityObjectToClipPos(i.vertex);
 
 				//法线方向转到世界空间
-				fixed3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld,i.normal));
+				fixed3 worldNormal = normalize(mul(i.normal, (float3x3)unity_WorldToObject));
 
 				o.worldNormal = worldNormal;
 				o.worldPos = mul(unity_ObjectToWorld, i.vertex);

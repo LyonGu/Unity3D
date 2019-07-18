@@ -39,8 +39,7 @@
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 
 				//把法线从模型空间转到世界空间
-				//fixed3 worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
-				fixed3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld,v.normal));
+				fixed3 worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
 
 				//光源的方向（假设场景中只有一个光源切实平行光）
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);

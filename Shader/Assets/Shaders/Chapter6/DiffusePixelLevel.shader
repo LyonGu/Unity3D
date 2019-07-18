@@ -36,8 +36,7 @@
 				o.pos = UnityObjectToClipPos(v.vertex);
 
 				//把法线从模型空间转到世界空间
-				//fixed3 worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
-				fixed3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld,v.normal));
+				fixed3 worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
 
 				//传递给片段着色器
 				o.worldNormal = worldNormal;
