@@ -111,7 +111,23 @@
 				*/
 				
 				//wToT = the inverse of tToW = the transpose of tToW as long as tToW is an orthogonal matrix.
-				float3x3 worldToTangent = float3x3(worldTangent, worldBinormal, worldNormal);
+				float3x3 worldToTangent = float3x3(worldTangent, worldBinormal, worldNormal); //因为是正交矩阵，转置矩阵等于逆矩阵，
+
+				/*
+					float3x3 tangentToWorld = float3x3(	worldTangent.x, worldBinormal.x, worldNormal.x,
+												   		worldTangent.y, worldBinormal.y, worldNormal.y,
+												   		worldTangent.z, worldBinormal.z, worldNormal.z,
+												   		);
+
+
+					float3x3(worldTangent, worldBinormal, worldNormal) ==>
+					   float3x3(	worldTangent.x, worldTangent.y, worldTangent.z,
+									worldBinormal.x, worldBinormal.y, worldBinormal.z,
+									worldNormal.x, worldNormal.y, worldNormal.z,
+								);
+
+					tangentToWorld 转置下就是了
+				*/
 
 				// Transform the light and view dir from world space to tangent space
 				o.lightDir = mul(worldToTangent, WorldSpaceLightDir(v.vertex));
