@@ -598,6 +598,7 @@
     <None Include="Assets\Shaders\Dissove\DissoveSpread.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveSpreadTop.shader" />
     <None Include="Assets\Shaders\Occlusion\XRay.shader" />
+    <None Include="Assets\Shaders\Occlusion\XRayEffect.shader" />
     <None Include="Assets\Shaders\Surface\BRDF.shader" />
     <None Include="Assets\Shaders\Surface\BRDFOpengl.shader" />
     <None Include="Assets\Shaders\Surface\BRDFOpenglMap.shader" />
