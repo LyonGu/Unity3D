@@ -15,9 +15,10 @@ Shader "Occlusion/XRay"
 		//渲染X光效果的Pass
 		Pass
 		{
-			
+			//ZTest 可取值为：Greater , GEqual , Less , LEqual , Equal , NotEqual , Always , Never , Off，默认是 LEqual，ZTest Off 等同于 ZTest Always。
+
 			Blend SrcAlpha One
-			ZWrite Off    //一定要关闭深度写入，否则正常渲染的pass会把遮挡部分也画出来
+			ZWrite Off    //一定要关闭深度写入，否则正常渲染的pass会把遮挡部分也画出来  ZTest默认值为LEqual
 			ZTest Greater //被遮挡的部分设置深度大于通过
 
 			CGPROGRAM
@@ -50,7 +51,6 @@ Shader "Occlusion/XRay"
 		{
 			
 			ZWrite On
-	
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
