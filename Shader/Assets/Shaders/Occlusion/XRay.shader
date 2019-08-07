@@ -1,54 +1,83 @@
-﻿Shader "Occlusion/XRay"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Occlusion/XRay"
 {
+	//所谓X光，就是在被遮挡的部分呈现一个其他的颜色
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" }
+		Tags{ "Queue" = "Geometry" "RenderType" = "Opaque" }
 		LOD 100
 
+		//渲染X光效果的Pass
 		Pass
 		{
+			
+			Blend SrcAlpha One
+			ZWrite Off    //一定要关闭深度写入，否则正常渲染的pass会把遮挡部分也画出来
+			ZTest Greater //被遮挡的部分设置深度大于通过
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-
-			
-			#include "UnityCG.cginc"
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
+			#include "Lighting.cginc"
 
 			struct v2f
 			{
-				float2 uv : TEXCOORD0;
-				UNITY_FOG_COORDS(1)
-				float4 vertex : SV_POSITION;
+				float4 pos : SV_POSITION;
 			};
-
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
-			
-			v2f vert (appdata v)
+ 
+			v2f vert (appdata_base v)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				return o;
 			}
-			
-			fixed4 frag (v2f i) : SV_Target
+ 
+			fixed4 frag(v2f i) : SV_Target
 			{
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-
-				return col;
+				return fixed4(1,1,1,0.5);
 			}
+
+			ENDCG
+		}
+
+		//正常渲染的Pass
+		Pass
+		{
+			
+			ZWrite On
+	
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "Lighting.cginc"
+
+			sampler2D _MainTex;
+			fixed4 _MainTex_ST;
+
+			struct v2f
+			{
+				float4 pos : SV_POSITION;
+				fixed2 uv : TEXCOORD1;
+			};
+ 
+			v2f vert (appdata_base v)
+			{
+				v2f o;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+				return o;
+			}
+ 
+			fixed4 frag(v2f i) : SV_Target
+			{
+				return tex2D(_MainTex, i.uv);
+			}
+
 			ENDCG
 		}
 	}
