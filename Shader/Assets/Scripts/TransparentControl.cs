@@ -104,6 +104,7 @@ public class TransparentControl : MonoBehaviour {
             }
         }
         param.isTransparent = true;
+        param.isResume = false;
     }
 
 
@@ -124,6 +125,7 @@ public class TransparentControl : MonoBehaviour {
                     param.currentFadeTime -= Time.deltaTime;
                     float t = param.currentFadeTime / fadeInTime;
                     col.a = Mathf.Lerp(1, destTransparent, t);
+                    param.maxTranspaent = t;
                     mat.SetColor("_Color", col);
                     if (t <= 0.0f)
                     {
