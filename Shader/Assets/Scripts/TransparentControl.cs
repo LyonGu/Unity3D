@@ -12,6 +12,8 @@ public class TransparentControl : MonoBehaviour {
         public Material[] sharedMats = null;
         public float currentFadeTime = 0;
         public bool isTransparent = true;
+        public bool isResume = false;
+        public float maxTranspaent = 0.0f;
     }
 
     public Transform targetObject = null;   //目标对象
@@ -31,6 +33,7 @@ public class TransparentControl : MonoBehaviour {
     {
         if (targetObject == null)
             return;
+
         UpdateTransparentObject();
         UpdateRayCastHit();
         RemoveUnuseTransparent();
@@ -46,11 +49,16 @@ public class TransparentControl : MonoBehaviour {
             param.isTransparent = false;
             foreach (var mat in param.materials)
             {
-                Color col = mat.GetColor("_Color");
-                param.currentFadeTime += Time.deltaTime;
-                float t = param.currentFadeTime / fadeInTime;
-                col.a = Mathf.Lerp(1, destTransparent, t);
-                mat.SetColor("_Color", col);
+                if (!param.isResume && param.maxTranspaent <1.0f)
+                {
+                    Color col = mat.GetColor("_Color");
+                    param.currentFadeTime += Time.deltaTime;
+                    float t = param.currentFadeTime / fadeInTime;
+                    param.maxTranspaent = t;
+                    col.a = Mathf.Lerp(1, destTransparent, t);
+                    mat.SetColor("_Color", col);
+                }
+               
             }
         }
     }
@@ -105,11 +113,33 @@ public class TransparentControl : MonoBehaviour {
         var var = transparentDic.GetEnumerator();
         while (var.MoveNext())
         {
-            if (var.Current.Value.isTransparent == false)
+            TransparentParam param = var.Current.Value;
+            if (param.isTransparent == false)
             {
-                //用完后材质实例不会销毁，可以被unloadunuseasset销毁或切场景销毁。
-                var.Current.Key.materials = var.Current.Value.sharedMats;  //var.Current.Key --》render
-                clearList.Add(var.Current.Key);
+                param.isResume = true;
+                bool isResumeOver = false;
+                foreach (var mat in param.materials)
+                {
+                    Color col = mat.GetColor("_Color");
+                    param.currentFadeTime -= Time.deltaTime;
+                    float t = param.currentFadeTime / fadeInTime;
+                    col.a = Mathf.Lerp(1, destTransparent, t);
+                    mat.SetColor("_Color", col);
+                    if (t <= 0.0f)
+                    {
+                        isResumeOver = true;   
+                    }
+                }
+
+                if (isResumeOver)
+                {
+                    //用完后材质实例不会销毁，可以被unloadunuseasset销毁或切场景销毁。
+                    param.isResume = false;
+                    param.maxTranspaent = 0.0f;
+                    var.Current.Key.materials = param.sharedMats;  //var.Current.Key --》render
+                    clearList.Add(var.Current.Key);
+                }
+ 
             }
         }
         foreach (var v in clearList)

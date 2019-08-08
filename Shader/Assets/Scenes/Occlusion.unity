@@ -293,8 +293,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 2117270334}
   height: 0.5
-  destTransparent: 0.9
-  fadeInTime: 1
+  destTransparent: 0.5
+  fadeInTime: 2
 --- !u!1 &344693436
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,8 +689,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: -0.000000029802322, z: 0}
+  m_Size: {x: 1.006619, y: 1, z: 1}
+  m_Center: {x: 0.0051092054, y: -0.000000035922636, z: 0}
 --- !u!1 &1159247792
 GameObject:
   m_ObjectHideFlags: 0
