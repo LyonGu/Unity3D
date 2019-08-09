@@ -79,7 +79,7 @@ Material:
     - _ReflAmount: 1
     - _ReflPower: 3
     - _SmoothnessTextureChannel: 0
-    - _SpecPower: 29.7
+    - _SpecPower: 30
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
