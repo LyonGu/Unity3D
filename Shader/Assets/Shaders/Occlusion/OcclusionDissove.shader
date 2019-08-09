@@ -13,6 +13,9 @@
 
 		_ColorFactorA("ColorFactorA", Range(0,1)) = 0.7
 		_ColorFactorB("ColorFactorB", Range(0,1)) = 0.8
+
+		_DissolveDistance("DissolveDistance", Range(0, 20)) = 14
+		_DissolveDistanceFactor("DissolveDistanceFactor", Range(0,3)) = 3
 	}
 	SubShader
 	{
@@ -43,6 +46,10 @@
 			half _ColorFactorA;
 			half _ColorFactorB;
 
+			float _DissolveDistance;
+			float _DissolveDistanceFactor;
+
+
 
 			struct a2v
 			{
@@ -58,6 +65,7 @@
 				float3 worldNormal:TEXCOORD1;
 				float4 screenPos : TEXCOORD2;
 				float3 worldPos :TEXCOORD3;
+				float3 viewDir : TEXCOORD4;
 			};
 
 			
@@ -69,6 +77,7 @@
 				o.worldNormal = UnityObjectToWorldNormal(v.normal);
 				o.screenPos = ComputeGrabScreenPos(o.pos);  //根据clip坐标计算屏幕坐标
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				o.viewDir = ObjSpaceViewDir(v.vertex);
 				return o;
 			}
 			
@@ -78,8 +87,12 @@
 				//计算距离中心点距离
 				float2 dir = float2(0.5, 0.5) - screenPos;
 				float distance = sqrt(dir.x * dir.x + dir.y * dir.y);
+
+				//计算一下像素点到相机距离作为另一个控制系数
+				float viewDistance =  max(0,(_DissolveDistance - length(i.viewDir)) / _DissolveDistance) * _DissolveDistanceFactor;
+
 				//距离中心点近的才进行溶解处理
-				float disolveFactor = (0.5 - distance) * _DissolveThreshold;
+				float disolveFactor = (0.5 - distance) * _DissolveThreshold * viewDistance;
 				//采样Dissolve Map
 				fixed4 dissolveValue = tex2D(_DissolveMap, i.uv);
 				//小于阈值的部分直接discard
