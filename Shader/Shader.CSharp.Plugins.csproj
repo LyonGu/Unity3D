@@ -501,6 +501,8 @@
     <None Include="Assets\Shaders\Occlusion\OcclusionTransparentZwirte.shader" />
     <None Include="Assets\Shaders\Occlusion\XRay.shader" />
     <None Include="Assets\Shaders\Occlusion\XRayEffect.shader" />
+    <None Include="Assets\Shaders\SampleUV\DissolveEffectX.shader" />
+    <None Include="Assets\Shaders\SampleUV\DissolveEffectXRimLight.shader" />
     <None Include="Assets\Shaders\SampleUV\FlashEffect.shader" />
     <None Include="Assets\Shaders\SampleUV\FlashEffectMode.shader" />
     <None Include="Assets\Shaders\Surface\BRDF.shader" />
