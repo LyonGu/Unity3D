@@ -20,3 +20,6 @@ assetBundle/learnAssetBundle/Library/
 assetBundle/learnAssetBundle/Temp/
 assetBundle/learnAssetBundle/Assets/StreamingAssets/
 Shader/Apk/
+PullTheBox/Library/
+PullTheBox/obj/
+PullTheBox/.vs/
