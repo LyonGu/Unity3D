@@ -5,17 +5,16 @@ using UnityEngine.UI;
 public class PositonConvert : MonoBehaviour {
 
 
-    public Transform cube1;
-    public Transform cube2;
+    public RectTransform canvasRectTransform; //根canvas的RectTransform
+    public RectTransform textRectTransform;   //子UI的canvas的RectTransform
 
-    public Canvas canvas;
-    public Text text;
+    public Transform cubeTransform;
+
+    public Camera UICamera;
+
+
 	// Use this for initialization
 	void Start () {
-        Debug.Log("position1 :"+ cube1.position);
-        Debug.Log("position2 :" + cube2.position);
-        Debug.Log("localposition1 :" + cube1.localPosition);
-        Debug.Log("localposition2 :" + cube2.localPosition);
 
         worldToScreenInUICamera();
 	}
@@ -24,22 +23,32 @@ public class PositonConvert : MonoBehaviour {
     void worldToScreenInUICamera()
     {
 
-
-        Vector3 wPos = cube1.position;
+        //世界坐标
+        Vector3 wPos = cubeTransform.position;
 
         //转换成屏幕坐标
         Vector3 screenPos = Camera.main.WorldToScreenPoint(wPos);
-        RectTransform rectTrans = canvas.GetComponent<RectTransform>();
+
 
         Vector2 localPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPos, canvas.worldCamera, out localPos);
-
-        text.transform.localPosition = new Vector3(localPos.x, localPos.y, 0);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPos, UICamera, out localPos);
+        textRectTransform.anchoredPosition = localPos;
 
     
     }
 	// Update is called once per frame
 	void Update () {
-		
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 screenPos = Input.mousePosition;
+            Vector2 outVec;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, UICamera, out outVec);
+
+            Debug.Log("Setting anchored positiont to: " + outVec);
+            //textRectTransform.position = outVec;
+            textRectTransform.anchoredPosition = outVec; //anchoredPosition 才是UGUI坐标系的坐标位置（属性面板里position属性）
+            //textRectTransform.position = outVec;  //position是代表世界空间的坐标
+        }
 	}
 }
