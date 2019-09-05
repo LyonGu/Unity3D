@@ -6,7 +6,7 @@
 
 	1 手臂伸长 使用 localScale， 锚点设置在哪，不是两端同时scale
 
-
+	2  [SerializeField] 把私有字段和保护字段也显示在属性面板上
 ]====]
 
 
