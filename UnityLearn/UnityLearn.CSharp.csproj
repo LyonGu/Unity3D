@@ -394,6 +394,7 @@
     <Compile Include="Assets\Scripts\StataMachine\StateMachine.cs" />
     <Compile Include="Assets\Scripts\test.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
+    <Compile Include="Assets\Scripts\TestCallOrder.cs" />
     <Compile Include="Assets\Scripts\TestDictionary.cs" />
     <Compile Include="Assets\Scripts\TestManger.cs" />
     <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
