@@ -56,6 +56,9 @@
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\AssetBundleMgr.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\AssetLoader.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\MultiABMgr.cs" />
+     <Compile Include="Assets\Scripts\AssetBundleFrameWork\NetHelp\IStartGame.cs" />
+     <Compile Include="Assets\Scripts\AssetBundleFrameWork\NetHelp\StartGame.cs" />
+     <Compile Include="Assets\Scripts\AssetBundleFrameWork\NetHelp\UpdateFromServer.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\SingleABLoader.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Test\TestClass_ABToolFramework.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Test\TestClass_SingABLoader.cs" />
