@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Editor\AutoSetLabels.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Editor\BuildAssetBundle.cs" />
+     <Compile Include="Assets\Scripts\AssetBundleFrameWork\Editor\CopyLuaFile.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Editor\CreateVerifyFills.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Editor\DeleteAssetBundle.cs" />
      <Compile Include="Assets\XLua\Src\Editor\Generator.cs" />
