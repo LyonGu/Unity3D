@@ -40,19 +40,19 @@ namespace ABFW
                 Directory.CreateDirectory(strABOutPathDIR);
             }
             //打包生成
-        string strReturnPlatformPath = string.Empty;
-		switch (Application.platform)
-		{
+            string strReturnPlatformPath = string.Empty;
+            switch (Application.platform)
+            {
 
-			case RuntimePlatform.WindowsEditor:
-                BuildPipeline.BuildAssetBundles(strABOutPathDIR, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-                break;
-			case RuntimePlatform.OSXEditor:
-				BuildPipeline.BuildAssetBundles(strABOutPathDIR, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
-				break;
-			default:
-				break;
-		}
+                case RuntimePlatform.WindowsEditor:
+                    BuildPipeline.BuildAssetBundles(strABOutPathDIR, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
+                    break;
+                case RuntimePlatform.OSXEditor:
+                    BuildPipeline.BuildAssetBundles(strABOutPathDIR, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
+                    break;
+                default:
+                    break;
+            }
         }
 
     }//Class_end

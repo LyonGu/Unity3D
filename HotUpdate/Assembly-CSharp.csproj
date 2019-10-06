@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Test\TestClass_ABToolFramework.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Test\TestClass_SingABLoader.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Tools\ABDefine.cs" />
+     <Compile Include="Assets\Scripts\AssetBundleFrameWork\Tools\Helps.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFrameWork\Tools\PathTools.cs" />
      <Compile Include="Assets\XLua\Examples\01_Helloworld\Helloworld.cs" />
      <Compile Include="Assets\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
@@ -110,6 +111,7 @@
      <None Include="Assets\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
      <None Include="Assets\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
      <None Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
+     <None Include="Assets\StreamingAssets\MACOS\ProjectVerifyFile.txt" />
      <None Include="Assets\XLua\Examples\06_Coroutine\Resources\coruntine_test.lua.txt" />
      <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
      <None Include="Assets\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
