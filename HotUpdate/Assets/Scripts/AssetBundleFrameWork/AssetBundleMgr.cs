@@ -1,4 +1,4 @@
-﻿/***
+/***
  *
  *   Title: "AssetBundle简单框架"项目
  *          框架主流程(第4层): 所有“场景”的AssetBundle 管理。

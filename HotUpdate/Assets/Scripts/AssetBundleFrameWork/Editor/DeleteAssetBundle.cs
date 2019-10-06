@@ -1,4 +1,4 @@
-﻿/***
+/***
  *
  *   Title: "AssetBundle简单框架"项目
  *          删除AssetBundle包文件
