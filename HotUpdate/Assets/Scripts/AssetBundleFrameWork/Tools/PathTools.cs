@@ -1,137 +1,114 @@
-/***
- *
- *   Title: "AssetBundle简单框架"项目
- *          路径工具类
- *
- *   Description:
- *          功能： 
- *          包含本框架中所有的路径常量、路径方法
- *
- *   Author: Liuguozhu
- *
- *   Date: 2017.10
- *
- *   Modify：  
- *
- */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ABFW
-{
-	public class PathTools
+public class PathTool {
+
+	public const string AB_RESROOTPATH = "AB_Res";
+
+	//得到AB资源的输入目录
+	public static string GetABResourcesPath()
 	{
-        /* 路径常量 */
-        public const string AB_RESOURCES = "AB_Res";
-
-        /* 路径方法 */
-        /// <summary>
-        /// 得到AB资源的输入目录
-        /// </summary>
-        /// <returns></returns>
-        public static string GetABResourcesPath()
-        {
-            return Application.dataPath + "/"+ AB_RESOURCES;
-        }
-
-        /// <summary>
-        /// 获取AB输出路径
-        /// 算法：
-        ///     1： 平台(PC/移动端)路径。
-        ///     2： 平台的名称
-        /// </summary>
-        public static string GetABOutPath()
-        {
-            return GetPlatformPath() + "/" + GetPlatformName();
-        }
-
-        /// <summary>
-        /// 获取平台的路径
-        /// </summary>
-        /// <returns></returns>
-        private static string GetPlatformPath()
-        {
-            string strReturnPlatformPath = string.Empty;
-
-
-            switch (Application.platform)
-            {
-                case RuntimePlatform.WindowsPlayer:
-                case RuntimePlatform.WindowsEditor:
-                    strReturnPlatformPath = Application.streamingAssetsPath;
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                case RuntimePlatform.Android:
-                    strReturnPlatformPath = Application.persistentDataPath;
-                    break;      
-                default:
-                    break;
-            }
-
-            return strReturnPlatformPath;
-        }
-
-        /// <summary>
-        /// 获取平台的名称
-        /// </summary>
-        /// <returns></returns>
-        public static string GetPlatformName()
-        {
-            string strReturnPlatformName = string.Empty;
-
-            switch (Application.platform)
-            {
-                case RuntimePlatform.WindowsPlayer:
-                case RuntimePlatform.WindowsEditor:
-                    strReturnPlatformName = "Windows";
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                    strReturnPlatformName = "Iphone";
-                    break;
-                case RuntimePlatform.Android:
-                    strReturnPlatformName = "Android";
-                    break;
-                default:
-                    break;
-            }
-
-            return strReturnPlatformName;
-        }
-
-
-        /// <summary>
-        /// 获取WWW协议下载（AB包）路径
-        /// </summary>
-        /// <returns></returns>
-        public static string GetWWWPath()
-        {
-            //返回路径字符串
-            string strReturnWWWPath = string.Empty;
-
-            switch (Application.platform)
-            {
-                //Windows 主平台
-                case RuntimePlatform.WindowsPlayer:
-                case RuntimePlatform.WindowsEditor:
-                    strReturnWWWPath = "file://" + GetABOutPath();
-                    break;
-                //Android 平台
-                case RuntimePlatform.Android:
-                    strReturnWWWPath = "jar:file://" + GetABOutPath();
-                    break;
-                //IPhone平台
-                case RuntimePlatform.IPhonePlayer:
-                    strReturnWWWPath = GetABOutPath()+"/Raw/";
-                    break;
-                default:
-                    break;
-            }
-
-            return strReturnWWWPath;
-        }
-		
+		return Application.dataPath + "/" + AB_RESROOTPATH;
 	}
+
+	//获取AB输出路径
+	public static string GetABOutPath()
+	{
+		return GetPlatformPath() + "/" + GetPlatformName();
+	}
+
+	/// 获取平台的路径
+	private static string GetPlatformPath()
+	{
+		string strReturnPlatformPath = string.Empty;
+		switch (Application.platform)
+		{	
+			//Application.streamingAssetsPath 只是可读，不能删除原始zip文件以及加密
+			case RuntimePlatform.WindowsPlayer:
+			case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.OSXEditor:
+				strReturnPlatformPath = Application.streamingAssetsPath;
+				break;
+			//移动平台，Application.persistentDataPath为可读可写目录 
+			case RuntimePlatform.IPhonePlayer:
+			case RuntimePlatform.Android:
+				strReturnPlatformPath = Application.persistentDataPath;
+				/*
+					Application.persistentDataPath
+						android :   "/storage/emulated/0/Android/data/package name/files"
+						ios:        "/var/mobile/Containers/Data/Application/app sandbox/Documents"
+
+					Application.streamingAssetsPath  
+						android: jar:file:///data/app/package name-1/base.apk!/assets    
+						ios:  /var/containers/Bundle/Application/app sandbox/test.app/Data/Raw 
+				 */
+				
+				break;
+			default:
+				break;
+		}
+
+		return strReturnPlatformPath;
+	}
+
+	/// 获取平台的名称
+	public static string GetPlatformName()
+	{
+		string strReturnPlatformName = string.Empty;
+
+		switch (Application.platform)
+		{
+			case RuntimePlatform.WindowsPlayer:
+			case RuntimePlatform.WindowsEditor:
+				strReturnPlatformName = "Windows";
+				break;
+			case RuntimePlatform.IPhonePlayer:
+				strReturnPlatformName = "Iphone";
+				break;
+			case RuntimePlatform.Android:
+				strReturnPlatformName = "Android";
+				break;
+			case RuntimePlatform.OSXEditor:
+				strReturnPlatformName = "MACOS";
+				break;
+			default:
+				break;
+		}
+
+		return strReturnPlatformName;
+	}
+
+	/// 获取WWW协议下载（AB包）路径
+	public static string GetWWWPath()
+	{
+		//返回路径字符串
+		string strReturnWWWPath = string.Empty;
+
+		switch (Application.platform)
+		{
+			//Windows 主平台
+			case RuntimePlatform.WindowsPlayer:
+			case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.OSXPlayer:
+			case RuntimePlatform.OSXEditor:
+				strReturnWWWPath = "file://" + GetABOutPath();
+				break;
+			//Android 平台
+			case RuntimePlatform.Android:
+				strReturnWWWPath = "jar:file://" + GetABOutPath();
+				break;
+			//IOS 平台
+			case RuntimePlatform.IPhonePlayer:
+				strReturnWWWPath = GetABOutPath()+"/Raw/";
+				break;
+			default:
+				break;
+		}
+
+		return strReturnWWWPath;
+	}
+
+
+
 }
-
-
