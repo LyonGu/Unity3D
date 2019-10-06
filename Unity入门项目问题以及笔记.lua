@@ -37,6 +37,17 @@
 			box.rotation = Quaternion.Lerp(box.rotation, body.rotation, Time.deltaTime * 5); //四元数旋转
 		}
 
+		方法4
+		{
+			Vector3 v1 = invader.transform.position - transform.position;
+	        v1.y = 0;
+	        // 结合叉积和Rotate函数进行旋转，很简洁很好用，建议掌握
+	        // 使用Mathf.Min(turnSpeed, Mathf.Abs(angle))是为了严谨，避免旋转过度导致的抖动
+	        Vector3 cross = Vector3.Cross(transform.forward, v1);
+	        float angle = Vector3.Angle(transform.forward, v1);
+	        transform.Rotate(cross, Mathf.Min(turnSpeed, Mathf.Abs(angle)));
+		}
+
 	}
 	
 
@@ -156,8 +167,50 @@
 	        Vector3 dis = targetPos - transform.position;
 	        transform.Translate(dis * speed * Time.deltaTime, Space.World);
 		}
+
+		方法四：利用Rigidbody组件
+		{
+			// 获得输入的H轴和V轴，也就是横轴和纵轴，也就是W、S键或是A、D键的状态。
+	        float input_h = Input.GetAxisRaw("Horizontal");
+	        float input_v = Input.GetAxisRaw("Vertical");
+
+	        // 输入是一个-1~+1之间的浮点数，把它转化成方向向量
+	        Vector3 vec = new Vector3(input_h, 0, input_v);
+
+	        // 当W键和D键同时按下时，vec会比单按W键要长一些，你可以想想为什么。
+	        // 所以这里要把输入归一化，无论怎么按键，vec长度都要一致。
+	        vec = vec.normalized;
+
+	        // 乘以moveSpeed可以让调整vec的长度
+	        vec = vec * moveSpeed;
+
+	        // 把vec赋值给刚体的速度，就可以让刚体运动起来了
+	        myRigidbody.velocity = vec;
+		}
+
+
 	    
 	}
+
+	Input.GetKey(KeyCode.A) --> 持续按键的判断
+	Input.GetKeyDown(KeyCode.A) --> 按下的动作，一次按下只触发一次
+
+	Debug.DrawLine函数显示的射线只会出现在编辑窗口里，而不出现在Game窗口
+
+	Vector3.Angle(transform.forward, v1) --> 两个向量之间的夹角
+
+	{
+		Application.dataPath
+		Application.persistentDataPath
+	}
+
+	{
+		判断射线碰到什么
+		1 if (hitt.transform != null && hitt.transform.name == "Ground")
+
+		2 Physics.Raycast(ray, out hitt, 100, LayerMask.GetMask("Ground"));
+	}
+	
 
 	
 
