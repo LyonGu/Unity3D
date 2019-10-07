@@ -48,6 +48,9 @@
 	        transform.Rotate(cross, Mathf.Min(turnSpeed, Mathf.Abs(angle)));
 		}
 
+		transform.rotation --> 返回的是四元数
+		transform.eulerAngles = new Vector3(0,100,0);  //面板上roration属性为欧拉角
+
 	}
 	
 
@@ -192,6 +195,11 @@
 	    
 	}
 
+	6 Aimatior中state和blendtree的区别：state只能使用给一个动作，blendtree其实也是一个状态，只不过可以使用多个动作进行融合
+	{
+		https://www.cnblogs.com/hammerc/p/4832642.html
+	}
+	
 	Input.GetKey(KeyCode.A) --> 持续按键的判断
 	Input.GetKeyDown(KeyCode.A) --> 按下的动作，一次按下只触发一次
 
