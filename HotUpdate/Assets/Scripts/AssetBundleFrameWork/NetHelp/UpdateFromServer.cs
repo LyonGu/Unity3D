@@ -129,10 +129,10 @@ using ABFW;
 			yield return www;
 			if (www.error!=null && !string.IsNullOrEmpty(www.error))
 			{
-				Debug.Log("服务器校验文件下载失败=====error:" + www.error);
+				Debug.Log("文件下载失败=====error:" + www.error + "/" + localPath);
 				yield break;
 			}
-
+            Debug.Log("下载成功=====" + localPath);
 			File.WriteAllBytes(localPath, www.bytes);
 			yield return null;
 		}
