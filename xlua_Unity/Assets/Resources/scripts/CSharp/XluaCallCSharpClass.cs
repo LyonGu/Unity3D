@@ -33,7 +33,6 @@ public class XluaCallCSharpClass : XluaCallCSharpParentClass
       
     }
 
-
     //定义委托
     [CSharpCallLua]
     public delegate void MyDelegate(int num);

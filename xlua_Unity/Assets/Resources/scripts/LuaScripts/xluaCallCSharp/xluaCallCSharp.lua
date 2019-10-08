@@ -82,7 +82,7 @@ local testFunc = function ()
 	print("传了一个方法进去========")
 end
 
---测试C#中带有params 关键字的方法 传入方法没成功
+--测试C#中带有params 关键字的方法 直接传入方法没成功
 -- xluaCallCSharp:xluaCallCSharp4(20,"hexinpng",68, testFunc)
 
 
@@ -113,6 +113,11 @@ local myInterfaceTable=
 
 	SpeakSelf=function(self)
 		print("lua中 SpeakSelf 方法被调用!")
+	end,
+
+	-- c#中接口定义可以不声明walk方法，
+	walk = function (self)
+		print("lua中 walk 方法被调用!")
 	end
 }
 

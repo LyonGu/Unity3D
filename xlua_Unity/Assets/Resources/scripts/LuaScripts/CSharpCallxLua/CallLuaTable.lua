@@ -3,7 +3,7 @@
 -- 定义全局变量，c#中只能使用全局变量
 
 --定义一个简单表
-local gameLanguage={str1="C#语言",str2="lua语言",str3="C++语言",str4="C语言"}
+gameLanguage={str1="C#语言",str2="lua语言",str3="C++语言",str4="C语言"}
 
 
 --定义一个综合表（lua中的OOP思想）
