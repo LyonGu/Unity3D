@@ -220,6 +220,47 @@
 	}
 	
 
+	7 结构体类型定义 自定义数据结构序列化，就可以使用多个自定义结构了
+	{
+		[System.Serializable] //可序列化标识
+		public struct AnimationClipSet  // public class AnimationClipSet
+		{
+		    //动画剪辑
+		    public AnimationClip AnimaClip;
+		    //动画剪辑播放速度
+		    public float ClipPlaySpeed;
+		}
+
+		在某个脚本里使用
+		public AnimationClipSet Runing
+	}
+
+	8 一种动作管理的思想
+	{
+		1 animatonMgr中定义一个委托，在update里实时调用，所有的动作方法都写在animatonMgr里
+		2 在其他脚本里，根据状态控制animatonMgr中对应的委托函数
+	}
+
+	9 委托的重载
+	{
+		1 父类有一个委托，在OnTriggerEnter里调用
+		2 子类重载这个委托，这样就实现了，所有的子类只要单纯实现逻辑即可
+	}
+
+	10 光照贴图，烘焙 --》烘焙完成后就可以删掉或者禁用掉对应的光源了
+	{
+		1 烘焙 --》只针对静态物体  光源为bake模式
+		2 反射探头 --》为了增强烘焙后的反射效果
+		3 光照探头 --》针对动态物体的光照
+	}
+	
+	11 角色移动，摄像机移动
+	{
+		
+	}
+
+	12 canvas 对于UI来说，后面的比前面的更后渲染，显示在上层
+
 	
 
 

@@ -13,6 +13,7 @@ public class RotateAroundByTarget : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //以aroundTraget.position为中心点，绕y轴方向旋转
         this.transform.RotateAround(aroundTraget.position, Vector3.up, aroundSpeed);
 	}
 }
