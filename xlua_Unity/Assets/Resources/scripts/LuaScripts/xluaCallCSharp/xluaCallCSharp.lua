@@ -85,6 +85,7 @@ end
 --测试C#中带有params 关键字的方法 直接传入方法没成功
 -- xluaCallCSharp:xluaCallCSharp4(20,"hexinpng",68, testFunc)
 
+xluaCallCSharp:xluaCallCSharp4_call(testFunc) --> ok
 
 --测试lua调用C#中带有结构体参数的方法
 --定义一个表

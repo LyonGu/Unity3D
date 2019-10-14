@@ -72,12 +72,12 @@ public class XluaCallCSharpClass : XluaCallCSharpParentClass
     public void xluaCallCSharp4(params object[] values)
     {
 
-        //string value0 = (string)values[0];
-        //string value1 = (string)values[1];
-        //string value2 = (string)values[2];
-        //Debug.Log(GetType() + "/value======" + value0);
-        //Debug.Log(GetType() + "/value======" + value1);
-        //Debug.Log(GetType() + "/value======" + value2);
+        string value0 = (string)values[0];
+        string value1 = (string)values[1];
+        string value2 = (string)values[2];
+        Debug.Log(GetType() + "/value======" + value0);
+        Debug.Log(GetType() + "/value======" + value1);
+        Debug.Log(GetType() + "/value======" + value2);
 
         //_callBack = (xluaCallBack)values[3];
         //_callBack();
@@ -85,8 +85,16 @@ public class XluaCallCSharpClass : XluaCallCSharpParentClass
         //string value0 = values[0] as string;
 
         //Debug.Log(GetType() + "/value======" + value0);
-        _callBack = (xluaCallBack)values[3];
-        _callBack();
+        // _callBack = (xluaCallBack)values[3];  报错
+        // _callBack();
+
+        // LuaFunction  luaFunc =  (LuaFunction)values[3];  报错
+        // luaFunc.Call();
+    }
+
+    public void xluaCallCSharp4_call(LuaFunction func)
+    {
+        func.Call();
     }
 
 
