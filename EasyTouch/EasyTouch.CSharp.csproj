@@ -284,6 +284,7 @@
     <Compile Include="Assets\EasyTouch\Plugins\VirtualScreen.cs" />
     <Compile Include="Assets\MyFirstTouch.cs" />
     <Compile Include="Assets\MySecondTouch.cs" />
+    <Compile Include="Assets\Scripts\RecieveMsg.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\EasyTouch\Readme_first.txt" />

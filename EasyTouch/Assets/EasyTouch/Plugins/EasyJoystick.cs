@@ -902,17 +902,17 @@ public class EasyJoystick : MonoBehaviour {
 							UpdateDirect();
 							break;
 						case InteractionType.EventNotification:
-							//CreateEvent(MessageName.On_JoystickMove);
+							CreateEvent(MessageName.On_JoystickMove);
 							break;
 						case InteractionType.DirectAndEvent:
-							//UpdateDirect();
-							//CreateEvent(MessageName.On_JoystickMove);
+							UpdateDirect();
+							CreateEvent(MessageName.On_JoystickMove);
 							break;
 					}
 				}
 				else{
 					if (!sendEnd){
-						//CreateEvent(MessageName.On_JoystickMoveEnd);
+						CreateEvent(MessageName.On_JoystickMoveEnd);
 						sendEnd = true;
 					}
 								
