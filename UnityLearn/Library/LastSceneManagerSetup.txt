@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/Dotween.unity
+- path: Assets/Scene/Scriptable.unity
   isLoaded: 1
   isActive: 1
