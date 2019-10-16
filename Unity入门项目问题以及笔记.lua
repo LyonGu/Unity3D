@@ -216,7 +216,7 @@
 		判断射线碰到什么
 		1 if (hitt.transform != null && hitt.transform.name == "Ground")
 
-		2 Physics.Raycast(ray, out hitt, 100, LayerMask.GetMask("Ground"));
+		2 Physics.Raycast(ray, out hitt, 100, LayerMask.GetMask("Ground"));  //只和"Ground"层做碰撞检测
 	}
 	
 
@@ -314,7 +314,7 @@
 
 	12 canvas 对于UI来说，后面的比前面的更后渲染，显示在上层
 
-	
+	13 string tag = prefab.GetInstanceID().ToString()  //GameObject的唯一标识
 
 
 ]==============]
