@@ -40,7 +40,7 @@ public class AssetLoader: System.IDisposable {
 		}
 
 		//正式加载
-		T tmpTResource = _currentAssetBundle.LoadAsset<T>(assetName);
+		T tmpTResource = _currentAssetBundle.LoadAsset<T>(assetName); // 最后都要调用c#的方法
 		if(tmpTResource != null && isCache)
 		{
 			_htTable.Add(assetName, tmpTResource);

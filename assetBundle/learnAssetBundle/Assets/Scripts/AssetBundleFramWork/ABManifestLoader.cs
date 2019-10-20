@@ -109,7 +109,7 @@ public class ABManifestLoader : System.IDisposable
     {
         if (_ManifestObj!=null && !string.IsNullOrEmpty(abName))
         {
-            return _ManifestObj.GetAllDependencies(abName);
+            return _ManifestObj.GetAllDependencies(abName);  // C#自身方法
         }
         return null;
     }
