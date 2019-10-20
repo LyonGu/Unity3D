@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 using System.IO;
-using ABFW;
+
 
 
 namespace HotUpdateModel
@@ -92,7 +92,8 @@ namespace HotUpdateModel
         private byte[] customLoader(ref string fileName)
         {
             //获取lua所在目录
-            string luaPath = PathTools.GetABOutPath() + PathTools.LUA_DEPLOY_PATH;
+            //string luaPath = PathTools.GetABOutPath() + PathTools.LUA_DEPLOY_PATH;
+            string luaPath = ""; //自己修改下 todo
 
             //缓存判断处理： 根据lua文件路径，获取lua的内容
             if (_DicLuaFileArray.ContainsKey(fileName))

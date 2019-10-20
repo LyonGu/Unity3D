@@ -245,6 +245,7 @@
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByInterface.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByLuaTable.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CSLua.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\LuaHelper.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\Rotating.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByFile.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByRequire.cs" />
