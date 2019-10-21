@@ -50,7 +50,7 @@ XluaCallCSharpMonoBehaviour:xluaCallCSharp()
 
 --[[  三： 学习 lua  调用自定义C#脚本 不继承MonoBehaviour  ]]--
 
-local XluaCallCSharpClass=CS.XluaCallCSharpClass
+local XluaCallCSharpClass=CS.XluaCallCSharpClass  -- 如果有命名空间用CS.命名空间.xxxx
 local xluaCallCSharp = XluaCallCSharpClass:getInstance()
 xluaCallCSharp:xluaCallCSharp1()  --调用共有方法 成功
 -- xluaCallCSharp:xluaCallCSharp2()　--调用私有方法 不成功
