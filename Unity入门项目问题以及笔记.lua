@@ -50,6 +50,12 @@
 
 		transform.rotation --> 返回的是四元数
 		transform.eulerAngles = new Vector3(0,100,0);  //面板上roration属性为欧拉角
+		
+		方法5
+		{
+			e.Transform.rotation *= Quaternion.AngleAxis(e.Rotator.Speed * deltaTime, Vector3.up);
+		}
+		
 
 	}
 	

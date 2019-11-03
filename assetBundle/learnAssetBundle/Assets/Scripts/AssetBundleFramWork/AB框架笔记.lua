@@ -113,6 +113,15 @@
 	}
 
 
+	AssetBundleMgr.GetInstance().DisposeAllAssets(_sceneName);
+	{
+		1 调用所有MultiABMgr对象的DisposeAllAsset方法	
+		2 MultiABMgr:DisposeAllAsset --> 调用所有的SingleABLoader：的DisposeALL方法
+		3 SingleABLoader:DisposeALL  --> 调用AssetLoader的DisposeALL方法
+
+	}
+
+
 
 
 ]====]
