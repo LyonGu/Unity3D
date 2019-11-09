@@ -34,3 +34,5 @@ HotUpdate/Assets/StreamingAssets/
 Touch/Library/
 Touch/Temp/
 Touch/APK/
+xlua_Unity/obj/Debug/Assembly-CSharp-Editor.csprojAssemblyReference.cache
+xlua_Unity/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
