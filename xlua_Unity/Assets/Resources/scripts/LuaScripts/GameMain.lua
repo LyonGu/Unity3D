@@ -1,5 +1,9 @@
 
- require("LuaDebug")("localhost", 7003)
+require("LuaDebug")("localhost", 7003)
+
+local profiler = require("perf.profiler")  -- 考虑后面写成
+
+profiler.start()
 
 print("直接引用.lua文件===========GameMain.lua")
 
@@ -15,8 +19,26 @@ local CustomHelper = CS.Hxp.CustomHelper
 local sum = CustomHelper.Add(2,3)
 print("CustomHelper sum======",sum)
 
--- 对象方法
+-- 对象方法 一般使用:
 local customH = CustomHelper()
 local str = customH:HString("age")
 print("CustomHelper str======", str)
+
+-- 调用时长分析工具
+local Application = CS.UnityEngine.Application
+local outfile = io.open(Application.dataPath .."/profile.log", "w+")
+outfile:write(profiler.report())
+outfile:close()
+profiler.stop()
+
+
+-- 内存泄漏分析
+-- local memory = require("perf.memory")
+-- print("total memory:", memory.total())
+-- outfile = io.open(Application.dataPath .. "/memory.log", "w+")
+-- outfile:write(memory.snapshot())
+-- outfile:close()
+
+
+
 
