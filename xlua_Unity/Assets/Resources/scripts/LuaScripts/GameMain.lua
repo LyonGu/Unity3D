@@ -9,3 +9,14 @@ require "CSharpCallxLua.CallLuaTable"
 require "xluaCallCSharp.xluaCallCSharp"
 
 
+local CustomHelper = CS.Hxp.CustomHelper
+
+-- 静态方法 可以参考导出的类结构一般使用.
+local sum = CustomHelper.Add(2,3)
+print("CustomHelper sum======",sum)
+
+-- 对象方法
+local customH = CustomHelper()
+local str = customH:HString("age")
+print("CustomHelper str======", str)
+

@@ -245,6 +245,7 @@
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByInterface.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CallLuaTableByLuaTable.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\CSLua.cs" />
+    <Compile Include="Assets\Resources\scripts\CSharp\CustomHelper.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\LuaHelper.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\Rotating.cs" />
     <Compile Include="Assets\Resources\scripts\CSharp\RunLuaByFile.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Assets\XLua\Gen\Foo2ParentWrap.cs" />
     <Compile Include="Assets\XLua\Gen\FooExtensionWrap.cs" />
     <Compile Include="Assets\XLua\Gen\FooWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\HxpCustomHelperWrap.cs" />
     <Compile Include="Assets\XLua\Gen\InvokeLuaICalcBridge.cs" />
     <Compile Include="Assets\XLua\Gen\LuaBehaviourWrap.cs" />
     <Compile Include="Assets\XLua\Gen\PackUnpack.cs" />
