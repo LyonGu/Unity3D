@@ -20,4 +20,9 @@ public class XluaCallCSharpMonoBehaviour : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	public void TestClickImage()
+	{
+        Debug.Log(GetType() + "/TestClickImage");
+	}
 }
