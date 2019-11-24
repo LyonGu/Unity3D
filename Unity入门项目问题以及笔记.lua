@@ -322,5 +322,17 @@
 
 	13 string tag = prefab.GetInstanceID().ToString()  //GameObject的唯一标识
 
+	14
+	{
+		var list = ListPool<Canvas>.Get();
+		gameObject.GetComponentsInParent(false, list); --> 获取当前gameobject父对象上的所有canvas组件
+		if (list.Count == 0)
+                return;
+	}
+	
+            
+            
+
+
 
 ]==============]
