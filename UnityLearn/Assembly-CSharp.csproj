@@ -122,7 +122,6 @@
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUI.cs" />
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
-     <Compile Include="Assets\MoveCtrl.cs" />
      <Compile Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\Scripts\NcEffect\NcUvAnimation.cs" />
      <Compile Include="Assets\Resources\ParticleProps\Arrow\arrowControl.cs" />
      <Compile Include="Assets\Resources\ParticleProps\csPoint\csPoint.cs" />
