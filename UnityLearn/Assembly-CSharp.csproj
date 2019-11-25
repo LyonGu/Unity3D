@@ -122,6 +122,7 @@
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUI.cs" />
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
      <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
+     <Compile Include="Assets\MoveCtrl.cs" />
      <Compile Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\Scripts\NcEffect\NcUvAnimation.cs" />
      <Compile Include="Assets\Resources\ParticleProps\Arrow\arrowControl.cs" />
      <Compile Include="Assets\Resources\ParticleProps\csPoint\csPoint.cs" />
@@ -220,6 +221,7 @@
      <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
      <Compile Include="Assets\Scripts\TriggerDemo.cs" />
      <Compile Include="Assets\Scripts\WWWDemo1.cs" />
+     <Compile Include="Assets\VM_CubeMove.cs" />
      <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
      <None Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\ToolResources\EffectShader\FXMaker_Mask Additive Tint.shader" />
