@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/Scriptable.unity
+- path: Assets/Scene/Cinemachine/Cinemachine_timeLine.unity
   isLoaded: 1
   isActive: 1
