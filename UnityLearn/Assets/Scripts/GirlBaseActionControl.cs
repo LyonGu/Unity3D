@@ -18,7 +18,7 @@ public class GirlBaseActionControl : MonoBehaviour {
 
         if(Input.GetKey(KeyCode.W))
         {
-            AnimaObj.SetFloat("Speed", 1);
+            AnimaObj.SetFloat("SpWeed", 1);
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 AnimaObj.SetBool("IsRun", true);
@@ -30,7 +30,7 @@ public class GirlBaseActionControl : MonoBehaviour {
                 AnimaObj.SetBool("IsRun", false);
                 AnimaObj.SetBool("IsWalk", true);
             }
-            this.transform.Translate(Vector3.forward * floWalkingSpeed);
+            this.transform.Translate(Vector3.forward * floWalkingSpeed * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.S))
         {
@@ -46,7 +46,7 @@ public class GirlBaseActionControl : MonoBehaviour {
                 AnimaObj.SetBool("IsRun", false);
                 AnimaObj.SetBool("IsWalk", true);
             }
-            this.transform.Translate(Vector3.back * floWalkingSpeed);
+            this.transform.Translate(Vector3.back * floWalkingSpeed * Time.deltaTime);
         }
         else
         {
