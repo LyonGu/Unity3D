@@ -8,16 +8,13 @@ public class StoryControl : MonoBehaviour
 
 
     public bool isTrigger;
-
-    public GameObject ui_tip;
-
     public PlayableDirector playableDirector;
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "Trigger")
         {
-            ui_tip.gameObject.SetActive(true);
+            
             isTrigger = true;
         }
     }
@@ -27,7 +24,6 @@ public class StoryControl : MonoBehaviour
     {
         if (other.gameObject.name == "Trigger")
         {
-            ui_tip.gameObject.SetActive(false);
             isTrigger = true;
         }
     }
