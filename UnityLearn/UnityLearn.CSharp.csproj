@@ -406,6 +406,7 @@
     <Compile Include="Assets\Scripts\StataMachine\PlayerState.cs" />
     <Compile Include="Assets\Scripts\StataMachine\StartGame.cs" />
     <Compile Include="Assets\Scripts\StataMachine\StateMachine.cs" />
+    <Compile Include="Assets\Scripts\StoryControl.cs" />
     <Compile Include="Assets\Scripts\test.cs" />
     <Compile Include="Assets\Scripts\test1.cs" />
     <Compile Include="Assets\Scripts\TestCallOrder.cs" />
@@ -413,8 +414,11 @@
     <Compile Include="Assets\Scripts\TestManger.cs" />
     <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
     <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
+    <Compile Include="Assets\Scripts\TimeLine\TestPlayableAsset.cs" />
+    <Compile Include="Assets\Scripts\TimeLine\TestPlayableBehaviour.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
     <Compile Include="Assets\Scripts\WWWDemo1.cs" />
+    <Compile Include="Assets\VM_CubeMove.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
