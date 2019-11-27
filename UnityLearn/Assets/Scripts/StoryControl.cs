@@ -24,7 +24,7 @@ public class StoryControl : MonoBehaviour
     {
         if (other.gameObject.name == "Trigger")
         {
-            isTrigger = true;
+            isTrigger = false;
         }
     }
 
