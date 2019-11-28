@@ -11,6 +11,7 @@ public class GirlBaseActionControl : MonoBehaviour {
     private Rigidbody myRigidbody;
     public PlayableDirector playableDirector;
     private Vector3 oldPosition;
+    private bool isRun = false;
 
 
     // Use this for initialization
@@ -51,7 +52,7 @@ public class GirlBaseActionControl : MonoBehaviour {
         {
             UpdateAnimator(true);
         }
-        if (playableDirector.state != PlayState.Playing)
+        if (playableDirector != null && playableDirector.state != PlayState.Playing)
         {
             oldPosition = transform.localPosition;
             transform.localPosition = new Vector3(oldPosition.x, 0, oldPosition.z);
@@ -61,15 +62,17 @@ public class GirlBaseActionControl : MonoBehaviour {
 
     void UpdateAnimator(bool isReset = false)
     {
+        isRun = false;
         if (isReset)
         {
             AnimaObj.SetBool("IsRun", false);
             AnimaObj.SetBool("IsWalk", false);
             return;
         }
-        AnimaObj.SetFloat("SpWeed", 1);
+        AnimaObj.SetFloat("Speed",1);
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            isRun = true;
             AnimaObj.SetBool("IsRun", true);
             AnimaObj.SetBool("IsWalk", false);
         }
@@ -83,7 +86,13 @@ public class GirlBaseActionControl : MonoBehaviour {
     void UpdatePosAndDir(Vector3 vec3)
     {
         transform.eulerAngles = vec3;
-        this.transform.Translate(Vector3.forward * floWalkingSpeed * Time.deltaTime); //默认Space.Self
+        float walkSpedd = floWalkingSpeed;
+        if (isRun)
+        {
+            walkSpedd *= 3.0f;
+        }
+            
+        this.transform.Translate(Vector3.forward * walkSpedd * Time.deltaTime); //默认Space.Self
         //oldPosition = transform.localPosition;
         //transform.localPosition = new Vector3(oldPosition.x, 0, oldPosition.z);
         //transform.localPosition = 
@@ -91,7 +100,7 @@ public class GirlBaseActionControl : MonoBehaviour {
 
     void ResetPlaybleState()
     {
-        if (playableDirector.state == PlayState.Playing)
+        if (playableDirector != null && playableDirector.state == PlayState.Playing)
         {
             playableDirector.Stop();
         }

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/TimeLine/TimeLineDevelop.unity
+- path: Assets/Scene/TimeLine/TimeLine_Cinimachine.unity
   isLoaded: 1
   isActive: 1
