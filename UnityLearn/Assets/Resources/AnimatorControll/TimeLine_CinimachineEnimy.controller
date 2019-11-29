@@ -5,7 +5,7 @@ AnimatorController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TimeLine_Cinimachine
+  m_Name: TimeLine_CinimachineEnimy
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -216,7 +216,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: deb4eafa1320c354584312b41a468761, type: 3}
+  m_Motion: {fileID: 7400000, guid: 3c4d69e9d96503641b8df2741a629cee, type: 3}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 
@@ -295,7 +295,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 52f6231385a429a4480e588660dde909, type: 3}
+  m_Motion: {fileID: 7400000, guid: 58a75039bfac5b04b946706737e409ec, type: 3}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 
