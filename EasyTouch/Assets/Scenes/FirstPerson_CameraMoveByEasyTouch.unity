@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enable: 1
   isActivated: 1
-  showDebugRadius: 1
+  showDebugRadius: 0
   useFixedUpdate: 0
   isUseGuiLayout: 1
   dynamicJoystick: 0
@@ -1227,7 +1227,7 @@ MonoBehaviour:
   deadZone: 20
   restrictArea: 0
   resetFingerExit: 0
-  interaction: 3
+  interaction: 0
   useBroadcast: 0
   messageMode: 0
   receiverGameObject: {fileID: 0}
@@ -1419,7 +1419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enable: 1
   isActivated: 1
-  showDebugRadius: 1
+  showDebugRadius: 0
   useFixedUpdate: 0
   isUseGuiLayout: 1
   dynamicJoystick: 0
@@ -1431,7 +1431,7 @@ MonoBehaviour:
   deadZone: 20
   restrictArea: 0
   resetFingerExit: 0
-  interaction: 3
+  interaction: 0
   useBroadcast: 0
   messageMode: 0
   receiverGameObject: {fileID: 0}
@@ -1453,7 +1453,7 @@ MonoBehaviour:
   yAxisTransform: {fileID: 939679785}
   yAxisCharacterController: {fileID: 939679786}
   yAxisGravity: 0
-  yTI: 0
+  yTI: 1
   yAI: 0
   inverseYAxis: 1
   enableYClamp: 0
@@ -2631,7 +2631,7 @@ MonoBehaviour:
   useBroadcast: 0
   messageMode: 0
   receiverGameObject: {fileID: 0}
-  speed: {x: 100, y: 1}
+  speed: {x: 1, y: 1}
   enableXaxis: 1
   xAxisTransform: {fileID: 939679785}
   xAxisCharacterController: {fileID: 939679786}
