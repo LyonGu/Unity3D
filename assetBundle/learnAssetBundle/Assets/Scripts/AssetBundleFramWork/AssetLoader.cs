@@ -77,11 +77,11 @@ public class AssetLoader: System.IDisposable {
             _currentAssetBundle.Unload(false); 
         }
 
-        /// 释放当前AssetBundle内存镜像资源,且释放内存资源（gameObject内存）。
-        /// 只能释放GameObject类型资源(预设体)，不能释放非内存资源（纹理，材质。。。。）
+        /// 释放当前AssetBundle内存镜像资源,且释放内存资源（只要是从该AB包加载的object都会被卸载，包括gameobject以及其他object(texture sprite matiral。。。。)）。
+        /// 
         public void DisposeALL()
         {
-            _currentAssetBundle.Unload(true);
+            _currentAssetBundle.Unload(true);  
         }
 
 
