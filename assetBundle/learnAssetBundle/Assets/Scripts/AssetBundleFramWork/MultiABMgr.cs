@@ -136,9 +136,10 @@ public class MultiABMgr
     {
         foreach (string item_abName in _DicSingleABLoaderCache.Keys)
         {
-            //先找到对应得AB包
+            //先找到对应得AB包，这里封装了一层，其实是SingleABLoader
             if (abName== item_abName)
             {
+                //加载ab包里对应得asset
                 return _DicSingleABLoaderCache[item_abName].LoadAsset(assetName, isCache);
             }
         }
