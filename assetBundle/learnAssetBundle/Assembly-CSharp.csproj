@@ -62,6 +62,8 @@
      <Compile Include="Assets\Scripts\AssetBundleFramWork\Tools\ABDefine.cs" />
      <Compile Include="Assets\Scripts\AssetBundleFramWork\Tools\PathTool.cs" />
      <Compile Include="Assets\Scripts\AssetBundleLoad.cs" />
+     <Compile Include="Assets\Scripts\AssetMsg.cs" />
+     <Compile Include="Assets\Scripts\AssetMsgTest.cs" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity2017.4.12/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
  </Reference>
