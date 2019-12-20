@@ -1,8 +1,8 @@
 /***
 
- * 功能： 
+ * 功能：
  * 1: 存储指定AB包的所有依赖关系包
- * 2: 存储指定AB包所有的引用关系包 
+ * 2: 存储指定AB包所有的引用关系包
  *
  */
 using System.Collections;
@@ -14,9 +14,9 @@ public class ABRelation
 {
     //当前AsseetBundel 名称
     private string _ABName;
-    //本包所有的依赖包集合
+    //本包所有的依赖包集合 A依赖BCD
     private List<string> _LisAllDependenceAB;
-    //本包所有的引用包集合
+    //本包所有的引用包集合 A引用了EFG，应该是 E 依赖A，F依赖A，G依赖A， ？？
     private List<string> _lisAllReferenceAB;
 
 
@@ -56,7 +56,7 @@ public class ABRelation
     /// <returns>
     /// true；　此AssetBundel 没有依赖项
     /// false;  此AssetBundel 还有其他的依赖项
-    /// 
+    ///
     /// </returns>
     public bool RemoveDependece(string abName)
     {
@@ -101,7 +101,7 @@ public class ABRelation
     /// <returns>
     /// true；　此AssetBundel 没有引用项
     /// false;  此AssetBundel 还有其他的引用项
-    /// 
+    ///
     /// </returns>
     public bool RemoveReference(string abName)
     {

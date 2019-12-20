@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 /*
 	加载单一AB包
 
@@ -25,7 +24,7 @@ public class SingleABLoader : System.IDisposable {
 		//委托初始化
 		_LoadCompleteHandle = loadComplete;
 		//AB包下载路径（初始化）
-		_ABDownLoadPath = PathTool.GetWWWPath() + "/" + _ABName;            
+		_ABDownLoadPath = PathTool.GetWWWPath() + "/" + _ABName;
 	}
 
 	//加载AssetBundle 资源包
@@ -54,10 +53,10 @@ public class SingleABLoader : System.IDisposable {
 					Debug.LogError(GetType()+ "/LoadAssetBundle()/WWW 下载出错，请检查！ AssetBundle URL: "+ _ABDownLoadPath+" 错误信息： "+www.error);
 				}
 			}
-		}//using_end            
+		}//using_end
 	}
 
-	
+
 	/// 加载（AB包内）资源
 	public UnityEngine.Object LoadAsset(string assetName,bool isCache)
 	{
@@ -69,7 +68,7 @@ public class SingleABLoader : System.IDisposable {
 		return null;
 	}
 
-	
+
 	/// 卸载（AB包中）资源
 	public void UnLoadAsset(UnityEngine.Object asset,bool isRemoveUnUseAssets = false)
 	{
@@ -82,7 +81,7 @@ public class SingleABLoader : System.IDisposable {
 		}
 	}
 
-	
+
 	/// 释放资源
 	public void Dispose()
 	{
@@ -97,7 +96,7 @@ public class SingleABLoader : System.IDisposable {
 		}
 	}
 
-	
+
 	/// 释放当前AssetBundle资源包,且卸载所有资源
 	public void DisposeALL()
 	{
@@ -112,7 +111,7 @@ public class SingleABLoader : System.IDisposable {
 		}
 	}
 
-	
+
 	/// 查询当前AssetBundle包中所有的资源
 	public string[] RetrivalAllAssetName()
 	{

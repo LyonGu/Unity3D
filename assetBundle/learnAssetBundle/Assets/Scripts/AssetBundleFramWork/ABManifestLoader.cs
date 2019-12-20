@@ -16,7 +16,7 @@ public class ABManifestLoader : System.IDisposable
     private AssetBundleManifest _ManifestObj;
     //AssetBundle 清单文件的路径
     private string _StrManifestPath;
-    //读取AB清单文件的AssetBundel 
+    //读取AB清单文件的AssetBundel
     private AssetBundle _ABReadManifest;
     //是否加载（Manifest ）完成
     private bool _IsLoadFinish;
@@ -65,12 +65,12 @@ public class ABManifestLoader : System.IDisposable
                 {
                     _ABReadManifest = abObj;
                     //读取清单文件资源。（读取到系统类的实例中。）
-                    _ManifestObj = _ABReadManifest.LoadAsset(ABDefine.ASSETBUNDLE_MANIFEST) as AssetBundleManifest; 
+                    _ManifestObj = _ABReadManifest.LoadAsset(ABDefine.ASSETBUNDLE_MANIFEST) as AssetBundleManifest;
                     //本次加载与读取清单文件完毕。
                     _IsLoadFinish = true;
                 }
                 else {
-                    Debug.Log(GetType()+ "/LoadMainifestFile()/WWW下载出错，请检查！ _StrManifestPath="+ _StrManifestPath+"  错误信息： "+www.error);  
+                    Debug.Log(GetType()+ "/LoadMainifestFile()/WWW下载出错，请检查！ _StrManifestPath="+ _StrManifestPath+"  错误信息： "+www.error);
                 }
             }
 
