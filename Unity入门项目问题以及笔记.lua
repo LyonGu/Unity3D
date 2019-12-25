@@ -329,6 +329,58 @@
 		if (list.Count == 0)
                 return;
 	}
+
+	15 世界坐标 屏幕坐标转换成UGUI坐标 : RectTransformUtility.ScreenPointToLocalPointInRectangle 和 anchoredPosition 属性
+	{
+		void worldToScreenInUICamera()
+	    {
+
+	        //世界坐标
+	        Vector3 wPos = cubeTransform.position;
+
+	        //转换成屏幕坐标
+	        Vector3 screenPos = Camera.main.WorldToScreenPoint(wPos);
+
+
+	        Vector2 localPos;
+	        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPos, UICamera, out localPos);
+	        textRectTransform.anchoredPosition = localPos;
+
+	    
+	    }
+
+	     if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 screenPos = Input.mousePosition;
+            Vector2 outVec;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, UICamera, out outVec);
+
+            Debug.Log("Setting anchored positiont to: " + outVec);
+            //textRectTransform.position = outVec;
+            textRectTransform.anchoredPosition = outVec; //anchoredPosition 才是UGUI坐标系的坐标位置（属性面板里position属性）
+            //textRectTransform.position = outVec;  //position是代表世界空间的坐标
+        }
+
+		
+		//unity检测鼠标是否点在了某个UI上
+        if (Input.GetMouseButtonUp(1))//右键
+        {
+            RectTransform rctTr = _TreeView.gameObject.GetComponent<RectTransform>();
+            //如果Canvas为Overlay不需要传Camera参数，否则需要传Camera
+            //Canvas canvas = GetComponent<Canvas>();
+            //Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : Camera.main;
+            bool isContain = RectTransformUtility.RectangleContainsScreenPoint(rctTr, Input.mousePosition, null);
+            if(isContain)
+            {
+                Debug.Log("点上了");
+            }
+            else
+            {
+                Debug.Log("没点上");
+            }            
+        }
+ 
+	}
 	
             
             

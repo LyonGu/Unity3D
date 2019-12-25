@@ -9,7 +9,7 @@ using UnityEngine;
  * 4： 查看当前AB资源。
  */
 public class AssetLoader: System.IDisposable {
-	
+
 	//当前Assetbundle
 	private AssetBundle _currentAssetBundle;
 
@@ -52,11 +52,18 @@ public class AssetLoader: System.IDisposable {
 		return tmpTResource;
 	}
 
-	//卸载指定资源(非GameObject) todo测试
+
+	// 卸载GameObject的资源 用Resources.UnloadUnusedAssets
+	/*
+		_prefabObj = null;
+        Resources.UnloadUnusedAssets();
+	*/
+	//卸载指定资源(非GameObject)
 	public bool UnLoadAsset(Object asset, bool isRemoveUnUseAssets = false)
 	{
 		if(asset != null)
 		{
+			// (编辑器下和真包下可能不一样，编辑器可能同一帧卸载不掉，设备上没有问题)
 			Resources.UnloadAsset(asset); //不在Resoucers目录下的资源也能删除
             if (isRemoveUnUseAssets)
             {
@@ -71,14 +78,14 @@ public class AssetLoader: System.IDisposable {
 
 
         /// 释放当前AssetBundle内存镜像资源(解压缩数据)
- 
+
         public void Dispose()
         {
-            _currentAssetBundle.Unload(false); 
+            _currentAssetBundle.Unload(false);
         }
 
-        /// 释放当前AssetBundle内存镜像资源,且释放内存资源（gameObject内存）。
-        /// 只能释放GameObject类型资源(预设体)，不能释放非内存资源（纹理，材质。。。。）
+        /// 释放当前AssetBundle内存镜像资源,且释放内存资源（只要是从该AB包加载的object都会被卸载，包括gameobject以及其他object(texture sprite matiral。。。。)）。
+        ///
         public void DisposeALL()
         {
             _currentAssetBundle.Unload(true);
@@ -90,6 +97,6 @@ public class AssetLoader: System.IDisposable {
         {
             return _currentAssetBundle.GetAllAssetNames();
         }
-	
+
 }
 

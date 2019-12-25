@@ -24,7 +24,7 @@
 					T tmpTResource = _currentAssetBundle.LoadAsset<T>(assetName); // 最后都要调用c#的方法
 				}
 			}
-			
+
 		}
 	}
 
@@ -43,7 +43,7 @@
 				AssetBundle abObj = www.assetBundle;
 				_ABReadManifest = abObj;  //ab实例
                 //读取清单文件资源。（读取到系统类的实例中。）
-                _ManifestObj = _ABReadManifest.LoadAsset(ABDefine.ASSETBUNDLE_MANIFEST) as AssetBundleManifest; 
+                _ManifestObj = _ABReadManifest.LoadAsset(ABDefine.ASSETBUNDLE_MANIFEST) as AssetBundleManifest;
                 //本次加载与读取清单文件完毕。
                 _IsLoadFinish = true;
 
@@ -53,7 +53,7 @@
 		2 Test_framwork的Start方法里调用AssetBundleMgr的LoadAssetBundlePack方法，加载某个场景下的ab包(依赖包也会加载)以及设置回调
 		{
 			StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack(_sceneName, _assetBundleName, LoadAllABComplete));
-			
+
 			LoadAssetBundlePack
 			{
 				A: 等待Manifest清单文件加载完成
@@ -115,12 +115,18 @@
 
 	AssetBundleMgr.GetInstance().DisposeAllAssets(_sceneName);
 	{
-		1 调用所有MultiABMgr对象的DisposeAllAsset方法	
+		1 调用所有MultiABMgr对象的DisposeAllAsset方法
 		2 MultiABMgr:DisposeAllAsset --> 调用所有的SingleABLoader：的DisposeALL方法
 		3 SingleABLoader:DisposeALL  --> 调用AssetLoader的DisposeALL方法
 
 	}
 
+
+	优化
+	{
+		1 抽出打标签的逻辑，不规定死以功能文件夹作为一级目录
+		2 把所有的ab包和ab包里的asset做一个映射表，要求同一个ab包里的资源不重名
+	}
 
 
 

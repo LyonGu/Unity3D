@@ -1,9 +1,9 @@
 /***
- * 
- *  功能： 
+ *
+ *  功能：
  *  1: 提取“Menifest 清单文件”，缓存本脚本。
  *  2：以“场景”为单位，管理整个项目中所有的AssetBundle 包。
- *  
+ *
  *
  */
 using System.Collections;
@@ -80,7 +80,7 @@ public class AssetBundleMgr:MonoBehaviour
         {
             Debug.LogError(GetType() + "/LoadAssetBundlePack()/tmpMultiMgrObj is null ,请检查！");
         }
-        //调用“多包管理类”的加载指定AB包。
+        //调用“多包管理类”的加载指定AB包。加载指定ab包以及会把该包所依赖的ab包也加载
         yield return tmpMultiMgrObj.LoadAssetBundeler(abName);
 
     }//Method_end

@@ -1,6 +1,6 @@
 /***
  *
- * 功能： 
+ * 功能：
  * 1： 获取AB包之间的依赖与引用关系。
  * 2： 管理AssetBundle包之间的自动连锁（递归）加载机制
  *
@@ -101,7 +101,7 @@ public class MultiABMgr
 
 
     /// <summary>
-    /// 加载引用AB包
+    /// 加载引用AB包  refABName依赖abName
     /// </summary>
     /// <param name="abName">AB包名称</param>
     /// <param name="refABName">被引用AB包名称</param>
@@ -136,8 +136,10 @@ public class MultiABMgr
     {
         foreach (string item_abName in _DicSingleABLoaderCache.Keys)
         {
+            //先找到对应得AB包，这里封装了一层，其实是SingleABLoader
             if (abName== item_abName)
             {
+                //加载ab包里对应得asset
                 return _DicSingleABLoaderCache[item_abName].LoadAsset(assetName, isCache);
             }
         }

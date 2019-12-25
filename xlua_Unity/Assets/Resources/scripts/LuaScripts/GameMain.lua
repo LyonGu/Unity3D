@@ -44,8 +44,17 @@ profiler.stop()
 -- 给UGUI添加事件 event trigger方式
 local GameObject = CS.UnityEngine.GameObject
 local  control = GameObject.Find("CustomImage")
+local EventTrigger = control:AddComponent(typeof(CS.UnityEngine.EventSystems.EventTrigger))
+local entry = EventTrigger.Entry()
+local EventTriggerType = CS.UnityEngine.EventSystems.EventTriggerType
+entry.eventID = EventTriggerType.PointerClick
+local clickFunc = function (eventData)
+   print("click=====",eventData.position)
+end
+entry.callback.AddListener(clickFunc);
+EventTrigger.triggers.Add(entry);
 
-control:AddComponent(typeof(CS.UnityEngine.EventSystems.EventTrigger))
+
 
 --[===[
 
