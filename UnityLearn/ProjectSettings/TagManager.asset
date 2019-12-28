@@ -7,6 +7,7 @@ TagManager:
   - SphereTag
   - CapsuleTag
   - player
+  - Trigger
   layers:
   - Default
   - TransparentFX

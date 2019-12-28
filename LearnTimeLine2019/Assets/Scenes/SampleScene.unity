@@ -676,7 +676,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 9
   m_Type: 1
-  m_Color: {r: 0.990566, g: 0.08877712, b: 0.08877712, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -722,7 +722,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0.033333335, y: 0.06666667, z: 1e-45, w: 0}
+  m_BoundingSphereOverride: {x: 4.5904e-41, y: 0, z: 0, w: 14.849579}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1186,8 +1186,6 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: -5238877806076863424, guid: f848e0f31102dc84b9430ec4484502bb, type: 2}
     value: {fileID: 760435441}
-  - key: {fileID: 1259153292481677061, guid: f848e0f31102dc84b9430ec4484502bb, type: 2}
-    value: {fileID: 781095471}
   m_ExposedReferences:
     m_References:
     - c7a4887732c6a534e8adf2ccc3b1bf4a: {fileID: 705507994}
