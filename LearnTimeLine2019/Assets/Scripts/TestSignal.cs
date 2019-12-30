@@ -9,4 +9,9 @@ public class TestSignal : MonoBehaviour
    {
         Debug.Log("TestRecieve============");
    }
+
+     public void TestRecieve1()
+   {
+        Debug.Log("TestRecieve1============");
+   }
 }

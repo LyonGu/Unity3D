@@ -219,6 +219,8 @@
      <Compile Include="Assets\Scripts\TestManger.cs" />
      <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
      <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
+     <Compile Include="Assets\Scripts\TimeLine\LightControlAsset.cs" />
+     <Compile Include="Assets\Scripts\TimeLine\LightControlBehaviour.cs" />
      <Compile Include="Assets\Scripts\TimeLine\TestPlayableAsset.cs" />
      <Compile Include="Assets\Scripts\TimeLine\TestPlayableBehaviour.cs" />
      <Compile Include="Assets\Scripts\TriggerDemo.cs" />
