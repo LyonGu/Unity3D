@@ -10,8 +10,8 @@ public class TestSignal : MonoBehaviour
         Debug.Log("TestRecieve============");
    }
 
-     public void TestRecieve1()
+     public void TestRecieve1(int id)
    {
-        Debug.Log("TestRecieve1============");
+        Debug.Log("TestRecieve1============"+id);
    }
 }
