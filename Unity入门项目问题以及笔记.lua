@@ -379,6 +379,16 @@
                 Debug.Log("没点上");
             }            
         }
+
+
+        // 代码设置Canvas的camera
+        {
+			//设置UI摄像机
+	        _uiCamera = GameObject.FindGameObjectWithTag("UICamera");
+	        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+	        canvas.worldCamera = _uiCamera.GetComponent<Camera>();
+	        canvas.sortingOrder = GlobalParams.DamageLabelOrder;
+        }
  
 	}
 	
