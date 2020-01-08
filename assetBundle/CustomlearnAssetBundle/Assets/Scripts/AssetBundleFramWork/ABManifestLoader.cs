@@ -51,6 +51,20 @@ public class ABManifestLoader : System.IDisposable
         return _Instance;
     }
 
+    public void LoadMainifestFileNew()
+    {
+
+
+        string abName = Application.dataPath + "/StreamingAssets/Windows" + "/Windows";
+        // AssetBundle ab = AssetBundle.LoadFromFile(abName);
+        AssetBundle abObj = AssetBundle.LoadFromFile(abName);
+        _ABReadManifest = abObj;
+        //读取清单文件资源。（读取到系统类的实例中。）
+        _ManifestObj = _ABReadManifest.LoadAsset(ABDefine.ASSETBUNDLE_MANIFEST) as AssetBundleManifest;
+        //本次加载与读取清单文件完毕。
+        _IsLoadFinish = true;
+
+    }
     //加载Manifest 清单文件
     public IEnumerator LoadMainifestFile()
     {

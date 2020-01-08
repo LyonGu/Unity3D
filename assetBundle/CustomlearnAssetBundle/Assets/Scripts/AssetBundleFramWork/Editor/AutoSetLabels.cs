@@ -165,7 +165,7 @@ public class AutoSetLabels  {
 				strABName = scenesName + "/" + fileName;
 
 				string path1 = strABName + ".ab";
-				string lookupPath = path1 + ":" + oldScene+ "/"+strABFileNameArea + ":" + fileName;
+				string lookupPath = path1.ToLower() + ":" + oldScene+ "/"+strABFileNameArea + ":" + fileName;
 				lookupList.Add(lookupPath);
 		}
 		else {

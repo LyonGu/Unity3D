@@ -34,12 +34,17 @@ public class Test_framwork : MonoBehaviour {
         assetBundleMgr = AssetBundleMgr.GetInstance();
 
         string abName = assetBundleMgr.GetABPath(_assetNameTest);
-        StartCoroutine(assetBundleMgr.LoadAssetBundlePack(_sceneName, abName, LoadAllABComplete));
+        // StartCoroutine(assetBundleMgr.LoadAssetBundlePack(_sceneName, abName, LoadAllABComplete));
         // StartCoroutine(assetBundleMgr.LoadAssetBundlePack(_sceneName, _assetBundleName, LoadAllABComplete)); //包加载完设置回调
         //StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack(_sceneName, _assetBundleName)); //仅仅只做包加载
 
-        // GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
-        // Instantiate(gameObj);
+        GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
+        Instantiate(gameObj);
+        // Application.dataPath + "/StreamingAssets/Windows/" + "Sphere.assetbundle"
+        // abName = Application.dataPath + "/StreamingAssets/Windows" + "/" + abName;
+        // AssetBundle ab = AssetBundle.LoadFromFile(abName);
+
+        // string a = "";
 	}
 
 

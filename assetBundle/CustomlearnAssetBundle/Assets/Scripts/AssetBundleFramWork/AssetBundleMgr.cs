@@ -40,7 +40,8 @@ public class AssetBundleMgr:MonoBehaviour
     {
         InitLookUp();
         //加载Manifest清单文件
-        StartCoroutine(ABManifestLoader.GetInstance().LoadMainifestFile());
+        // StartCoroutine(ABManifestLoader.GetInstance().LoadMainifestFile());
+        ABManifestLoader.GetInstance().LoadMainifestFileNew();
     }
 
 
@@ -126,62 +127,56 @@ public class AssetBundleMgr:MonoBehaviour
         _isLoadoneMainfest = true;
 
     }
-    // public UnityEngine.Object LoadAssetNew(string assetName ,bool isCache = true)
-    // {
+    public UnityEngine.Object LoadAssetNew(string assetName ,bool isCache = true)
+    {
 
-    //     // 先加载AB包
-    //     string abNameT = GetABPath(assetName);
+        // 先加载AB包
+        string abNameT = GetABPath(assetName);
+        LoadAssetBundlePackNew(abNameT);
 
-    //     StartCoroutine(LoadAssetBundlePackNew(abNameT, LoadAllABComplete));
-
-    //     if (_DicAllScenes.ContainsKey(abNameT))
-    //     {
-    //         MultiABMgr multObj = _DicAllScenes[abNameT];
-    //         return multObj.LoadAsset(abNameT, assetName, isCache);
-    //     }
-
-    //     return null;
-    // }
+        if (_DicAllScenes.ContainsKey(abNameT))
+        {
+            MultiABMgr multObj = _DicAllScenes[abNameT];
+            return multObj.LoadAsset(abNameT, assetName, isCache);
+        }
+        return null;
+    }
 
 
-    //  public IEnumerator LoadAssetBundlePackNew(string abName, DelLoadComplete loadAllCompleteHandle = null)
-    // {
-    //     //参数检查
-    //     if ( string.IsNullOrEmpty(abName))
-    //     {
-    //         Debug.LogError(GetType()+ "/LoadAssetBundlePack()/ScenesName Or abName is null ,请检查！");
-    //         yield break;
-    //     }
+     public void LoadAssetBundlePackNew(string abName, DelLoadComplete loadAllCompleteHandle = null)
+    {
+        //参数检查
+        if ( string.IsNullOrEmpty(abName))
+        {
+            Debug.LogError(GetType()+ "/LoadAssetBundlePack()/ScenesName Or abName is null ,请检查！");
+            return;
+        }
 
-    //     //等待Manifest清单文件加载完成
-    //     while (!ABManifestLoader.GetInstance().IsLoadFinish)
-    //     {
-    //         yield return null;
-    //     }
-    //     _ManifestObj = ABManifestLoader.GetInstance().GetABManifest();
-    //     if (_ManifestObj==null)
-    //     {
-    //         Debug.LogError(GetType() + "/LoadAssetBundlePack()/_ManifestObj is null ,请先确保加载Manifest清单文件！");
-    //         yield break;
-    //     }
+        _ManifestObj = ABManifestLoader.GetInstance().GetABManifest();
+        if (_ManifestObj==null)
+        {
+            Debug.LogError(GetType() + "/LoadAssetBundlePack()/_ManifestObj is null ,请先确保加载Manifest清单文件！");
+            return;
+        }
 
 
-    //     //把当前场景加入集合中。
-    //     if (!_DicAllScenes.ContainsKey(abName))
-    //     {
-    //         MultiABMgr multiMgrObj = new MultiABMgr("",abName, loadAllCompleteHandle);
-    //         _DicAllScenes.Add(abName, multiMgrObj);
-    //     }
+        //把当前场景加入集合中。
+        if (!_DicAllScenes.ContainsKey(abName))
+        {
+            MultiABMgr multiMgrObj = new MultiABMgr("",abName, loadAllCompleteHandle);
+            _DicAllScenes.Add(abName, multiMgrObj);
+        }
 
-    //     //调用下一层（“多包管理类”）
-    //     MultiABMgr tmpMultiMgrObj = _DicAllScenes[abName];
-    //     if (tmpMultiMgrObj==null)
-    //     {
-    //         Debug.LogError(GetType() + "/LoadAssetBundlePack()/tmpMultiMgrObj is null ,请检查！");
-    //     }
-    //     //调用“多包管理类”的加载指定AB包。加载指定ab包以及会把该包所依赖的ab包也加载
-    //     yield return tmpMultiMgrObj.LoadAssetBundeler(abName);
-    // }
+        //调用下一层（“多包管理类”）
+        MultiABMgr tmpMultiMgrObj = _DicAllScenes[abName];
+        if (tmpMultiMgrObj==null)
+        {
+            Debug.LogError(GetType() + "/LoadAssetBundlePack()/tmpMultiMgrObj is null ,请检查！");
+        }
+        //调用“多包管理类”的加载指定AB包。加载指定ab包以及会把该包所依赖的ab包也加载
+        // StartCoroutine(tmpMultiMgrObj.LoadAssetBundeler(abName));
+        tmpMultiMgrObj.LoadAssetBundelerNew(abName);
+    }
 
 
     /// <summary>
@@ -232,7 +227,7 @@ public class AssetBundleMgr:MonoBehaviour
                     return;
                 }
                 // _DicABPath[fileName] = PathTool.GetWWWPath() + "/" + abName;
-                _DicABPath[fileName] = abName.ToLower();
+                _DicABPath[fileName] = abName;
 
                 if (_DicFilePath.ContainsKey(fileName))
                 {

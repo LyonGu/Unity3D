@@ -24,7 +24,9 @@ public class SingleABLoader : System.IDisposable {
 		//委托初始化
 		_LoadCompleteHandle = loadComplete;
 		//AB包下载路径（初始化）
-		_ABDownLoadPath = PathTool.GetWWWPath() + "/" + _ABName;
+		// _ABDownLoadPath = PathTool.GetWWWPath() + "/" + _ABName;
+
+		_ABDownLoadPath = Application.dataPath + "/StreamingAssets/Windows/" + _ABName;
 	}
 
 	//加载AssetBundle 资源包
@@ -54,6 +56,40 @@ public class SingleABLoader : System.IDisposable {
 				}
 			}
 		}//using_end
+	}
+
+
+	public void LoadAssetBundleNew()
+	{
+
+		// string abName = Application.dataPath + "/StreamingAssets/Windows/" + _ABDownLoadPath;
+        // AssetBundle ab = AssetBundle.LoadFromFile(abName);
+        AssetBundle abObj = AssetBundle.LoadFromFile(_ABDownLoadPath);
+		_AssetLoader = new AssetLoader(abObj);
+		// using (WWW www=new WWW(_ABDownLoadPath))
+		// {
+		// 	yield return www;
+		// 	//WWW下载AB包完成
+		// 	if (www.progress>=1)
+		// 	{
+		// 		//获取AssetBundle的实例
+		// 		AssetBundle abObj = www.assetBundle;
+		// 		if (abObj!=null)
+		// 		{
+		// 			//实例化引用类
+		// 			_AssetLoader = new AssetLoader(abObj);
+		// 			//AssetBundle 下载完毕，调用委托
+		// 			if (_LoadCompleteHandle!=null)
+		// 			{
+		// 				_LoadCompleteHandle(_ABName);
+		// 			}
+
+		// 		}
+		// 		else {
+		// 			Debug.LogError(GetType()+ "/LoadAssetBundle()/WWW 下载出错，请检查！ AssetBundle URL: "+ _ABDownLoadPath+" 错误信息： "+www.error);
+		// 		}
+		// 	}
+		// }//using_end
 	}
 
 

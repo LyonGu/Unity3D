@@ -127,6 +127,7 @@
 		1 抽出打标签的逻辑，不规定死以功能文件夹作为一级目录 ==>都打成单个ab包，方便热更
 		2 把所有的ab包和ab包里的asset做一个映射表，要求同一个ab包里的资源不重名
 		3 使用ab包下载资源时，只要用asset的名字即可，不需要完整路径
+		4 AssetBundle ab = AssetBundle.LoadFromFile(abName); 加载ab包不需要 "file://"   https://blog.csdn.net/chinacyr/article/details/45028529
 	}
 
 
