@@ -26,7 +26,7 @@ public class AutoSetLabels  {
 
 		//清空无用AB标记
 		AssetDatabase.RemoveUnusedAssetBundleNames();
-		
+
 		//文件夹根目录
 		strNeedSetLabelRoot = PathTool.GetABResourcesPath();
 
@@ -34,13 +34,13 @@ public class AutoSetLabels  {
 
 		//只能获得子目录，不能获取子子目录
 		dirScenesDIRArray = dirTempInfo.GetDirectories();
-		
+
 		//遍历每个“场景”文件夹（目录)
 		foreach (DirectoryInfo currentDIR in dirScenesDIRArray)
 		{
 			 //2.1 遍历本场景目录下所有的目录或者文件。
                 //如果是目录，则继续“递归”访问里面的文件，直到定位到文件
-			 
+
 			 // currentDIR 就是场景文件夹，todo 可以根据项目需求修改
 			 string tmpScenesDIR = strNeedSetLabelRoot + "/" + currentDIR.Name; //全路径
 			 int tmpIndex = tmpScenesDIR.LastIndexOf("/");
@@ -130,7 +130,7 @@ public class AutoSetLabels  {
 		string tmpWinPath = fileinfoObj.FullName;                  //文件信息的全路径（Win格式）
 		//Unity路径
 		string tmpUnityPath = tmpWinPath.Replace("\\","/");        //替换为Unity字符串分割符
-		//定位“场景名称”后面字符位置 
+		//定位“场景名称”后面字符位置
       int tmpSceneNamePostion = tmpUnityPath.IndexOf(scenesName)+ scenesName.Length;
 		//AB包中“类型名称”所在区域  得到 ==》“Textures/xxxx”
       string strABFileNameArea = tmpUnityPath.Substring(tmpSceneNamePostion+1);
@@ -138,7 +138,7 @@ public class AutoSetLabels  {
 		{
 				string[] tempStrArray = strABFileNameArea.Split('/');
 				//AB包名称正式形成
-				strABName = scenesName + "/" + tempStrArray[0];
+				strABName = scenesName + "/" + tempStrArray[0] + "/" + tempStrArray[1];
 		}
 		else {
 				//定义*.Unity 文件形成的特殊AB包名称

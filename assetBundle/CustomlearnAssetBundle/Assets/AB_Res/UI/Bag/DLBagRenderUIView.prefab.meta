@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 5ec82d21b513847b9843b25500b83474
+guid: 80c5305c27c5af14188bc31c9a6bbf1a
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 100100000
   userData: 
-  assetBundleName: scene_1/prefabs/testcubeprefab.prefab
+  assetBundleName: ui/bag/dlbagrenderuiview.prefab
   assetBundleVariant: ab
