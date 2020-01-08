@@ -36,7 +36,7 @@ public class MultiABMgr
     /// <param name="loadAllABPackCompleteHandle">（委托）是否调用完成</param>
     public MultiABMgr(string scenesName,string abName,DelLoadComplete loadAllABPackCompleteHandle)
     {
-        _CurrentScenesName = scenesName;
+        // _CurrentScenesName = scenesName;
         _CurrentABName = abName;
         _DicSingleABLoaderCache = new Dictionary<string, SingleABLoader>();
         _DicABRelation = new Dictionary<string, ABRelation>();
@@ -169,7 +169,7 @@ public class MultiABMgr
             _DicABRelation.Clear();
             _DicABRelation = null;
             _CurrentABName = null;
-            _CurrentScenesName = null;
+            // _CurrentScenesName = null;
             _LoadAllABPackageCompleteHandel = null;
 
             //卸载没有使用到的资源

@@ -1,48 +1,48 @@
 ManifestFileVersion: 0
-CRC: 940371431
+CRC: 330969377
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: scene_1/materials/floor.mat.ab
+      Name: scene_1/materials/floor.ab
       Dependencies:
-        Dependency_0: scene_1/textures/floor.jpg.ab
+        Dependency_0: scene_1/textures/txfloor.ab
     Info_1:
-      Name: scene_1/prefabs/capsule.prefab.ab
+      Name: scene_1/prefabs/capsule.ab
       Dependencies: {}
     Info_2:
-      Name: scene_1/prefabs/plane.prefab.ab
+      Name: scene_1/prefabs/plane.ab
       Dependencies: {}
     Info_3:
-      Name: scene_1/prefabs/testcubeprefab.prefab.ab
+      Name: scene_1/prefabs/testcubeprefab.ab
       Dependencies:
-        Dependency_0: scene_1/materials/floor.mat.ab
+        Dependency_0: scene_1/materials/floor.ab
     Info_4:
-      Name: scene_1/test/1.ab
+      Name: scene_1/test/t1/floor2.ab
       Dependencies: {}
     Info_5:
-      Name: scene_1/test/floor1.jpg.ab
+      Name: scene_1/test/floor1.ab
       Dependencies: {}
     Info_6:
-      Name: scene_1/textures/floor.jpg.ab
+      Name: scene_1/textures/path (rocky).ab
       Dependencies: {}
     Info_7:
-      Name: scene_1/textures/path (rocky).jpg.ab
+      Name: scene_1/textures/unitychan_tile3.ab
       Dependencies: {}
     Info_8:
-      Name: scene_1/textures/unitychan_tile3.png.ab
+      Name: scene_1/textures/unitychan_tile6.ab
       Dependencies: {}
     Info_9:
-      Name: scene_1/textures/unitychan_tile6.png.ab
+      Name: scene_1/textures/whilefloor.ab
       Dependencies: {}
     Info_10:
-      Name: scene_1/textures/whilefloor.jpg.ab
+      Name: ui/bag/dlbagrenderuiview.ab
       Dependencies: {}
     Info_11:
-      Name: ui/bag/dlbaguiview.prefab.ab
+      Name: ui/bag/dlbaguiview.ab
       Dependencies: {}
     Info_12:
-      Name: ui/task/dltaskuiview.prefab.ab
+      Name: ui/task/dltaskuiview.ab
       Dependencies: {}
     Info_13:
-      Name: ui/bag/dlbagrenderuiview.prefab.ab
+      Name: scene_1/textures/txfloor.ab
       Dependencies: {}

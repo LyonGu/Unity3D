@@ -64,6 +64,7 @@
      <Compile Include="Assets\Scripts\AssetBundleLoad.cs" />
      <Compile Include="Assets\Scripts\AssetMsg.cs" />
      <Compile Include="Assets\Scripts\AssetMsgTest.cs" />
+     <None Include="Assets\AB_Res\lookup.txt" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity2017.4.12/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
  </Reference>

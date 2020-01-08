@@ -14,11 +14,21 @@ using System.IO;
 		   B: 找到文件，则使用AssetImporter类，标记“包名” 与 “后缀名”
  */
 public class AutoSetLabels  {
+	//建立查询表
+	static List<string> lookupList = new List<string>();
+    const string saveFolderPath = "Assets/AB_Res/lookup.txt";
+
 
 	// 设置AB包名称
 	[MenuItem("AssetBundleTools/Set AB Label")]
 	public static void setABLable()
 	{
+        string targetPath = Path.Combine(Application.dataPath, saveFolderPath.Replace("Assets/", ""));
+		if(!File.Exists(targetPath))
+        {
+            File.Delete(targetPath);
+        }
+
 		string strNeedSetLabelRoot = string.Empty;
 
 		//目录信息:根目录下所有的目录信息(只能遍历一级目录下，二级子目录不能遍历)
@@ -52,7 +62,14 @@ public class AutoSetLabels  {
           JudgeDIRorFileByRecursive(currentDIR, tmpScenesName);
 		}
 
+		string conent = "";
+		for (int i = 0; i < lookupList.Count; i++)
+		{
+			conent = conent + lookupList[i] + "\n";
 
+		}
+		File.WriteAllText(targetPath,conent);
+		// File.WriteAllLines(targetPath, lookupList);
 		AssetDatabase.Refresh();
 		Debug.Log("AssetBundle 本次操作设置标记完成");
 	}
@@ -139,13 +156,17 @@ public class AutoSetLabels  {
 		if (strABFileNameArea.Contains("/"))
 		{
 				string[] tempStrArray = strABFileNameArea.Split('/');
-
+				string oldScene = scenesName;
 				for (int i = 0; i < tempStrArray.Length -1; i++)
 				{
 					scenesName = scenesName + "/" + tempStrArray[i];
 				}
 				//AB包名称正式形成
 				strABName = scenesName + "/" + fileName;
+
+				string path1 = strABName + ".ab";
+				string lookupPath = path1 + ":" + oldScene+ "/"+strABFileNameArea + ":" + fileName;
+				lookupList.Add(lookupPath);
 		}
 		else {
 				//定义*.Unity 文件形成的特殊AB包名称

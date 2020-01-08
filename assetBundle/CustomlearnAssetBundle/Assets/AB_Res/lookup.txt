@@ -1,0 +1,14 @@
+Scene_1/Materials/Floor.ab:Scene_1/Materials/Floor.mat:Floor
+Scene_1/Prefabs/Capsule.ab:Scene_1/Prefabs/Capsule.prefab:Capsule
+Scene_1/Prefabs/Plane.ab:Scene_1/Prefabs/Plane.prefab:Plane
+Scene_1/Prefabs/TestCubePrefab.ab:Scene_1/Prefabs/TestCubePrefab.prefab:TestCubePrefab
+Scene_1/Test/t1/Floor2.ab:Scene_1/Test/t1/Floor2.jpg:Floor2
+Scene_1/Test/Floor1.ab:Scene_1/Test/Floor1.jpg:Floor1
+Scene_1/Textures/Path (Rocky).ab:Scene_1/Textures/Path (Rocky).jpg:Path (Rocky)
+Scene_1/Textures/TxFloor.ab:Scene_1/Textures/TxFloor.jpg:TxFloor
+Scene_1/Textures/unitychan_tile3.ab:Scene_1/Textures/unitychan_tile3.png:unitychan_tile3
+Scene_1/Textures/unitychan_tile6.ab:Scene_1/Textures/unitychan_tile6.png:unitychan_tile6
+Scene_1/Textures/WhileFloor.ab:Scene_1/Textures/WhileFloor.jpg:WhileFloor
+UI/Bag/DLBagRenderUIView.ab:UI/Bag/DLBagRenderUIView.prefab:DLBagRenderUIView
+UI/Bag/DLBagUIView.ab:UI/Bag/DLBagUIView.prefab:DLBagUIView
+UI/Task/DLTaskUIView.ab:UI/Task/DLTaskUIView.prefab:DLTaskUIView

@@ -25,28 +25,28 @@ public class Test_sigleAB : MonoBehaviour {
         private string _AssetName1 = "TestCubePrefab.prefab";
 		private string _AssetName2 = "Capsule.prefab";
 
+        private AssetBundleMgr assetBundleMgr;
+
 
         #region 简单（无依赖包）预设的加载
         private void Start()
         {
-            //非GameObject资源测试 ==》ok
-            _URL1 = PathTool.GetWWWPath() + "/scene_1/textures.ab"; // 
+
+            assetBundleMgr = AssetBundleMgr.GetInstance();
 
             //AB包内部资源名称，就是原始资源的名称
             _assetTexName1 = "unitychan_tile6";
+            _URL1 = assetBundleMgr.GetABPath(_assetTexName1);
             StartCoroutine(LoadNoeObjectFramAB(_URL1, goCubeChangeTexture1, _assetTexName1));
-            //_LoadObj = new SingleABLoader(_ABDependName1, LoadComplete);
-            //StartCoroutine(_LoadObj.LoadNoeObjectFramAB(_URL1, goCubeChangeTexture1, _assetTexName1));
-
 
            //加载非依赖AB包 ok
-           //_LoadObj = new SingleABLoader(_ABName1, LoadComplete);
-           //StartCoroutine(_LoadObj.LoadAssetBundle());
+           _LoadObj = new SingleABLoader(_ABName1, LoadComplete);
+           StartCoroutine(_LoadObj.LoadAssetBundle());
 
-		    //依赖包 ==>ok 
-			SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1, LoadDependComplete1);
+		    //依赖包 ==>ok
+			// SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1, LoadDependComplete1);
             //加载AB依赖包
-            StartCoroutine(_LoadDependObj.LoadAssetBundle());
+            // StartCoroutine(_LoadDependObj.LoadAssetBundle());
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ public class Test_sigleAB : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.A))
             {
                 //_LoadObj.UnLoadAsset(_texObj, true);  //释放资源内存
-               
+
                 //_LoadObj.UnLoadAsset(_tmpObj,true);
                 /*
                  * // 只能释放对应的预设体，不能删除预设引用的材质以及材质中的贴图
@@ -116,10 +116,10 @@ public class Test_sigleAB : MonoBehaviour {
 
                 //Destroy(_gameObj); //*********************仅仅释放克隆体的内存，如果要释放对应的预设体资源，需要预设体对象为null
                 Debug.Log("释放镜像内存资源，与内存资源");
-                
+
                  //_LoadObj.Dispose();//释放镜像内存资源
                 _LoadObj.DisposeALL();//释放镜像内存资源，与内存资源（gameObject）//只能释放GameObject类型资源(预设体)，不能释放非内存资源（纹理，材质。。。。）
-                
+
             }
         }
 
