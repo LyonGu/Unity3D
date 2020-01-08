@@ -128,6 +128,8 @@ public class AutoSetLabels  {
 
 		//Win路径
 		string tmpWinPath = fileinfoObj.FullName;                  //文件信息的全路径（Win格式）
+
+		string fileName= Path.GetFileNameWithoutExtension(tmpWinPath);
 		//Unity路径
 		string tmpUnityPath = tmpWinPath.Replace("\\","/");        //替换为Unity字符串分割符
 		//定位“场景名称”后面字符位置
@@ -137,8 +139,13 @@ public class AutoSetLabels  {
 		if (strABFileNameArea.Contains("/"))
 		{
 				string[] tempStrArray = strABFileNameArea.Split('/');
+
+				for (int i = 0; i < tempStrArray.Length -1; i++)
+				{
+					scenesName = scenesName + "/" + tempStrArray[i];
+				}
 				//AB包名称正式形成
-				strABName = scenesName + "/" + tempStrArray[0] + "/" + tempStrArray[1];
+				strABName = scenesName + "/" + fileName;
 		}
 		else {
 				//定义*.Unity 文件形成的特殊AB包名称
