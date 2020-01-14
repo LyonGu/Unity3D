@@ -207,7 +207,7 @@ public class AssetBundleMgr:MonoBehaviour
 
     public void InitLookUp()
     {
-        string path =PathTool.GetABResourcesPath() + "/lookup.txt";
+        string path =PathTool.GetABOutPath() + "/lookup.txt";
         StreamReader sr =new StreamReader(path);
         string result = sr.ReadToEnd();
         string[] lines = result.Split('\n');

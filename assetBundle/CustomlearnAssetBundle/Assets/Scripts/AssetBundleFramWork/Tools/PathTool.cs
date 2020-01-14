@@ -19,18 +19,18 @@ public class PathTool {
 	}
 
 	/// 获取平台的路径
-	private static string GetPlatformPath()
+	public static string GetPlatformPath()
 	{
 		string strReturnPlatformPath = string.Empty;
 		switch (Application.platform)
-		{	
+		{
 			//Application.streamingAssetsPath 只是可读，不能删除原始zip文件以及加密
 			case RuntimePlatform.WindowsPlayer:
 			case RuntimePlatform.WindowsEditor:
 			case RuntimePlatform.OSXEditor:
 				strReturnPlatformPath = Application.streamingAssetsPath;
 				break;
-			//移动平台，Application.persistentDataPath为可读可写目录 
+			//移动平台，Application.persistentDataPath为可读可写目录
 			case RuntimePlatform.IPhonePlayer:
 			case RuntimePlatform.Android:
 				strReturnPlatformPath = Application.persistentDataPath;
@@ -39,11 +39,11 @@ public class PathTool {
 						android :   "/storage/emulated/0/Android/data/package name/files"
 						ios:        "/var/mobile/Containers/Data/Application/app sandbox/Documents"
 
-					Application.streamingAssetsPath  
-						android: jar:file:///data/app/package name-1/base.apk!/assets    
-						ios:  /var/containers/Bundle/Application/app sandbox/test.app/Data/Raw 
+					Application.streamingAssetsPath
+						android: jar:file:///data/app/package name-1/base.apk!/assets
+						ios:  /var/containers/Bundle/Application/app sandbox/test.app/Data/Raw
 				 */
-				
+
 				break;
 			default:
 				break;
@@ -79,7 +79,7 @@ public class PathTool {
 		return strReturnPlatformName;
 	}
 
-	/// 获取WWW协议下载（AB包）路径
+	/// 获取WWW协议下载（AB包）路径 string abName = Application.dataPath + "/StreamingAssets/Windows" + "/Windows";
 	public static string GetWWWPath()
 	{
 		//返回路径字符串
@@ -93,6 +93,35 @@ public class PathTool {
 			case RuntimePlatform.OSXPlayer:
 			case RuntimePlatform.OSXEditor:
 				strReturnWWWPath = "file://" + GetABOutPath();
+				break;
+			//Android 平台
+			case RuntimePlatform.Android:
+				strReturnWWWPath = "jar:file://" + GetABOutPath();
+				break;
+			//IOS 平台
+			case RuntimePlatform.IPhonePlayer:
+				strReturnWWWPath = GetABOutPath()+"/Raw/";
+				break;
+			default:
+				break;
+		}
+
+		return strReturnWWWPath;
+	}
+
+	public static string GetStreamAssetPath()
+	{
+		//返回路径字符串
+		string strReturnWWWPath = string.Empty;
+
+		switch (Application.platform)
+		{
+			//Windows 主平台
+			case RuntimePlatform.WindowsPlayer:
+			case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.OSXPlayer:
+			case RuntimePlatform.OSXEditor:
+				strReturnWWWPath = GetABOutPath();
 				break;
 			//Android 平台
 			case RuntimePlatform.Android:
