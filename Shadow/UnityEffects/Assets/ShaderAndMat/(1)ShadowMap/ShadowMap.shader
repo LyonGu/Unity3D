@@ -61,24 +61,19 @@ Shader "UnityEffects/ShadowMap"
 			
 			
 				float4 uvPos = i.projectionPos;
-				//uvPos = uvPos/uvPos.w;  //转到[-1,1]
-				//uvPos = uvPos * 0.5 + 0.5; // 转到[0,1]
-			
-
-				uvPos.x = uvPos.x * 0.5f + uvPos.w * 0.5f;//变换到[0,w]
-				uvPos.y = uvPos.y * 0.5f    + uvPos.w * 0.5f;//变换到[0,w]
+				uvPos = uvPos/uvPos.w;  //转到[-1,1]
+				uvPos = uvPos * 0.5 + 0.5; // 转到[0,1]
+				
+				
 				//我们要把投影的点映射到纹理，就必须考虑不同平台uv空间y的方向
 				#if UNITY_UV_STARTS_AT_TOP
 				//Dx like
 				uvPos.y = 1.0 - uvPos.y;
 				#endif
+				float depth =  DecodeFloatRGBA(tex2D(_DepthMap, uvPos.xy));//从深度图中取出深度 //手动进行透视除法
+				float depthPixel = uvPos.z;//像素深度
 
-
-				float depth =  DecodeFloatRGBA(tex2D(_DepthMap, uvPos.xy/ uvPos.w));//从深度图中取出深度 //手动进行透视除法
-
-				float depthPixel = uvPos.z / uvPos.w;//像素深度
-
-
+			
 				#if (defined(SHADER_API_GLES) || defined(SHADER_API_GLES3)) && defined(SHADER_API_MOBILE)
 				//GL like
 				depthPixel = depthPixel * 0.5f + 0.5; 

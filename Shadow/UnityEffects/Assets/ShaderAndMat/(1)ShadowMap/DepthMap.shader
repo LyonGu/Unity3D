@@ -33,6 +33,7 @@ Shader "UnityEffects/DepthMap"
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
+			half4 _MainTex_TexelSize;
             uniform sampler2D _CameraDepthTexture;
 
 			
@@ -46,8 +47,12 @@ Shader "UnityEffects/DepthMap"
 				// 然后在frag里  viewPort = viewPort/viewPort.w
 				o.texPos.x = o.vertex.x * 0.5f + 0.5f * o.vertex.w;//变换到x[0,w] y[0,w]的空间
 				o.texPos.y = o.vertex.y * 0.5f  + 0.5f * o.vertex.w;
-				if (_ProjectionParams.x < 0)//uv空间与平台有关
-					 o.texPos.y = 1.0 - o.texPos.y;//https://docs.unity3d.com/Manual/SL-PlatformDifferences.html
+				//if (_ProjectionParams.x < 0)//uv空间与平台有关
+					//o.texPos.y = 1.0 - o.texPos.y;//https://docs.unity3d.com/Manual/SL-PlatformDifferences.html
+				#if UNITY_UV_STARTS_AT_TOP			
+				if (_MainTex_TexelSize.y < 0.0)
+					o.texPos.y = o.vertex.w - o.texPos.y;
+				#endif
 				return o;
 			}
 			
