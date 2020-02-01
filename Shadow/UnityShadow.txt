@@ -14,3 +14,5 @@ Unity使用的是方法2 默认使用pass名为 shadowCaster来更新阴影贴图
 SHADOW_COORDS  --》 声明阴影坐标属性
 TRANSFER_SHADOW  --》获取阴影纹理坐标  -》 这个宏里会判断是否支持屏幕空间阴影映射，不支持的话使用传统阴影映射
 SHADOW_ATTENUATION --》计算阴影值
+
+1
