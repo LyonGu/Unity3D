@@ -5,6 +5,7 @@ using Assets.Script.Utils;
 
 /// <summary>
 /// 生成灯光的深度图
+/// 
 /// </summary>
 public class CreateDepthMap : MonoBehaviour 
 {
