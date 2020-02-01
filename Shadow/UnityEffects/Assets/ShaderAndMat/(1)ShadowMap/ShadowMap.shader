@@ -52,25 +52,29 @@ Shader "UnityEffects/ShadowMap"
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				matrix mvp = mul(_ViewProjectionMat ,unity_ObjectToWorld);
-				o.projectionPos = mul( mvp,float4(v.vertex.xyz,1));//投影到贴图的齐次剪裁空间
+				o.projectionPos = mul( mvp,float4(v.vertex.xyz,1));//投影到贴图的齐次剪裁空间，只有标有SV_POSITION对应的属性进入frag之前会进行透视除法
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
 			
-				//
+			
 				float4 uvPos = i.projectionPos;
+				//uvPos = uvPos/uvPos.w;  //转到[-1,1]
+				//uvPos = uvPos * 0.5 + 0.5; // 转到[0,1]
+			
+
 				uvPos.x = uvPos.x * 0.5f + uvPos.w * 0.5f;//变换到[0,w]
 				uvPos.y = uvPos.y * 0.5f    + uvPos.w * 0.5f;//变换到[0,w]
 				//我们要把投影的点映射到纹理，就必须考虑不同平台uv空间y的方向
 				#if UNITY_UV_STARTS_AT_TOP
 				//Dx like
-				uvPos.y = uvPos.w - uvPos.y;
+				uvPos.y = 1.0 - uvPos.y;
 				#endif
 
 
-				float depth =  DecodeFloatRGBA(tex2D(_DepthMap, uvPos.xy/ uvPos.w));//从深度图中取出深度
+				float depth =  DecodeFloatRGBA(tex2D(_DepthMap, uvPos.xy/ uvPos.w));//从深度图中取出深度 //手动进行透视除法
 
 				float depthPixel = uvPos.z / uvPos.w;//像素深度
 

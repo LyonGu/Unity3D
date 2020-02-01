@@ -15,7 +15,7 @@ public class CreateDepthMap : MonoBehaviour
 	void Start () 
     {
         _lightCamera = GetComponent<Camera>();
-        _lightCamera.depthTextureMode = DepthTextureMode.Depth;
+        _lightCamera.depthTextureMode = DepthTextureMode.Depth;  //开启深度纹理模式 shader里使用_CameraDepthTexture得到深度贴图，但是dc会翻一倍
         _lightCamera.clearFlags = CameraClearFlags.SolidColor;
         _lightCamera.backgroundColor = Color.white;//背景色设为白色，表示背景的地方离视点最远，不会受到阴影的影响
         _lightCamera.SetReplacementShader(depthMapShader, "RenderType");//使用替换渲染方式为知道的renderType类型生成深度图
