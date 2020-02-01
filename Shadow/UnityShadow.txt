@@ -1,0 +1,16 @@
+http://note.youdao.com/noteshare?id=f007823df0b6082295d979a5be400b68&sub=WEBb0e89c962c133e13319bf67d74c8b70a
+
+1 传统阴影映射 --》 使用阴影贴图
+2 屏幕空间阴影映射 --》显卡需要支持MRT（多渲染目标）
+3 使用projetor组件结合rendertexture
+{
+	只需在projector位置创建一个摄像机，并复制projector的参数，并将这个摄像机的rendertexture传递给projector的material，
+}
+
+
+Unity使用的是方法2 默认使用pass名为 shadowCaster来更新阴影贴图
+
+使用几个宏
+SHADOW_COORDS  --》 声明阴影坐标属性
+TRANSFER_SHADOW  --》获取阴影纹理坐标  -》 这个宏里会判断是否支持屏幕空间阴影映射，不支持的话使用传统阴影映射
+SHADOW_ATTENUATION --》计算阴影值
