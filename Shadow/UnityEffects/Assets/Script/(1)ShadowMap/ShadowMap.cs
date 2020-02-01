@@ -23,6 +23,8 @@ public class ShadowMap : MonoBehaviour
         }
     }
 
+
+    //在LateUpdate后面调用
     void OnWillRenderObject()
     {
         if (_mat != null && _lightCamera != null)
