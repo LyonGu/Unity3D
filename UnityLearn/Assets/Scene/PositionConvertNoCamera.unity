@@ -341,7 +341,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 669000338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ff7c8981662b8046b0cb02d8d79847c, type: 3}
+  m_Script: {fileID: 11500000, guid: bda0ba7278ba2a344bdd220864edcfba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvasRectTransform: {fileID: 1783634412}
@@ -383,7 +383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!20 &807549911
 Camera:
   m_ObjectHideFlags: 0
@@ -1071,7 +1071,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1406,7 +1406,7 @@ Canvas:
   m_GameObject: {fileID: 1783634408}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 807549911}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

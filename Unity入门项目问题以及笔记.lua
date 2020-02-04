@@ -391,6 +391,32 @@
         }
  
 	}
+
+
+	16 动画状态机判断正处于某个状态
+	{
+
+		//将名称转换为哈希值可以提高索引的速度
+      	private int moveSpeed = Animator.StringToHash("moveSpeed");
+    	private int jump = Animator.StringToHash("Jump");
+    	private int runState = Animator.StringToHash("Base Layer.Run");
+
+		//获取动画的当前状态
+		AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+		if(info.fullPathHash == runState)
+		{
+			xxxx
+		}
+
+
+
+
+		AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(0);
+        if(state.shortNameHash == Animator.StringToHash("Run"))
+        {
+            //
+        }
+	}
 	
             
             

@@ -188,6 +188,7 @@
      <Compile Include="Assets\Scripts\PoolManager.cs" />
      <Compile Include="Assets\Scripts\Pools.cs" />
      <Compile Include="Assets\Scripts\PositonConvert.cs" />
+     <Compile Include="Assets\Scripts\PositonConvertNoCamera.cs" />
      <Compile Include="Assets\Scripts\RayDemo.cs" />
      <Compile Include="Assets\Scripts\RayDemo2_CCWalking.cs" />
      <Compile Include="Assets\Scripts\ReceiveObj.cs" />
