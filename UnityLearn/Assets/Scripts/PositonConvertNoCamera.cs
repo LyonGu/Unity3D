@@ -11,6 +11,7 @@ public class PositonConvertNoCamera : MonoBehaviour {
 
     public RectTransform canvasRectTransform; //根canvas的RectTransform
     public RectTransform textRectTransform;   //子UI的canvas的RectTransform
+    public RectTransform txtParentRectTransform;
 
     public Transform cubeTransform;
 
@@ -43,56 +44,27 @@ public class PositonConvertNoCamera : MonoBehaviour {
     void LocalUIToScreenAndWorld()
     {
 
-        RectTransform ParentRectTransform = (RectTransform)localUIRectTransform.parent;
-        //targetUIRectTransform的父节点是根画布
-        Vector2 targetScreenPos = localUIRectTransform.anchoredPosition + ParentRectTransform.anchoredPosition; //得到相对于根画布的坐标
-                                                                                                                //targetUIRectTransform.anchoredPosition = targetScreenPos;
-        //计算屏幕坐标
-        Vector2 RootCanvasPos = localUIRectTransform.anchoredPosition;
-        RectTransform cur = localUIRectTransform;
-        while (cur.parent)
-        {
-            cur = (RectTransform)cur.parent;
-            if (cur == canvasRectTransform) break;
-            RootCanvasPos += cur.anchoredPosition;
-        }
-
-
-        float rax = RootCanvasPos.x / 800; //canvas的宽
-        float ray = RootCanvasPos.y / 450; //canvas的高
-        Vector2 ratio = new Vector2(rax + 0.5f, ray + 0.5f); //根画布的中心点为中间，先把坐标系转到左下角
-        Debug.Log("screenSize:" + Screen.width + "/  " + Screen.height);
-        Vector2 screenPos = new Vector2(Screen.width * ratio.x, Screen.height * ratio.y); ; //是相对于根画布的坐标targetScreenPos
+   
+        //overlay 模式，屏幕坐标系原点和世界坐标重合，所以世界坐标就是屏幕坐标
+        Vector3 screenPos = localUIRectTransform.position;
         Debug.Log("screenPos:" + screenPos.x + "/  " + screenPos.y);
 
-        Vector2 localPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPos, null, out localPos);
-        targetUIRectTransform.anchoredPosition = localPos;
 
 
-        Vector2 RootCanvasPos2 = localUIRectTransform2.anchoredPosition;
-        cur = localUIRectTransform2;
-        while (cur.parent)
-        {
-            cur = (RectTransform)cur.parent;
-            if (cur == canvasRectTransform) break;
-            RootCanvasPos2 += cur.anchoredPosition;
-        }
 
-        rax = RootCanvasPos2.x / 800; //canvas的宽
-        ray = RootCanvasPos2.y / 450; //canvas的高
-        ratio = new Vector2(rax + 0.5f, ray + 0.5f); //根画布的中心点为中间，先把坐标系转到左下角
+        Vector2 localPos = SceenPos2UGUI(screenPos, targetUIRectTransform, canvasRectTransform);
+        targetUIRectTransform.anchoredPosition = localPos;  //targetUIRectTransform必须是锚点在中间
 
-        Vector2 screenPos2 = new Vector2(Screen.width * ratio.x, Screen.height * ratio.y); ; //是相对于根画布的坐标targetScreenPos
+        Vector2 screenPos2 = localUIRectTransform2.position;
         Debug.Log("screenPos2:" + screenPos2.x + "/  " + screenPos2.y);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPos2, null, out localPos);
+        localPos = SceenPos2UGUI(screenPos2, targetUIRectTransform2, canvasRectTransform);
         targetUIRectTransform2.anchoredPosition = localPos;
 
 
-        //转成屏幕坐标不可以直接用Main.camera
-        Vector3 worldPos1 = localUIRectTransform.position;
-        Vector3 screenPosOrgin1 = mainCamera.WorldToScreenPoint(worldPos1);
-        Debug.Log("screenPosOrgin1:" + screenPosOrgin1.x + "/  " + screenPosOrgin1.y);
+        ////转成屏幕坐标不可以直接用Main.camera
+        //Vector3 worldPos1 = localUIRectTransform.position;
+        //Vector3 screenPosOrgin1 = mainCamera.WorldToScreenPoint(worldPos1);
+        //Debug.Log("screenPosOrgin1:" + screenPosOrgin1.x + "/  " + screenPosOrgin1.y);
 
 
 
@@ -115,17 +87,36 @@ public class PositonConvertNoCamera : MonoBehaviour {
         //转换成屏幕坐标
         Vector3 screenPos = Camera.main.WorldToScreenPoint(wPos);
 
-
-        Vector2 localPos;
-        //当canvas没有摄像机时，camera传入null即可
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, screenPos, null, out localPos);
+        Vector2 localPos = SceenPos2UGUI(new Vector2(screenPos.x, screenPos.y), textRectTransform, txtParentRectTransform);
         textRectTransform.anchoredPosition = localPos;
 
-        //public static bool ScreenPointToLocalPointInRectangle(RectTransform rect, Vector2 screenPoint, Camera cam, out Vector2 localPoint);
-        //public static bool ScreenPointToWorldPointInRectangle(RectTransform rect, Vector2 screenPoint, Camera cam, out Vector3 worldPoint);
-        //public static Vector2 WorldToScreenPoint(Camera cam, Vector3 worldPoint);
 
+    }
 
+    Vector2 SceenPos2UGUI(Vector2 ScreenPos, RectTransform target, RectTransform parent)
+    {
+        Vector2 outVec;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, ScreenPos, null, out outVec);
+        float pW = parent.rect.width;
+        float pH = parent.rect.height;
+        Vector2 anchorMax = target.anchorMax;
+        Vector2 anchorMin = target.anchorMin;
+        Vector2 anchorOffset;
+        if (anchorMax.x == anchorMin.x && anchorMax.y == anchorMin.y)
+        {
+            Debug.Log("锚点为一个点:");
+            //锚点为一个点
+            anchorOffset = new Vector2(0.5f - anchorMax.x, 0.5f - anchorMax.y);
+        }
+        else
+        {
+            //锚点为一个区域（拉伸）
+            Debug.Log("锚点为一个区域");
+            anchorOffset = new Vector2(0.5f - (anchorMin.x + anchorMax.x) * 0.5f, 0.5f - (anchorMin.y + anchorMax.y) * 0.5f);  
+        }
+        outVec.x = outVec.x + (anchorOffset.x * pW);
+        outVec.y = outVec.y + (anchorOffset.y * pH);
+        return outVec;
     }
 	// Update is called once per frame
 	void Update () {
@@ -146,13 +137,104 @@ public class PositonConvertNoCamera : MonoBehaviour {
  
             cubeTargetTransform.position = worldPos;
 
-            Vector2 outVec;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, null, out outVec);
+            //Vector2 outVec;
+            //RectTransformUtility.ScreenPointToLocalPointInRectangle(txtParentRectTransform, Input.mousePosition, null, out outVec);
 
-            Debug.Log("Setting anchored positiont to: " + outVec);
+
+            //float pW = txtParentRectTransform.rect.width;
+            //float pH = txtParentRectTransform.rect.height;
+
+            //Vector2 maxOffset = textRectTransform.anchorMax - new Vector2(0.5f, 0.5f);
+            //outVec.x = outVec.x - 2 * maxOffset.x * Screen.width / 2;
+            //outVec.y = outVec.y - 2 * maxOffset.y * Screen.height / 2;
+            //Debug.Log("Setting anchored positiont to: " + outVec);
             //textRectTransform.position = outVec;
-            textRectTransform.anchoredPosition = outVec; //anchoredPosition 才是UGUI坐标系的坐标位置（属性面板里position属性）
-            //textRectTransform.position = outVec;  //position是代表世界空间的坐标
+            //outVec.x = outVec.x + (0.5f * pW); //（0,0.5）
+            //outVec.x = outVec.x + (-0.5f * pW);  //（1.0,0.5）
+
+            //outVec.y = outVec.y + (-0.5f * pH);  //（0.5,1.0）
+            //outVec.y = outVec.y + (0.5f * pH);  //（0.5,0）
+
+            //（0.5,0.5）
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+
+            //（0,1）
+            //outVec.x = outVec.x + (0.5f * pW);
+            //outVec.y = outVec.y + (-0.5f * pH);
+
+            //（0,0）
+            //outVec.x = outVec.x + (0.5f * pW);
+            //outVec.y = outVec.y + (0.5f * pH);
+
+            //（1,1）
+            //outVec.x = outVec.x + (-0.5f * pW);
+            //outVec.y = outVec.y + (-0.5f * pH);
+
+            //（1,0）
+            //outVec.x = outVec.x + (-0.5f * pW);
+            //outVec.y = outVec.y + (0.5f * pH);
+
+
+            //拉伸（0-1,0.5） 水平居中拉伸
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+            //拉伸（0-1,1.0）水平部拉伸
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (-0.5f * pH);
+
+            //拉伸（0-1,0）水平底部拉伸
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (0.5f * pH);
+
+
+            //拉伸（0.5,0-1）竖直中部拉伸
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+
+            //拉伸（0,0-1）竖直左部拉伸
+            //outVec.x = outVec.x + (0.5f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+
+            //拉伸（1.0,0-1）竖直右部拉伸
+            //outVec.x = outVec.x + (-0.5f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+            //拉伸（0-1,0-1）水平竖直都拉伸
+            //outVec.x = outVec.x + (0f * pW);
+            //outVec.y = outVec.y + (0f * pH);
+
+            //Vector2 textAnchorMax = textRectTransform.anchorMax;
+            //Vector2 textAnchorMin = textRectTransform.anchorMin;
+
+            //if (textAnchorMax.x == textAnchorMin.x && textAnchorMax.y == textAnchorMin.y)
+            //{
+            //    Debug.Log("锚点为一个点:");
+            //    //锚点为一个点
+            //    Vector2 anchorOffset = new Vector2(0.5f - textAnchorMax.x, 0.5f - textAnchorMax.y);
+            //    outVec.x = outVec.x + (anchorOffset.x * pW);
+            //    outVec.y = outVec.y + (anchorOffset.y * pH);
+            //}
+            //else
+            //{
+            //    //锚点为一个区域（拉伸）
+            //    Debug.Log("锚点为一个区域");
+            //    Vector2 anchorOffset = new Vector2(0.5f - (textAnchorMin.x + textAnchorMax.x) * 0.5f, 0.5f - (textAnchorMin.y + textAnchorMax.y) * 0.5f);
+            //    outVec.x = outVec.x + (anchorOffset.x * pW);
+            //    outVec.y = outVec.y + (anchorOffset.y * pH);
+            //}
+
+            //// outVec.x = outVec.x + (0.5f * pW);
+            //textRectTransform.anchoredPosition = outVec; //anchoredPosition 才是UGUI坐标系的坐标位置（属性面板里position属性）
+            ////textRectTransform.position = outVec;  //position是代表世界空间的坐标
+            ///
+
+            Vector2 localPos = SceenPos2UGUI(Input.mousePosition, textRectTransform, txtParentRectTransform);
+            textRectTransform.anchoredPosition = localPos;
         }
 	}
 }
