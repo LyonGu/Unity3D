@@ -175,10 +175,13 @@
      <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferRT.cs" />
      <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
      <Compile Include="Assets\Scripts\CommandBuffer\CommoandBufferPostEffect.cs" />
+     <Compile Include="Assets\Scripts\HealthBar.cs" />
      <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
      <Compile Include="Assets\Scripts\Helpers\GirlBaseActionControl.cs" />
      <Compile Include="Assets\Scripts\Helpers\Rotating.cs" />
      <Compile Include="Assets\Scripts\Helpers\SetPropertyAttribute.cs" />
+     <Compile Include="Assets\Scripts\HPFillCount.cs" />
+     <Compile Include="Assets\Scripts\LockHPProperty.cs" />
      <Compile Include="Assets\Scripts\LockProperty.cs" />
      <Compile Include="Assets\Scripts\PhotoshopLevelsLockProperty.cs" />
      <Compile Include="Assets\Scripts\PostEffectHelp.cs" />
@@ -257,6 +260,7 @@
      <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
      <None Include="Assets\Shaders\Chapter10\Refraction.shader" />
      <None Include="Assets\Shaders\Chapter13\EdgeDetectNormalAndDepth.shader" />
+     <None Include="Assets\Shaders\Common\EnimyHp.shader" />
      <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_alphaTest.shader" />
      <None Include="Assets\Shaders\Chapter5\SimpleShader_4.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Tonemapping.cginc" />
@@ -275,6 +279,7 @@
      <None Include="Assets\Colorful\Shaders\CC_CrossStitch.shader" />
      <None Include="Assets\Shaders\Surface\SimpleAlphaTest.shader" />
      <None Include="Assets\Shaders\Occlusion\XRay.shader" />
+     <None Include="Assets\Shaders\Common\FriendHp.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Blit.shader" />
      <None Include="Assets\Shaders\Surface\BRDFOpengl.shader" />
      <None Include="Assets\Shaders\Chapter6\Blinn-PhongUse Built-in Functions.shader" />
@@ -383,6 +388,7 @@
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
      <None Include="Assets\Shaders\Common\OutLine3D.shader" />
      <None Include="Assets\Shaders\Surface\LogoFlash.shader" />
+     <None Include="Assets\Shaders\Common\FriendHpText.shader" />
      <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
      <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
      <None Include="Assets\Shaders\Chapter9\ForwardRendering.shader" />
@@ -417,6 +423,7 @@
      <None Include="Assets\Shaders\Surface\BRDF.shader" />
      <None Include="Assets\Cookbook\Code\05_Code\CarPaint.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\ColorGrading.cginc" />
+     <None Include="Assets\Shaders\Common\UIDefault.shader" />
      <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
      <None Include="Assets\Shaders\Common\BaseSprite.shader" />
      <None Include="Assets\Colorful\Shaders\CC_PhotoFilter.shader" />

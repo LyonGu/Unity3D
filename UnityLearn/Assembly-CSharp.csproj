@@ -227,6 +227,7 @@
      <Compile Include="Assets\Scripts\TriggerDemo.cs" />
      <Compile Include="Assets\Scripts\WWWDemo1.cs" />
      <Compile Include="Assets\VM_CubeMove.cs" />
+     <Compile Include="Assets\WorldToSceen.cs" />
      <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
      <None Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\ToolResources\EffectShader\FXMaker_Mask Additive Tint.shader" />

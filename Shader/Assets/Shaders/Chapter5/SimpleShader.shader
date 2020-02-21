@@ -1,13 +1,13 @@
-﻿Shader "Shaders/Chapter5/SimpleShader"  //shader的名称，这里的写法会在选择shader时生效
+Shader "Shaders/Chapter5/SimpleShader"  //shader的名称，这里的写法会在选择shader时生效
 {
-	
+
 	SubShader {
         Pass {
             CGPROGRAM
 
             #pragma vertex vert
             #pragma fragment frag
-            
+
             //POSITION 输入 ：把模型的顶点坐标填充到输入参数v中
             //SV_POSITION 输出: 顶点着色器输出的是裁剪空间的顶点坐标
         	float4 vert(float4 v : POSITION) : SV_POSITION{

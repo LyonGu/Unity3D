@@ -1,6 +1,6 @@
-﻿Shader "Shaders/Chapter5/SimpleShader_1"  //shader的名称，这里的写法会在选择shader时生效
+Shader "Shaders/Chapter5/SimpleShader_1"  //shader的名称，这里的写法会在选择shader时生效
 {
-	
+
 	SubShader {
         Pass {
             CGPROGRAM
@@ -15,7 +15,7 @@
                 float3 normal : NORMAL;     //NORMAL告诉Unity,用模型空间的法线方向填充normal
                 float4 texcoord : TEXCOORD;  //TEXCOORD告诉Unity,用0级纹理填充texcoord
             };
-            
+
             float4 vert(a2v v): SV_POSITION
             {
                 //使用v.vertext 来访问模型空间的顶点坐标

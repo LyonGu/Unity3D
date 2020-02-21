@@ -1,6 +1,6 @@
-﻿Shader "Shaders/Chapter5/SimpleShader_2"  //shader的名称，这里的写法会在选择shader时生效
+Shader "Shaders/Chapter5/SimpleShader_2"  //shader的名称，这里的写法会在选择shader时生效
 {
-	
+
 	SubShader {
         Pass {
             CGPROGRAM
@@ -21,7 +21,7 @@
                 float4 pos: SV_POSITION;  //SV_POSITION告诉Unity,pos里包含了顶点在裁剪空间的位置信息
                 fixed3 color: COLOR0;      //COLOR0用于存储颜色信息
             };
-            
+
             v2f vert(a2v v)
             {
                 v2f o;
