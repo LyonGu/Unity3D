@@ -1,10 +1,10 @@
-﻿Shader "Shaders/Chapter6/SpecularVertexLevel"
+Shader "Shaders/Chapter6/SpecularVertexLevel"
 {
 	//逐顶点高光会导致高光部分不平滑，不推荐使用
 
-	//高光部分的计算是非线性的 
+	//高光部分的计算是非线性的
 	//顶点着色器中计算光照在进行插值的过程是线性的，破坏了原有的非线性关系
-	
+
 	Properties
 	{
 		_Diffuse 	("Diffuse", Color) 			= (1.0,1.0,1.0,1.0)
@@ -73,11 +73,11 @@
 
 			}
 
-			fixed4 frag(v2f o): SV_Target 
+			fixed4 frag(v2f o): SV_Target
 			{
 				return fixed4(o.color,1.0);
 			}
-	
+
 			ENDCG
 		}
 	}

@@ -49,7 +49,7 @@ Shader "Common/EnimyHp" {
             fixed4 frag(v2f o) : SV_Target
             {
                 fixed4 c =  tex2D (_MainTex, o.uv) * _Color;
-                c.rgb *= c.a;
+                c.rgb *= c.a; //这里不乘，alpha为0就显示白色了？？？ 是因为混合函数为Blend One OneMinusSrcAlpha
                 if (o.uv.x > _fillCount)
                 {
                     discard;

@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter6/DiffusePiexlHalfLambert"
+Shader "Shaders/Chapter6/DiffusePiexlHalfLambert"
 {
 	Properties
 	{
@@ -29,7 +29,7 @@
 				float3 worldNormal : TEXCOORD0;
 			};
 
-			
+
 			v2f vert(a2v v){
 				v2f o;
 				//坐标转到裁剪空间
@@ -56,14 +56,14 @@
 
 				//半兰伯特光照模型 不用max操作防止为负值
 				fixed halfLambert = dot(worldNormal, worldLight) * 0.5 + 0.5;
-				
+
 				//_Diffuse理解为材质的颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * halfLambert;
 
 				fixed3 color = ambient + diffuse;
 				return fixed4(color, 1.0);
 			}
-			
+
 			ENDCG
 		}
 	}

@@ -11,7 +11,7 @@ Shader "Common/FriendHp" {
     	Tags { "Queue"="Overlay" "RenderType"="Transparent" }
 
         Cull Off
-        ZTest off
+        ZTest Off
         Blend One OneMinusSrcAlpha
 
         Pass {

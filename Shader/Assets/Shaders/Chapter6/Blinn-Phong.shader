@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter6/Blinn-Phong"
+Shader "Shaders/Chapter6/Blinn-Phong"
 {
 	//Blinn-Phong模型：用半法量方向来代替反射方向计算高光 （phong光照模型的进阶版）
 	Properties
@@ -36,7 +36,7 @@
 				float3 worldPos : TEXCOORD1; //纹理有4个通道可以用来存储数据
 			};
 
-			
+
 			v2f vert(a2v i){
 				v2f o;
 				o.pos = UnityObjectToClipPos(i.vertex);
@@ -52,7 +52,7 @@
 			}
 
 			//逐像素高光
-			fixed4 frag(v2f o): SV_Target 
+			fixed4 frag(v2f o): SV_Target
 			{
 				fixed3 color;
 				//环境光照
@@ -83,7 +83,7 @@
 
 				return fixed4(color,1.0);
 			}
-	
+
 			ENDCG
 		}
 	}

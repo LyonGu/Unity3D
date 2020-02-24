@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter6/DiffusePixelLevel"
+Shader "Shaders/Chapter6/DiffusePixelLevel"
 {
 	Properties
 	{
@@ -29,7 +29,7 @@
 				float3 worldNormal : TEXCOORD0;
 			};
 
-			
+
 			v2f vert(a2v v){
 				v2f o;
 				//坐标转到裁剪空间
@@ -60,7 +60,7 @@
 				fixed3 color = ambient + diffuse;
 				return fixed4(color, 1.0);
 			}
-			
+
 			ENDCG
 		}
 	}

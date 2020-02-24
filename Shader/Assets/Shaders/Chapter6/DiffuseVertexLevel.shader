@@ -1,8 +1,8 @@
-﻿Shader "Shaders/Chapter6/DiffuseVertexLevel"
+Shader "Shaders/Chapter6/DiffuseVertexLevel"
 {
 	Properties
 	{
-		_Diffuse ("Diffuse", Color)	 = (1.0,1.0,1.0,1.0) 
+		_Diffuse ("Diffuse", Color)	 = (1.0,1.0,1.0,1.0)
 	}
 	SubShader
 	{
@@ -38,14 +38,15 @@
 				//获取环境光分量
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 
-				//把法线从模型空间转到世界空间
+				//把法线从模型空间转到世界空间  法线需要使用逆转置矩阵
+				// mul(TI_M, P) ==> mul(P, I_M) 
 				fixed3 worldNormal = normalize(mul(v.normal, (float3x3)unity_WorldToObject));
 
 				//光源的方向（假设场景中只有一个光源切实平行光）
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);
 
 				//计算漫反射 saturate类似于 math.max ==>避免计算值为负值
-				//dot(法线方向，光源方向) 
+				//dot(法线方向，光源方向)
 				//_Diffuse理解为材质的颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLight));
 
@@ -56,7 +57,7 @@
 			fixed4 frag(v2f i):SV_Target{
 				return fixed4(i.color, 1.0);
 			}
-			
+
 			ENDCG
 		}
 	}
