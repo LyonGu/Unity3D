@@ -1,5 +1,5 @@
-﻿Shader "Shaders/Chapter7/RampTexture"
-{	
+Shader "Shaders/Chapter7/RampTexture"
+{
 	//渐变纹理:控制漫反射光照的结果
 	Properties
 	{
@@ -18,7 +18,7 @@
 
 			#pragma vertex vert
 			#pragma fragment frag
-			
+
 			#include "Lighting.cginc"
 
 			fixed4 _Color;
@@ -60,7 +60,7 @@
 			}
 
 			fixed4 frag(v2f i) : SV_Target{
-			
+
 				fixed3 worldNormal 	= normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 
@@ -76,7 +76,7 @@
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
 				fixed3 halfDir = normalize(worldLightDir + viewDir);
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
-				
+
 				return fixed4(ambient + diffuse + specular, 1.0);
 			}
 

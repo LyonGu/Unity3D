@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter7/NormalMapWorldSpaceMat"
+Shader "Shaders/Chapter7/NormalMapWorldSpaceMat"
 {
 	Properties
 	{
@@ -16,7 +16,7 @@
 		{
 			Tags {"LightMode" = "ForwardBase"}
 			CGPROGRAM
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -34,17 +34,17 @@
 
 			struct a2v{
 				float4 vertex 	: POSITION;   //模型空间中顶点的位置
-				float3 normal 	: NORMAL;     //模型空间的法线信息 
-				float4 tangent 	: TANGENT;    //模型空间的切线信息 
+				float3 normal 	: NORMAL;     //模型空间的法线信息
+				float4 tangent 	: TANGENT;    //模型空间的切线信息
 				float4 texcoord	: TEXCOORD0;
 			};
 
 			struct v2f{
 				float4 pos 		: SV_POSITION;
 				float4 uv  		: TEXCOORD0;   //同时存储MainTex和normalMap的纹理坐标
-				float4 TtoW0 	: TEXCOORD1;  
-				float4 TtoW1 	: TEXCOORD2;  
-				float4 TtoW2 	: TEXCOORD3; 
+				float4 TtoW0 	: TEXCOORD1;
+				float4 TtoW1 	: TEXCOORD2;
+				float4 TtoW2 	: TEXCOORD3;
 			};
 
 
@@ -61,13 +61,13 @@
 				o.uv.zw = i.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
 
 
-				float3 worldPos = mul(unity_ObjectToWorld, i.vertex).xyz; 
+				float3 worldPos = mul(unity_ObjectToWorld, i.vertex).xyz;
 
 				//计算世界空间下的法线和切线方向
-				fixed3 worldNormal = normalize(UnityObjectToWorldNormal(i.normal));  
-				fixed3 worldTangent = normalize(UnityObjectToWorldDir(i.tangent.xyz)); 
+				fixed3 worldNormal = normalize(UnityObjectToWorldNormal(i.normal));
+				fixed3 worldTangent = normalize(UnityObjectToWorldDir(i.tangent.xyz));
 
-				fixed3 worldBinormal = cross(worldNormal, worldTangent) * i.tangent.w; 
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * i.tangent.w;
 
 				//计算从切线空间转到世界空间的矩阵TBN，把世界坐标也一并存储了
 				o.TtoW0 = float4(worldTangent.x, worldBinormal.x, worldNormal.x, worldPos.x);
@@ -92,7 +92,7 @@
 				tangentNormal.xy *= _BumpScale;
 				tangentNormal.z = sqrt(1.0 - saturate(dot(tangentNormal.xy, tangentNormal.xy)));
 
-			
+
 
 				// 把法线信息从切线空间转到世界空间
 				fixed3 worldNormal = normalize(half3(dot(i.TtoW0.xyz, tangentNormal), dot(i.TtoW1.xyz, tangentNormal), dot(i.TtoW2.xyz, tangentNormal)));

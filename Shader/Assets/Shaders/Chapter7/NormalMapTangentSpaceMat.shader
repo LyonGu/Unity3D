@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter7/NormalMapTangentSpaceMat"
+Shader "Shaders/Chapter7/NormalMapTangentSpaceMat"
 {
 	Properties
 	{
@@ -16,7 +16,7 @@
 		{
 			Tags {"LightMode" = "ForwardBase"}
 			CGPROGRAM
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -34,8 +34,8 @@
 
 			struct a2v{
 				float4 vertex 	: POSITION;   //模型空间中顶点的位置
-				float3 normal 	: NORMAL;     //模型空间的法线信息 
-				float4 tangent 	: TANGENT;    //模型空间的切线信息 
+				float3 normal 	: NORMAL;     //模型空间的法线信息
+				float4 tangent 	: TANGENT;    //模型空间的切线信息
 				float4 texcoord	: TEXCOORD0;
 			};
 
@@ -48,23 +48,23 @@
 
 			float4x4 inverse(float4x4 input) {
 				#define minor(a,b,c) determinant(float3x3(input.a, input.b, input.c))
-				
+
 				float4x4 cofactors = float4x4(
-				     minor(_22_23_24, _32_33_34, _42_43_44), 
+				     minor(_22_23_24, _32_33_34, _42_43_44),
 				    -minor(_21_23_24, _31_33_34, _41_43_44),
 				     minor(_21_22_24, _31_32_34, _41_42_44),
 				    -minor(_21_22_23, _31_32_33, _41_42_43),
-				    
+
 				    -minor(_12_13_14, _32_33_34, _42_43_44),
 				     minor(_11_13_14, _31_33_34, _41_43_44),
 				    -minor(_11_12_14, _31_32_34, _41_42_44),
 				     minor(_11_12_13, _31_32_33, _41_42_43),
-				    
+
 				     minor(_12_13_14, _22_23_24, _42_43_44),
 				    -minor(_11_13_14, _21_23_24, _41_43_44),
 				     minor(_11_12_14, _21_22_24, _41_42_44),
 				    -minor(_11_12_13, _21_22_23, _41_42_43),
-				    
+
 				    -minor(_12_13_14, _22_23_24, _32_33_34),
 				     minor(_11_13_14, _21_23_24, _31_33_34),
 				    -minor(_11_12_14, _21_22_24, _31_32_34),
@@ -83,7 +83,7 @@
 				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;
 
-				
+
 				//我们要得出从世界空间到切线空间的转换矩阵TBN，然后把世界空间下的光方向和视觉方向
 				//都转到切线空间，所以我们可以先求出TBN的逆矩阵，即从切线空间到世界空间的转换矩阵TBN_I
 
@@ -94,10 +94,10 @@
 				//考虑了非线性缩放和线性缩放
 
 				//构建一个从切线空间到世界空间的矩阵，因为用的都是世界空间的信息，所以只能转到世界空间
-				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);  
-				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);  
+				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);
+				fixed3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
 				//计算副切线
-				fixed3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w; 
+				fixed3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w;
 
 				/*
 				float4x4 tangentToWorld = float4x4(worldTangent.x, worldBinormal.x, worldNormal.x, 0.0,
@@ -109,7 +109,7 @@
 				//取反操作，得到TBN
 				float3x3 worldToTangent = inverse(tangentToWorld);
 				*/
-				
+
 				//wToT = the inverse of tToW = the transpose of tToW as long as tToW is an orthogonal matrix.
 				float3x3 worldToTangent = float3x3(worldTangent, worldBinormal, worldNormal); //因为是正交矩阵，转置矩阵等于逆矩阵，
 
@@ -135,7 +135,7 @@
 
 				///
 				/// Note that the code below can only handle uniform scales, not including non-uniform scales
-				/// 
+				///
 				// 下面的代码未考虑非线性缩放
 				// Compute the binormal
 //				float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) ) * v.tangent.w;
@@ -143,12 +143,12 @@
 //				float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
 				// Or just use the built-in macro
 //				TANGENT_SPACE_ROTATION;
-//				
+//
 //				// Transform the light direction from object space to tangent space
 //				o.lightDir = mul(rotation, normalize(ObjSpaceLightDir(v.vertex))).xyz;
 //				// Transform the view direction from object space to tangent space
 //				o.viewDir = mul(rotation, normalize(ObjSpaceViewDir(v.vertex))).xyz;
-				
+
 				return o;
 
 			}

@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter7/Specular_NormalMapMat"
+Shader "Shaders/Chapter7/Specular_NormalMapMat"
 {
 	Properties
 	{
@@ -18,7 +18,7 @@
 		{
 			Tags {"LightMode" = "ForwardBase"}
 			CGPROGRAM
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -39,8 +39,8 @@
 
 			struct a2v{
 				float4 vertex 	: POSITION;   //模型空间中顶点的位置
-				float3 normal 	: NORMAL;     //模型空间的法线信息 
-				float4 tangent 	: TANGENT;    //模型空间的切线信息 
+				float3 normal 	: NORMAL;     //模型空间的法线信息
+				float4 tangent 	: TANGENT;    //模型空间的切线信息
 				float4 texcoord	: TEXCOORD0;
 			};
 
