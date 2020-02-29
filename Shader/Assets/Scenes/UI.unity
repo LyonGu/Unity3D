@@ -208,6 +208,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1410392966}
+  - {fileID: 1690270865}
   m_Father: {fileID: 2138408196}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -228,7 +229,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originGameObject: {fileID: 1410392965}
+  originShieldGameObject: {fileID: 1690270864}
   maxHp: 1500
+  shieldHP: 0
   curHp: 0
 --- !u!1 &1291098873
 GameObject:
@@ -279,7 +282,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originGameObject: {fileID: 1947516477}
+  originShieldGameObject: {fileID: 0}
   maxHp: 1500
+  shieldHP: 0
   curHp: 0
 --- !u!114 &1291098876
 MonoBehaviour:
@@ -609,6 +614,74 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1690270864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1690270865}
+  - component: {fileID: 1690270867}
+  - component: {fileID: 1690270866}
+  m_Layer: 5
+  m_Name: Shield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1690270865
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1690270864}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 327749334}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 7}
+  m_SizeDelta: {x: 36, y: 14}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &1690270866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1690270864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: c0d258f02e097dc4991750722a65cbb2, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: 6628462556e2c1441a2e3c600a3d1c1d, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1690270867
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1690270864}
 --- !u!1 &1837318125
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,7 +729,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originGameObject: {fileID: 298062703}
+  originShieldGameObject: {fileID: 0}
   maxHp: 1500
+  shieldHP: 0
   curHp: 0
 --- !u!1 &1904095886
 GameObject:
