@@ -28,10 +28,15 @@ public class Test_framwork : MonoBehaviour {
 
     private AssetBundleMgr assetBundleMgr;
 
+    //测试通用框架
+    private AssetMsg assetMsg;
+
 	// Use this for initialization
 	void Start () {
         Debug.Log("开始测试框架=========");
         assetBundleMgr = AssetBundleMgr.GetInstance();
+
+        assetMsg = AssetMsg.GetInstance();
 
         string abName = assetBundleMgr.GetABPath(_assetNameTest);
         // StartCoroutine(assetBundleMgr.LoadAssetBundlePack(_sceneName, abName, LoadAllABComplete));
@@ -40,6 +45,11 @@ public class Test_framwork : MonoBehaviour {
 
         GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
         Instantiate(gameObj);
+
+        // GameObject gameObj = assetMsg.LoadAsset<GameObject>(_assetNameTest);
+        // Instantiate(gameObj);
+
+
         // Application.dataPath + "/StreamingAssets/Windows/" + "Sphere.assetbundle"
         // abName = Application.dataPath + "/StreamingAssets/Windows" + "/" + abName;
         // AssetBundle ab = AssetBundle.LoadFromFile(abName);

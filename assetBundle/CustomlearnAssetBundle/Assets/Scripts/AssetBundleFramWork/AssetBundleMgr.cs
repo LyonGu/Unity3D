@@ -93,6 +93,18 @@ public class AssetBundleMgr:MonoBehaviour
         return null;
     }
 
+    // public T LoadAsset<T>(string assetName, bool isCache) where T : Object
+    // {
+    //     string abNameT = GetABPath(assetName);
+    //     LoadAssetBundlePackNew(abNameT);
+    //     if (_DicAllScenes.ContainsKey(abNameT))
+    //     {
+    //         MultiABMgr multObj = _DicAllScenes[abNameT];
+    //         return (T)multObj.LoadAsset(abNameT, assetName, isCache);
+    //     }
+    //     return null;
+    // }
+
 
      public void LoadAssetBundlePackNew(string abName, DelLoadComplete loadAllCompleteHandle = null)
     {

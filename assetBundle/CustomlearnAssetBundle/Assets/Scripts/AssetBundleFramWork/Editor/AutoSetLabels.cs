@@ -162,7 +162,8 @@ public class AutoSetLabels  {
 					scenesName = scenesName + "/" + tempStrArray[i];
 				}
 				//AB包名称正式形成
-				strABName = scenesName + "/" + fileName;
+				// strABName = scenesName + "/" + fileName;
+				strABName = scenesName;
 
 				string path1 = strABName + ".ab";
 				string lookupPath = path1.ToLower() + ":" + oldScene+ "/"+strABFileNameArea + ":" + fileName;
