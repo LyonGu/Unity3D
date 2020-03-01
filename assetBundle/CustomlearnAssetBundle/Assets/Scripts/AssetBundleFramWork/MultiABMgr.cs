@@ -61,44 +61,6 @@ public class MultiABMgr
     }
 
 
-    /// <summary>
-    /// 加载AB包
-    /// </summary>
-    /// <param name="abName">AssetBundle 名称</param>
-    /// <returns></returns>
-    public IEnumerator LoadAssetBundeler(string abName)
-    {
-        //AB包关系的建立
-        if (!_DicABRelation.ContainsKey(abName))
-        {
-            ABRelation abRelationObj = new ABRelation(abName);
-            _DicABRelation.Add(abName, abRelationObj);
-        }
-        ABRelation tmpABRelationObj = _DicABRelation[abName];
-
-        //得到指定AB包所有的依赖关系（查询Manifest清单文件）
-        string[] strDependeceArray = ABManifestLoader.GetInstance().RetrivalDependce(abName);
-        foreach (string item_Depence in strDependeceArray)
-        {
-            //添加“依赖”项
-            tmpABRelationObj.AddDependence(item_Depence);
-            //添加“引用”项    （递归调用）
-            yield return LoadReference(item_Depence, abName);
-        }
-
-        //真正加载AB包
-        if (_DicSingleABLoaderCache.ContainsKey(abName))
-        {
-            yield return _DicSingleABLoaderCache[abName].LoadAssetBundle();
-        }
-        else {
-            _CurrentSinglgABLoader = new SingleABLoader(abName, CompleteLoadAB);
-            _DicSingleABLoaderCache.Add(abName, _CurrentSinglgABLoader);
-            yield return _CurrentSinglgABLoader.LoadAssetBundle();
-        }
-
-    }//Method_end
-
     public void LoadAssetBundelerNew(string abName)
     {
         //AB包关系的建立
@@ -122,7 +84,7 @@ public class MultiABMgr
         //真正加载AB包
         if (_DicSingleABLoaderCache.ContainsKey(abName))
         {
-            _DicSingleABLoaderCache[abName].LoadAssetBundle();
+            _DicSingleABLoaderCache[abName].LoadAssetBundleNew();
         }
         else {
             _CurrentSinglgABLoader = new SingleABLoader(abName, CompleteLoadAB);
@@ -131,31 +93,6 @@ public class MultiABMgr
         }
 
     }//Method_end
-
-    /// <summary>
-    /// 加载引用AB包  refABName依赖abName
-    /// </summary>
-    /// <param name="abName">AB包名称</param>
-    /// <param name="refABName">被引用AB包名称</param>
-    /// <returns></returns>
-    private IEnumerator LoadReference(string abName,string refABName)
-    {
-        //AB包已经加载
-        if (_DicABRelation.ContainsKey(abName))
-        {
-            ABRelation tmpABRelationObj = _DicABRelation[abName];
-            //添加AB包引用关系（被依赖）
-            tmpABRelationObj.AddReference(refABName);
-        }
-        else {
-            ABRelation tmpABRelationObj = new ABRelation(abName);
-            tmpABRelationObj.AddReference(refABName);
-            _DicABRelation.Add(abName, tmpABRelationObj);
-
-            //开始加载依赖的包(这是一个递归调用)
-            yield return LoadAssetBundeler(abName);
-        }
-    }
 
     private void LoadReferenceNew(string abName,string refABName)
     {

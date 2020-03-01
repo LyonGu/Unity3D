@@ -24,7 +24,7 @@ public class AssetMsgTest : MonoBehaviour {
 		targetObj1.GetComponent<Renderer>().material = material;
 
 		//GameObject资源
-		GameObject obj = _assetMsg.LoadAsset<GameObject>("AB_Res/Scene_1/Prefabs/TestCubePrefab.prefab", true);
+		GameObject obj = _assetMsg.LoadAsset<GameObject>("AB_Res/Scene_1/Prefabs/TestCubePrefab.prefab");
 		obj.transform.SetParent(targetObj.transform);
 
 	}

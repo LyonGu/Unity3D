@@ -41,7 +41,7 @@ public class Test_sigleAB : MonoBehaviour {
 
            //加载非依赖AB包 ok
            _LoadObj = new SingleABLoader(_ABName1, LoadComplete);
-           StartCoroutine(_LoadObj.LoadAssetBundle());
+           //StartCoroutine(_LoadObj.LoadAssetBundle());
 
 		    //依赖包 ==>ok
 			// SingleABLoader _LoadDependObj = new SingleABLoader(_ABDependName1, LoadDependComplete1);
@@ -69,7 +69,7 @@ public class Test_sigleAB : MonoBehaviour {
             Debug.Log("依赖包1（贴图包）加载完毕，加载依赖包2（材质包）");
             SingleABLoader _LoadDependObj2 = new SingleABLoader(_ABDependName2, LoadDependComplete2);
             //加载AB依赖包
-            StartCoroutine(_LoadDependObj2.LoadAssetBundle());
+            //StartCoroutine(_LoadDependObj2.LoadAssetBundle());
         }
 
         //依赖回调函数2
@@ -78,7 +78,7 @@ public class Test_sigleAB : MonoBehaviour {
             Debug.Log("依赖包2（材质包）加载完毕，开始正式加载预设包");
             _LoadObj = new SingleABLoader(_ABName1, LoadCompleteDepend);
             //加载AB依赖包
-            StartCoroutine(_LoadObj.LoadAssetBundle());
+            //StartCoroutine(_LoadObj.LoadAssetBundle());
         }
 
         /// <summary>

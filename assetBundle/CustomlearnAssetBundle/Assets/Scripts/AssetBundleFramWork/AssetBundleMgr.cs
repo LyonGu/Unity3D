@@ -46,55 +46,6 @@ public class AssetBundleMgr:MonoBehaviour
 
 
     /// <summary>
-    /// 下载AssetBundel 指定包
-    /// </summary>
-    /// <param name="scenesName">场景名称</param>
-    /// <param name="abName">AssetBundle 包名称</param>
-    /// <param name="loadAllCompleteHandle">委托： 调用是否完成</param>
-    /// <returns></returns>
-    public IEnumerator LoadAssetBundlePack(string scenesName, string abName, DelLoadComplete loadAllCompleteHandle = null)
-    {
-        //参数检查
-        if (string.IsNullOrEmpty(scenesName) || string.IsNullOrEmpty(abName))
-        {
-            Debug.LogError(GetType()+ "/LoadAssetBundlePack()/ScenesName Or abName is null ,请检查！");
-            yield break;
-        }
-
-        //等待Manifest清单文件加载完成
-        while (!ABManifestLoader.GetInstance().IsLoadFinish)
-        {
-            yield return null;
-        }
-        _ManifestObj = ABManifestLoader.GetInstance().GetABManifest();
-        if (_ManifestObj==null)
-        {
-            Debug.LogError(GetType() + "/LoadAssetBundlePack()/_ManifestObj is null ,请先确保加载Manifest清单文件！");
-            yield break;
-        }
-
-
-        //把当前场景加入集合中。
-        if (!_DicAllScenes.ContainsKey(scenesName))
-        {
-            MultiABMgr multiMgrObj = new MultiABMgr(scenesName,abName, loadAllCompleteHandle);
-            _DicAllScenes.Add(scenesName, multiMgrObj);
-        }
-
-        //调用下一层（“多包管理类”）
-        MultiABMgr tmpMultiMgrObj = _DicAllScenes[scenesName];
-        if (tmpMultiMgrObj==null)
-        {
-            Debug.LogError(GetType() + "/LoadAssetBundlePack()/tmpMultiMgrObj is null ,请检查！");
-        }
-        //调用“多包管理类”的加载指定AB包。加载指定ab包以及会把该包所依赖的ab包也加载
-        yield return tmpMultiMgrObj.LoadAssetBundeler(abName);
-
-    }//Method_end
-
-
-
-    /// <summary>
     /// 加载(AB 包中)资源
     /// </summary>
     /// <param name="scenesName">场景名称</param>

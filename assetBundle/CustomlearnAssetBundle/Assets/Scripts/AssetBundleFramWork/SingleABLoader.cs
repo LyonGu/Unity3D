@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /*
@@ -30,67 +30,10 @@ public class SingleABLoader : System.IDisposable {
 
 	}
 
-	//加载AssetBundle 资源包
-	public IEnumerator LoadAssetBundle()
-	{
-		using (WWW www=new WWW(_ABDownLoadPath))
-		{
-			yield return www;
-			//WWW下载AB包完成
-			if (www.progress>=1)
-			{
-				//获取AssetBundle的实例
-				AssetBundle abObj = www.assetBundle;
-				if (abObj!=null)
-				{
-					//实例化引用类
-					_AssetLoader = new AssetLoader(abObj);
-					//AssetBundle 下载完毕，调用委托
-					if (_LoadCompleteHandle!=null)
-					{
-						_LoadCompleteHandle(_ABName);
-					}
-
-				}
-				else {
-					Debug.LogError(GetType()+ "/LoadAssetBundle()/WWW 下载出错，请检查！ AssetBundle URL: "+ _ABDownLoadPath+" 错误信息： "+www.error);
-				}
-			}
-		}//using_end
-	}
-
-
 	public void LoadAssetBundleNew()
 	{
-
-		// string abName = Application.dataPath + "/StreamingAssets/Windows/" + _ABDownLoadPath;
-        // AssetBundle ab = AssetBundle.LoadFromFile(abName);
         AssetBundle abObj = AssetBundle.LoadFromFile(_ABDownLoadPath);
 		_AssetLoader = new AssetLoader(abObj);
-		// using (WWW www=new WWW(_ABDownLoadPath))
-		// {
-		// 	yield return www;
-		// 	//WWW下载AB包完成
-		// 	if (www.progress>=1)
-		// 	{
-		// 		//获取AssetBundle的实例
-		// 		AssetBundle abObj = www.assetBundle;
-		// 		if (abObj!=null)
-		// 		{
-		// 			//实例化引用类
-		// 			_AssetLoader = new AssetLoader(abObj);
-		// 			//AssetBundle 下载完毕，调用委托
-		// 			if (_LoadCompleteHandle!=null)
-		// 			{
-		// 				_LoadCompleteHandle(_ABName);
-		// 			}
-
-		// 		}
-		// 		else {
-		// 			Debug.LogError(GetType()+ "/LoadAssetBundle()/WWW 下载出错，请检查！ AssetBundle URL: "+ _ABDownLoadPath+" 错误信息： "+www.error);
-		// 		}
-		// 	}
-		// }//using_end
 	}
 
 

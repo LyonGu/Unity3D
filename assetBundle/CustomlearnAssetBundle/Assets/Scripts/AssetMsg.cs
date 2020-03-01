@@ -8,7 +8,7 @@ using UnityEditor;
 
 public class AssetMsg
  {
-
+	private AssetBundleMgr assetBundleMgr;
 	private static AssetMsg _instance;
 	public static AssetMsg GetInstance()
 	 {
@@ -19,7 +19,11 @@ public class AssetMsg
 		return _instance;
 	 }
 
-	 public T LoadAsset<T>(string path, bool isPrefab = false) where T : Object
+	 private AssetMsg()
+	 {
+		assetBundleMgr = AssetBundleMgr.GetInstance();
+	 }
+	 public T LoadAsset<T>(string path) where T : Object
 	 {
 		//后续加上缓存 todo
 		if(string.IsNullOrEmpty(path))
@@ -30,13 +34,18 @@ public class AssetMsg
 #if UNITY_EDITOR
 		path = "Assets/" + path;
 		T obj = AssetDatabase.LoadAssetAtPath<T>(path);
-		if (isPrefab)
+
+		if(typeof(T) == typeof(GameObject))
 		{
 			return GameObject.Instantiate(obj);
 		}
 		return obj;
 #else
 		//todo 使用AssetBundle
+		// GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
+        // Instantiate(gameObj);
+
+
 #endif
 		return null;
 	 }
