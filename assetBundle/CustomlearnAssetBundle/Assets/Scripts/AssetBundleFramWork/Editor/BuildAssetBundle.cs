@@ -8,7 +8,7 @@ using System.IO;
 public class BuildAssetBundle  {
 
 
-    public static bool isDebugAndroid = true;
+    public static bool isDebugAndroid = false;
     //所有基于编辑器的开发都必须是静态方法
     [MenuItem("AssetBundleTools/BuildAllAssetBundle")]
     public static void BuildAllAB()

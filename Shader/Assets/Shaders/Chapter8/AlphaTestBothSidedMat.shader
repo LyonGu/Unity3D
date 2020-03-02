@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter8/AlphaTestBothSidedMat"
+Shader "Shaders/Chapter8/AlphaTestBothSidedMat"
 {
 	//单纯进行alpha测试，关闭了背面剔除，可以看到立方体内部
 	Properties
@@ -21,8 +21,8 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
-			
+
+
 			#include "Lighting.cginc"
 
 			fixed4 		_Color;
@@ -69,7 +69,7 @@
 				// Alpha test
 				clip (texColor.a - _Cutoff);
 
-				// Equal to 
+				// Equal to
 				//if ((texColor.a - _Cutoff) < 0.0) {
 				//		discard;
 				//}
@@ -83,7 +83,7 @@
 				return fixed4(ambient + diffuse, 1.0);
 			}
 
-			
+
 			ENDCG
 		}
 	}

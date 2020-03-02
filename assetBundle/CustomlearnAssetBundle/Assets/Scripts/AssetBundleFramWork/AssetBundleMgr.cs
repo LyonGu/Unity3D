@@ -79,12 +79,12 @@ public class AssetBundleMgr:MonoBehaviour
         _isLoadoneMainfest = true;
 
     }
-    public UnityEngine.Object LoadAssetNew(string assetName ,bool isCache = true)
+    public UnityEngine.Object LoadAsset(string assetName ,bool isCache = true)
     {
 
         // 先加载AB包
         string abNameT = GetABPath(assetName);
-        LoadAssetBundlePackNew(abNameT);
+        LoadAssetBundlePack(abNameT);
 
         if (_DicAllScenes.ContainsKey(abNameT))
         {
@@ -97,7 +97,7 @@ public class AssetBundleMgr:MonoBehaviour
     // public T LoadAsset<T>(string assetName, bool isCache) where T : Object
     // {
     //     string abNameT = GetABPath(assetName);
-    //     LoadAssetBundlePackNew(abNameT);
+    //     LoadAssetBundlePack(abNameT);
     //     if (_DicAllScenes.ContainsKey(abNameT))
     //     {
     //         MultiABMgr multObj = _DicAllScenes[abNameT];
@@ -107,7 +107,7 @@ public class AssetBundleMgr:MonoBehaviour
     // }
 
 
-     public void LoadAssetBundlePackNew(string abName, DelLoadComplete loadAllCompleteHandle = null)
+     public void LoadAssetBundlePack(string abName, DelLoadComplete loadAllCompleteHandle = null)
     {
         //参数检查
         if ( string.IsNullOrEmpty(abName))
@@ -139,7 +139,7 @@ public class AssetBundleMgr:MonoBehaviour
         }
         //调用“多包管理类”的加载指定AB包。加载指定ab包以及会把该包所依赖的ab包也加载
         // StartCoroutine(tmpMultiMgrObj.LoadAssetBundeler(abName));
-        tmpMultiMgrObj.LoadAssetBundelerNew(abName);
+        tmpMultiMgrObj.LoadAssetBundeler(abName);
     }
 
 

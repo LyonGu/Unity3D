@@ -16,7 +16,7 @@ using System.IO;
 public class AutoSetLabels  {
 	//建立查询表
 	static List<string> lookupList = new List<string>();
-    const string saveFolderPath = "Assets/AB_Res/lookup.txt";
+    const string saveFolderPath = "Assets/Resources/lookup.txt";
 
 
 	// 设置AB包名称
@@ -24,7 +24,7 @@ public class AutoSetLabels  {
 	public static void setABLable()
 	{
         string targetPath = Path.Combine(Application.dataPath, saveFolderPath.Replace("Assets/", ""));
-		if(!File.Exists(targetPath))
+		if(File.Exists(targetPath))
         {
             File.Delete(targetPath);
         }

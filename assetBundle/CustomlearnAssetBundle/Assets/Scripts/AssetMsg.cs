@@ -25,9 +25,10 @@ public class AssetMsg
 
 	 private AssetMsg()
 	 {
-		assetBundleMgr = AssetBundleMgr.GetInstance();
 		#if UNITY_EDITOR
 			InitLookUp();
+		#else
+			assetBundleMgr = AssetBundleMgr.GetInstance();
 		#endif
 	 }
 
@@ -87,7 +88,7 @@ public class AssetMsg
 		return obj;
 #else
 		//todo 使用AssetBundle
-		T obj = (T)assetBundleMgr.LoadAssetNew(assetName, isCache);
+		T obj = (T)assetBundleMgr.LoadAsset(assetName, isCache);
 		if(typeof(T) == typeof(GameObject))
 		{
 			return GameObject.Instantiate(obj);

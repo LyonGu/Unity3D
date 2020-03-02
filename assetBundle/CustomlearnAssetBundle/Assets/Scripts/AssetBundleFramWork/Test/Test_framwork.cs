@@ -43,10 +43,10 @@ public class Test_framwork : MonoBehaviour {
         // StartCoroutine(assetBundleMgr.LoadAssetBundlePack(_sceneName, _assetBundleName, LoadAllABComplete)); //包加载完设置回调
         //StartCoroutine(AssetBundleMgr.GetInstance().LoadAssetBundlePack(_sceneName, _assetBundleName)); //仅仅只做包加载
 
-        GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
+        GameObject gameObj = (GameObject)assetBundleMgr.LoadAsset(_assetNameTest);
         Instantiate(gameObj);
 
-        Texture tx = (Texture)assetBundleMgr.LoadAssetNew(_assetTexName);
+        Texture tx = (Texture)assetBundleMgr.LoadAsset(_assetTexName);
         goCubeChangeTexture1.GetComponent<Renderer>().material.mainTexture = tx;
 	}
 

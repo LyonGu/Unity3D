@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter8/AlphaBlendZWrite"
+Shader "Shaders/Chapter8/AlphaBlendZWrite"
 {
 	//alpha混合：开启深度写入
 	//用两个pass，第一个pass开启深度写入，不输出颜色，仅仅为了写入深度值
@@ -19,10 +19,10 @@
 		//这个pass仅仅写入深度缓冲
 		Pass {
 			ZWrite On
-			ColorMask 0  
+			ColorMask 0
 
 		}
-		
+
 
 		Pass
 		{
@@ -32,13 +32,13 @@
 
 			//设置混合因子
 			//源颜色用SrcAlpha, 已经存在缓冲区里的颜色用OneMinusSrcAlpha
-			Blend SrcAlpha OneMinusSrcAlpha 
+			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
-			
+
+
 			#include "Lighting.cginc"
 
 			fixed4 		_Color;
@@ -82,7 +82,7 @@
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
 
 				fixed4 texColor = tex2D(_MainTex, v.uv);
-	
+
 				fixed3 albedo = texColor.rgb * _Color.rgb;
 
 				fixed3 ambient =  UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
@@ -92,7 +92,7 @@
 				return fixed4(ambient + diffuse, texColor.a * _AlphaScale);
 			}
 
-			
+
 			ENDCG
 		}
 	}

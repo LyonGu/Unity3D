@@ -61,7 +61,7 @@ public class MultiABMgr
     }
 
 
-    public void LoadAssetBundelerNew(string abName)
+    public void LoadAssetBundeler(string abName)
     {
         //AB包关系的建立
         if (!_DicABRelation.ContainsKey(abName))
@@ -78,7 +78,7 @@ public class MultiABMgr
             //添加“依赖”项
             tmpABRelationObj.AddDependence(item_Depence);
             //添加“引用”项    （递归调用）
-            LoadReferenceNew(item_Depence, abName);
+            LoadReference(item_Depence, abName);
         }
 
         //真正加载AB包
@@ -94,7 +94,7 @@ public class MultiABMgr
 
     }//Method_end
 
-    private void LoadReferenceNew(string abName,string refABName)
+    private void LoadReference(string abName,string refABName)
     {
         //AB包已经加载
         if (_DicABRelation.ContainsKey(abName))
@@ -109,7 +109,7 @@ public class MultiABMgr
             _DicABRelation.Add(abName, tmpABRelationObj);
 
             //开始加载依赖的包(这是一个递归调用)
-            LoadAssetBundelerNew(abName);
+            LoadAssetBundeler(abName);
         }
     }
 

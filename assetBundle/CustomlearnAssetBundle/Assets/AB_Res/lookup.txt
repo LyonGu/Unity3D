@@ -12,3 +12,17 @@ scene_1/textures.ab:Scene_1/Textures/WhileFloor.jpg:WhileFloor
 ui/bag.ab:UI/Bag/DLBagRenderUIView.prefab:DLBagRenderUIView
 ui/bag.ab:UI/Bag/DLBagUIView.prefab:DLBagUIView
 ui/task.ab:UI/Task/DLTaskUIView.prefab:DLTaskUIView
+scene_1/materials.ab:Scene_1/Materials/Floor.mat:Floor
+scene_1/prefabs.ab:Scene_1/Prefabs/Capsule.prefab:Capsule
+scene_1/prefabs.ab:Scene_1/Prefabs/Plane.prefab:Plane
+scene_1/prefabs.ab:Scene_1/Prefabs/TestCubePrefab.prefab:TestCubePrefab
+scene_1/test/t1.ab:Scene_1/Test/t1/Floor2.jpg:Floor2
+scene_1/test.ab:Scene_1/Test/Floor1.jpg:Floor1
+scene_1/textures.ab:Scene_1/Textures/Path (Rocky).jpg:Path (Rocky)
+scene_1/textures.ab:Scene_1/Textures/TxFloor.jpg:TxFloor
+scene_1/textures.ab:Scene_1/Textures/unitychan_tile3.png:unitychan_tile3
+scene_1/textures.ab:Scene_1/Textures/unitychan_tile6.png:unitychan_tile6
+scene_1/textures.ab:Scene_1/Textures/WhileFloor.jpg:WhileFloor
+ui/bag.ab:UI/Bag/DLBagRenderUIView.prefab:DLBagRenderUIView
+ui/bag.ab:UI/Bag/DLBagUIView.prefab:DLBagUIView
+ui/task.ab:UI/Task/DLTaskUIView.prefab:DLTaskUIView

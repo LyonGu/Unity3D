@@ -1,12 +1,12 @@
-﻿Shader "Shaders/Chapter8/AlphaBlendMat"
+Shader "Shaders/Chapter8/AlphaBlendMat"
 {
 	//alpha混合：关闭深度写入
-	//正常混合：				Blend SrcAlpha OneMinusSrcAlpha 
-	//柔和相加：				Blend OneMinusDstColor One 
-	//正片叠底（图像变暗）：	Blend DstColor Zero 
-	//两倍相乘：				Blend DstColor SrcColor 
-	//滤色（变亮）：			Blend One OneMinusSrcAlpha 
-	//线性减淡：				Blend One One 
+	//正常混合：				Blend SrcAlpha OneMinusSrcAlpha
+	//柔和相加：				Blend OneMinusDstColor One
+	//正片叠底（图像变暗）：	Blend DstColor Zero
+	//两倍相乘：				Blend DstColor SrcColor
+	//滤色（变亮）：			Blend One OneMinusSrcAlpha
+	//线性减淡：				Blend One One
 	Properties
 	{
 		_Color ("Color Tint", Color) 			= (1,1,1,1)
@@ -25,13 +25,13 @@
 
 			//设置混合因子
 			//源颜色用SrcAlpha, 已经存在缓冲区里的颜色用OneMinusSrcAlpha
-			Blend SrcAlpha OneMinusSrcAlpha 
+			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
-			
+
+
 			#include "Lighting.cginc"
 
 			fixed4 		_Color;
@@ -75,7 +75,7 @@
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(v.worldPos));
 
 				fixed4 texColor = tex2D(_MainTex, v.uv);
-	
+
 				fixed3 albedo = texColor.rgb * _Color.rgb;
 
 				fixed3 ambient =  UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
@@ -85,7 +85,7 @@
 				return fixed4(ambient + diffuse, texColor.a * _AlphaScale);
 			}
 
-			
+
 			ENDCG
 		}
 	}
