@@ -26,7 +26,7 @@ public class SingleABLoader : System.IDisposable {
 		//AB包下载路径（初始化）
 		// _ABDownLoadPath = PathTool.GetWWWPath() + "/" + _ABName;
 
-		_ABDownLoadPath = PathTool.GetStreamAssetPath()+ "/" + _ABName;
+		_ABDownLoadPath = PathTool.GetABOutPath()+ "/" + _ABName;
 
 	}
 

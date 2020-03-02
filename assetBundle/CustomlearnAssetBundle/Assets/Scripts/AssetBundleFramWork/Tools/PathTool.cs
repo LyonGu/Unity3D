@@ -33,7 +33,8 @@ public class PathTool {
 			//移动平台，Application.persistentDataPath为可读可写目录
 			case RuntimePlatform.IPhonePlayer:
 			case RuntimePlatform.Android:
-				strReturnPlatformPath = Application.persistentDataPath;
+				// strReturnPlatformPath = Application.persistentDataPath;
+                strReturnPlatformPath = Application.streamingAssetsPath;
 				/*
 					Application.persistentDataPath
 						android :   "/storage/emulated/0/Android/data/package name/files"
@@ -138,6 +139,34 @@ public class PathTool {
 		return strReturnWWWPath;
 	}
 
+    public static string GetLookUpPath()
+	{
+        //返回路径字符串
+        string strReturnWWWPath = string.Empty;
 
+        switch (Application.platform)
+        {
+            //Windows 主平台
+            case RuntimePlatform.WindowsPlayer:
+            case RuntimePlatform.WindowsEditor:
+            case RuntimePlatform.OSXPlayer:
+            case RuntimePlatform.OSXEditor:
+                strReturnWWWPath = "file://" + GetABOutPath() + "/lookup.txt";
+                break;
+            //Android 平台
+            case RuntimePlatform.Android:
+                strReturnWWWPath = GetABOutPath() + "/lookup.txt";
+                break;
+            //IOS 平台
+            case RuntimePlatform.IPhonePlayer:
+                strReturnWWWPath = "file://" + GetABOutPath() + "/lookup.txt";
+                break;
+            default:
+                break;
+        }
+
+        return strReturnWWWPath;
+
+	}
 
 }

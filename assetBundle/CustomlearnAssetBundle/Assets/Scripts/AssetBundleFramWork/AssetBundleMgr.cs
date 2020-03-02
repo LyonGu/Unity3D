@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System;
 
 public class AssetBundleMgr:MonoBehaviour
 {
@@ -170,10 +171,46 @@ public class AssetBundleMgr:MonoBehaviour
 
     public void InitLookUp()
     {
-        string path =PathTool.GetABOutPath() + "/lookup.txt";
-        StreamReader sr =new StreamReader(path);
-        string result = sr.ReadToEnd();
-        string[] lines = result.Split('\n');
+
+        // string path = PathTool.GetLookUpPath();
+        // string path = Application.dataPath + "/Resources/lookup.txt";
+        // StreamReader sr =new StreamReader(path);
+        // string result = sr.ReadToEnd();
+        // string[] lines = result.Split('\n');
+        // foreach (var item in lines)
+        // {
+        //     string data = item;
+        //     if (data!="")
+        //     {
+        //         string[] names = data.Split(':');
+        //         string abName = names[0];
+        //         string filePath = names[1];
+        //         string fileName = names[2];
+
+        //         if (_DicABPath.ContainsKey(fileName))
+        //         {
+        //             Debug.LogError("_DicABPath is have exsit key :"+ fileName);
+        //             return;
+        //         }
+        //         // _DicABPath[fileName] = PathTool.GetWWWPath() + "/" + abName;
+        //         _DicABPath[fileName] = abName;
+
+        //         if (_DicFilePath.ContainsKey(fileName))
+        //         {
+        //             Debug.LogError("_DicFilePath is have exsit key :"+ fileName);
+        //             return;
+        //         }
+        //         _DicFilePath[fileName] = filePath;
+        //     }
+
+        // }
+
+        string path = PathTool.GetLookUpPath();
+        WWW www = new WWW(path);
+        while (!www.isDone) { }
+
+        string[] lines = www.text.Split(new string[] { "\n" }, StringSplitOptions.None);
+
         foreach (var item in lines)
         {
             string data = item;

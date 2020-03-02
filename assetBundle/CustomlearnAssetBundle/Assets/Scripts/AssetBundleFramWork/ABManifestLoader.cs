@@ -54,7 +54,7 @@ public class ABManifestLoader : System.IDisposable
     public void LoadMainifestFileNew()
     {
 
-        string abName = PathTool.GetStreamAssetPath() + "/" + PathTool.GetPlatformName();
+        string abName = PathTool.GetABOutPath() + "/" + PathTool.GetPlatformName();
         // AssetBundle ab = AssetBundle.LoadFromFile(abName);
         AssetBundle abObj = AssetBundle.LoadFromFile(abName);
         _ABReadManifest = abObj;

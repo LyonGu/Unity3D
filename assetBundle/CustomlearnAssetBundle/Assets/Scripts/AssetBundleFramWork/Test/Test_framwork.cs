@@ -46,15 +46,8 @@ public class Test_framwork : MonoBehaviour {
         GameObject gameObj = (GameObject)assetBundleMgr.LoadAssetNew(_assetNameTest);
         Instantiate(gameObj);
 
-        // GameObject gameObj = assetMsg.LoadAsset<GameObject>(_assetNameTest);
-        // Instantiate(gameObj);
-
-
-        // Application.dataPath + "/StreamingAssets/Windows/" + "Sphere.assetbundle"
-        // abName = Application.dataPath + "/StreamingAssets/Windows" + "/" + abName;
-        // AssetBundle ab = AssetBundle.LoadFromFile(abName);
-
-        // string a = "";
+        Texture tx = (Texture)assetBundleMgr.LoadAssetNew(_assetTexName);
+        goCubeChangeTexture1.GetComponent<Renderer>().material.mainTexture = tx;
 	}
 
 
