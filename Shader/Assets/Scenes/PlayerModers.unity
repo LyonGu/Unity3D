@@ -442,7 +442,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1108013566}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 412e17097a83247d0aa3ef77923d918f, type: 3}
   m_Name: 
@@ -539,7 +539,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: b3a4377be13bf1240be1521b68ddb4b6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: b3a4377be13bf1240be1521b68ddb4b6, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -737,7 +737,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 6ba7c7cdab839c844878f139c2c6ae42, type: 2}
     - target: {fileID: 100078, guid: 31bf0eb77ebb4c44ebb6079f9c272050, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400080, guid: 31bf0eb77ebb4c44ebb6079f9c272050, type: 3}
       propertyPath: m_LocalPosition.y

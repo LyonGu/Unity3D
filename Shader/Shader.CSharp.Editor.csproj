@@ -581,6 +581,9 @@
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NoNormal.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NormalMapSpecularMap.shader" />
+    <None Include="Assets\Shaders\Common\EnimyHp.shader" />
+    <None Include="Assets\Shaders\Common\FriendHp.shader" />
+    <None Include="Assets\Shaders\Common\FriendHpText.shader" />
     <None Include="Assets\Shaders\Common\Normal.shader" />
     <None Include="Assets\Shaders\Common\OutLine.shader" />
     <None Include="Assets\Shaders\Common\OutLine3D.shader" />
@@ -589,6 +592,8 @@
     <None Include="Assets\Shaders\Common\RimLight.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMaskNoSpecuMap.shader" />
+    <None Include="Assets\Shaders\Common\UIDefault.shader" />
+    <None Include="Assets\Shaders\Common\UVAnimation.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveBase.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveBaseNoIf.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveSpread.shader" />

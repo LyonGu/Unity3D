@@ -367,15 +367,19 @@
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferRT.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommoandBufferPostEffect.cs" />
+    <Compile Include="Assets\Scripts\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\Helpers\Rotating.cs" />
     <Compile Include="Assets\Scripts\Helpers\SetPropertyAttribute.cs" />
+    <Compile Include="Assets\Scripts\HPFillCount.cs" />
+    <Compile Include="Assets\Scripts\LockHPProperty.cs" />
     <Compile Include="Assets\Scripts\LockProperty.cs" />
     <Compile Include="Assets\Scripts\PhotoshopLevelsLockProperty.cs" />
     <Compile Include="Assets\Scripts\PostEffectHelp.cs" />
     <Compile Include="Assets\Scripts\ShowNormals.cs" />
     <Compile Include="Assets\Scripts\TransparentControl.cs" />
+    <Compile Include="Assets\Shaders\Common\UVAnimation.cs" />
     <Compile Include="Assets\Shaders\Surface\SwapCubemaps1.cs" />
     <Compile Include="Assets\Shaders\Surface\WaterFlow.cs" />
   </ItemGroup>
@@ -586,6 +590,9 @@
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NoNormal.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NormalMapSpecularMap.shader" />
+    <None Include="Assets\Shaders\Common\EnimyHp.shader" />
+    <None Include="Assets\Shaders\Common\FriendHp.shader" />
+    <None Include="Assets\Shaders\Common\FriendHpText.shader" />
     <None Include="Assets\Shaders\Common\Normal.shader" />
     <None Include="Assets\Shaders\Common\OutLine.shader" />
     <None Include="Assets\Shaders\Common\OutLine3D.shader" />
@@ -594,6 +601,8 @@
     <None Include="Assets\Shaders\Common\RimLight.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
     <None Include="Assets\Shaders\Common\RimLightNoMaskNoSpecuMap.shader" />
+    <None Include="Assets\Shaders\Common\UIDefault.shader" />
+    <None Include="Assets\Shaders\Common\UVAnimation.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveBase.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveBaseNoIf.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveSpread.shader" />

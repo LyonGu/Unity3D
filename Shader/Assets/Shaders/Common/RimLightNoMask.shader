@@ -24,19 +24,19 @@ Shader "Shaders/Common/RimLightNoMask" {
     }
     SubShader
     {
-        
+
         Tags { "RenderType"="Opaque" "Queue"="Geometry"}
-        
+
         Pass {
             Tags { "LightMode"="ForwardBase" }
 
             CGPROGRAM
-            
+
             #pragma vertex  vert
             #pragma fragment frag
 
             #pragma target 2.0
-            
+
             #include "UnityCG.cginc"
             #include "Lighting.cginc"
 
@@ -82,7 +82,7 @@ Shader "Shaders/Common/RimLightNoMask" {
             {
 
                 fixed3 color;
-               
+
                 fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(o.worldPos));
                 fixed3 worldNormal = normalize(o.worldNormal);
                 fixed3 worldViewDir = normalize(o.worldViewDir);
@@ -94,7 +94,7 @@ Shader "Shaders/Common/RimLightNoMask" {
                 fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
 
                 fixed3 lambert = 0.5 * dot(worldNormal, worldLightDir) + 0.5;
-                
+
                 //漫反射
                 fixed3 diffuse = _LightColor0.rgb * albedo * lambert;
 
@@ -109,17 +109,17 @@ Shader "Shaders/Common/RimLightNoMask" {
                 float rim = 1 - max(0, dot(worldViewDir, worldNormal)); //这里有些模型法线导出居然是反向的
 
                 //计算rimLight
-                fixed3 rimColor = _RimColor * pow(rim, 1 / _RimPower);
+                fixed3 rimColor = _RimColor * pow(rim, 1/_RimPower);
 
                 //加上边缘颜色
                 color += rimColor;
                 return fixed4 (color,1.0);
-               
+
             }
-            ENDCG     
+            ENDCG
         }
-       
+
     }
-    
+
    FallBack "Specular"
 }

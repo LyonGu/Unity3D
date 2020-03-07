@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Common/OutLine" {
+Shader "Shaders/Common/OutLine" {
 	Properties {
 		 [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
@@ -10,17 +10,17 @@
 	}
     SubShader {
 		Tags
-        { 
-            "Queue"="Transparent" 
-            "RenderType"="Opaque" 
+        {
+            "Queue"="Transparent"
+            "RenderType"="Opaque"
         }
-		
+
 
 		Pass {
 			NAME "OUTLINE2D"
-			
+
 			CGPROGRAM
-			
+
 			    #pragma vertex vert
 	            #pragma fragment frag
 	            #pragma target 2.0
@@ -35,7 +35,7 @@
 	            float _CheckRange;
 	            float _LineWidth;
 	            float _CheckAccuracy;
-			
+
 			 	struct appdata_t
 	            {
 	                float4 vertex   : POSITION;
@@ -50,7 +50,7 @@
 	                float2 uv[5]  : TEXCOORD0;
 	            };
 
-			
+
 				v2f vert(appdata_t v)
 	            {
 	                v2f o;
@@ -69,7 +69,7 @@
 					o.uv[4] = uv + _MainTex_TexelSize.xy * half2(-_LineWidth, 0);
 	                return o;
 	            }
-			
+
 
 			 	fixed4 frag(v2f o) : SV_Target
 	            {
@@ -77,22 +77,22 @@
 	            	fixed a = tex.a;
 					clip(a-0.1);
 	                fixed4 c = tex * o.color;
-	                
-              		fixed4 pixelUp    = tex2D(_MainTex, o.uv[1]);  
-                    fixed4 pixelDown  = tex2D(_MainTex, o.uv[2]);  
-                    fixed4 pixelRight = tex2D(_MainTex, o.uv[3]);  
-                    fixed4 pixelLeft  = tex2D(_MainTex, o.uv[4]); 
+
+              		fixed4 pixelUp    = tex2D(_MainTex, o.uv[1]);
+                    fixed4 pixelDown  = tex2D(_MainTex, o.uv[2]);
+                    fixed4 pixelRight = tex2D(_MainTex, o.uv[3]);
+                    fixed4 pixelLeft  = tex2D(_MainTex, o.uv[4]);
 
                     //step(parm1,parm2)  parm2>parm1 返回1 否则返回0
                     float bOut = step((1-_CheckAccuracy),pixelUp.a*pixelDown.a*pixelRight.a*pixelLeft.a);
                     c = lerp(_OutlineColor,c,bOut);
                     return c;
 	            }
-			
+
 			ENDCG
 		}
-		
-	
+
+
 	}
 	FallBack "Diffuse"
 }
