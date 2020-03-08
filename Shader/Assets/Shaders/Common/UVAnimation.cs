@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[ExecuteInEditMode]
 public class UVAnimation : MonoBehaviour {
 
 	public Image imgCom;
@@ -16,18 +18,26 @@ public class UVAnimation : MonoBehaviour {
 
 	private Material material;
 	void Start () {
-        material = new Material(Shader.Find ("Common/UVAnimation"));
-        material.hideFlags = HideFlags.DontSave;
-        imgCom.material = material;
+
+    }
+
+    void OnDisable()
+    {
+        DestroyImmediate(material);
+        material = null;
     }
 
 	// Update is called once per frame
 	void Update () {
-		if(material!=null)
+
+		if(material == null)
 		{
-            material.SetFloat("_SpeedX", speedX);
-            material.SetFloat("_SpeedY", speedY);
-            material.SetColor("_Color", imgCom.color);
+            material = new Material(Shader.Find("Common/UVAnimation"));
+            material.hideFlags = HideFlags.DontSave;
+            imgCom.material = material;
 		}
+        material.SetFloat("_SpeedX", speedX);
+        material.SetFloat("_SpeedY", speedY);
+        material.SetColor("_Color", imgCom.color);
 	}
 }

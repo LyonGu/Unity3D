@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter11/Water"
+Shader "Shaders/Chapter11/Water"
 {
 	//使用正弦函数来模拟水流的波动效果
 	Properties
@@ -14,7 +14,7 @@
 
 		//波长的倒数，_InvWaveLength越大，波长越小
 		_InvWaveLength ("Distortion Inverse Wave Length", Float) = 10
- 		
+
 		//水流速度
  		_Speed ("Speed", Float) = 0.5
 
@@ -33,7 +33,7 @@
 
 			#pragma vertex vert
 			#pragma fragment frag
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
@@ -48,7 +48,7 @@
 				float4 vertex : POSITION;
 				float4 texcoord : TEXCOORD0;
 			};
-			
+
 			struct v2f {
 				float4 pos : SV_POSITION;
 				float2 uv : TEXCOORD0;
@@ -75,9 +75,9 @@
 			fixed4 frag(v2f i) : SV_Target {
 				fixed4 c = tex2D(_MainTex, i.uv);
 				c.rgb *= _Color.rgb;
-				
+
 				return c;
-			} 
+			}
 
 			ENDCG
 		}

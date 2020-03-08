@@ -299,6 +299,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\AutoSetLabels.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\BuildAssetBundle.cs" />
+    <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\BuildAssetBundle_Andorid.cs" />
     <Compile Include="Assets\Scripts\AssetBundleFramWork\Editor\DeleteAssetBundle.cs" />
   </ItemGroup>
   <ItemGroup>

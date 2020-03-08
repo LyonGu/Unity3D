@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter12/EdgeDetection"
+Shader "Shaders/Chapter12/EdgeDetection"
 {
 	//利用卷积实现边缘检测
 	Properties
@@ -19,11 +19,11 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment fragSobel
-			
-		
+
+
 			#include "UnityCG.cginc"
 
-			sampler2D _MainTex;  
+			sampler2D _MainTex;
 
 			//xxx_TexelSize是Unity提供的访问对应每个纹素的大小，
 			//比如一张512x512,该值大约为 1/512
@@ -59,13 +59,13 @@
 				o.uv[6] = uv + _MainTex_TexelSize.xy * half2(-1, 1);
 				o.uv[7] = uv + _MainTex_TexelSize.xy * half2(0, 1);
 				o.uv[8] = uv + _MainTex_TexelSize.xy * half2(1, 1);
-						 
+
 				return o;
 			}
 
 			//自定义函数
 			fixed luminance(fixed4 color) {
-				return  0.2125 * color.r + 0.7154 * color.g + 0.0721 * color.b; 
+				return  0.2125 * color.r + 0.7154 * color.g + 0.0721 * color.b;
 			}
 
 			half Sobel(v2f i) {
@@ -74,8 +74,8 @@
 									-1,  0,  1};
 				const half Gy[9] = {-1, -2, -1,
 									0,  0,  0,
-									1,  2,  1};		
-				
+									1,  2,  1};
+
 				//for循环在某些andorid机上不支持，可以考虑展开
 				half texColor;
 				half edgeX = 0;
@@ -85,21 +85,22 @@
 					edgeX += texColor * Gx[it];
 					edgeY += texColor * Gy[it];
 				}
-				
-				half edge = 1 - abs(edgeX) - abs(edgeY);
-				
+
+				half edge = abs(edgeX) + abs(edgeY);
+
 				return edge;
 			}
-			
+
 			fixed4 fragSobel(v2f i) : SV_Target {
 				half edge = Sobel(i);
-				
-				fixed4 withEdgeColor = lerp(_EdgeColor, tex2D(_MainTex, i.uv[4]), edge);
-				fixed4 onlyEdgeColor = lerp(_EdgeColor, _BackgroundColor, edge);
+
+				fixed4 color = tex2D(_MainTex, i.uv[4]);
+				fixed4 withEdgeColor = lerp(color, _EdgeColor,  edge);
+				fixed4 onlyEdgeColor = lerp(_BackgroundColor, _EdgeColor, edge);
 				return lerp(withEdgeColor, onlyEdgeColor, _EdgeOnly);
  			}
 
-	
+
 			ENDCG
 
 		}

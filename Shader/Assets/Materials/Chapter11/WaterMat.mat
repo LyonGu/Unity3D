@@ -59,17 +59,17 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Frequency: 5
+    - _Frequency: 10
     - _Glossiness: 0.5
-    - _InvWaveLength: 3
+    - _InvWaveLength: 2
     - _InvWavelength: 20
-    - _Magnitude: 0.01
+    - _Magnitude: 0.02
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ShadowRamp: 1
-    - _Speed: 0.05
+    - _Speed: 0.01
     - _SrcBlend: 1
     - _UVSec: 0
     - _UseLightMap: 1
