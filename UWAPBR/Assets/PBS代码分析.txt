@@ -1,17 +1,17 @@
-//½ğÊôÁ÷º¯Êı
+//é‡‘å±æµå‡½æ•°
 inline half4 LightingStandard (SurfaceOutputStandard s, float3 viewDir, UnityGI gi)
 {
     s.Normal = normalize(s.Normal);
 
-	//1-·´ÉäÖµ
+	//1-åå°„å€¼
     half oneMinusReflectivity;
-	//¸ß¹âÑÕÉ«
+	//é«˜å…‰é¢œè‰²
     half3 specColor;
     s.Albedo = DiffuseAndSpecularFromMetallic (s.Albedo, s.Metallic, /*out*/ specColor, /*out*/ oneMinusReflectivity);
 
     // shader relies on pre-multiply alpha-blend (_SrcBlend = One, _DstBlend = OneMinusSrcAlpha)
     // this is necessary to handle transparency in physically correct way - only diffuse component gets affected by alpha
-	//Ô¤³ËalphaÖµ²¢ÇÒ¼ÆËãÎïÀíalphaÖµ
+	//é¢„ä¹˜alphaå€¼å¹¶ä¸”è®¡ç®—ç‰©ç†alphaå€¼
     half outputAlpha;
     s.Albedo = PreMultiplyAlpha (s.Albedo, s.Alpha, oneMinusReflectivity, /*out*/ outputAlpha);
 
@@ -20,18 +20,18 @@ inline half4 LightingStandard (SurfaceOutputStandard s, float3 viewDir, UnityGI 
     return c;
 }
 
-//¼ÆËã½ğÊô¶ÈÓëÁ½ÖÖ·´ÉäÂÊÖ®¼äµÄ¹ØÏµ
+//è®¡ç®—é‡‘å±åº¦ä¸ä¸¤ç§åå°„ç‡ä¹‹é—´çš„å…³ç³»
 inline half3 DiffuseAndSpecularFromMetallic (half3 albedo, half metallic, out half3 specColor, out half oneMinusReflectivity)
 {
-	//¸ù¾İ½ğÊô¶Æ¼ÆËã¸ß¹âÑÕÉ«£¬metallic = 1£¬¸ß¹âÑÕÉ« =  albedo£» metallic = 0Ê±£¬¸ß¹âÑÕÉ« = unity_ColorSpaceDielectricSpec£»
+	//æ ¹æ®é‡‘å±é•€è®¡ç®—é«˜å…‰é¢œè‰²ï¼Œmetallic = 1ï¼Œé«˜å…‰é¢œè‰² =  albedoï¼› metallic = 0æ—¶ï¼Œé«˜å…‰é¢œè‰² = unity_ColorSpaceDielectricSpecï¼›
     specColor = lerp (unity_ColorSpaceDielectricSpec.rgb, albedo, metallic);
-	//Âş·´Éä×Ü±ÈÂÊ   µ±²ÄÖÊÎª½ğÊôÊ±£¬Âş·´Éä×Ü±ÈÂÊ = 0£¨Ã»ÓĞÂş·´Éä£©£» µ±²ÄÖÊÎª·Ç½ğÊô£¬Âş·´Éä×Ü±ÈÂÊ = ½Ó½ü1.
+	//æ¼«åå°„æ€»æ¯”ç‡   å½“æè´¨ä¸ºé‡‘å±æ—¶ï¼Œæ¼«åå°„æ€»æ¯”ç‡ = 0ï¼ˆæ²¡æœ‰æ¼«åå°„ï¼‰ï¼› å½“æè´¨ä¸ºéé‡‘å±ï¼Œæ¼«åå°„æ€»æ¯”ç‡ = æ¥è¿‘1.
     oneMinusReflectivity = OneMinusReflectivityFromMetallic(metallic);
-	//·µ»ØÂş·´ÉäÑÕÉ«Öµ
+	//è¿”å›æ¼«åå°„é¢œè‰²å€¼
     return albedo * oneMinusReflectivity;
 }
 
-//¸ù¾İ½ğÊô¶È¼ÆËã·´Éä±ÈÂÊ
+//æ ¹æ®é‡‘å±åº¦è®¡ç®—åå°„æ¯”ç‡
 inline half OneMinusReflectivityFromMetallic(half metallic)
 {
     // We'll need oneMinusReflectivity, so
@@ -43,7 +43,7 @@ inline half OneMinusReflectivityFromMetallic(half metallic)
     return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
 }
 
-//¸ù¾İ²»Í¬Æ½Ì¨µÄ²»Í¬Ñ¡Ôñ  Èı¸öµÈ¼¶µÄBRDF Ä¬ÈÏ»áÑ¡ÔñBRDF1_Unity_PBS
+//æ ¹æ®ä¸åŒå¹³å°çš„ä¸åŒé€‰æ‹©  ä¸‰ä¸ªç­‰çº§çš„BRDF é»˜è®¤ä¼šé€‰æ‹©BRDF1_Unity_PBS
 #if !defined (UNITY_BRDF_PBS) // allow to explicitly override BRDF in custom shader
     // still add safe net for low shader models, otherwise we might end up with shaders failing to compile
     #if SHADER_TARGET < 30 || defined(SHADER_TARGET_SURFACE_ANALYSIS) // only need "something" for surface shader analysis pass; pick the cheap one
@@ -59,16 +59,16 @@ inline half OneMinusReflectivityFromMetallic(half metallic)
     #endif
 #endif
 
-//BRDF1µÄ¼ÆËãº¯Êı
+//BRDF1çš„è®¡ç®—å‡½æ•°
 half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivity, half smoothness,
     float3 normal, float3 viewDir,
     UnityLight light, UnityIndirect gi)
 {
-    float perceptualRoughness = SmoothnessToPerceptualRoughness (smoothness);//==(1 - smoothness);¼ÆËã´Ö²Ú¶È
-	//¼ÆËã°ë½ÇÏòÁ¿£¨Á½¸öÏòÁ¿¶¼ÊÇ´Ó±»¹Û²ìÕßµã³ö·¢£©
+    float perceptualRoughness = SmoothnessToPerceptualRoughness (smoothness);//==(1 - smoothness);è®¡ç®—ç²—ç³™åº¦
+	//è®¡ç®—åŠè§’å‘é‡ï¼ˆä¸¤ä¸ªå‘é‡éƒ½æ˜¯ä»è¢«è§‚å¯Ÿè€…ç‚¹å‡ºå‘ï¼‰
     float3 halfDir = Unity_SafeNormalize (float3(light.dir) + viewDir);
 
-	//°ë½ÇÏòÁ¿µÄ¼ÆËã
+	//åŠè§’å‘é‡çš„è®¡ç®—
 	//inline float3 Unity_SafeNormalize(float3 inVec)
 	//{
     //float dp3 = max(0.001f, dot(inVec, inVec));
@@ -90,38 +90,38 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     // A re-normalization should be applied here but as the shift is small we don't do it to save ALU.
     //normal = normalize(normal);
 
-	//·¨ÏßºÍÊÓ½Ç·½Ïò¼Ğ½ÇÓàÏÒÖµ£¬ÏŞÖÆ 0 - 1
+	//æ³•çº¿å’Œè§†è§’æ–¹å‘å¤¹è§’ä½™å¼¦å€¼ï¼Œé™åˆ¶ 0 - 1
     float nv = saturate(dot(normal, viewDir)); // TODO: this saturate should no be necessary here
 #else
-	//·¨ÏßºÍÊÓ½Ç·½Ïò¼Ğ½ÇÓàÏÒÖµ£¬È¡¾ø¶ÔÖµ
+	//æ³•çº¿å’Œè§†è§’æ–¹å‘å¤¹è§’ä½™å¼¦å€¼ï¼Œå–ç»å¯¹å€¼
     half nv = abs(dot(normal, viewDir));    // This abs allow to limit artifact
 #endif
 
-	//·¨ÏßÓë¹âÔ´·½ÏòµÄ¼Ğ½ÇÓàÏÒ
+	//æ³•çº¿ä¸å…‰æºæ–¹å‘çš„å¤¹è§’ä½™å¼¦
     float nl = saturate(dot(normal, light.dir));
-	//·¨ÏßÓë°ë½ÇµÄ¼Ğ½ÇÓàÏÒ
+	//æ³•çº¿ä¸åŠè§’çš„å¤¹è§’ä½™å¼¦
     float nh = saturate(dot(normal, halfDir));
 
-	//¹âÔ´ÓëÊÓ½Ç·½ÏòµÄ¼Ğ½ÇÓàÏÒ
+	//å…‰æºä¸è§†è§’æ–¹å‘çš„å¤¹è§’ä½™å¼¦
     half lv = saturate(dot(light.dir, viewDir));
-	//¹âÔ´Óë°ë½ÇµÄ¼Ğ½ÇÓàÏÒ
+	//å…‰æºä¸åŠè§’çš„å¤¹è§’ä½™å¼¦
     half lh = saturate(dot(light.dir, halfDir));
 
-    //Âş·´ÉäÏî
+    //æ¼«åå°„é¡¹
     half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;
 
     // Specular term
     // HACK: theoretically we should divide diffuseTerm by Pi and not multiply specularTerm!
     // BUT 1) that will make shader look significantly darker than Legacy ones
     // and 2) on engine side "Non-important" lights have to be divided by Pi too in cases when they are injected into ambient SH
-	//Ô­´Ö²Ú¶ÈµÄÆ½·½
+	//åŸç²—ç³™åº¦çš„å¹³æ–¹
     float roughness = PerceptualRoughnessToRoughness(perceptualRoughness); // return perceptualRoughness * perceptualRoughness; 
 #if UNITY_BRDF_GGX
     // GGX with roughtness to 0 would mean no specular at all, using max(roughness, 0.002) here to match HDrenderloop roughtness remapping.
     roughness = max(roughness, 0.002);
-	//Î¢Æ½ÃæÕÚµ²º¯Êı
+	//å¾®å¹³é¢é®æŒ¡å‡½æ•°
     float V = SmithJointGGXVisibilityTerm (nl, nv, roughness);
-	//Î¢Æ½Ãæ·¨Ïß·Ö²¼º¯Êı
+	//å¾®å¹³é¢æ³•çº¿åˆ†å¸ƒå‡½æ•°
     float D = GGXTerm (nh, roughness);
 #else
     // Legacy
@@ -129,22 +129,22 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     half D = NDFBlinnPhongNormalizedTerm (nh, PerceptualRoughnessToSpecPower(perceptualRoughness));
 #endif
 
-	//¸ß¹â·´ÉäÏî£¨²»°üº¬·ÆÄá¶û·´Éä£©
+	//é«˜å…‰åå°„é¡¹ï¼ˆä¸åŒ…å«è²å°¼å°”åå°„ï¼‰
     float specularTerm = V*D * UNITY_PI; // Torrance-Sparrow model, Fresnel is applied later
 
-	//µ±Ç°´¦ÓÚ·ÇÏßĞÔ¿Õ¼ä£¬Ôò×ö×ª»»
+	//å½“å‰å¤„äºéçº¿æ€§ç©ºé—´ï¼Œåˆ™åšè½¬æ¢
 #   ifdef UNITY_COLORSPACE_GAMMA
         specularTerm = sqrt(max(1e-4h, specularTerm));
 #   endif
 
-	//¸ß¹â·´ÉäÇ¿¶È£¨¿¼ÂÇ¹âÏß·´·½ÏòºÍ·¨ÏßµÄ¼Ğ½ÇÓàÏÒ£©
+	//é«˜å…‰åå°„å¼ºåº¦ï¼ˆè€ƒè™‘å…‰çº¿åæ–¹å‘å’Œæ³•çº¿çš„å¤¹è§’ä½™å¼¦ï¼‰
     // specularTerm * nl can be NaN on Metal in some cases, use max() to make sure it's a sane value
     specularTerm = max(0, specularTerm * nl);
 #if defined(_SPECULARHIGHLIGHTS_OFF)
     specularTerm = 0.0;
 #endif
 
-	//GIÏà¹Ø¼ÆËã
+	//GIç›¸å…³è®¡ç®—
     // surfaceReduction = Int D(NdotH) * NdotH * Id(NdotL>0) dH = 1/(roughness^2+1)
     half surfaceReduction;
 #   ifdef UNITY_COLORSPACE_GAMMA
@@ -154,18 +154,18 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 #   endif
 
     // To provide true Lambert lighting, we need to be able to kill specular completely.
-	//Ö»ÒªÓĞ¸ß¹âÑÕÉ«²»ÊÇ´¿ºÚ£¬ÄÇÃ´¾ÍÊÇ¸ß¹âÏî£¬·ñÔò¾ÍÃ»ÓĞ¸ß¹âÏî
+	//åªè¦æœ‰é«˜å…‰é¢œè‰²ä¸æ˜¯çº¯é»‘ï¼Œé‚£ä¹ˆå°±æ˜¯é«˜å…‰é¡¹ï¼Œå¦åˆ™å°±æ²¡æœ‰é«˜å…‰é¡¹
     specularTerm *= any(specColor) ? 1.0 : 0.0;
 
     half grazingTerm = saturate(smoothness + (1-oneMinusReflectivity));
-    half3 color =   diffColor * (gi.diffuse + light.color * diffuseTerm) //Âş·´ÉäÏî£¨ÆäÖĞgi.diffuseÓëGIÏà¹ØµÄ£©
-                    + specularTerm * light.color * FresnelTerm (specColor, lh)//¸ß¹â·´ÉäÏî£¨¼ÓÈë·ÆÄá¶û·´Éä£©
-                    + surfaceReduction * gi.specular * FresnelLerp (specColor, grazingTerm, nv);//GIÏà¹ØµÄ
+    half3 color =   diffColor * (gi.diffuse + light.color * diffuseTerm) //æ¼«åå°„é¡¹ï¼ˆå…¶ä¸­gi.diffuseä¸GIç›¸å…³çš„ï¼‰
+                    + specularTerm * light.color * FresnelTerm (specColor, lh)//é«˜å…‰åå°„é¡¹ï¼ˆåŠ å…¥è²å°¼å°”åå°„ï¼‰
+                    + surfaceReduction * gi.specular * FresnelLerp (specColor, grazingTerm, nv);//GIç›¸å…³çš„
 
     return half4(color, 1);
 }
 
-//¼ÆËãBRDFÂş·´ÉäÏî
+//è®¡ç®—BRDFæ¼«åå°„é¡¹
 half DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness)
 {
     half fd90 = 0.5 + 2 * LdotH * LdotH * perceptualRoughness;
@@ -176,7 +176,7 @@ half DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness)
     return lightScatter * viewScatter;
 }
 
-//ÒõÓ°ÕÚµ²º¯Êı
+//é˜´å½±é®æŒ¡å‡½æ•°
 inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
 {
 #if 0
@@ -187,7 +187,7 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
 
     // Reorder code to be more optimal
 
-	//¼ÆËãÁËBRDF¸ß¹âÏîÀïÃæGÏîºÍ4*(nl)(nv)£¨·ÖÄ¸Ïî£©
+	//è®¡ç®—äº†BRDFé«˜å…‰é¡¹é‡Œé¢Gé¡¹å’Œ4*(nl)(nv)ï¼ˆåˆ†æ¯é¡¹ï¼‰
     half a          = roughness;
     half a2         = a * a;
 
@@ -197,7 +197,7 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
     // Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
     return 0.5f / (lambdaV + lambdaL + 1e-5f);  // This function is not intended to be running on Mobile,
                                                 // therefore epsilon is smaller than can be represented by half
-#else//Ä¬ÈÏ×ßÕâ±ß£¬¼ò»¯°æ±¾
+#else//é»˜è®¤èµ°è¿™è¾¹ï¼Œç®€åŒ–ç‰ˆæœ¬
     // Approximation of the above formulation (simplify the sqrt, not mathematically correct but close enough)
     float a = roughness;
     float lambdaV = NdotL * (NdotV * (1 - a) + a);
@@ -212,8 +212,8 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
 #endif
 }
 
-//·¨Ïß·Ö²¼º¯Êı
-inline float GGXTerm (float NdotH, float roughness)//ÕâÀï¼ÆËãDÏî  
+//æ³•çº¿åˆ†å¸ƒå‡½æ•°
+inline float GGXTerm (float NdotH, float roughness)//è¿™é‡Œè®¡ç®—Dé¡¹  
 {
     float a2 = roughness * roughness;
     float d = (NdotH * a2 - NdotH) * NdotH + 1.0f; // 2 mad // (NdotH * NdotH) * (a2-1) + 1.0f
@@ -222,12 +222,12 @@ inline float GGXTerm (float NdotH, float roughness)//ÕâÀï¼ÆËãDÏî
 	//UNITY_INV_PI  = 1 / UNITY_PI
 }
 
-//BRDF2º¯Êı¼ÆËã
+//BRDF2å‡½æ•°è®¡ç®—
 half4 BRDF2_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivity, half smoothness,
     float3 normal, float3 viewDir,
     UnityLight light, UnityIndirect gi)
 {
-	°ë½Ç
+	åŠè§’
     float3 halfDir = Unity_SafeNormalize (float3(light.dir) + viewDir);
 
     half nl = saturate(dot(normal, light.dir));
@@ -236,9 +236,9 @@ half4 BRDF2_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     float lh = saturate(dot(light.dir, halfDir));
 
     // Specular term
-	//¸ù¾İ¹â»¬¶È¼ÆËã´Ö²Ú¶È
+	//æ ¹æ®å…‰æ»‘åº¦è®¡ç®—ç²—ç³™åº¦
     half perceptualRoughness = SmoothnessToPerceptualRoughness (smoothness);
-	//´Ö²Ú¶ÈµÄÆ½·½
+	//ç²—ç³™åº¦çš„å¹³æ–¹
     half roughness = PerceptualRoughnessToRoughness(perceptualRoughness);
 
 #if UNITY_BRDF_GGX
@@ -312,7 +312,7 @@ half4 BRDF2_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     return half4(color, 1);
 }
 
-//BRDF3¼ÆËãº¯Êı
+//BRDF3è®¡ç®—å‡½æ•°
 half4 BRDF3_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivity, half smoothness,
     float3 normal, float3 viewDir,
     UnityLight light, UnityIndirect gi)
@@ -336,13 +336,13 @@ half4 BRDF3_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     return half4(color, 1);
 }
 
-//¸ß¹â·´ÉäÁ÷º¯Êı
+//é«˜å…‰åå°„æµå‡½æ•°
 inline half4 LightingStandardSpecular (SurfaceOutputStandardSpecular s, float3 viewDir, UnityGI gi)
 {
     s.Normal = normalize(s.Normal);
 
     // energy conservation
-	//1-·´ÉäÖµ
+	//1-åå°„å€¼
     half oneMinusReflectivity;
     s.Albedo = EnergyConservationBetweenDiffuseAndSpecular (s.Albedo, s.Specular, /*out*/ oneMinusReflectivity);
 
@@ -356,10 +356,10 @@ inline half4 LightingStandardSpecular (SurfaceOutputStandardSpecular s, float3 v
     return c;
 }
 
-//¼ÆËã¸ß¹âÓë·´ÉäÂÊÖ®¼äµÄ¹ØÏµ
+//è®¡ç®—é«˜å…‰ä¸åå°„ç‡ä¹‹é—´çš„å…³ç³»
 inline half3 EnergyConservationBetweenDiffuseAndSpecular (half3 albedo, half3 specColor, out half oneMinusReflectivity)
 {
-	//Âş·´Éä·´ÉäÂÊ
+	//æ¼«åå°„åå°„ç‡
     oneMinusReflectivity = 1 - SpecularStrength(specColor);
     #if !UNITY_CONSERVE_ENERGY
         return albedo;

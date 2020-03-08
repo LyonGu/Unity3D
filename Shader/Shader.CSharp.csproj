@@ -467,6 +467,7 @@
     <None Include="Assets\Cookbook\Code\11_Code\OldFilmEffectShader.shader" />
     <None Include="Assets\Cookbook\Readme.txt.TXT" />
     <None Include="Assets\Materials\GrabShader.shader" />
+    <None Include="Assets\Materials\PBR\NewSurfaceShader.shader" />
     <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramCompute.compute" />
     <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramRender.shader" />
     <None Include="Assets\PostProcessing\Editor Resources\Monitors\ParadeRender.shader" />
