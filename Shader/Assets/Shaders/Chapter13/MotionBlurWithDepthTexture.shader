@@ -11,7 +11,7 @@
 		CGINCLUDE
 
 			#include "UnityCG.cginc"
-			
+
 			sampler2D _MainTex;
 			half4 _MainTex_TexelSize;
 			half _BlurSize;
@@ -21,7 +21,7 @@
 			sampler2D _CameraDepthTexture;
 			float4x4 _CurrentViewProjectionInverseMatrix;
 			float4x4 _PreviousViewProjectionMatrix;
-			
+
 			struct v2f {
 				float4 pos : SV_POSITION;
 				half2 uv : TEXCOORD0;
@@ -31,15 +31,15 @@
 			v2f vert(appdata_img v) {
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);
-				
+
 				o.uv = v.texcoord;
 				o.uv_depth = v.texcoord;
-				
+
 				#if UNITY_UV_STARTS_AT_TOP
 				if (_MainTex_TexelSize.y < 0)
 					o.uv_depth.y = 1 - o.uv_depth.y;
 				#endif
-						 
+
 				return o;
 			}
 
@@ -51,7 +51,7 @@
 					d = 1.0 - d;
 				#endif
 
-				// 把UV坐标转换到[-1,1]  当前像素的NDC坐标
+				// 把UV坐标转换到[-1,1]  当前像素的NDC坐标  深度 = 0.5 * Z(dnc坐标) + 0.5
 				float4 H = float4(i.uv.x * 2 - 1, i.uv.y * 2 - 1, d * 2 - 1, 1);
 
 				// 把NDC坐标H转到世界空间
@@ -59,17 +59,17 @@
 
 				// 进行透视化处理 ？？？？？？这里为什么要除w分量 ==》为了方便计算
 				float4 worldPos = D / D.w; //这里除不除w分量从效果上看不出什么区别
-				
+
 				// Current viewport position 当前像素的NDC坐标
-				float4 currentPos = H;  
-				// Use the world position, and transform by the previous view-projection matrix.  
+				float4 currentPos = H;
+				// Use the world position, and transform by the previous view-projection matrix.
 				float4 previousPos = mul(_PreviousViewProjectionMatrix, worldPos); //仅仅得到了裁剪空间的坐标[-w,w]
 				// Convert to nonhomogeneous points [-1,1] by dividing by w.
 				previousPos /= previousPos.w;  //经过透视除法之后才能得到NDC坐标
-				
+
 				// Use this frame's position and last frame's to compute the pixel velocity.
 				float2 velocity = (currentPos.xy - previousPos.xy)/2.0;
-				
+
 				float2 uv = i.uv;
 				float4 c = tex2D(_MainTex, uv);
 				uv += velocity * _BlurSize;
@@ -78,21 +78,21 @@
 					c += currentColor;
 				}
 				c /= 3;
-				
+
 				return fixed4(c.rgb, 1.0);
 			}
 
 		ENDCG
 
-		Pass {      
+		Pass {
 			ZTest Always Cull Off ZWrite Off
-			    	
-			CGPROGRAM  
-			
-			#pragma vertex vert  
-			#pragma fragment frag  
-			  
-			ENDCG  
+
+			CGPROGRAM
+
+			#pragma vertex vert
+			#pragma fragment frag
+
+			ENDCG
 		}
 	}
 	FallBack Off
