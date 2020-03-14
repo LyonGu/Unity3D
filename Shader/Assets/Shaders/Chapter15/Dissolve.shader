@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter15/Dissolve"
+Shader "Shaders/Chapter15/Dissolve"
 {
 	Properties
 	{
@@ -29,7 +29,7 @@
 			Cull off //关闭背面剔除
 
 			CGPROGRAM
-			
+
 				#include "Lighting.cginc"
 				#include "AutoLight.cginc"
 				#pragma multi_compile_fwdbase
@@ -41,11 +41,12 @@
 				fixed _BurnAmount;
 				fixed _LineWidth;
 				sampler2D _MainTex;
+				half4 _MainTex_TexelSize;
 				sampler2D _BumpMap;
 				fixed4 _BurnFirstColor;
 				fixed4 _BurnSecondColor;
 				sampler2D _BurnMap;
-				
+
 				//对应的纹理坐标
 				float4 _MainTex_ST;
 				float4 _BumpMap_ST;
@@ -79,16 +80,21 @@
 					o.uvBumpMap = TRANSFORM_TEX(v.texcoord, _BumpMap);
 					o.uvBurnMap = TRANSFORM_TEX(v.texcoord, _BurnMap);
 
+					#if UNITY_UV_STARTS_AT_TOP
+					if (_MainTex_TexelSize.y < 0)
+						o.uvBumpMap.y = 1 - o.uvBumpMap.y;
+					#endif
+
 					//unity内置方法，直接得到从模型空间转到切线空间的矩阵rotation
 					TANGENT_SPACE_ROTATION;
 
 					o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex)).xyz;
-  				
+
   					o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
   					//计算声明的阴影纹理坐标
 	  					//使用TRANSFER_SHADOW 注意：
-	  					// 1 必须保证a2v中顶点坐标名为vertex 
+	  					// 1 必须保证a2v中顶点坐标名为vertex
 	  					// 2 顶点着色器的输入形参名必须为v
 	  					// 3 v2f的顶点变量名必须为pos
 
@@ -99,12 +105,12 @@
 				}
 
 				fixed4 frag(v2f o):SV_Target{
-					
+
 					//透明图直接丢弃
 					fixed4 textureColor = tex2D(_MainTex, o.uvMainTex);
 					float a = textureColor.a;
 					clip (a - 0.1);
-				
+
 					//得到噪点值
 					fixed3 burn = tex2D(_BurnMap, o.uvBurnMap).rgb;
 
@@ -131,55 +137,55 @@
 					UNITY_LIGHT_ATTENUATION(atten, o, o.worldPos);
 
 					fixed3 finalColor = lerp(ambient + diffuse * atten, burnColor, t * step(0.0001, _BurnAmount));
-				
+
 					return fixed4(finalColor, 1);
 
 				}
 
-			
+
 			ENDCG
 		}
 
 		// Pass to render object as a shadow caster
 		Pass {
 			Tags { "LightMode" = "ShadowCaster" }
-			
+
 			CGPROGRAM
-			
+
 				#pragma vertex vert
 				#pragma fragment frag
-				
+
 				#pragma multi_compile_shadowcaster
-				
+
 				#include "UnityCG.cginc"
-				
+
 				fixed _BurnAmount;
 				sampler2D _BurnMap;
 				float4 _BurnMap_ST;
-				
+
 				struct v2f {
 					V2F_SHADOW_CASTER;
 					float2 uvBurnMap : TEXCOORD1;
 				};
-				
+
 				v2f vert(appdata_base v) {
 					v2f o;
-					
+
 					//使用TRANSFER_SHADOW_CASTER_NORMALOFFSET注意
 					// 1 顶点着色器函数形参为v
 					// 2 形参类型必须含有vertex 和 normal字段
 					TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
-					
+
 					o.uvBurnMap = TRANSFORM_TEX(v.texcoord, _BurnMap);
-					
+
 					return o;
 				}
-				
+
 				fixed4 frag(v2f i) : SV_Target {
 					fixed3 burn = tex2D(_BurnMap, i.uvBurnMap).rgb;
-					
+
 					clip(burn.r - _BurnAmount);
-					
+
 					SHADOW_CASTER_FRAGMENT(i)
 				}
 			ENDCG

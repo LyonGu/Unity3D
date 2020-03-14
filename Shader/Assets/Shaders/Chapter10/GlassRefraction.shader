@@ -1,4 +1,4 @@
-﻿Shader "Shaders/Chapter10/GlassRefraction" {
+Shader "Shaders/Chapter10/GlassRefraction" {
 	Properties {
 		_MainTex ("Main Tex", 2D) = "white" {}
 		_BumpMap ("Normal Map", 2D) = "bump" {}

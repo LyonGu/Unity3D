@@ -62,14 +62,14 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distortion: 100
+    - _Distortion: 49.6
     - _DstBlend: 0
     - _Glossiness: 0.5
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RefractAmount: 0.909
+    - _RefractAmount: 0.811
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1

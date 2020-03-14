@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BurnHelper : MonoBehaviour {
@@ -25,7 +25,7 @@ public class BurnHelper : MonoBehaviour {
 			material.SetFloat("_BurnAmount", 0.0f);
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		burnAmount = Mathf.Repeat(Time.time * burnSpeed, 1.0f);
