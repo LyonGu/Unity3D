@@ -554,6 +554,7 @@
     <None Include="Assets\Shaders\Chapter15\DissolveNoNormal.shader" />
     <None Include="Assets\Shaders\Chapter15\FogWithNoise.shader" />
     <None Include="Assets\Shaders\Chapter15\WaterWave.shader" />
+    <None Include="Assets\Shaders\Chapter18\SimpleBlend.shader" />
     <None Include="Assets\Shaders\Chapter5\FalseColor.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_1.shader" />
