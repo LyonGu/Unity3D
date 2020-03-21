@@ -592,6 +592,7 @@
     <None Include="Assets\Shaders\Common\BumpedSpecular.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NoNormal.shader" />
     <None Include="Assets\Shaders\Common\BumpedSpecular_NormalMapSpecularMap.shader" />
+    <None Include="Assets\Shaders\Common\DistanceMelt.shader" />
     <None Include="Assets\Shaders\Common\EnimyHp.shader" />
     <None Include="Assets\Shaders\Common\FriendHp.shader" />
     <None Include="Assets\Shaders\Common\FriendHpText.shader" />
