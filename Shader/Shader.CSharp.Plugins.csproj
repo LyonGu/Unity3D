@@ -543,6 +543,7 @@
     <None Include="Assets\Shaders\Surface\TextureBlending.shader" />
     <None Include="Assets\Shaders\Surface\TranspantObject.shader" />
     <None Include="Assets\Shaders\Surface\TranspantObject1.shader" />
+    <None Include="Assets\Shaders\Surface\Wave.shader" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
