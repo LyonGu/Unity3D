@@ -246,7 +246,6 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9e0ac2df3485bd14a83a0a98ddc445f6, type: 3}
-  m_RootGameObject: {fileID: 104144301}
   m_IsPrefabParent: 0
 --- !u!1 &697761326
 GameObject:
@@ -279,7 +278,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 4f35c122487093b419bf8562176de12a, type: 2}
+  - {fileID: 2100000, guid: c23000974aded91419dc720dee7dd7a4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
