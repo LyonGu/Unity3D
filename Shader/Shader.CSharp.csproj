@@ -643,6 +643,7 @@
     <None Include="Assets\Shaders\Surface\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVsAdvance.shader" />
+    <None Include="Assets\Shaders\Surface\SilhouetteRimLight.shader" />
     <None Include="Assets\Shaders\Surface\SimpleAlpha.shader" />
     <None Include="Assets\Shaders\Surface\SimpleAlphaTest.shader" />
     <None Include="Assets\Shaders\Surface\SimpleAlpha_BSC.shader" />
