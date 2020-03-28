@@ -5,7 +5,7 @@ Shader "Shaders/Chapter15/Dissolve"
 		//消融程度
 		_BurnAmount ("Burn Amount", Range(0.0,1.0)) = 0.0
 		//燃烧时线宽
-		_LineWidth ("Burn Line Width", Range(0.0,0.5)) = 0.2
+		_LineWidth ("Burn Line Width", Range(0.0,2.5)) = 0.2
 
 		//漫反射贴图
 		_MainTex ("Base (RGB)", 2D) = "white" {}
@@ -129,7 +129,22 @@ Shader "Shaders/Chapter15/Dissolve"
 					fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(tangentNormal, tangentLightDir));
 
 					//插值计算燃烧颜色
+					/*
+
+						smoothstep(a,b,x)
+						{
+							float t = saturate((x-a)/(b-a))
+							return t*t(3- 2*t)
+						}
+						如果参数x小于起点，smoothstep 将返回 0。
+						如果参数x大于终点，smoothstep 将返回 1。
+
+						b越大 返回值越小
+
+					*/
+					//_LineWidth越大, smoothstep越小，t就越大，burnColor越接近_BurnSecondColor，finalColor越接近burnColor
 					fixed t = 1 - smoothstep(0.0, _LineWidth, burn.r - _BurnAmount);
+					//fixed t = 1 - lerp(0.0, _LineWidth, burn.r - _BurnAmount);
 					fixed3 burnColor = lerp(_BurnFirstColor, _BurnSecondColor, t);
 					burnColor = pow(burnColor, 5);
 

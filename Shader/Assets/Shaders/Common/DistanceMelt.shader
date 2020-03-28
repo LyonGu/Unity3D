@@ -74,7 +74,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 PointPos = mul(unity_WorldToObject , _MeltPoint);//将世界坐标的目标点转到物体空间坐标
-				float Distance = length(i.objPos - PointPos);//计算他们在物体空间坐标的距离
+				float Distance = length(i.objPos - PointPos);//计算他们在物体空间坐标的距离 distance(p0, p1) == length(p0-p1)
 				fixed noise = tex2D(_NoiseTex, i.uvNoise).r;//采样噪声，后续将对消融距离进行扰动
 				//noise*_NoiseEffect表示噪声扰动的影响程度
 				//Distance减去noise*_NoiseEffect完成对距离的扰动影响
