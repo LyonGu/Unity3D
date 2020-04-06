@@ -1,0 +1,6 @@
+F:\C#Projects\Echo\Echo\bin\Debug\Echo.exe.config
+F:\C#Projects\Echo\Echo\bin\Debug\Echo.exe
+F:\C#Projects\Echo\Echo\bin\Debug\Echo.pdb
+F:\C#Projects\Echo\Echo\obj\Debug\Echo.csprojResolveAssemblyReference.cache
+F:\C#Projects\Echo\Echo\obj\Debug\Echo.exe
+F:\C#Projects\Echo\Echo\obj\Debug\Echo.pdb
