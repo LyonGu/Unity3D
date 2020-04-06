@@ -1,49 +1,129 @@
 fileFormatVersion: 2
 guid: e4363e54d0150514b8b903830949dabd
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: guanyu_01_01_00
-    21300002: guanyu_01_01_01
-    21300004: guanyu_01_01_02
-    21300006: guanyu_01_01_03
-    21300008: guanyu_01_01_04
-    21300010: guanyu_01_01_05
-    21300012: guanyu_01_01_06
-    21300014: guanyu_01_01_07
-    21300016: guanyu_01_01_08
-    21300018: guanyu_01_01_09
-    21300020: guanyu_01_01_10
-    21300022: guanyu_01_01_11
-    21300024: guanyu_01_01_12
-    21300026: guanyu_01_01_13
-    21300028: guanyu_01_01_14
-    21300030: guanyu_01_01_15
-    21300032: guanyu_01_01_16
-    21300034: guanyu_01_01_17
-    21300036: guanyu_01_01_18
-    21300038: guanyu_01_01_19
-    21300040: guanyu_03_01_00
-    21300042: guanyu_03_01_01
-    21300044: guanyu_03_01_02
-    21300046: guanyu_03_01_03
-    21300048: guanyu_03_01_04
-    21300050: guanyu_03_01_05
-    21300052: guanyu_03_01_06
-    21300054: guanyu_03_01_07
-    21300056: guanyu_03_01_08
-    21300058: guanyu_03_01_09
-    21300060: guanyu_03_01_10
-    21300062: guanyu_03_01_11
-    21300064: guanyu_03_01_12
-    21300066: guanyu_03_01_13
-    21300068: guanyu_03_01_14
-    21300070: guanyu_03_01_15
-    21300072: guanyu_03_01_16
-    21300074: guanyu_03_01_17
-    21300076: guanyu_03_01_18
-    21300078: guanyu_03_01_19
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: guanyu_01_01_00
+  - first:
+      213: 21300002
+    second: guanyu_01_01_01
+  - first:
+      213: 21300004
+    second: guanyu_01_01_02
+  - first:
+      213: 21300006
+    second: guanyu_01_01_03
+  - first:
+      213: 21300008
+    second: guanyu_01_01_04
+  - first:
+      213: 21300010
+    second: guanyu_01_01_05
+  - first:
+      213: 21300012
+    second: guanyu_01_01_06
+  - first:
+      213: 21300014
+    second: guanyu_01_01_07
+  - first:
+      213: 21300016
+    second: guanyu_01_01_08
+  - first:
+      213: 21300018
+    second: guanyu_01_01_09
+  - first:
+      213: 21300020
+    second: guanyu_01_01_10
+  - first:
+      213: 21300022
+    second: guanyu_01_01_11
+  - first:
+      213: 21300024
+    second: guanyu_01_01_12
+  - first:
+      213: 21300026
+    second: guanyu_01_01_13
+  - first:
+      213: 21300028
+    second: guanyu_01_01_14
+  - first:
+      213: 21300030
+    second: guanyu_01_01_15
+  - first:
+      213: 21300032
+    second: guanyu_01_01_16
+  - first:
+      213: 21300034
+    second: guanyu_01_01_17
+  - first:
+      213: 21300036
+    second: guanyu_01_01_18
+  - first:
+      213: 21300038
+    second: guanyu_01_01_19
+  - first:
+      213: 21300040
+    second: guanyu_03_01_00
+  - first:
+      213: 21300042
+    second: guanyu_03_01_01
+  - first:
+      213: 21300044
+    second: guanyu_03_01_02
+  - first:
+      213: 21300046
+    second: guanyu_03_01_03
+  - first:
+      213: 21300048
+    second: guanyu_03_01_04
+  - first:
+      213: 21300050
+    second: guanyu_03_01_05
+  - first:
+      213: 21300052
+    second: guanyu_03_01_06
+  - first:
+      213: 21300054
+    second: guanyu_03_01_07
+  - first:
+      213: 21300056
+    second: guanyu_03_01_08
+  - first:
+      213: 21300058
+    second: guanyu_03_01_09
+  - first:
+      213: 21300060
+    second: guanyu_03_01_10
+  - first:
+      213: 21300062
+    second: guanyu_03_01_11
+  - first:
+      213: 21300064
+    second: guanyu_03_01_12
+  - first:
+      213: 21300066
+    second: guanyu_03_01_13
+  - first:
+      213: 21300068
+    second: guanyu_03_01_14
+  - first:
+      213: 21300070
+    second: guanyu_03_01_15
+  - first:
+      213: 21300072
+    second: guanyu_03_01_16
+  - first:
+      213: 21300074
+    second: guanyu_03_01_17
+  - first:
+      213: 21300076
+    second: guanyu_03_01_18
+  - first:
+      213: 21300078
+    second: guanyu_03_01_19
   externalObjects: {}
-  serializedVersion: 4
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -61,6 +141,8 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -71,7 +153,7 @@ TextureImporter:
     serializedVersion: 2
     filterMode: -1
     aniso: -1
-    mipBias: -1
+    mipBias: -100
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -91,11 +173,14 @@ TextureImporter:
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
+  singleChannelComponent: 0
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  applyGammaDecoding: 1
   platformSettings:
-  - buildTarget: DefaultTexturePlatform
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -105,6 +190,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -122,6 +208,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 02305410000000000800000000000000
+      internalID: 21300000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_01
       rect:
@@ -136,6 +229,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 22305410000000000800000000000000
+      internalID: 21300002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_02
       rect:
@@ -150,6 +250,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 42305410000000000800000000000000
+      internalID: 21300004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_03
       rect:
@@ -164,6 +271,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 62305410000000000800000000000000
+      internalID: 21300006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_04
       rect:
@@ -178,6 +292,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 82305410000000000800000000000000
+      internalID: 21300008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_05
       rect:
@@ -192,6 +313,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: a2305410000000000800000000000000
+      internalID: 21300010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_06
       rect:
@@ -206,6 +334,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: c2305410000000000800000000000000
+      internalID: 21300012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_07
       rect:
@@ -220,6 +355,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: e2305410000000000800000000000000
+      internalID: 21300014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_08
       rect:
@@ -234,6 +376,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 03305410000000000800000000000000
+      internalID: 21300016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_09
       rect:
@@ -248,6 +397,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 23305410000000000800000000000000
+      internalID: 21300018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_10
       rect:
@@ -262,6 +418,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 43305410000000000800000000000000
+      internalID: 21300020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_11
       rect:
@@ -276,6 +439,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 63305410000000000800000000000000
+      internalID: 21300022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_12
       rect:
@@ -290,6 +460,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 83305410000000000800000000000000
+      internalID: 21300024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_13
       rect:
@@ -304,6 +481,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: a3305410000000000800000000000000
+      internalID: 21300026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_14
       rect:
@@ -318,6 +502,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: c3305410000000000800000000000000
+      internalID: 21300028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_15
       rect:
@@ -332,6 +523,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: e3305410000000000800000000000000
+      internalID: 21300030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_16
       rect:
@@ -346,6 +544,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 04305410000000000800000000000000
+      internalID: 21300032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_17
       rect:
@@ -360,6 +565,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 24305410000000000800000000000000
+      internalID: 21300034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_18
       rect:
@@ -374,6 +586,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 44305410000000000800000000000000
+      internalID: 21300036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_01_01_19
       rect:
@@ -388,6 +607,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 64305410000000000800000000000000
+      internalID: 21300038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_00
       rect:
@@ -402,6 +628,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 84305410000000000800000000000000
+      internalID: 21300040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_01
       rect:
@@ -416,6 +649,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: a4305410000000000800000000000000
+      internalID: 21300042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_02
       rect:
@@ -430,6 +670,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: c4305410000000000800000000000000
+      internalID: 21300044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_03
       rect:
@@ -444,6 +691,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: e4305410000000000800000000000000
+      internalID: 21300046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_04
       rect:
@@ -458,6 +712,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 05305410000000000800000000000000
+      internalID: 21300048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_05
       rect:
@@ -472,6 +733,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 25305410000000000800000000000000
+      internalID: 21300050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_06
       rect:
@@ -486,6 +754,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 45305410000000000800000000000000
+      internalID: 21300052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_07
       rect:
@@ -500,6 +775,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 65305410000000000800000000000000
+      internalID: 21300054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_08
       rect:
@@ -514,6 +796,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 85305410000000000800000000000000
+      internalID: 21300056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_09
       rect:
@@ -528,6 +817,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: a5305410000000000800000000000000
+      internalID: 21300058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_10
       rect:
@@ -542,6 +838,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: c5305410000000000800000000000000
+      internalID: 21300060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_11
       rect:
@@ -556,6 +859,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: e5305410000000000800000000000000
+      internalID: 21300062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_12
       rect:
@@ -570,6 +880,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 06305410000000000800000000000000
+      internalID: 21300064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_13
       rect:
@@ -584,6 +901,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 26305410000000000800000000000000
+      internalID: 21300066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_14
       rect:
@@ -598,6 +922,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 46305410000000000800000000000000
+      internalID: 21300068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_15
       rect:
@@ -612,6 +943,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 66305410000000000800000000000000
+      internalID: 21300070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_16
       rect:
@@ -626,6 +964,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: 86305410000000000800000000000000
+      internalID: 21300072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_17
       rect:
@@ -640,6 +985,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: a6305410000000000800000000000000
+      internalID: 21300074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_18
       rect:
@@ -654,6 +1006,13 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: c6305410000000000800000000000000
+      internalID: 21300076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     - serializedVersion: 2
       name: guanyu_03_01_19
       rect:
@@ -668,9 +1027,26 @@ TextureImporter:
       outline: []
       physicsShape: []
       tessellationDetail: -1
+      bones: []
+      spriteID: e6305410000000000800000000000000
+      internalID: 21300078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
   spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

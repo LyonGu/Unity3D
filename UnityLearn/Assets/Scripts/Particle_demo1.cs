@@ -8,7 +8,7 @@ public class Particle_demo1 : MonoBehaviour {
     public ParticleSystem ps;
 
     //添加了扩展粒子组件
-    public ParticleEmitter psExtend;
+    //public ParticleEmitter psExtend;
 
     //复合粒子系统
     public GameObject psCom;
@@ -17,7 +17,7 @@ public class Particle_demo1 : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         ps.Stop();
-        psExtend.emit = false;
+        //psExtend.emit = false;
         psCom.SetActive(false);
 	}
 	
@@ -34,7 +34,7 @@ public class Particle_demo1 : MonoBehaviour {
             ps.Play();
         }
 
-        psExtend.emit = true;
+        //psExtend.emit = true;
         psCom.SetActive(true);
     }
 
@@ -45,7 +45,7 @@ public class Particle_demo1 : MonoBehaviour {
         {
             ps.Stop();
         }
-        psExtend.emit = false;
+        //psExtend.emit = false;
         psCom.SetActive(false);
     }
 }

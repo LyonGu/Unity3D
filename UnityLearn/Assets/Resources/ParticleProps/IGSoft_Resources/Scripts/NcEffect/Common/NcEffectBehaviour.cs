@@ -60,7 +60,7 @@ public class NcEffectBehaviour : MonoBehaviour
 		GameObject	effroot	= FindRootEditorEffect();
 		if (effroot == null)
 			return false;
-		return (effroot.transform.GetChildCount() == 0);
+		return (effroot.transform.childCount == 0);
 	}
 
 	protected GameObject GetFXMakerGameObject()
@@ -145,9 +145,9 @@ public class NcEffectBehaviour : MonoBehaviour
 
 	protected static void RemoveAllChildObject(GameObject parent, bool bImmediate)
 	{
-		for (int n = parent.transform.GetChildCount()-1; 0 <= n; n--)
+		for (int n = parent.transform.childCount-1; 0 <= n; n--)
 		{
-			if (n < parent.transform.GetChildCount())
+			if (n < parent.transform.childCount)
 			{
 				Transform	obj = parent.transform.GetChild(n);
 				if (bImmediate)
@@ -306,10 +306,10 @@ public class NcEffectBehaviour : MonoBehaviour
 		foreach (ParticleSystem em in pss)
 			if (em != null)
 				em.enableEmission = false;
-		ParticleEmitter[] pes = gameObject.GetComponentsInChildren<ParticleEmitter>(true);
-		foreach (ParticleEmitter em in pes)
-			if (em != null)
-				em.emit = false;
+		//ParticleEmitter[] pes = gameObject.GetComponentsInChildren<ParticleEmitter>(true);
+		//foreach (ParticleEmitter em in pes)
+		//	if (em != null)
+		//		em.emit = false;
 	}
 
 	// SafeCreate -----------------------------------------------------------------------------------

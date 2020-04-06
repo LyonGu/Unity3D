@@ -1,112 +1,319 @@
 fileFormatVersion: 2
 guid: 88fef9fae9d468749aa5516f0d6e5032
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: Bip01
-    100002: Bip01 Head
-    100004: Bip01 L Calf
-    100006: Bip01 L Clavicle
-    100008: Bip01 L Finger0
-    100010: Bip01 L Finger01
-    100012: Bip01 L Finger1
-    100014: Bip01 L Finger11
-    100016: Bip01 L Finger2
-    100018: Bip01 L Finger21
-    100020: Bip01 L Foot
-    100022: Bip01 L Forearm
-    100024: Bip01 L Hand
-    100026: Bip01 L Thigh
-    100028: Bip01 L Toe0
-    100030: Bip01 L UpperArm
-    100032: Bip01 Neck
-    100034: Bip01 Pelvis
-    100036: Bip01 R Calf
-    100038: Bip01 R Clavicle
-    100040: Bip01 R Finger0
-    100042: Bip01 R Finger01
-    100044: Bip01 R Finger1
-    100046: Bip01 R Finger11
-    100048: Bip01 R Finger2
-    100050: Bip01 R Finger21
-    100052: Bip01 R Foot
-    100054: Bip01 R Forearm
-    100056: Bip01 R Hand
-    100058: Bip01 R Thigh
-    100060: Bip01 R Toe0
-    100062: Bip01 R UpperArm
-    100064: Bip01 Spine
-    100066: Bip01 Spine1
-    100068: Bone01
-    100070: Bone01(mirrored)
-    100072: Bone02
-    100074: Bone02(mirrored)
-    100076: Bone03
-    100078: Bone03(mirrored)
-    100080: Bone04
-    100082: Bone04(mirrored)
-    100084: Bone05
-    100086: Bone06
-    100088: //RootNode
-    100090: StoneKing
-    100092: Stone
-    400000: Bip01
-    400002: Bip01 Head
-    400004: Bip01 L Calf
-    400006: Bip01 L Clavicle
-    400008: Bip01 L Finger0
-    400010: Bip01 L Finger01
-    400012: Bip01 L Finger1
-    400014: Bip01 L Finger11
-    400016: Bip01 L Finger2
-    400018: Bip01 L Finger21
-    400020: Bip01 L Foot
-    400022: Bip01 L Forearm
-    400024: Bip01 L Hand
-    400026: Bip01 L Thigh
-    400028: Bip01 L Toe0
-    400030: Bip01 L UpperArm
-    400032: Bip01 Neck
-    400034: Bip01 Pelvis
-    400036: Bip01 R Calf
-    400038: Bip01 R Clavicle
-    400040: Bip01 R Finger0
-    400042: Bip01 R Finger01
-    400044: Bip01 R Finger1
-    400046: Bip01 R Finger11
-    400048: Bip01 R Finger2
-    400050: Bip01 R Finger21
-    400052: Bip01 R Foot
-    400054: Bip01 R Forearm
-    400056: Bip01 R Hand
-    400058: Bip01 R Thigh
-    400060: Bip01 R Toe0
-    400062: Bip01 R UpperArm
-    400064: Bip01 Spine
-    400066: Bip01 Spine1
-    400068: Bone01
-    400070: Bone01(mirrored)
-    400072: Bone02
-    400074: Bone02(mirrored)
-    400076: Bone03
-    400078: Bone03(mirrored)
-    400080: Bone04
-    400082: Bone04(mirrored)
-    400084: Bone05
-    400086: Bone06
-    400088: //RootNode
-    400090: StoneKing
-    400092: Stone
-    4300000: StoneKing
-    4300002: Stone
-    7400000: Take 001
-    9500000: //RootNode
-    11100000: //RootNode
-    13700000: StoneKing
-    13700002: Stone
-  externalObjects: {}
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Bip01
+  - first:
+      1: 100002
+    second: Bip01 Head
+  - first:
+      1: 100004
+    second: Bip01 L Calf
+  - first:
+      1: 100006
+    second: Bip01 L Clavicle
+  - first:
+      1: 100008
+    second: Bip01 L Finger0
+  - first:
+      1: 100010
+    second: Bip01 L Finger01
+  - first:
+      1: 100012
+    second: Bip01 L Finger1
+  - first:
+      1: 100014
+    second: Bip01 L Finger11
+  - first:
+      1: 100016
+    second: Bip01 L Finger2
+  - first:
+      1: 100018
+    second: Bip01 L Finger21
+  - first:
+      1: 100020
+    second: Bip01 L Foot
+  - first:
+      1: 100022
+    second: Bip01 L Forearm
+  - first:
+      1: 100024
+    second: Bip01 L Hand
+  - first:
+      1: 100026
+    second: Bip01 L Thigh
+  - first:
+      1: 100028
+    second: Bip01 L Toe0
+  - first:
+      1: 100030
+    second: Bip01 L UpperArm
+  - first:
+      1: 100032
+    second: Bip01 Neck
+  - first:
+      1: 100034
+    second: Bip01 Pelvis
+  - first:
+      1: 100036
+    second: Bip01 R Calf
+  - first:
+      1: 100038
+    second: Bip01 R Clavicle
+  - first:
+      1: 100040
+    second: Bip01 R Finger0
+  - first:
+      1: 100042
+    second: Bip01 R Finger01
+  - first:
+      1: 100044
+    second: Bip01 R Finger1
+  - first:
+      1: 100046
+    second: Bip01 R Finger11
+  - first:
+      1: 100048
+    second: Bip01 R Finger2
+  - first:
+      1: 100050
+    second: Bip01 R Finger21
+  - first:
+      1: 100052
+    second: Bip01 R Foot
+  - first:
+      1: 100054
+    second: Bip01 R Forearm
+  - first:
+      1: 100056
+    second: Bip01 R Hand
+  - first:
+      1: 100058
+    second: Bip01 R Thigh
+  - first:
+      1: 100060
+    second: Bip01 R Toe0
+  - first:
+      1: 100062
+    second: Bip01 R UpperArm
+  - first:
+      1: 100064
+    second: Bip01 Spine
+  - first:
+      1: 100066
+    second: Bip01 Spine1
+  - first:
+      1: 100068
+    second: Bone01
+  - first:
+      1: 100070
+    second: Bone01(mirrored)
+  - first:
+      1: 100072
+    second: Bone02
+  - first:
+      1: 100074
+    second: Bone02(mirrored)
+  - first:
+      1: 100076
+    second: Bone03
+  - first:
+      1: 100078
+    second: Bone03(mirrored)
+  - first:
+      1: 100080
+    second: Bone04
+  - first:
+      1: 100082
+    second: Bone04(mirrored)
+  - first:
+      1: 100084
+    second: Bone05
+  - first:
+      1: 100086
+    second: Bone06
+  - first:
+      1: 100088
+    second: //RootNode
+  - first:
+      1: 100090
+    second: StoneKing
+  - first:
+      1: 100092
+    second: Stone
+  - first:
+      4: 400000
+    second: Bip01
+  - first:
+      4: 400002
+    second: Bip01 Head
+  - first:
+      4: 400004
+    second: Bip01 L Calf
+  - first:
+      4: 400006
+    second: Bip01 L Clavicle
+  - first:
+      4: 400008
+    second: Bip01 L Finger0
+  - first:
+      4: 400010
+    second: Bip01 L Finger01
+  - first:
+      4: 400012
+    second: Bip01 L Finger1
+  - first:
+      4: 400014
+    second: Bip01 L Finger11
+  - first:
+      4: 400016
+    second: Bip01 L Finger2
+  - first:
+      4: 400018
+    second: Bip01 L Finger21
+  - first:
+      4: 400020
+    second: Bip01 L Foot
+  - first:
+      4: 400022
+    second: Bip01 L Forearm
+  - first:
+      4: 400024
+    second: Bip01 L Hand
+  - first:
+      4: 400026
+    second: Bip01 L Thigh
+  - first:
+      4: 400028
+    second: Bip01 L Toe0
+  - first:
+      4: 400030
+    second: Bip01 L UpperArm
+  - first:
+      4: 400032
+    second: Bip01 Neck
+  - first:
+      4: 400034
+    second: Bip01 Pelvis
+  - first:
+      4: 400036
+    second: Bip01 R Calf
+  - first:
+      4: 400038
+    second: Bip01 R Clavicle
+  - first:
+      4: 400040
+    second: Bip01 R Finger0
+  - first:
+      4: 400042
+    second: Bip01 R Finger01
+  - first:
+      4: 400044
+    second: Bip01 R Finger1
+  - first:
+      4: 400046
+    second: Bip01 R Finger11
+  - first:
+      4: 400048
+    second: Bip01 R Finger2
+  - first:
+      4: 400050
+    second: Bip01 R Finger21
+  - first:
+      4: 400052
+    second: Bip01 R Foot
+  - first:
+      4: 400054
+    second: Bip01 R Forearm
+  - first:
+      4: 400056
+    second: Bip01 R Hand
+  - first:
+      4: 400058
+    second: Bip01 R Thigh
+  - first:
+      4: 400060
+    second: Bip01 R Toe0
+  - first:
+      4: 400062
+    second: Bip01 R UpperArm
+  - first:
+      4: 400064
+    second: Bip01 Spine
+  - first:
+      4: 400066
+    second: Bip01 Spine1
+  - first:
+      4: 400068
+    second: Bone01
+  - first:
+      4: 400070
+    second: Bone01(mirrored)
+  - first:
+      4: 400072
+    second: Bone02
+  - first:
+      4: 400074
+    second: Bone02(mirrored)
+  - first:
+      4: 400076
+    second: Bone03
+  - first:
+      4: 400078
+    second: Bone03(mirrored)
+  - first:
+      4: 400080
+    second: Bone04
+  - first:
+      4: 400082
+    second: Bone04(mirrored)
+  - first:
+      4: 400084
+    second: Bone05
+  - first:
+      4: 400086
+    second: Bone06
+  - first:
+      4: 400088
+    second: //RootNode
+  - first:
+      4: 400090
+    second: StoneKing
+  - first:
+      4: 400092
+    second: Stone
+  - first:
+      43: 4300000
+    second: StoneKing
+  - first:
+      43: 4300002
+    second: Stone
+  - first:
+      74: 7400000
+    second: Take 001
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      111: 11100000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: StoneKing
+  - first:
+      137: 13700002
+    second: Stone
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StoneKing
+    second: {fileID: 2100000, guid: 3c7fcbbeb4a4a5242a87c9f6079a694d, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 0
@@ -123,6 +330,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -137,6 +345,8 @@ ModelImporter:
     globalScale: 0.01
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 1
     importCameras: 0
@@ -144,10 +354,13 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -159,10 +372,35 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 4
     normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips:
+  - 8a1c1539bf0bcf64193967555229c0d7
+  - dcd2c918a7cc5794d86583ab49df5dce
+  - 2162b737ad9659e48bbd03d6a92e44af
+  - 032f02be750774145a7973c0d3444947
+  - 46b5b8d468b1359499aa3acfe03898b7
+  - 4f20f7b31cac0554a85f5066cb96ef7f
+  - 287f7a675e0f5e0479d682b36579fc17
+  - 1b578bbd6ece32147acfb239363b8781
+  - 41a7c42b8b5f0c74db900d54820a98fa
+  - c6ed83bce8130624093208ea2280f66a
+  - 535fd25e367e71640be8212b8c35cfdc
+  - fcad2351825f155458374e44b77c9224
+  - 866c89fb7694b0742be51272fec51be8
+  - 2e833f0fcad55ad4cbb83ccbadff390b
+  - f747adc7bb30f7041bfecd7125e88563
+  - 58b8e22a6a9d25f4d8013a138896297b
+  - 630ba0e812276d64c9535693f5119152
+  - f10f96d8356dbab43884dbc32eb78203
+  - 3702370cb09283a4fbb9d68c330c172e
+  - 3f726b19a3ad68a44930d181bc8f3b07
+  - 4cc4c44f17444834d9c2086a2f4a8697
+  - fab1990a3d5c62f46891511b093e245d
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -172,14 +410,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.01
     rootMotionBoneName: Bip01
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 1
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 1
   userData: 
   assetBundleName: 

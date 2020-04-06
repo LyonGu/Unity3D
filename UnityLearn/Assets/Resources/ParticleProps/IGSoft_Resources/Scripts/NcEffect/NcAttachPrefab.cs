@@ -175,7 +175,7 @@ public class NcAttachPrefab : NcEffectBehaviour
 	// -------------------------------------------------------------------------------
 	GameObject GetTargetGameObject()
 	{
-		// ¿ùµåÁÂÇ¥ °íÁ¤ÇüÀÌ¸é..
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½..
 		if (m_bWorldSpace || m_AttachType == AttachType.Destroy)
 			 return GetRootInstanceEffect();
 		else return this.gameObject;
@@ -190,13 +190,13 @@ public class NcAttachPrefab : NcEffectBehaviour
 	}
 
 	// utility fonction ----------------------------------------------------------------
-	// tag¸íÀ» ¸ðµÎ ¹Ù²Û´Ù.
+	// tagï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ù²Û´ï¿½.
 	public static void Ng_ChangeLayerWithChild(GameObject rootObj, int nLayer)
 	{
 		if (rootObj == null)
 			return;
 		rootObj.layer = nLayer;
-		for (int n = 0; n < rootObj.transform.GetChildCount(); n++)
+		for (int n = 0; n < rootObj.transform.childCount; n++)
 			Ng_ChangeLayerWithChild(rootObj.transform.GetChild(n).gameObject, nLayer);
 	}
 }
