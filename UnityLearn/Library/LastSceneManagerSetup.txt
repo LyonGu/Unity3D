@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scene/MinMap.unity
+- path: Assets/Scene/Video.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
