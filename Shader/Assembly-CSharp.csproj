@@ -159,6 +159,7 @@
     <Compile Include="Assets\Scripts\BaseLockProperty.cs" />
     <Compile Include="Assets\Scripts\Chapter11\Translating.cs" />
     <Compile Include="Assets\Scripts\Chapter12\Bloom.cs" />
+    <Compile Include="Assets\Scripts\Chapter12\BloomHDR.cs" />
     <Compile Include="Assets\Scripts\Chapter12\BrightnessSaturationAndContrast.cs" />
     <Compile Include="Assets\Scripts\Chapter12\DepthField.cs" />
     <Compile Include="Assets\Scripts\Chapter12\DepthTest.cs" />
@@ -348,6 +349,7 @@
     <None Include="Assets\Shaders\Chapter12\MotionBlur.shader" />
     <None Include="Assets\Shaders\Common\BumpedDiffuse.shader" />
     <None Include="Assets\Cookbook\Code\03_Code\BlinnPhong.shader" />
+    <None Include="Assets\Shaders\Chapter12\BloomHDR.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader.shader" />
     <None Include="Assets\Shaders\Surface\MobileShader.shader" />
     <None Include="Assets\Shaders\Dissove\DissoveBase.shader" />

@@ -4,8 +4,15 @@ Shader "Shaders/Chapter12/BloomHDR"
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_Bloom ("Bloom (RGB)", 2D) = "black" {}
-		_LuminanceThreshold ("Luminance Threshold", Float) = 0.5
+		_BrightThreshold ("BrightThreshold", Float) = 1.0
 		_BlurSize ("Blur Size", Float) = 1.0
+		_Exposure("Exposure", Float) = 1.0
+
+		_Exp("Exp", Float) = 1.0
+		_BM("BM", Float) = 1.0
+		_Lum("Lum", Float) = 1.0
+		_IsGamma("IsGamma", Int) = 0
+
 	}
 	SubShader
 	{
@@ -15,8 +22,13 @@ Shader "Shaders/Chapter12/BloomHDR"
 			sampler2D _MainTex;
 			half4 _MainTex_TexelSize;
 			sampler2D _Bloom;
-			float _LuminanceThreshold;
+			float _BrightThreshold;
 			float _BlurSize;
+			float _Exposure;
+			float _BM;
+			float _Exp;
+			float _Lum;
+			int _IsGamma;
 
 			struct v2f{
 				float4 pos: SV_POSITION;
@@ -43,10 +55,11 @@ Shader "Shaders/Chapter12/BloomHDR"
 				fixed4 c = tex2D(_MainTex, i.uv);
 				//使用HDR
 				float val = luminance(c);
-				if (val > 1.0)
+				if (val > _BrightThreshold)  //默认应该是_BrightThreshold为1.0
 				{
-					return c
+					return c;
 				}
+				return fixed4(0.0,0.0,0.0,1.0);
 			}
 
 
@@ -79,14 +92,17 @@ Shader "Shaders/Chapter12/BloomHDR"
 
 				//使用HDR后，最后输出结果还要进行色调映射 ，如果在非线性空间下还得进行gamma矫正
 				fixed4 hdrColor =  tex2D(_MainTex, i.uv.xy) + tex2D(_Bloom, i.uv.zw);
-				vec3 result = vec3(1.0) - exp(-hdrColor * exposure);
+				// fixed3 result = fixed3(1.0,1.0,1.0) - exp(-hdrColor * _Exposure);
 
+				// float y = dot(float4(0.3,0.59,0.11,1), hdrColor);
+				// float yd = _Exp * (_Exp / _BM + 1) / (_Exp + 1);
+				// fixed3 result = (hdrColor*yd).xyz;
 				/*
 					// Reinhard色调映射
 					vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
 
 					// 曝光色调映射
-    				vec3 mapped = vec3(1.0) - exp(-hdrColor * exposure);
+    				vec3 mapped = vec3(1.0) - exp(-hdrColor * _Exposure);
 
 					//Unity用的是这个色调映射 从HDR到LDR
 					float4 frag(v2f i) :COLOR
@@ -99,10 +115,28 @@ Shader "Shaders/Chapter12/BloomHDR"
 
 				*/
 
+
+
+
+				//使用Unity的内置函数进行色调映射
+				fixed3 color = tex2D(_MainTex, i.uv.xy).xyz;
+				fixed3 result = tex2D(_Bloom, i.uv.zw).xyz;
+				float lum = Luminance(result);
+				result = color + result * (lum+0.1) * _Lum;
+
+
 				// also gamma correct while we're at it
-				// const float gamma = 2.2;
-				// result = pow(result, vec3(1.0 / gamma));
-				return vec4(result, 1.0f);
+				if(_IsGamma == 1)
+				{
+					const float gamma = 2.2;
+					result.x = pow(result.x, 1.0 / gamma);
+					result.y = pow(result.y, 1.0 / gamma);
+					result.z = pow(result.z, 1.0 / gamma);
+				}
+
+				return fixed4(result, 1.0);
+
+				// return float4(result,1);
 			}
 
 		ENDCG
