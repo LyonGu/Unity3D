@@ -77,3 +77,7 @@ UnityNet/Library/
 UnityNet/EXE/
 EffectSystem/Library/
 EffectSystem/obj/
+UnitySRP/.vs/
+UnitySRP/Library/
+test/
+UnitySRP/obj/
