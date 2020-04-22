@@ -221,12 +221,12 @@ public class HealthBar : MonoBehaviour
 
     }
 
-    void UpdateGridHp(int maxHpNum, int shieldHPNum)
+    void UpdateGridHp(int maxHpNum, int curHpNum, int shieldHPNum)
     {
-        RefreshHP(gridMaxHpList, originGameObject, maxHpNum, 0, maxHpPre);
+        RefreshHP(gridMaxHpList, originGameObject, curHpNum, 0, maxHpPre);
         if (shieldHP > 0)
         {
-            RefreshHP(gridShieldHpList, originShieldGameObject, shieldHPNum, maxHpNum, shieldHPPre);
+            RefreshHP(gridShieldHpList, originShieldGameObject, shieldHPNum, curHpNum, shieldHPPre);
         }
     }
 
@@ -277,15 +277,17 @@ public class HealthBar : MonoBehaviour
 
     void Update()
     {
-        float totalHp = maxHp + shieldHP;
+        float totalHp = curHp + shieldHP;
         int maxHpGridNum = (int)Round(maxHp/gridHp, 0);
         int shieldHpGridNum = (int)Round(shieldHP/gridHp, 0);
         int num = maxHpGridNum + shieldHpGridNum;
         if(num != _curGridNum)
         {
             _curGridNum = num;
+            int curHpGridNum = (int)Round(curHp / gridHp, 0);
             curHp = totalHp;
-            UpdateGridHp(maxHpGridNum, shieldHpGridNum);
+            
+            UpdateGridHp(maxHpGridNum, curHpGridNum, shieldHpGridNum);
         }
 
         // //更新当前血量
