@@ -6,9 +6,20 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 
 public class MyPipeline : RenderPipeline
 {
+  
     private CullingResults cull;
     private CommandBuffer buffer;
     private Material errorMaterial;
+
+    private bool _dynamicBatching = false;
+    private bool _instancing = false;
+
+    public MyPipeline(bool dynamicBatching, bool instancing)
+    {
+        _dynamicBatching = dynamicBatching;
+        _instancing = instancing;
+    }
+
     protected override void Render(ScriptableRenderContext context, Camera[] cameras)
     {
         //把command传入了buffer 实际起效需要我们通过submit函数submit 这些commands
@@ -144,8 +155,8 @@ public class MyPipeline : RenderPipeline
         sorting.criteria = SortingCriteria.CommonOpaque;
 
         var drawSetting = new DrawingSettings(shaderTagId, sorting);
-        //drawSetting.enableDynamicBatching = true;
-
+        drawSetting.enableDynamicBatching = _dynamicBatching;
+        drawSetting.enableInstancing = _instancing;
 
 
         //渲染过滤设置，这里设置成所有的都渲染

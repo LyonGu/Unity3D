@@ -63,10 +63,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\InstancedColor.cs" />
     <Compile Include="Assets\MyPipeline.cs" />
     <Compile Include="Assets\MyPipelineAsset.cs" />
-    <None Include="Assets\Materials\Blinn-PhongUse Built-in Functions.shader" />
-    <None Include="Assets\Materials\UnliTexture.shader" />
+    <None Include="Assets\Shaders\Unlit.shader" />
+    <None Include="Assets\Shaders\Blinn-PhongUse Built-in Functions.shader" />
+    <None Include="Assets\Shaders\UnliTexture.shader" />
+    <None Include="Assets\Shaders\CG\UnlitCG.cginc" />
+    <None Include="Assets\Shaders\CG\UnlitCG.shader" />
+    <None Include="Assets\Shaders\ShaderLibrary\Unlit.hlsl" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/GitResponse/Unity3D/UnitySRP/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
@@ -93,6 +98,15 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>D:/GitResponse/Unity3D/UnitySRP/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Editor">
+      <HintPath>D:/GitResponse/Unity3D/UnitySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>D:/GitResponse/Unity3D/UnitySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>D:/GitResponse/Unity3D/UnitySRP/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.8f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
