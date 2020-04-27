@@ -82,3 +82,7 @@ UnitySRP/Library/
 test/
 UnitySRP/obj/
 UnitySRP/Temp/
+Animation/Library/
+Animation/Logs/
+Animation/obj/
+Animation/Temp/
