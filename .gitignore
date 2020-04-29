@@ -86,3 +86,5 @@ Animation/Library/
 Animation/Logs/
 Animation/obj/
 Animation/Temp/
+ShaderGraph/Library/
+ShaderGraph/Temp/
