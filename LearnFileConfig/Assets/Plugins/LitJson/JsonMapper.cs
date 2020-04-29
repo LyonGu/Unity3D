@@ -676,6 +676,11 @@ namespace LitJson
             RegisterImporter (base_importers_table, typeof (double),
                               typeof (decimal), importer);
 
+            importer = delegate (object input) {
+                return Convert.ToSingle((double)input);
+            };
+            RegisterImporter(base_importers_table, typeof(double),
+                typeof(float), importer);
 
             importer = delegate (object input) {
                 return Convert.ToUInt32 ((long) input);
@@ -743,6 +748,12 @@ namespace LitJson
 
             if (obj is Double) {
                 writer.Write ((double) obj);
+                return;
+            }
+
+            if (obj is Single)
+            {
+                writer.Write((float)obj);
                 return;
             }
 
