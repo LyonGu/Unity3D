@@ -65,6 +65,16 @@
   <ItemGroup>
     <Compile Include="Assets\Plugins\JSON\JSONObject.cs" />
     <Compile Include="Assets\Plugins\JSON\VectorTemplates.cs" />
+    <Compile Include="Assets\Plugins\LitJson\IJsonWrapper.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonData.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonException.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonMapper.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonMockWrapper.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonReader.cs" />
+    <Compile Include="Assets\Plugins\LitJson\JsonWriter.cs" />
+    <Compile Include="Assets\Plugins\LitJson\Lexer.cs" />
+    <Compile Include="Assets\Plugins\LitJson\Netstandard15Polyfill.cs" />
+    <Compile Include="Assets\Plugins\LitJson\ParserToken.cs" />
     <Compile Include="Assets\Plugins\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
     <Compile Include="Assets\Plugins\Unity-Logs-Viewer\Reporter\Reporter.cs" />
     <Compile Include="Assets\Plugins\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
