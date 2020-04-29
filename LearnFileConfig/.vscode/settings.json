@@ -1,0 +1,92 @@
+{
+    "luaide.luaTemplatesDir": "C:\\Lua\\Template",
+
+    "files.exclude": {
+        "**/*.meta": true,
+        "**/*.iml": true,
+        ".idea": true,
+        "@LuaCheckRule.asset": true
+    },
+
+    // Force to use the utf8 in lua files.
+    "files.encoding": "utf8",
+
+    // Force to use the windows style eol(because we work on
+    // windows mostly).
+    "files.eol": "\r\n",
+
+    // Trim the trailing whitespace, to match the luacheck rule.
+    "files.trimTrailingWhitespace": true,
+
+    // Insert a final new line in lua file.
+    "files.insertFinalNewline": true,
+
+    // Force to use 4 space instead of tab.
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+
+    // The code should not more than 80 characters in one line.
+    // Althrough the modern screen is large, this rule still good
+    // when you use diff tool.
+    "editor.rulers": [80],
+
+    "files.associations": {//配置语言的文件关联（在Unity里面写lua大多以.txt为文件后缀）
+        "*.txt": "lua"
+    },
+    "files.exclude": {//配置 glob 模式以在搜索中排除文件和文件夹。
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.gitignore": true,
+        "**/.gitmodules": true,
+        "**/*.booproj": true,
+        "**/*.pidb": true,
+        "**/*.suo": true,
+        "**/*.user": true,
+        "**/*.userprefs": true,
+        "**/*.unityproj": true,
+        "**/*.dll": true,
+        "**/*.exe": true,
+        "**/*.pdf": true,
+        "**/*.mid": true,
+        "**/*.midi": true,
+        "**/*.wav": true,
+        "**/*.gif": true,
+        "**/*.ico": true,
+        "**/*.jpg": true,
+        "**/*.jpeg": true,
+        "**/*.png": true,
+        "**/*.psd": true,
+        "**/*.tga": true,
+        "**/*.tif": true,
+        "**/*.tiff": true,
+        "**/*.3ds": true,
+        "**/*.3DS": true,
+        "**/*.fbx": true,
+        "**/*.FBX": true,
+        "**/*.lxo": true,
+        "**/*.LXO": true,
+        "**/*.ma": true,
+        "**/*.MA": true,
+        "**/*.obj": true,
+        "**/*.OBJ": true,
+        "**/*.asset": true,
+        "**/*.cubemap": true,
+        "**/*.flare": true,
+        "**/*.mat": true,
+        "**/*.meta": true,
+        "**/*.prefab": true,
+        "**/*.unity": true,
+        "build/": true,
+        "Build/": true,
+        "Library/": true,
+        "library/": true,
+        "obj/": true,
+        "Obj/": true,
+        "ProjectSettings/": true,
+        "temp/": true,
+        "Temp/": true,
+        "Logs/": true,
+        "Packages/": true,
+    },
+    "editor.snippetSuggestions": "bottom"
+}
