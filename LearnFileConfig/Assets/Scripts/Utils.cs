@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.Networking;
 public static class Utils 
 {
 #if UNITY_EDITOR
@@ -23,7 +24,11 @@ public static class Utils
 #if UNITY_EDITOR
         string str = File.ReadAllText(path);
 #else
-        string str = File.ReadAllText(path);
+        var uri = new System.Uri(path);
+        var request = UnityWebRequest.Get(uri.AbsoluteUri);
+        request.SendWebRequest();
+        while (!request.isDone) { };
+        string str = request.downloadHandler.text;
 #endif
         return str;
     }
