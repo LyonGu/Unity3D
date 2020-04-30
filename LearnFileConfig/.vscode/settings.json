@@ -87,6 +87,8 @@
         "Temp/": true,
         "Logs/": true,
         "Packages/": true,
+        "Assets/Plugins/": true,
+        "Assets/Scenes/": true,
     },
     "editor.snippetSuggestions": "bottom"
 }

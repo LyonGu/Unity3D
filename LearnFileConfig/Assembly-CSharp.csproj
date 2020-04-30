@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\JsonWitJsonUtility.cs" />
     <Compile Include="Assets\Scripts\JsonWitLitJson.cs" />
     <Compile Include="Assets\Scripts\LearnFile.cs" />
+    <Compile Include="Assets\Scripts\UsingCsvHelper.cs" />
     <Compile Include="Assets\Scripts\Utils.cs" />
     <Compile Include="Assets\Scripts\XmlDecode.cs" />
     <Compile Include="Assets\Scripts\XmlDoc.cs" />
