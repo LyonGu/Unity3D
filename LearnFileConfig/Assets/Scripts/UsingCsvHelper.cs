@@ -22,9 +22,7 @@ namespace GameCsvHelper
         // Start is called before the first frame update
         void Start()
         {
-            var path = Utils.GetConfigFilePath("Npcs.csv");
-
-            var csvStr = File.ReadAllText(path);
+            var csvStr = Utils.ReadConfigFile("Npcs.csv");
 
             using (var reader = new StringReader(csvStr))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))

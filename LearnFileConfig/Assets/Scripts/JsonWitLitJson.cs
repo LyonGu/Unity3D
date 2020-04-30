@@ -20,10 +20,9 @@ namespace GameLitJson
     {
         void Start()
         {
-            var path = Utils.GetConfigFilePath("data.json");
-            var jsonStr = File.ReadAllText(path);
+            var jsonStr = Utils.ReadConfigFile("data.json");
 
-        
+
             var npcs = JsonMapper.ToObject<Npc[]>(jsonStr);
             Debug.Log(npcs.Length);
             foreach (var npc in npcs)

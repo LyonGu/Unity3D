@@ -289,12 +289,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="I18N.CJK">
-      <HintPath>D:/GitResponse/Unity3D/LearnFileConfig/Assets/Plugins/I18N.CJK.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N">
-      <HintPath>D:/GitResponse/Unity3D/LearnFileConfig/Assets/Plugins/I18N.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>D:/GitResponse/Unity3D/LearnFileConfig/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>

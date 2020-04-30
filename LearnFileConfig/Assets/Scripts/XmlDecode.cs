@@ -30,8 +30,7 @@ namespace GameXmlDecode
         void Start()
         {
             // 使用Path.Combine减少路径拼接的错误
-            var path = Utils.GetConfigFilePath("npcs.xml");
-            var xmlStr = File.ReadAllText(path);
+            var xmlStr = Utils.ReadConfigFile("npcs.xml");
 
             // 使用using，在离开作用范围后会自动释放rdr
             using (var rdr = new StringReader(xmlStr))

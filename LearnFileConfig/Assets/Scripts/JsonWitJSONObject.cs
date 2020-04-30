@@ -5,8 +5,7 @@ public class JsonWitJSONObject : MonoBehaviour
 {
     void Start()
     {
-        var path = Utils.GetConfigFilePath("data.json");
-        var jsonStr = File.ReadAllText(path);
+        var jsonStr = Utils.ReadConfigFile("data.json");
 
         JSONObject j = new JSONObject(jsonStr);
         accessData(j);

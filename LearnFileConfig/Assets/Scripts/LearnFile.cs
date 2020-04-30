@@ -8,8 +8,7 @@ public class LearnFile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string filePath = Utils.GetConfigFilePath("text.txt");
-        var str = File.ReadAllText(filePath);
+        var str = Utils.ReadConfigFile("text.txt");
         Debug.Log(str);
     }
 

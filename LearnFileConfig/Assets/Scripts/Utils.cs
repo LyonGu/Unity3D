@@ -16,4 +16,15 @@ public static class Utils
         filePath = filePath.Replace("\\", "/");
         return filePath;
     }
+
+    public static string ReadConfigFile(string fileName)
+    {
+        string path = GetConfigFilePath(fileName);
+#if UNITY_EDITOR
+        string str = File.ReadAllText(path);
+#else
+        string str = File.ReadAllText(path);
+#endif
+        return str;
+    }
 }

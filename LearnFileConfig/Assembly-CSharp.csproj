@@ -281,12 +281,6 @@
     <Reference Include="UnityEngine.XRModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.8f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
     </Reference>
-    <Reference Include="I18N.CJK">
-      <HintPath>D:/GitResponse/Unity3D/LearnFileConfig/Assets/Plugins/I18N.CJK.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N">
-      <HintPath>D:/GitResponse/Unity3D/LearnFileConfig/Assets/Plugins/I18N.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.8f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
     </Reference>

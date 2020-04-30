@@ -24,8 +24,7 @@ namespace GameJsonUtility
     {
         void Start()
         {
-            var path = Utils.GetConfigFilePath("dataobject.json");
-            var jsonStr = File.ReadAllText(path);
+            var jsonStr = Utils.ReadConfigFile("dataobject.json");
 
             var npcs = JsonUtility.FromJson<Npcs>(jsonStr);
             Debug.Log(npcs.npcs.Length);
