@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GetFileByWebRequest.cs" />
     <Compile Include="Assets\Scripts\JsonWitJSONObject.cs" />
     <Compile Include="Assets\Scripts\JsonWitJsonUtility.cs" />
     <Compile Include="Assets\Scripts\JsonWitLitJson.cs" />
