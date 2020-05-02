@@ -32,12 +32,12 @@ outfile:close()
 profiler.stop()
 
 
--- 内存泄漏分析
--- local memory = require("perf.memory")
--- print("total memory:", memory.total())
--- outfile = io.open(Application.dataPath .. "/memory.log", "w+")
--- outfile:write(memory.snapshot())
--- outfile:close()
+-- -- 内存泄漏分析
+-- -- local memory = require("perf.memory")
+-- -- print("total memory:", memory.total())
+-- -- outfile = io.open(Application.dataPath .. "/memory.log", "w+")
+-- -- outfile:write(memory.snapshot())
+-- -- outfile:close()
 
 
 
@@ -68,6 +68,37 @@ EventTrigger.triggers.Add(entry);
         //将事件对象压入eventTrigger的triggers中
         eventTrigger.triggers.Add(entry);
 ]===]
+
+collectgarbage("collect")
+collectgarbage("collect")
+collectgarbage("collect")
+print("now0,Lua内存为:", collectgarbage("count"))
+
+local colen = {} --现在是局部变量
+for i = 1, 5000 do
+    table.insert(colen, {})
+end
+
+local a = colen
+local b = a
+
+print("now1,Lua内存为:", collectgarbage("count"))
+
+a = nil
+colen = nil
+b = nil
+
+collectgarbage("collect")
+collectgarbage("collect")
+collectgarbage("collect")
+print("now2,Lua内存为:", collectgarbage("count"))
+
+
+
+function A(  )
+   local a = 10
+   local t = {1,2,}
+end
 
 
 

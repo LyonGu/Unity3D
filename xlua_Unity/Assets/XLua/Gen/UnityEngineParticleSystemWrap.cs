@@ -573,7 +573,7 @@ namespace XLua.CSObjectWrap
                 {
                     bool _enabled = LuaAPI.lua_toboolean(L, 1);
                     
-                    UnityEngine.ParticleSystem.EnableMeshNonUniformScaleFix( _enabled );
+                    //UnityEngine.ParticleSystem.EnableMeshNonUniformScaleFix( _enabled );
                     
                     
                     
