@@ -187,6 +187,7 @@
     <Compile Include="Assets\Scripts\DestroyObjUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\DotweenLearn.cs" />
     <Compile Include="Assets\Scripts\DragTest.cs" />
+    <Compile Include="Assets\Scripts\GCTest.cs" />
     <Compile Include="Assets\Scripts\GUI_demo1.cs" />
     <Compile Include="Assets\Scripts\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\GirlBaseActionControl.cs" />

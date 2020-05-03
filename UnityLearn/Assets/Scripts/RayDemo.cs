@@ -17,7 +17,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ShottingNoBufferPool: MonoBehaviour
+public class RayDemo: MonoBehaviour
 {    
     public Texture Texture_ShootingCursor;                 //射击瞄准星
     public GameObject G0_CubeOrigianl;                     //射击原型物体
