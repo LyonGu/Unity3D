@@ -45,6 +45,9 @@ meshRender.material = m
 local gameObject = GameObject.Find("Game")
 local XluaCallCSharpMonoBehaviour = gameObject:GetComponent(typeof(CS.XluaCallCSharpMonoBehaviour))
 XluaCallCSharpMonoBehaviour:xluaCallCSharp()
+-- local aa = gameObject
+-- GameObject.Destroy(aa)
+-- CS.System.GC.Collect()
 
 
 

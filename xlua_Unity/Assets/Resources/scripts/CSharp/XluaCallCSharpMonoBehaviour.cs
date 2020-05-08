@@ -21,8 +21,15 @@ public class XluaCallCSharpMonoBehaviour : MonoBehaviour {
 		
 	}
 
+
+
 	public void TestClickImage()
 	{
         Debug.Log(GetType() + "/TestClickImage");
+	}
+
+	~XluaCallCSharpMonoBehaviour()
+	{
+		Debug.Log(GetType() + "/析构调用====");
 	}
 }

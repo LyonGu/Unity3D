@@ -97,3 +97,6 @@ LearnFileConfig/APK/
 AVProVideo(3D)/Library/
 AVProVideo(3D)/Temp/
 AVProVideo(3D)/Logs/
+Light/Library/
+Light/Logs/
+FakeReflection/Library/

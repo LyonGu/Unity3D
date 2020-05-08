@@ -14,7 +14,19 @@ public class Demo3 : MonoBehaviour {
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.A))
         {
-            this.gameObject.AddComponent(typeof(SelfRotation));
+			this.gameObject.AddComponent(typeof(SelfRotation));
+			GameObject.Destroy(this.gameObject);
         }
 	}
+
+	private void OnDisable()
+	{
+		Debug.Log(GetType() + "/OnDisable");
+	}
+
+	private void OnDestroy()
+	{
+		Debug.Log(GetType() + "/OnDestroy");
+	}
+
 }
