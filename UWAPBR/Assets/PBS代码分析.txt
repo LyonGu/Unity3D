@@ -107,7 +107,7 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 	//光源与半角的夹角余弦
     half lh = saturate(dot(light.dir, halfDir));
 
-    //漫反射项
+    //漫反射项 根据粗糙度
     half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;
 
     // Specular term
@@ -115,7 +115,7 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
     // BUT 1) that will make shader look significantly darker than Legacy ones
     // and 2) on engine side "Non-important" lights have to be divided by Pi too in cases when they are injected into ambient SH
 	//原粗糙度的平方
-    float roughness = PerceptualRoughnessToRoughness(perceptualRoughness); // return perceptualRoughness * perceptualRoughness; 
+    float roughness = PerceptualRoughnessToRoughness(perceptualRoughness); // return perceptualRoughness * perceptualRoughness;
 #if UNITY_BRDF_GGX
     // GGX with roughtness to 0 would mean no specular at all, using max(roughness, 0.002) here to match HDrenderloop roughtness remapping.
     roughness = max(roughness, 0.002);
@@ -213,7 +213,7 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
 }
 
 //法线分布函数
-inline float GGXTerm (float NdotH, float roughness)//这里计算D项  
+inline float GGXTerm (float NdotH, float roughness)//这里计算D项
 {
     float a2 = roughness * roughness;
     float d = (NdotH * a2 - NdotH) * NdotH + 1.0f; // 2 mad // (NdotH * NdotH) * (a2-1) + 1.0f
