@@ -240,6 +240,7 @@
     <None Include="Assets\PostProcessing\Resources\Shaders\EyeHistogram.compute" />
     <None Include="Assets\Cookbook\Code\01_Code\BRDFDiffuse.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_3.shader" />
+    <None Include="Assets\Shaders\Chapter18\CustomPBR.shader" />
     <None Include="Assets\Cookbook\Code\07_Code\VertexHeightMapBlend.shader" />
     <None Include="Assets\Shaders\Chapter12\DistortPostEffectScreen.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
