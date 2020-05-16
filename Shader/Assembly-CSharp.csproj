@@ -452,6 +452,7 @@
     <None Include="Assets\Shaders\Surface\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\SampleUV\FlashEffect.shader" />
     <None Include="Assets\Colorful\Shaders\CC_Posterize.shader" />
+    <None Include="Assets\Shaders\Common\OutLine3DHDRColor.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex2.shader" />
     <None Include="Assets\Shaders\Surface\SimpleVertexColor.shader" />
     <None Include="Assets\Shaders\Chapter11\VertexAnimationWithShadow.shader" />
