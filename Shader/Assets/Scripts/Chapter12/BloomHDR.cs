@@ -31,8 +31,8 @@ public class BloomHDR : PostEffectsBase
     //[Range(0.0f, 4.0f)]
     //public float luminanceThreshold = 0.6f;
 
-    [Range(0.0f, 4.0f)]
-    public float exposure = 0.6f;
+    // [Range(0.0f, 4.0f)]
+    // public float exposure = 0.6f;
 
     [Range(0.0f, 4.0f)]
     public float BM = 0.6f;
@@ -40,11 +40,11 @@ public class BloomHDR : PostEffectsBase
     [Range(0.0f, 4.0f)]
     public float Exp = 0.6f;
 
-    [Range(0.0f, 20.0f)]
-    public float Lum = 0.6f;
-
     [Range(0.0f, 4.0f)]
     public float BrightThreshold = 1.0f;
+
+    [Header("是否使用色调映射Tone-mapping")]
+    public bool IsUseToneMapping = false;
 
     [Header("是否使用Gamma矫正")]
     public bool IsUseGammaCorrect = false;
@@ -68,7 +68,7 @@ public class BloomHDR : PostEffectsBase
     //		} else {
     //			Graphics.Blit(src, dest);
     //		}
-    //	} 
+    //	}
 
     /// 2nd edition: scale the render texture
     //	void OnRenderImage (RenderTexture src, RenderTexture dest) {
@@ -104,6 +104,7 @@ public class BloomHDR : PostEffectsBase
             buffer0.filterMode = FilterMode.Bilinear;
 
             //把src图像数据缩放后存到buffer0中，使用第一个Pass
+            material.SetFloat("_BrightThreshold", BrightThreshold);
             Graphics.Blit(src, buffer0, material, 0);
 
             for (int i = 0; i < iterations; i++)
@@ -132,11 +133,11 @@ public class BloomHDR : PostEffectsBase
 
             //把提取亮度后 进行高斯模糊后的数据传到 shader里的_Bloom纹理
             material.SetTexture("_Bloom", buffer0);
-            material.SetFloat("_Exposure", exposure);
+            //material.SetFloat("_Exposure", exposure);
             material.SetFloat("_BM", BM);
             material.SetFloat("_Exp", Exp);
-            material.SetFloat("_Lum", Lum);
-            material.SetFloat("_BrightThreshold", BrightThreshold);
+
+
             if (IsUseGammaCorrect)
             {
                 material.SetInt("_IsGamma", 1);
@@ -146,10 +147,19 @@ public class BloomHDR : PostEffectsBase
                 material.SetInt("_IsGamma", 0);
             }
 
-      
+            if (IsUseToneMapping)
+            {
+                material.SetInt("_IsUseToneMapping", 1);
+            }
+            else
+            {
+                material.SetInt("_IsUseToneMapping", 0);
+            }
+
+
 
             //把原始图片进行shader里pass处理，融合原始图与buffer0
-            Graphics.Blit(src, dest, material, 3);  
+            Graphics.Blit(src, dest, material, 3);
             RenderTexture.ReleaseTemporary(buffer0);  //最后一定要解绑
         }
         else

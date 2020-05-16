@@ -393,6 +393,7 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_Shadow.shader" />
     <None Include="Assets\Cookbook\Code\01_Code\HalfLambertDiffuse.shader" />
     <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />
+    <None Include="Assets\Resources\Models\Maps\VW_ActionRPG_AssetPack\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
     <None Include="Assets\Shaders\Surface\LitSphereshadingmodel.shader" />
     <None Include="Assets\Colorful\Shaders\CC_Negative.shader" />

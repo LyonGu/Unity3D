@@ -12,6 +12,7 @@ Shader "Shaders/Chapter12/BloomHDR"
 		_BM("BM", Float) = 1.0
 		_Lum("Lum", Float) = 1.0
 		_IsGamma("IsGamma", Int) = 0
+		_IsUseToneMapping("IsUseToneMapping", Int) = 0
 
 	}
 	SubShader
@@ -29,6 +30,7 @@ Shader "Shaders/Chapter12/BloomHDR"
 			float _Exp;
 			float _Lum;
 			int _IsGamma;
+			int _IsUseToneMapping;
 
 			struct v2f{
 				float4 pos: SV_POSITION;
@@ -53,13 +55,13 @@ Shader "Shaders/Chapter12/BloomHDR"
 			//提取亮度像素着色器
 			fixed4 fragExtractBright(v2f i) : SV_Target {
 				fixed4 c = tex2D(_MainTex, i.uv);
-				//使用HDR
+				//使用HDR //使用Unity的内置函数进行色调映射
 				float val = luminance(c);
 				if (val > _BrightThreshold)  //默认应该是_BrightThreshold为1.0
 				{
 					return c;
 				}
-				return fixed4(0.0,0.0,0.0,1.0);
+				return fixed4(0.0,0.0,0.0,0.0);
 			}
 
 
@@ -91,7 +93,28 @@ Shader "Shaders/Chapter12/BloomHDR"
 			fixed4 fragBloom(v2fBloom i) : SV_Target {
 
 				//使用HDR后，最后输出结果还要进行色调映射 ，如果在非线性空间下还得进行gamma矫正
-				fixed4 hdrColor =  tex2D(_MainTex, i.uv.xy) + tex2D(_Bloom, i.uv.zw);
+				fixed4 hdrColor =  tex2D(_MainTex, i.uv.xy)+ tex2D(_Bloom, i.uv.zw) * 2.0;
+				fixed4 result = hdrColor;
+				if (_IsUseToneMapping == 1)
+				{
+					float y = dot(float4(0.3,0.59,0.11,1), hdrColor);
+					float yd = _Exp * (_Exp / _BM + 1) / (_Exp + 1);
+					result =  hdrColor*yd;
+				}
+
+				if(_IsGamma == 1)
+				{
+					const float gamma = 2.2;
+					result.x = pow(result.x, 1.0 / gamma);
+					result.y = pow(result.y, 1.0 / gamma);
+					result.z = pow(result.z, 1.0 / gamma);
+				}
+
+				return result;
+
+
+
+
 				// fixed3 result = fixed3(1.0,1.0,1.0) - exp(-hdrColor * _Exposure);
 
 				// float y = dot(float4(0.3,0.59,0.11,1), hdrColor);
@@ -116,27 +139,13 @@ Shader "Shaders/Chapter12/BloomHDR"
 				*/
 
 
-
-
-				//使用Unity的内置函数进行色调映射
-				fixed3 color = tex2D(_MainTex, i.uv.xy).xyz;
-				fixed3 result = tex2D(_Bloom, i.uv.zw).xyz;
-				float lum = Luminance(result);
-				result = color + result * (lum+0.1) * _Lum;
-
-
 				// also gamma correct while we're at it
-				if(_IsGamma == 1)
-				{
-					const float gamma = 2.2;
-					result.x = pow(result.x, 1.0 / gamma);
-					result.y = pow(result.y, 1.0 / gamma);
-					result.z = pow(result.z, 1.0 / gamma);
-				}
 
-				return fixed4(result, 1.0);
 
-				// return float4(result,1);
+
+
+
+
 			}
 
 		ENDCG

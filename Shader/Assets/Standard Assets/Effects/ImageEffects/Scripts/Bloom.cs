@@ -8,6 +8,9 @@ namespace UnityStandardAssets.ImageEffects
     [AddComponentMenu ("Image Effects/Bloom and Glow/Bloom")]
     public class Bloom : PostEffectsBase
     {
+        /// <summary>
+        /// 镜头耀斑风格
+        /// </summary>
         public enum LensFlareStyle
         {
             Ghosting = 0,
@@ -21,6 +24,9 @@ namespace UnityStandardAssets.ImageEffects
             Complex = 1,
         }
 
+        /// <summary>
+        /// HDR开启开关
+        /// </summary>
         public enum HDRBloomMode
         {
             Auto = 0,
@@ -105,9 +111,13 @@ namespace UnityStandardAssets.ImageEffects
             // screen blend is not supported when HDR is enabled (will cap values)
 
             doHdr = false;
+            bool allowHDR = GetComponent<Camera>().allowHDR;
             if (hdr == HDRBloomMode.Auto)
-                doHdr = source.format == RenderTextureFormat.ARGBHalf && GetComponent<Camera>().allowHDR;
-            else {
+            {
+                doHdr = source.format == RenderTextureFormat.ARGBHalf && allowHDR;
+            }
+            else
+            {
                 doHdr = hdr == HDRBloomMode.On;
             }
 
@@ -137,13 +147,17 @@ namespace UnityStandardAssets.ImageEffects
                 RenderTexture.ReleaseTemporary(rtDown4);
             }
             else {
+
+                //先直接把原始图缩放一半到halfRezColorDown，然后使用screenBlend的第七个pass，绘制到1/4 rt上
                 Graphics.Blit (source, halfRezColorDown);
-                Graphics.Blit (halfRezColorDown, quarterRezColor, screenBlend, 6);
+                Graphics.Blit (halfRezColorDown, quarterRezColor, screenBlend, 6); //简单做了一个模糊，使用默认参数
             }
             RenderTexture.ReleaseTemporary (halfRezColorDown);
 
             // cut colors (thresholding)
             RenderTexture secondQuarterRezColor = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
+
+            //利用阈值从quarterRezColor纹理提取亮度到secondQuarterRezColor
             BrightFilter (bloomThreshold * bloomThresholdColor, quarterRezColor, secondQuarterRezColor);
 
             // blurring
