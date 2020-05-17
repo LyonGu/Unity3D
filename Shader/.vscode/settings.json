@@ -86,5 +86,13 @@
         "temp/": true,
         "Temp/": true
     },
-    "editor.snippetSuggestions": "bottom"
+    "editor.snippetSuggestions": "bottom",
+
+    //code runner 配置
+    "code-runner.ignoreSelection": true,
+    "code-runner.fileDirectoryAsCwd": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.executorMap": {
+        "csharp": "echo= && csc /nologo /utf8output $fileName && $fileNameWithoutExt"
+    },
 }

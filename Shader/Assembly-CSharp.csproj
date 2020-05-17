@@ -184,6 +184,7 @@
     <Compile Include="Assets\Scripts\Chapter15\BurnHelper.cs" />
     <Compile Include="Assets\Scripts\Chapter15\FogWithNoise.cs" />
     <Compile Include="Assets\Scripts\Chapter5\ColorPicker.cs" />
+    <Compile Include="Assets\Scripts\CodeRunnerTest.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferOutLinePostEffect.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferRT.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
