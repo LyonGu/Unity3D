@@ -178,31 +178,31 @@
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset2.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\TiltShiftHdrLensBlur.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>G:/GitResponse/CookBook/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/CookBook/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.8f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
