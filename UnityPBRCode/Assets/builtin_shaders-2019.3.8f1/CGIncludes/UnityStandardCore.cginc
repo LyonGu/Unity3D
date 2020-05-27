@@ -438,8 +438,12 @@ half4 fragForwardBaseInternal (VertexOutputForwardBase i)
     UNITY_LIGHT_ATTENUATION(atten, i, s.posWorld);
 
     half occlusion = Occlusion(i.tex.xy);
+
+    //最后调用的也是UnityGlobalIllumination
+    //计算全局光照的间接光中的高光部分和漫反射部分
     UnityGI gi = FragmentGI (s, occlusion, i.ambientOrLightmapUV, atten, mainLight);
 
+    //BRDF计算 直接光的漫反射和高光部分
     half4 c = UNITY_BRDF_PBS (s.diffColor, s.specColor, s.oneMinusReflectivity, s.smoothness, s.normalWorld, -s.eyeVec, gi.light, gi.indirect);
     c.rgb += Emission(i.tex.xy);
 
