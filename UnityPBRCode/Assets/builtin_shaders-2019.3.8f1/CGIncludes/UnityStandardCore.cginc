@@ -374,10 +374,10 @@ struct VertexOutputForwardBase
 
 VertexOutputForwardBase vertForwardBase (VertexInput v)
 {
-    UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_SETUP_INSTANCE_ID(v);  //初始化Instance对象
     VertexOutputForwardBase o;
     UNITY_INITIALIZE_OUTPUT(VertexOutputForwardBase, o);
-    UNITY_TRANSFER_INSTANCE_ID(v, o);
+    UNITY_TRANSFER_INSTANCE_ID(v, o);  //需要传递Instance属性给frag着色器
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
     float4 posWorld = mul(unity_ObjectToWorld, v.vertex);

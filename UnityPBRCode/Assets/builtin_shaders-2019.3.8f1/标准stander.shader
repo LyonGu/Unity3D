@@ -12,10 +12,10 @@ Shader "Custom/NewSurfaceShader"
         Tags { "RenderType"="Opaque" }
         LOD 200
 
-        
+
 	// ------------------------------------------------------------
 	// Surface shader code generated out of a CGPROGRAM block:
-	
+
 
 	// ---- forward rendering base pass:
 	Pass {
@@ -105,7 +105,7 @@ CGPROGRAM
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 
 // vertex-to-fragment interpolation data
 // no lightmaps:
@@ -321,10 +321,14 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
     giInput.boxMin[1] = unity_SpecCube1_BoxMin;
     giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
   #endif
-  LightingStandard_GI(o, giInput, gi);  //计算了全局光照的直接光和间接光(IBL)，间接光的漫反射部分和高光部分
+  LightingStandard_GI(o, giInput, gi);  //计算了全局光照的直接光和间接光，间接光的漫反射部分和高光部分
 
   // realtime lighting: call lighting function
   // PBS计算 ==> 主要是BRDF
+  /*
+     会计算直接光的漫反射和镜面反射部分
+     根据GI里间接光中的漫反射和高光部分，基于IBL计算出 IBL的漫反射和高光部分
+  */
   c += LightingStandard (o, worldViewDir, gi);
   UNITY_APPLY_FOG(_unity_fogCoord, c); // apply fog
   UNITY_OPAQUE_ALPHA(c.a);
@@ -334,7 +338,7 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
 
 #endif
 
-// -------- variant for: INSTANCING_ON 
+// -------- variant for: INSTANCING_ON
 #if defined(INSTANCING_ON)
 // Surface shader code generated based on:
 // writes to per-pixel normal: no
@@ -403,7 +407,7 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 
 // vertex-to-fragment interpolation data
 // no lightmaps:
@@ -726,7 +730,7 @@ CGPROGRAM
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 
 // vertex-to-fragment interpolation data
 struct v2f_surf {
@@ -911,7 +915,7 @@ CGPROGRAM
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 
 // vertex-to-fragment interpolation data
 struct v2f_surf {
@@ -1078,7 +1082,7 @@ fixed3 originalNormal = o.Normal;
 
 #endif
 
-// -------- variant for: INSTANCING_ON 
+// -------- variant for: INSTANCING_ON
 #if defined(INSTANCING_ON)
 // Surface shader code generated based on:
 // writes to per-pixel normal: no
@@ -1146,7 +1150,7 @@ fixed3 originalNormal = o.Normal;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 
 // vertex-to-fragment interpolation data
 struct v2f_surf {
@@ -1407,7 +1411,7 @@ CGPROGRAM
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 #include "UnityMetaPass.cginc"
 
 // vertex-to-fragment interpolation data
@@ -1498,7 +1502,7 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
 
 #endif
 
-// -------- variant for: INSTANCING_ON 
+// -------- variant for: INSTANCING_ON
 #if defined(INSTANCING_ON)
 // Surface shader code generated based on:
 // writes to per-pixel normal: no
@@ -1566,7 +1570,7 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        
+
 #include "UnityMetaPass.cginc"
 
 // vertex-to-fragment interpolation data
