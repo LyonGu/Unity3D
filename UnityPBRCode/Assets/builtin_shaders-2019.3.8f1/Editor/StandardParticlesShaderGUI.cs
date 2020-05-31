@@ -479,7 +479,8 @@ namespace UnityEditor
             bool useFlipbookBlending = (material.GetFloat("_FlipbookMode") > 0.0f);
             bool useTangents = useLighting && material.GetTexture("_BumpMap");
 
-            bool useGPUInstancing = ShaderUtil.HasProceduralInstancing(material.shader);
+            //bool useGPUInstancing = ShaderUtil.HasProceduralInstancing(material.shader);
+            bool useGPUInstancing = true;
             if (useGPUInstancing && m_RenderersUsingThisMaterial.Count > 0)
             {
                 if (!m_RenderersUsingThisMaterial[0].enableGPUInstancing || m_RenderersUsingThisMaterial[0].renderMode != ParticleSystemRenderMode.Mesh)
@@ -541,10 +542,10 @@ namespace UnityEditor
                 {
                     if (renderer != null)
                     {
-                        if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
-                            renderer.SetActiveVertexStreams(instancedStreams);
-                        else
-                            renderer.SetActiveVertexStreams(streams);
+                        //if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
+                        //    renderer.SetActiveVertexStreams(instancedStreams);
+                        //else
+                        //    renderer.SetActiveVertexStreams(streams);
                     }
                 }
             }
@@ -559,13 +560,13 @@ namespace UnityEditor
                     renderer.GetActiveVertexStreams(rendererStreams);
 
                     bool streamsValid;
-                    if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
-                        streamsValid = rendererStreams.SequenceEqual(instancedStreams);
-                    else
-                        streamsValid = rendererStreams.SequenceEqual(streams);
+                    //if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
+                    //    streamsValid = rendererStreams.SequenceEqual(instancedStreams);
+                    //else
+                    //    streamsValid = rendererStreams.SequenceEqual(streams);
 
-                    if (!streamsValid)
-                        Warnings += "  " + renderer.name + "\n";
+                    //if (!streamsValid)
+                    //    Warnings += "  " + renderer.name + "\n";
                 }
             }
             if (Warnings != "")

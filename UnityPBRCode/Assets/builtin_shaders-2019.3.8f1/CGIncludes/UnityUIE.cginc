@@ -1,4 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
+// Upgrade NOTE: excluded shader from OpenGL ES 2.0 because it uses non-square matrices
+#pragma exclude_renderers gles
 
 #ifndef UNITY_UIE_INCLUDED
 #define UNITY_UIE_INCLUDED
