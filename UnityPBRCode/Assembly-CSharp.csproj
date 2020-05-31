@@ -125,6 +125,7 @@
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Alpha-Diffuse.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\GIDebug\VertexColors.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Unlit\Unlit-Normal.shader" />
+    <None Include="Assets\Scenes\MultipleVariants_PropertyDrawer.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\CGIncludes\UnityStandardUtils.cginc" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Normal-Parallax.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\TerrainShaders\Utils\BrushPreview.shader" />
@@ -232,6 +233,7 @@
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Sprites-Diffuse.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\CGIncludes\UnityUIE.cginc" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Nature\TreeCreator\TreeCreatorLeaves.shader" />
+    <None Include="Assets\Scenes\MaterialPropertyDrawerExample.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\DefaultResourcesExtra\Nature\SpeedTree.shader" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\CGIncludes\TerrainTool.cginc" />
     <None Include="Assets\builtin_shaders-2019.3.8f1\CGIncludes\UnityStandardInput.cginc" />
