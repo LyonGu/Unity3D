@@ -3723,6 +3723,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 254495559}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &258119111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258119113}
+  - component: {fileID: 258119112}
+  m_Layer: 0
+  m_Name: SingalBeCalled
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &258119112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258119111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cb6b4300eb9e14aa9694752abb4d52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &258119113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258119111}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.20161721, y: 1.1389885, z: -31.900993}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &260559885
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6390,6 +6433,10 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: 7030415034567202843, guid: 6b1702cfe0aea87409ef5565618ff40b, type: 2}
     value: {fileID: 1085635219}
+  - key: {fileID: 4006606173177635042, guid: 6b1702cfe0aea87409ef5565618ff40b, type: 2}
+    value: {fileID: 1184716458}
+  - key: {fileID: 1196457481014748638, guid: 6b1702cfe0aea87409ef5565618ff40b, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - 8baef41df4c26624689b415bcadeac5a: {fileID: 203887810}
@@ -15965,6 +16012,77 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1173117763}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1184716457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1184716459}
+  - component: {fileID: 1184716458}
+  m_Layer: 0
+  m_Name: SingalReciver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1184716458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184716457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 020f6dc673de6264e806c2410760ff5a, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 606259638}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 258119112}
+          m_MethodName: TestSingalCall
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: hexinping
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!4 &1184716459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184716457}
+  m_LocalRotation: {x: -0, y: 0.1836341, z: -0, w: 0.9829947}
+  m_LocalPosition: {x: 8.856944, y: -0.0064902892, z: -26.560804}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 22.744001, z: 0}
 --- !u!1001 &1184784703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24585,7 +24703,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "timeline\u7684c"
+  m_Text: 
 --- !u!222 &1766990826
 CanvasRenderer:
   m_ObjectHideFlags: 0

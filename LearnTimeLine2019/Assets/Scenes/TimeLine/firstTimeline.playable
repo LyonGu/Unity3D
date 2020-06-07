@@ -1246,6 +1246,7 @@ MonoBehaviour:
   - {fileID: -8620051996243004288}
   - {fileID: 3429158584927699411}
   - {fileID: 1235831559449406739}
+  - {fileID: 4136246860792910639}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
@@ -1343,6 +1344,22 @@ MonoBehaviour:
     m_DisplayName: ControlGameObject
   m_Markers:
     m_Objects: []
+--- !u!114 &1232817012802945670
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
+  m_Name: Signal Emitter
+  m_EditorClassIdentifier: 
+  m_Time: 2.466666666666667
+  m_Retroactive: 0
+  m_EmitOnce: 0
+  m_Asset: {fileID: 11400000, guid: 020f6dc673de6264e806c2410760ff5a, type: 2}
 --- !u!114 &1235831559449406739
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1905,6 +1922,54 @@ MonoBehaviour:
   m_Children:
   - {fileID: 2038031735496385865}
   - {fileID: 7030415034567202843}
+  m_Clips: []
+  m_Markers:
+    m_Objects: []
+--- !u!114 &4006606173177635042
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e36075dd1c124a8422c228e75e1fb, type: 3}
+  m_Name: Signal Track
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 4136246860792910639}
+  m_Children: []
+  m_Clips: []
+  m_Markers:
+    m_Objects:
+    - {fileID: 1232817012802945670}
+--- !u!114 &4136246860792910639
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0fc6f5187a81dc47999eefade6f0935, type: 3}
+  m_Name: Signal
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children:
+  - {fileID: 4006606173177635042}
   m_Clips: []
   m_Markers:
     m_Objects: []
