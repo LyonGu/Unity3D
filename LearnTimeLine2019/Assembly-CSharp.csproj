@@ -678,6 +678,9 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -699,6 +702,9 @@
     <Reference Include="Unity.PlayableGraphVisualizer">
       <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Unity.PlayableGraphVisualizer.dll</HintPath>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.PlayableGraphVisualizer.Editor">
       <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Unity.PlayableGraphVisualizer.Editor.dll</HintPath>
     </Reference>
@@ -707,12 +713,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Cinemachine">
-      <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>G:/GitResponse/Unity3D/LearnTimeLine2019/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>
