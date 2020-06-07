@@ -4,7 +4,7 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
 		_BumpMap ("Normal Map", 2D) = "bump" {}
-		_BumpScale ("Bump Scale", float) 		= 1.0 
+		_BumpScale ("Bump Scale", float) 		= 1.0
 		[KeywordEnum(MainTex, Light, Normal)] _Custom ("Custom", Float) = 0
 		[Toggle(_ENABLE_SHADOW)] _ENABLE_SHADOW ("ENABLE_SHADOW", Float) = 0
 	}
@@ -12,11 +12,11 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 	{
 		Tags { "RenderType"="Opaque" "Queue"="Geometry"}
 
-		Pass {	
+		Pass {
 
-			Tags { "LightMode"="ForwardBase" }  
+			Tags { "LightMode"="ForwardBase" }
 			CGPROGRAM
-				
+
 				//定义变体
 
 				/*
@@ -29,20 +29,22 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 				/*
 					EnableKeyword过，只要不DisableKeyword 就一直打开着
 				*/
-			
+
 
 				#pragma multi_compile _CUSTOM_MAINTEX _CUSTOM_LIGHT _CUSTOM_NORMAL
 				#pragma shader_feature _ENABLE_SHADOW
 
-				
+
+
 				#if _CUSTOM_LIGHT || _CUSTOM_NORMAL
 					// #pragma multi_compile_fwdbase
 					#include "Lighting.cginc"
 					#include "AutoLight.cginc"
 				#endif
-				
+
 				#pragma vertex vert
 				#pragma fragment frag
+
 
 				fixed4 _Color;
 				sampler2D _MainTex;
@@ -63,17 +65,17 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 					float4 pos : SV_POSITION;
 					float4 uv : TEXCOORD0;
 
-					#if _CUSTOM_LIGHT 
-						float3 worldPos: TEXCOORD01;
+					#if _CUSTOM_LIGHT
+						float3 worldPos: TEXCOORD1;
 						float3 worldNormal:TEXCOORD2;
-						#if _ENABLE_SHADOW 
+						#if _ENABLE_SHADOW
 							SHADOW_COORDS(3)
 						#endif
 					#elif _CUSTOM_NORMAL
 						float4 TtoW0 : TEXCOORD1;
 						float4 TtoW1 : TEXCOORD2;
 						float4 TtoW2 : TEXCOORD3;
-						#if _ENABLE_SHADOW 
+						#if _ENABLE_SHADOW
 							SHADOW_COORDS(4)
 						#endif
 					#endif
@@ -81,12 +83,12 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 				};
 
 				v2f vert(a2v v) {
-				
+
 					v2f o;
 					o.pos = UnityObjectToClipPos(v.vertex);
 					#if _CUSTOM_MAINTEX
 						o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
-					#endif 
+					#endif
 
 					#if _CUSTOM_LIGHT || _CUSTOM_NORMAL
 						o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
@@ -124,19 +126,19 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 						albedo = tex2D(_MainTex, i.uv.xy).rgb * _Color.rgb;
 					#else
 					 	albedo = _Color.rgb;
-					#endif 
+					#endif
 
 					#if _CUSTOM_LIGHT || _CUSTOM_NORMAL
 						// //测试_LightOn开启的时候  _MainTexOn是否关闭
 						// #if _CUSTOM_MAINTEX
 						// 	return fixed4(1,0,0, 1.0);
 						// #else
-						// 	#if _TestOn 
-						// 		return fixed4(0,1,0, 1.0); 
+						// 	#if _TestOn
+						// 		return fixed4(0,1,0, 1.0);
 						// 	#else
-						// 		return fixed4(0,0,0, 1.0); 
+						// 		return fixed4(0,0,0, 1.0);
 						// 	#endif
-							
+
 						// #endif
 						albedo = tex2D(_MainTex, i.uv.xy).rgb * _Color.rgb;
 						#if _CUSTOM_LIGHT
@@ -148,12 +150,14 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 							fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(worldNormal, worldLightDir));
 
 							#if _ENABLE_SHADOW
+								// fixed shadow = SHADOW_ATTENUATION(i);
+								// return fixed4(shadow,shadow,shadow 1.0);
 								UNITY_LIGHT_ATTENUATION(atten, i, worldPos);
 								return fixed4(ambient + diffuse * atten, 1.0);
 							#else
 								return fixed4(ambient + diffuse, 1.0);
 							#endif
-							
+
 						#else
 							float3 worldPos = float3(i.TtoW0.w, i.TtoW1.w, i.TtoW2.w);
 							fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
@@ -177,8 +181,8 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 						#endif
 					#else
 						return fixed4(albedo, 1.0);
-					#endif	
-		
+					#endif
+
 				}
 
 			ENDCG
@@ -192,11 +196,11 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 				#pragma fragment frag
 
 				#pragma multi_compile_shadowcaster
-				
+
 				#include "UnityCG.cginc"
 				struct v2f {
 					V2F_SHADOW_CASTER;
-					
+
 				};
 
 				v2f vert(appdata_base v) {
@@ -206,19 +210,19 @@ Shader "Shaders/Common/MultipleVariants_PropertyDrawer" {
 					// 1 顶点着色器函数形参为v
 					// 2 形参类型必须含有vertex 和 normal字段
 					TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
-					
+
 					return o;
 				}
 
 				fixed4 frag(v2f i) : SV_Target {
 					SHADOW_CASTER_FRAGMENT(i)
-					
+
 				}
 			ENDCG
 		}
-	
+
 	}
 	//FallBack "Diffuse"
-	
+
 }
 
