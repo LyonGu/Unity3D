@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\CustomLightControlAsset.cs" />
     <Compile Include="Assets\Scripts\CustomLightControlBehaviour.cs" />
     <Compile Include="Assets\Scripts\CustomTrack.cs" />
+    <Compile Include="Assets\Scripts\LearnITimeControl.cs" />
     <Compile Include="Assets\Scripts\PlayAnimationSample.cs" />
     <Compile Include="Assets\Scripts\TestLightControlAsset.cs" />
     <Compile Include="Assets\Scripts\TestLightControlBehaviour.cs" />
