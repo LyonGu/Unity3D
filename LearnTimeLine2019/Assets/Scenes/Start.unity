@@ -5253,6 +5253,75 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 354704595}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &356271392
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.164432
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -25.650219
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.99815804
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.060667656
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 173.044
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 959840d1fca8dea47b873773503db099,
+        type: 3}
+      propertyPath: m_Name
+      value: erika_archer_bow_arrow (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 959840d1fca8dea47b873773503db099, type: 3}
 --- !u!1001 &364672212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19740,6 +19809,44 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1428776099}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1428888333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 959840d1fca8dea47b873773503db099,
+    type: 3}
+  m_PrefabInstance: {fileID: 356271392}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1428888334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428888333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48e8b6a8f3fd0848a622f5c13fbe2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: -203655887218126122, guid: 7abc1ab6eacb24c4597ae184f8041eeb, type: 3}
+--- !u!95 &1428888335
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428888333}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 959840d1fca8dea47b873773503db099, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1434885083
 PrefabInstance:
   m_ObjectHideFlags: 0
