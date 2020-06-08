@@ -23,7 +23,7 @@ public class PlayableAnimation : MonoBehaviour
         PlayableGraph graph = PlayableGraph.Create("PlayableAnimation");
 
         AnimationClipPlayable clipPlayable = AnimationClipPlayable.Create(graph, clip);
-        AnimationPlayableOutput outPut = AnimationPlayableOutput.Create(graph, "AnimationOutPut First", GetComponent<Animator>());
+        AnimationPlayableOutput outPut = AnimationPlayableOutput.Create(graph, "AnimationOutPutFirst", GetComponent<Animator>());
         outPut.SetSourcePlayable(clipPlayable);  //给output设置输出资产
         graph.Play();
     }
