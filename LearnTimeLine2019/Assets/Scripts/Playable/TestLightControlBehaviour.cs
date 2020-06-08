@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 public class TestLightControlBehaviour : PlayableBehaviour
 {
-    public Light light = null;
+    
     public Color color = Color.white;
     public float intensity = 1f;
 
@@ -11,10 +11,10 @@ public class TestLightControlBehaviour : PlayableBehaviour
     /// </summary>
     /// <param name="playable"></param>
     /// <param name="info"></param>
-    /// <param name="playerData"></param>
-    public override void ProcessFrame(Playable playable, FrameData info, object
-    playerData)
+    /// <param name="playerData">绑定的组件</param>
+    public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
+        Light light = playerData as Light; 
         if (light != null)
         {
             light.color = color;

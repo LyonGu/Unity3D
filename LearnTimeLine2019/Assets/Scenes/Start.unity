@@ -1435,7 +1435,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.9647059, b: 0.9098039, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 1564.5952
   m_SpotAngle: 30
@@ -6437,10 +6437,13 @@ PlayableDirector:
     value: {fileID: 1184716458}
   - key: {fileID: 1196457481014748638, guid: 6b1702cfe0aea87409ef5565618ff40b, type: 2}
     value: {fileID: 0}
+  - key: {fileID: 5144511480282628947, guid: 6b1702cfe0aea87409ef5565618ff40b, type: 2}
+    value: {fileID: 76390876}
   m_ExposedReferences:
     m_References:
     - 8baef41df4c26624689b415bcadeac5a: {fileID: 203887810}
     - df95e2a256dfc0f429b65e3a50f3f566: {fileID: 203887810}
+    - 0af4f1b3f651f0347936a892cba3472d: {fileID: 76390876}
     - 682b72d031cb992429ec8624c64b103e: {fileID: 203887810}
 --- !u!1001 &430640887
 PrefabInstance:

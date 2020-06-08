@@ -103,6 +103,7 @@
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMove.cs" />
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMoveOnSphere.cs" />
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMovePhysics.cs" />
+    <Compile Include="Assets\Scripts\CustomAtrack\LightControlAtrack.cs" />
     <Compile Include="Assets\Scripts\LearnITimeControl.cs" />
     <Compile Include="Assets\Scripts\PlayAnimationSample.cs" />
     <Compile Include="Assets\Scripts\Playable\TestLightControlAsset.cs" />
