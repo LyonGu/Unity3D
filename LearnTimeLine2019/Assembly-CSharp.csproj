@@ -103,14 +103,11 @@
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMove.cs" />
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMoveOnSphere.cs" />
     <Compile Include="Assets\Samples\Cinemachine\2.5.0\Cinemachine Example Scenes\Shared\Scripts\PlayerMovePhysics.cs" />
-    <Compile Include="Assets\Scripts\CustomLightControlAsset.cs" />
-    <Compile Include="Assets\Scripts\CustomLightControlBehaviour.cs" />
-    <Compile Include="Assets\Scripts\CustomTrack.cs" />
     <Compile Include="Assets\Scripts\LearnITimeControl.cs" />
     <Compile Include="Assets\Scripts\PlayAnimationSample.cs" />
+    <Compile Include="Assets\Scripts\Playable\TestLightControlAsset.cs" />
+    <Compile Include="Assets\Scripts\Playable\TestLightControlBehaviour.cs" />
     <Compile Include="Assets\Scripts\SingalBeCalled.cs" />
-    <Compile Include="Assets\Scripts\TestLightControlAsset.cs" />
-    <Compile Include="Assets\Scripts\TestLightControlBehaviour.cs" />
     <Compile Include="Assets\Scripts\TestSignal.cs" />
     <Compile Include="Assets\Scripts\TestTimeControl.cs" />
     <Compile Include="Assets\unity-chan!\Unity-chan! Model\Scripts\AutoBlink.cs" />
