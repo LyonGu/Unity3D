@@ -9,6 +9,7 @@ using UnityEngine.Timeline;
 public class PlayableAnimation : MonoBehaviour
 {
     public AnimationClip clip;
+    private PlayableGraph _graph;
     void Start()
     {
         /*
@@ -20,13 +21,22 @@ public class PlayableAnimation : MonoBehaviour
             PlayableGraph 包含Playable和PlayableOutPut
 
          */
-        PlayableGraph graph = PlayableGraph.Create("PlayableAnimation");
+        _graph = PlayableGraph.Create("PlayableAnimation");
 
         AnimationClipPlayable clipPlayable = AnimationClipPlayable.Create(graph, clip);
         AnimationPlayableOutput outPut = AnimationPlayableOutput.Create(graph, "AnimationOutPutFirst", GetComponent<Animator>());
         outPut.SetSourcePlayable(clipPlayable);  //给output设置输出资产
         graph.Play();
+
+
+
+       // AnimationPlayableUtilities.PlayClip(GetComponent<Animator>(), clip, out graph);
     }
 
-    
+    private void OnDestroy()
+    {
+        _graph.Destroy();
+    }
+
+
 }
