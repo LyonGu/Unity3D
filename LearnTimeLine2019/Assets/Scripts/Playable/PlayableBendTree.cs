@@ -21,16 +21,27 @@ public class PlayableBendTree : MonoBehaviour
         var playableOutPut = AnimationPlayableOutput.Create(playableGraph, "AniamtionOutput", GetComponent<Animator>());
         var clip0Playable = AnimationClipPlayable.Create(playableGraph, clip0);
         var clip1Playable = AnimationClipPlayable.Create(playableGraph, clip1);
+
+        mixerPlayable = AnimationMixerPlayable.Create(playableGraph, 2);
+        playableOutPut.SetSourcePlayable(mixerPlayable);
+
+        playableGraph.Connect(clip0Playable, 0, mixerPlayable, 0);
+        playableGraph.Connect(clip1Playable, 0, mixerPlayable, 1);
+
+        playableGraph.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        weight = Mathf.Clamp01(weight);
+        mixerPlayable.SetInputWeight(0, weight);
+        mixerPlayable.SetInputWeight(1, 1 - weight);
     }
 
     private void OnDestroy()
     {
-        playableGraph.Destroy();
+        if (playableGraph.IsValid())
+            playableGraph.Destroy();
     }
 }

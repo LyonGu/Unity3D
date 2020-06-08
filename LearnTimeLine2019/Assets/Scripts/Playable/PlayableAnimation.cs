@@ -23,10 +23,10 @@ public class PlayableAnimation : MonoBehaviour
          */
         _graph = PlayableGraph.Create("PlayableAnimation");
 
-        AnimationClipPlayable clipPlayable = AnimationClipPlayable.Create(graph, clip);
-        AnimationPlayableOutput outPut = AnimationPlayableOutput.Create(graph, "AnimationOutPutFirst", GetComponent<Animator>());
+        AnimationClipPlayable clipPlayable = AnimationClipPlayable.Create(_graph, clip);
+        AnimationPlayableOutput outPut = AnimationPlayableOutput.Create(_graph, "AnimationOutPutFirst", GetComponent<Animator>());
         outPut.SetSourcePlayable(clipPlayable);  //给output设置输出资产
-        graph.Play();
+        _graph.Play();
 
 
 
@@ -35,7 +35,8 @@ public class PlayableAnimation : MonoBehaviour
 
     private void OnDestroy()
     {
-        _graph.Destroy();
+        if(_graph.IsValid())
+            _graph.Destroy();
     }
 
 

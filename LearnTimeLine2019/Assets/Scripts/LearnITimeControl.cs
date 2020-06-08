@@ -21,7 +21,8 @@ public class LearnITimeControl : MonoBehaviour , ITimeControl
     public void OnControlTimeStop()
     {
         Debug.Log("OnControlTimeStop======");
-        uitext.gameObject.SetActive(false);
+        if(uitext!=null)
+            uitext.gameObject.SetActive(false);
     }
 
 
