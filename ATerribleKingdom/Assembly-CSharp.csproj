@@ -111,7 +111,7 @@
     <Compile Include="Assets\Scripts\Dialog\DialogBehaviour.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogClip.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTrack.cs" />
-    <Compile Include="Assets\Scripts\Dialog\UIMgr.cs" />
+    <Compile Include="Assets\Scripts\GameMgr.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
@@ -122,6 +122,7 @@
     <Compile Include="Assets\Scripts\RTS\Unit.cs" />
     <Compile Include="Assets\Scripts\RTS\UnitTemplate.cs" />
     <Compile Include="Assets\Scripts\RTSCameraControll.cs" />
+    <Compile Include="Assets\Scripts\UIMgr.cs" />
     <Compile Include="Assets\Scripts\Utilities\DemoScript.cs" />
     <Compile Include="Assets\Scripts\Utilities\FollowObject.cs" />
     <Compile Include="Assets\Scripts\Utilities\FramesPerSecond.cs" />

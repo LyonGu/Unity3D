@@ -16,4 +16,5 @@ public class DialogClip : PlayableAsset, ITimelineClipAsset
         var playable = ScriptPlayable<DialogBehaviour>.Create(graph, Templete);
         return playable;
     }
+
 }
