@@ -36,6 +36,8 @@ public class GameMgr : MonoBehaviour
         {
             _director.Play();
             _director = null;
+
+            UIMgr.Instance.HideDialog();
         }
     }
 }

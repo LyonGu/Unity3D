@@ -9,13 +9,19 @@ public class DialogBehaviour : PlayableBehaviour
 {
     public string characterName;
     public string content;
+    public bool pauseAfterPlay;
 
-
-    public bool showDialog = false;
+    private bool showDialog = false;
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        UIMgr.Instance.SetDialog(characterName, content);
-        showDialog = true;
+        var uiInstance = UIMgr.Instance;
+        if (uiInstance != null)
+        {
+            UIMgr.Instance.SetDialog(characterName, content);
+            showDialog = pauseAfterPlay;
+            UIMgr.Instance.ShowTips(pauseAfterPlay);
+        }
+
     }
 
     public override void OnBehaviourPause(Playable playable, FrameData info)
@@ -24,6 +30,15 @@ public class DialogBehaviour : PlayableBehaviour
         {
             var director = playable.GetGraph().GetResolver() as PlayableDirector;
             GameMgr.Instance.PauseTimeLine(director);
+        }
+        else
+        {
+            var uiInstance = UIMgr.Instance;
+            if (uiInstance != null)
+            {
+                UIMgr.Instance.HideDialog();
+            }
+               
         }
     }
 

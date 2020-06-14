@@ -13,6 +13,7 @@ public class UIMgr : MonoBehaviour
     public GameObject targetD;
     public Text CharName;
     public Text Content;
+    public GameObject Tips;
 
     // Start is called before the first frame update
     void Start()
@@ -26,5 +27,16 @@ public class UIMgr : MonoBehaviour
         targetD.SetActive(true);
         CharName.text = charaterName;
         Content.text = content;
+    }
+
+    public void HideDialog()
+    {
+        targetD.SetActive(false);
+    }
+
+    public void ShowTips(bool isShow)
+    {
+        if(Tips!=null)
+            Tips.SetActive(isShow);
     }
 }
