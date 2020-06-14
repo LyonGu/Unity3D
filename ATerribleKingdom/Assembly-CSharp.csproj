@@ -108,6 +108,10 @@
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineClip.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineMixerBehaviour.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineTrack.cs" />
+    <Compile Include="Assets\Scripts\Dialog\DialogBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Dialog\DialogClip.cs" />
+    <Compile Include="Assets\Scripts\Dialog\DialogTrack.cs" />
+    <Compile Include="Assets\Scripts\Dialog\UIMgr.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
