@@ -680,70 +680,70 @@
       <HintPath>G:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Cinemachine">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-weaver.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.XR.LegacyInputHelpers">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
-      <HintPath>D:/GitResponse/ATerribleKingdom/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+      <HintPath>G:/GitResponse/Unity3D/ATerribleKingdom/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>
