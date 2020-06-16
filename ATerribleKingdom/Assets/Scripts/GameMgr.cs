@@ -26,18 +26,24 @@ public class GameMgr : MonoBehaviour
 
     public void PauseTimeLine(PlayableDirector director)
     {
-        director.Pause();
-        _director = director;
+        if (director.state == PlayState.Playing)
+        {
+            director.Pause();
+            _director = director;
+        }
+    
     }
 
     private void ResumeTimeLine()
     {
         if (_director != null)
         {
-            _director.Play();
-            _director = null;
-
-            UIMgr.Instance.HideDialog();
+            if (_director.state == PlayState.Paused)
+            {
+                _director.Play();
+                _director = null;
+                UIMgr.Instance.HideDialog();
+            }     
         }
     }
 }
