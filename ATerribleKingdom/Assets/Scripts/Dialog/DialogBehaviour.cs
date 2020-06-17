@@ -19,15 +19,18 @@ public class DialogBehaviour : PlayableBehaviour
         {
             UIMgr.Instance.SetDialog(characterName, content);
             showDialog = pauseAfterPlay;
-            UIMgr.Instance.ShowTips(pauseAfterPlay);
+            UIMgr.Instance.ShowTips(false);
         }
 
     }
 
+
+    //clip播放完调用
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
         if (showDialog)
         {
+            UIMgr.Instance.ShowTips(pauseAfterPlay);
             var director = playable.GetGraph().GetResolver() as PlayableDirector;
             GameMgr.Instance.PauseTimeLine(director);
         }
