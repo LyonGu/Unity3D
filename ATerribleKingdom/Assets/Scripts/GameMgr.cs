@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -7,6 +8,8 @@ public class GameMgr : MonoBehaviour
 {
 
     public static GameMgr Instance { get; private set; }
+
+    public Transform soldierParentTrans;
 
     private PlayableDirector _director;
     // Start is called before the first frame update
@@ -45,5 +48,18 @@ public class GameMgr : MonoBehaviour
                 UIMgr.Instance.HideDialog();
             }     
         }
+    }
+
+
+    public Transform[] GetAllSoldierTransform()
+    {
+        //List<Transform> tList = new List<Transform>();
+        //foreach (Transform item in soldierParentTrans)
+        //{
+        //    tList.Add(item);
+        //}
+        //return tList.ToArray();
+        return soldierParentTrans.Cast<Transform>().ToArray();
+
     }
 }

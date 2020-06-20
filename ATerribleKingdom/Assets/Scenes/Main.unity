@@ -16291,6 +16291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08818e089e638ae4c91c7fa0bf154807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soldierParentTrans: {fileID: 615417668}
 --- !u!4 &782440489 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4939160031252196, guid: 73eb3fbbde97a440181afe4bb9a2b3b5,
@@ -25421,7 +25422,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109440865}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
