@@ -14,6 +14,7 @@ public class UIMgr : MonoBehaviour
     public Text CharName;
     public Text Content;
     public GameObject Tips;
+    public RectTransform rectTrangle;
 
     private bool _isShowTips = false;
 
@@ -46,5 +47,17 @@ public class UIMgr : MonoBehaviour
                 Tips.SetActive(isShow);
         }
        
+    }
+
+    public void SetRectTrangle(Vector2 screenPos, Vector2 size)
+    {
+        ShowRectTrangle(true);
+        rectTrangle.position = screenPos; //overlay模式 屏幕坐标就是世界坐标
+        rectTrangle.sizeDelta = size;
+    }
+
+    public void ShowRectTrangle(bool isShow)
+    {
+        rectTrangle.gameObject.SetActive(isShow);
     }
 }

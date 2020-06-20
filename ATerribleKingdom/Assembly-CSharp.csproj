@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\Dialog\DialogClip.cs" />
     <Compile Include="Assets\Scripts\Dialog\DialogTrack.cs" />
     <Compile Include="Assets\Scripts\GameMgr.cs" />
+    <Compile Include="Assets\Scripts\InputMgr.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
