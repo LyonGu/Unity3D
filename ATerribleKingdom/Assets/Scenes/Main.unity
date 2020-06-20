@@ -25422,7 +25422,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109440865}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -36401,7 +36401,7 @@ PlayableDirector:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511295386}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 7c8733ba9fc5b7c4ca440208a6dd6432, type: 2}
   m_InitialState: 1
@@ -37064,7 +37064,7 @@ MonoBehaviour:
     Value: 0.5
     m_MaxSpeed: 20
     m_AccelTime: 0.2
-    m_DecelTime: 0.1
+    m_DecelTime: 1
     m_InputAxisName: Mouse Scroll
     m_InputAxisValue: 0
     m_InvertInput: 1

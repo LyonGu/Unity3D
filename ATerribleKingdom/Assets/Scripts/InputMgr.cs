@@ -11,6 +11,7 @@ public class InputMgr : MonoBehaviour
 
     private Rect _rect;
     private Camera _camera;
+    private List<Soldier> selectList = new List<Soldier>();
 
     private void Start()
     {
@@ -44,6 +45,7 @@ public class InputMgr : MonoBehaviour
             isDraging = false;
             UIMgr.Instance.ShowRectTrangle(false);
 
+            ClearSelectedList();
 
             Transform[] allUnits= GameMgr.Instance.GetAllSoldierTransform();
             
@@ -53,8 +55,26 @@ public class InputMgr : MonoBehaviour
                 if (_rect.Contains(screenPos))
                 {
                     Debug.Log($"框选了士兵===={item.name}");
+
+                    var unit = item.gameObject.GetComponent<Soldier>();
+                    AddToSelectedList(unit);
                 }
             }
         }
+    }
+
+    public void AddToSelectedList(Soldier unit)
+    {
+        unit.SetSelected(true);
+        selectList.Add(unit);
+    }
+
+    public void ClearSelectedList()
+    {
+        foreach (Soldier item in selectList)
+        {
+            item.SetSelected(false);
+        }
+        selectList.Clear();
     }
 }

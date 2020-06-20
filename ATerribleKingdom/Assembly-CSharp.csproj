@@ -123,6 +123,7 @@
     <Compile Include="Assets\Scripts\RTS\Unit.cs" />
     <Compile Include="Assets\Scripts\RTS\UnitTemplate.cs" />
     <Compile Include="Assets\Scripts\RTSCameraControll.cs" />
+    <Compile Include="Assets\Scripts\Soldier.cs" />
     <Compile Include="Assets\Scripts\UIMgr.cs" />
     <Compile Include="Assets\Scripts\Utilities\DemoScript.cs" />
     <Compile Include="Assets\Scripts\Utilities\FollowObject.cs" />
