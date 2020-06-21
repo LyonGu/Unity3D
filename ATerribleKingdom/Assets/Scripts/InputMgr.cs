@@ -12,6 +12,7 @@ public class InputMgr : MonoBehaviour
     private Rect _rect;
     private Camera _camera;
     private List<Soldier> selectList = new List<Soldier>();
+    private int SoldierLayerMask = 8;
 
     private void Start()
     {
@@ -54,10 +55,20 @@ public class InputMgr : MonoBehaviour
                 var screenPos = _camera.WorldToScreenPoint(item.position);
                 if (_rect.Contains(screenPos))
                 {
-                    Debug.Log($"框选了士兵===={item.name}");
+                    //Debug.Log($"框选了士兵===={item.name}");
 
-                    var unit = item.gameObject.GetComponent<Soldier>();
+                    var unit = item.GetComponent<Soldier>();
                     AddToSelectedList(unit);
+                }
+            }
+
+            var ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, 1000, 1 << SoldierLayerMask))
+            {
+                var s = hit.transform.GetComponent<Soldier>();
+                if (s)
+                {
+                    AddToSelectedList(s);
                 }
             }
         }
