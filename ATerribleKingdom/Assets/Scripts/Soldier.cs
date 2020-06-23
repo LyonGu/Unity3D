@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Soldier : MonoBehaviour
 {
     // Start is called before the first frame update
 
     public SpriteRenderer renderer;
+    public NavMeshAgent _agent;
 
     private void Start()
     {
@@ -25,5 +27,11 @@ public class Soldier : MonoBehaviour
     private void OnDestroy()
     {
         SetSelected(false);
+    }
+
+    public void SetDestination(Vector3 worldPos)
+    {
+        _agent.isStopped = false;
+        _agent.SetDestination(worldPos);
     }
 }

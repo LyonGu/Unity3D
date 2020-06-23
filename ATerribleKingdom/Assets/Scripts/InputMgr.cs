@@ -13,6 +13,7 @@ public class InputMgr : MonoBehaviour
     private Camera _camera;
     private List<Soldier> selectList = new List<Soldier>();
     private int SoldierLayerMask = 8;
+    private int GroundLayerMask = 9;
 
     private void Start()
     {
@@ -20,10 +21,28 @@ public class InputMgr : MonoBehaviour
     }
     void Update()
     {
-        ProcessInpout();
+        ProcessInput();
+
+        ProcessMovement();
     }
 
-    private void ProcessInpout()
+    private void ProcessMovement()
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            var ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, 1000, 1 << GroundLayerMask))
+            {
+                var position = hit.point; //世界坐标
+                foreach (Soldier item in selectList)
+                {
+                    item.SetDestination(position);
+                }
+            }
+        }
+    }
+
+    private void ProcessInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
