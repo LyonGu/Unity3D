@@ -15,6 +15,9 @@ public class InputMgr : MonoBehaviour
     private int SoldierLayerMask = 8;
     private int GroundLayerMask = 9;
 
+
+    public float radious = 1.5f;
+
     private void Start()
     {
         _camera = Camera.main;
@@ -34,9 +37,17 @@ public class InputMgr : MonoBehaviour
             if (Physics.Raycast(ray, out var hit, 1000, 1 << GroundLayerMask))
             {
                 var position = hit.point; //世界坐标
-                foreach (Soldier item in selectList)
+                int Count = selectList.Count;
+                var singleR = 2 * Mathf.PI / Count;
+                var targetPos = Vector3.zero;
+                targetPos.y = position.y;
+                Soldier s;
+                for (int i = Count - 1; i >= 0; i--)
                 {
-                    item.SetDestination(position);
+                    s = selectList[i];
+                    targetPos.x = position.x + radious * Mathf.Sin(singleR * i);
+                    targetPos.z = position.z + radious * Mathf.Cos(singleR * i);
+                    s.SetDestination(targetPos);
                 }
             }
         }
