@@ -34,10 +34,29 @@ public class InputMgr : MonoBehaviour
         if (Input.GetMouseButtonUp(1))
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 1000, 1 << GroundLayerMask))
+            int Count = selectList.Count;
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000, 1 << SoldierLayerMask))
+            {
+                if (hit.transform.gameObject.CompareTag("Foreigners"))
+                {
+                    var position = hit.point; //世界坐标
+                    var singleR = 2 * Mathf.PI / Count;
+                    var targetPos = Vector3.zero;
+                    targetPos.y = position.y;
+                    Soldier s;
+                    for (int i = Count - 1; i >= 0; i--)
+                    {
+                        s = selectList[i];
+                        targetPos.x = position.x + radious * Mathf.Sin(singleR * i);
+                        targetPos.z = position.z + radious * Mathf.Cos(singleR * i);
+                        s.MoveToTarget(hit.transform, targetPos);
+                    }
+                }
+            }
+            else if (Physics.Raycast(ray, out hit, 1000, 1 << GroundLayerMask))
             {
                 var position = hit.point; //世界坐标
-                int Count = selectList.Count;
                 var singleR = 2 * Mathf.PI / Count;
                 var targetPos = Vector3.zero;
                 targetPos.y = position.y;
@@ -49,7 +68,10 @@ public class InputMgr : MonoBehaviour
                     targetPos.z = position.z + radious * Mathf.Cos(singleR * i);
                     s.SetDestination(targetPos);
                 }
+
             }
+           
+           
         }
     }
 

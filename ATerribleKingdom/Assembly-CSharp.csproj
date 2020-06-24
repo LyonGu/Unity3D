@@ -87,6 +87,7 @@
     <Compile Include="Assets\DefaultPlayables\TransformTween\TransformTweenClip.cs" />
     <Compile Include="Assets\DefaultPlayables\TransformTween\TransformTweenMixerBehaviour.cs" />
     <Compile Include="Assets\DefaultPlayables\TransformTween\TransformTweenTrack.cs" />
+    <Compile Include="Assets\Scripts\BaseUnits.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\AICommand\AICommandBehaviour.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\AICommand\AICommandClip.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\AICommand\AICommandMixerBehaviour.cs" />
