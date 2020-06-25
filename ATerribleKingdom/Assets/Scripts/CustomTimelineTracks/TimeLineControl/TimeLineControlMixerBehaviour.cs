@@ -27,14 +27,16 @@ public class TimeLineControlMixerBehaviour : PlayableBehaviour
                 switch (markerType)
                 {
                     case MarkerType.JumpToMark:
-                        var t = markerDic[input.markerName];
-                        var director = playable.GetGraph().GetResolver() as PlayableDirector;
-                        if (director != null)
+                        if (!input.CheckCondition())
                         {
-                            director.time = t;
+                            var t = markerDic[input.markerName];
+                            var director = playable.GetGraph().GetResolver() as PlayableDirector;
+                            if (director != null)
+                            {
+                                director.time = t;
+                            }
                         }
                         break;
-                    
                 }
             }
 

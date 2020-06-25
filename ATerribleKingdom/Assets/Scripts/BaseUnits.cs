@@ -11,6 +11,7 @@ public class BaseUnits : MonoBehaviour
 
     private float CurrentHp = 100;
 
+    public bool isDead => CurrentHp <= 0;
 
     // Update is called once per fram
     public void DoDamage(float damage)

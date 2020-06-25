@@ -10,6 +10,7 @@ public class GameMgr : MonoBehaviour
     public static GameMgr Instance { get; private set; }
 
     public Transform soldierParentTrans;
+    public Transform monsterParentTrans;
 
     private PlayableDirector _director;
     // Start is called before the first frame update
@@ -61,5 +62,18 @@ public class GameMgr : MonoBehaviour
         //return tList.ToArray();
         return soldierParentTrans.Cast<Transform>().ToArray();
 
+    }
+
+    public bool IsAllMonsterDead()
+    {
+        foreach (Transform item in monsterParentTrans)
+        {
+            var unit = item.GetComponent<BaseUnits>();
+            if (!unit.isDead)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
