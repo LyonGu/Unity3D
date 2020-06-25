@@ -105,6 +105,10 @@
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TMPTextSwitcher\TMPTextSwitcherClip.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TMPTextSwitcher\TMPTextSwitcherMixerBehaviour.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TMPTextSwitcher\TMPTextSwitcherTrack.cs" />
+    <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeLineControl\TimeLineControlBehaviour.cs" />
+    <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeLineControl\TimeLineControlClip.cs" />
+    <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeLineControl\TimeLineControlMixerBehaviour.cs" />
+    <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeLineControl\TimeLineControlTrack.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineBehaviour.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineClip.cs" />
     <Compile Include="Assets\Scripts\CustomTimelineTracks\TimeMachine\TimeMachineMixerBehaviour.cs" />
