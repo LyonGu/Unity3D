@@ -14,7 +14,7 @@ public class TimeMachineClip : PlayableAsset, ITimelineClipAsset
 	public string markerToJumpTo = "", markerLabel = "";
 	public float timeToJumpTo = 0f;
 
-	public ExposedReference<Platoon> platoon;
+	public ExposedReference<Platoon> platoon; //如果要使用场景里的组件或者gameObject 必须使用ExposedReference
 
     public ClipCaps clipCaps
     {
@@ -25,8 +25,8 @@ public class TimeMachineClip : PlayableAsset, ITimelineClipAsset
     {
         var playable = ScriptPlayable<TimeMachineBehaviour>.Create (graph, template);
         TimeMachineBehaviour clone = playable.GetBehaviour ();
-        clone.platoon = platoon.Resolve (graph.GetResolver ());
-		clone.markerToJumpTo = markerToJumpTo;
+        clone.platoon = platoon.Resolve (graph.GetResolver ());  //通用写法 xxx.Resolve (graph.GetResolver ()) 场景中的物体需要这么写
+        clone.markerToJumpTo = markerToJumpTo;
 		clone.action = action;
 		clone.condition = condition;
 		clone.markerLabel = markerLabel;

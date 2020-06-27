@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 [TrackColor(1f, 0.8482758f, 0f)]
 [TrackClipType(typeof(LightClip))]
-[TrackBindingType(typeof(Light))]
+[TrackBindingType(typeof(Light))]  // TrackBindingType 定义轨道上绑定的类型
 public class LightTrack : TrackAsset
 {
     public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)

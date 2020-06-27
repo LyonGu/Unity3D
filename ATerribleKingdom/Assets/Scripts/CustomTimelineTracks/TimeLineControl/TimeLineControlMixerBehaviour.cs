@@ -11,6 +11,9 @@ public class TimeLineControlMixerBehaviour : PlayableBehaviour
     // NOTE: This function is called at runtime and edit time.  Keep that in mind when setting the values of properties.
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
+        //playerData 灏辨槸杞ㄩ亾涓婄粦瀹氱殑瀵硅薄
+
+
         int inputCount = playable.GetInputCount ();
 
         for (int i = 0; i < inputCount; i++)
@@ -22,7 +25,7 @@ public class TimeLineControlMixerBehaviour : PlayableBehaviour
             // Use the above variables to process each frame of this playable.
             if (inputWeight > 0)
             {
-                //inputWeight>0 表示当前运行的clip
+                //inputWeight>0 琛ㄧず褰撳墠杩愯鐨刢lip
                 var markerType = input.markType;
                 switch (markerType)
                 {
