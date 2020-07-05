@@ -20,6 +20,7 @@ public class ShaderUtils : MonoBehaviour
     void Start()
     {
         _mat = this.gameObject.GetComponent<Renderer>().sharedMaterial;
+        transform.position = Vector3.one;
     }
 
 
