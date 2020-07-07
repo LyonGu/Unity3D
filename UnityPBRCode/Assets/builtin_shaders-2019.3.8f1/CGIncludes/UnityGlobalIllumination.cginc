@@ -216,8 +216,10 @@ inline UnityGI UnityGlobalIllumination (UnityGIInput data, half occlusion, half3
 
 inline UnityGI UnityGlobalIllumination (UnityGIInput data, half occlusion, half3 normalWorld, Unity_GlossyEnvironmentData glossIn)
 {
-    //声明要返回的UniytGI，这个UnityGI_Base只计算gi.indirect.diffuse(带AO)，不计算specular。    
+    //声明要返回的UniytGI，这个UnityGI_Base计算gi.indirect.diffuse(带AO)，不计算specular。  
+    // UnityGI_Base中对UniytGI的light也进行了赋值，并进行了衰减处理
     UnityGI o_gi = UnityGI_Base(data, occlusion, normalWorld);
+
     o_gi.indirect.specular = UnityGI_IndirectSpecular(data, occlusion, glossIn);//这个部分计算Specular
     return o_gi;
 }
