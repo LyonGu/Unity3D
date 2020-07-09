@@ -193,6 +193,7 @@ Shader "Custom/PBRShader"
                         // HDR cubemap properties, use to decompress HDR texture
                         float4 probeHDR[2];
                     };
+                    
 
                 */
                 fixed4 frag(v2f i): SV_Target
