@@ -169,3 +169,8 @@ UnitySRP/UnityEditor.UI.csproj
 UnitySRP/UnityEngine.TestRunner.csproj
 UnitySRP/UnityEngine.UI.csproj
 FlowcanvasLearn/obj/
+*.csproj
+TestMeshProLearn/Library/
+TestMeshProLearn/obj/
+*.sln
+TestMeshProLearn/Temp/
