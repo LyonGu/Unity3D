@@ -4,7 +4,9 @@
 	Properties {
        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
-        _RTTex 		("RT Tex", 2D) 	= "white" {}
+        _ShowTex 		("Show Tex", 2D) 	= "white" {}
+        _UVX("uv x", Float) = 0.5
+        _UVY("uv y", Float) = 0.5
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
@@ -75,6 +77,9 @@
             };
 
             fixed4 _Color;
+            fixed _UVX;
+            fixed _UVY;
+            sampler2D _ShowTex;
 
 
             v2f vert(appdata_t v)
@@ -93,7 +98,16 @@
 
             fixed4 frag(v2f IN) : SV_Target
             {
-                half4 color = tex2D(_MainTex, IN.texcoord) * IN.color;
+                half4 color;
+                if(IN.texcoord.x > _UVX && IN.texcoord.y < _UVY )
+                {
+                    float2 uv1 = float2(2 * IN.texcoord.x - 1, 2 * IN.texcoord.y);
+                    color = tex2D(_ShowTex, uv1) * IN.color;
+                }
+                else
+                {
+                    color = tex2D(_MainTex, IN.texcoord) * IN.color;
+                }
                 return color;
             }
             ENDCG

@@ -59,6 +59,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShowTex:
+        m_Texture: {fileID: 2800000, guid: 3828f41189830264cb5b28559d93789c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _ColorMask: 15
@@ -81,6 +85,8 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _UVSec: 0
+    - _UVX: 0.5
+    - _UVY: 1
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
