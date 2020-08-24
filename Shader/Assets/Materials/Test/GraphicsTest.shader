@@ -7,6 +7,7 @@
         _ShowTex 		("Show Tex", 2D) 	= "white" {}
         _UVX("uv x", Float) = 0.5
         _UVY("uv y", Float) = 0.5
+        _UVRange("uv Range",Vector)= (0,0,0,0)  // xmin,xmax,ymin,ymax
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
@@ -80,6 +81,7 @@
             fixed _UVX;
             fixed _UVY;
             sampler2D _ShowTex;
+            vector _UVRange;
 
 
             v2f vert(appdata_t v)
@@ -99,10 +101,11 @@
             fixed4 frag(v2f IN) : SV_Target
             {
                 half4 color;
-                if(IN.texcoord.x > _UVX && IN.texcoord.y < _UVY )
+                if(IN.texcoord.x >= _UVRange.x && IN.texcoord.x < _UVRange.y && IN.texcoord.y >= _UVRange.z && IN.texcoord.y < _UVRange.w)
                 {
-                    float2 uv1 = float2(2 * IN.texcoord.x - 1, 2 * IN.texcoord.y);
-                    color = tex2D(_ShowTex, uv1) * IN.color;
+                    float ux = (IN.texcoord.x - _UVRange.x) * 1/(_UVRange.y - _UVRange.x);
+                    float uy = (IN.texcoord.y - _UVRange.z) * 1/(_UVRange.w - _UVRange.z);
+                    color = tex2D(_ShowTex, float2(ux, uy)) * IN.color;
                 }
                 else
                 {

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio 16
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.UI", "UnityEngine.UI.csproj", "{86A55489-01DB-D210-524E-9307553253B6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.TestRunner", "UnityEngine.TestRunner.csproj", "{EBBED668-6621-EE15-EADA-2635080B15E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{F0C5E3C4-D3B8-F380-114D-6230467F8D7B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.UI", "UnityEngine.UI.csproj", "{86A55489-01DB-D210-524E-9307553253B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unity.multiplayer-hlapi.Runtime", "com.unity.multiplayer-hlapi.Runtime.csproj", "{A3758649-EB2B-D697-529F-D4DFD6675EA8}"
 EndProject
@@ -59,6 +59,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86A55489-01DB-D210-524E-9307553253B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A55489-01DB-D210-524E-9307553253B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A55489-01DB-D210-524E-9307553253B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A55489-01DB-D210-524E-9307553253B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EBBED668-6621-EE15-EADA-2635080B15E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EBBED668-6621-EE15-EADA-2635080B15E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBBED668-6621-EE15-EADA-2635080B15E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,10 +71,6 @@ Global
 		{F0C5E3C4-D3B8-F380-114D-6230467F8D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0C5E3C4-D3B8-F380-114D-6230467F8D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0C5E3C4-D3B8-F380-114D-6230467F8D7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86A55489-01DB-D210-524E-9307553253B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86A55489-01DB-D210-524E-9307553253B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86A55489-01DB-D210-524E-9307553253B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86A55489-01DB-D210-524E-9307553253B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A3758649-EB2B-D697-529F-D4DFD6675EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A3758649-EB2B-D697-529F-D4DFD6675EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3758649-EB2B-D697-529F-D4DFD6675EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
