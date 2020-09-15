@@ -42,7 +42,7 @@
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            //自定义属性，其实都是数组
+            //自定义属性，其实都是数组 "Props"--> 这个可以使任意的，但是要保证下方取的时候一致
             UNITY_INSTANCING_BUFFER_START(Props)
 				UNITY_DEFINE_INSTANCED_PROP(float, _CenterX)
 				UNITY_DEFINE_INSTANCED_PROP(float, _CenterY)
@@ -76,7 +76,7 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
 
                 //使用自定义属性
-                float cx = UNITY_ACCESS_INSTANCED_PROP(Props, _CenterX);
+                float cx = UNITY_ACCESS_INSTANCED_PROP(Props, _CenterX); //Props为UNITY_INSTANCING_BUFFER_START设置
 				float cy = UNITY_ACCESS_INSTANCED_PROP(Props, _CenterY);
                 float2 offset = abs(i.uv - float2(cx, cy));
                 return fixed4(col.rgb,offset.x + offset.y);
