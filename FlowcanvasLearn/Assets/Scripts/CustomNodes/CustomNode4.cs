@@ -29,6 +29,10 @@ getter:将被调用以获取类型T的值的委托。
 [Category("Custom/Switchers")]
 public class CustomNode4 : FlowControlNode
 {
+
+    [ExposeField]
+    [SerializeField]
+    private string[] background;
     protected override void RegisterPorts()
     {
         var condition = AddValueInput<bool>("Condition");

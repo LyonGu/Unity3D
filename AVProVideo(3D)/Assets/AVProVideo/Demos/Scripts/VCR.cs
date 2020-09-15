@@ -40,7 +40,7 @@ namespace RenderHeads.Media.AVProVideo.Demos
 		public Toggle		_MuteToggle;
 
 		public MediaPlayer.FileLocation _location = MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder;
-		public string _folder = "AVProVideoDemos/";
+		public string _folder = "AVProVideoSamples/";
 		public string[] _videoFiles = { "BigBuckBunny_720p30.mp4", "SampleSphere.mp4" };
 
 		private int _VideoIndex = 0;
@@ -89,8 +89,16 @@ namespace RenderHeads.Media.AVProVideo.Demos
 
 		public void OnOpenVideoFile()
  		{
-			LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
-			_VideoIndex = (_VideoIndex + 1) % (_videoFiles.Length);
+            LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
+            
+
+            //var path = _videoFiles[_VideoIndex];
+            //if (!path.Contains("http://"))
+            //{
+            //    path = Application.dataPath + "/" + System.IO.Path.Combine(_folder, path);
+            //}
+            //LoadingPlayer.m_VideoPath = path;
+            _VideoIndex = (_VideoIndex + 1) % (_videoFiles.Length);
 			if (string.IsNullOrEmpty(LoadingPlayer.m_VideoPath))
 			{
 				LoadingPlayer.CloseVideo();
@@ -111,19 +119,19 @@ namespace RenderHeads.Media.AVProVideo.Demos
 
 		public void OnAutoStartChange()
 		{
-			if(PlayingPlayer && 
-				_AutoStartToggle && _AutoStartToggle.enabled &&
-				PlayingPlayer.m_AutoStart != _AutoStartToggle.isOn )
-			{
-				PlayingPlayer.m_AutoStart = _AutoStartToggle.isOn;
-			}
-			if (LoadingPlayer &&
-				_AutoStartToggle && _AutoStartToggle.enabled &&
-				LoadingPlayer.m_AutoStart != _AutoStartToggle.isOn)
-			{
-				LoadingPlayer.m_AutoStart = _AutoStartToggle.isOn;
-			}
-		}
+            if (PlayingPlayer &&
+                _AutoStartToggle && _AutoStartToggle.enabled &&
+                PlayingPlayer.m_AutoStart != _AutoStartToggle.isOn)
+            {
+                PlayingPlayer.m_AutoStart = _AutoStartToggle.isOn;
+            }
+            if (LoadingPlayer &&
+                _AutoStartToggle && _AutoStartToggle.enabled &&
+                LoadingPlayer.m_AutoStart != _AutoStartToggle.isOn)
+            {
+                LoadingPlayer.m_AutoStart = _AutoStartToggle.isOn;
+            }
+        }
 
 		public void OnMuteChange()
 		{
@@ -156,7 +164,8 @@ namespace RenderHeads.Media.AVProVideo.Demos
 			}
 		}
 
-		public void OnVideoSeekSlider()
+        // OnValueChange
+        public void OnVideoSeekSlider()
 		{
 			if (PlayingPlayer && _videoSeekSlider && _videoSeekSlider.value != _setVideoSeekSliderValue)
 			{
@@ -164,7 +173,8 @@ namespace RenderHeads.Media.AVProVideo.Demos
 			}
 		}
 
-		public void OnVideoSliderDown()
+        // BeginDrag
+        public void OnVideoSliderDown()
 		{
 			if(PlayingPlayer)
 			{
@@ -178,6 +188,9 @@ namespace RenderHeads.Media.AVProVideo.Demos
 				OnVideoSeekSlider();
 			}
 		}
+
+
+        //EndDrag
 		public void OnVideoSliderUp()
 		{
 			if(PlayingPlayer && _wasPlayingOnScrub )
@@ -224,20 +237,31 @@ namespace RenderHeads.Media.AVProVideo.Demos
 		{
 			if(PlayingPlayer)
 			{
-				PlayingPlayer.Control.Rewind();
-			}
+                //PlayingPlayer.Control.Rewind();
+                //PlayingPlayer.Control.SetPlaybackRate(-1.0f);
+                //PlayingPlayer.Rewind(false);
+
+                PlayingPlayer.CloseVideo();
+            }
 		}
 
 		private void Awake()
 		{
 			_loadingPlayer = _mediaPlayerB;
-		}
+
+            var Control1 = PlayingPlayer.Control;
+   
+            int a = 10;
+
+        }
 
 		void Start()
 		{
 			if(PlayingPlayer)
 			{
-				PlayingPlayer.Events.AddListener(OnVideoEvent);
+                var Control = PlayingPlayer.Control;
+
+                PlayingPlayer.Events.AddListener(OnVideoEvent);
 
 				if (LoadingPlayer)
 				{
@@ -290,70 +314,71 @@ namespace RenderHeads.Media.AVProVideo.Demos
 			}
 		}
 
+        //进度条显示用的
 		void Update()
 		{
-			if (PlayingPlayer && PlayingPlayer.Info != null && PlayingPlayer.Info.GetDurationMs() > 0f)
-			{
-				float time = PlayingPlayer.Control.GetCurrentTimeMs();
-				float duration = PlayingPlayer.Info.GetDurationMs();
-				float d = Mathf.Clamp(time / duration, 0.0f, 1.0f);
+            if (PlayingPlayer && PlayingPlayer.Info != null && PlayingPlayer.Info.GetDurationMs() > 0f)
+            {
+                float time = PlayingPlayer.Control.GetCurrentTimeMs();
+                float duration = PlayingPlayer.Info.GetDurationMs();
+                float d = Mathf.Clamp(time / duration, 0.0f, 1.0f);
 
-				// Debug.Log(string.Format("time: {0}, duration: {1}, d: {2}", time, duration, d));
+                // Debug.Log(string.Format("time: {0}, duration: {1}, d: {2}", time, duration, d));
 
-				_setVideoSeekSliderValue = d;
-				_videoSeekSlider.value = d;
+                _setVideoSeekSliderValue = d;
+                _videoSeekSlider.value = d;
 
-				if (_bufferedSliderRect != null)
-				{
-					if (PlayingPlayer.Control.IsBuffering())
-					{
-						float t1 = 0f;
-						float t2 = PlayingPlayer.Control.GetBufferingProgress();
-						if (t2 <= 0f)
-						{
-							if (PlayingPlayer.Control.GetBufferedTimeRangeCount() > 0)
-							{
-								PlayingPlayer.Control.GetBufferedTimeRange(0, ref t1, ref t2);
-								t1 /= PlayingPlayer.Info.GetDurationMs();
-								t2 /= PlayingPlayer.Info.GetDurationMs();
-							}
-						}
+                //if (_bufferedSliderRect != null)
+                //{
+                //    if (PlayingPlayer.Control.IsBuffering())
+                //    {
+                //        float t1 = 0f;
+                //        float t2 = PlayingPlayer.Control.GetBufferingProgress();
+                //        if (t2 <= 0f)
+                //        {
+                //            if (PlayingPlayer.Control.GetBufferedTimeRangeCount() > 0)
+                //            {
+                //                PlayingPlayer.Control.GetBufferedTimeRange(0, ref t1, ref t2);
+                //                t1 /= PlayingPlayer.Info.GetDurationMs();
+                //                t2 /= PlayingPlayer.Info.GetDurationMs();
+                //            }
+                //        }
 
-						Vector2 anchorMin = Vector2.zero;
-						Vector2 anchorMax = Vector2.one;
-		
-						if (_bufferedSliderImage != null &&
-							_bufferedSliderImage.type == Image.Type.Filled)
-						{
-							_bufferedSliderImage.fillAmount = d;
-						}
-						else
-						{   
-							anchorMin[0] = t1;   
-							anchorMax[0] = t2;
-						}
-						
-						_bufferedSliderRect.anchorMin = anchorMin;
-						_bufferedSliderRect.anchorMax = anchorMax;
-					}
-				}
-			}			
-		}
+                //        Vector2 anchorMin = Vector2.zero;
+                //        Vector2 anchorMax = Vector2.one;
+
+                //        if (_bufferedSliderImage != null &&
+                //            _bufferedSliderImage.type == Image.Type.Filled)
+                //        {
+                //            _bufferedSliderImage.fillAmount = d;
+                //        }
+                //        else
+                //        {
+                //            anchorMin[0] = t1;
+                //            anchorMax[0] = t2;
+                //        }
+
+                //        _bufferedSliderRect.anchorMin = anchorMin;
+                //        _bufferedSliderRect.anchorMax = anchorMax;
+                //    }
+                //}
+            }
+        }
 
 		// Callback function to handle events
 		public void OnVideoEvent(MediaPlayer mp, MediaPlayerEvent.EventType et, ErrorCode errorCode)
 		{
 			switch (et)
 			{
-				case MediaPlayerEvent.EventType.ReadyToPlay:
+				case MediaPlayerEvent.EventType.ReadyToPlay: 
 				break;
-				case MediaPlayerEvent.EventType.Started:
+				case MediaPlayerEvent.EventType.Started: // Triggered when the playback starts
+                    break;
+				case MediaPlayerEvent.EventType.FirstFrameReady: // Triggered when the first frame has been rendered
+                    SwapPlayers();
 				break;
-				case MediaPlayerEvent.EventType.FirstFrameReady:
-					SwapPlayers();
-				break;
-				case MediaPlayerEvent.EventType.FinishedPlaying:
-				break;
+				case MediaPlayerEvent.EventType.FinishedPlaying: // Triggered when a non-looping video has finished playing
+                    break;
 			}
 
 			Debug.Log("Event: " + et.ToString());

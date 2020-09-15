@@ -77,7 +77,7 @@ public class InputMgr : MonoBehaviour
 
     private void ProcessInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) //GetMouseButton 是持续按下
         {
             isDraging = true;
             startPos = Input.mousePosition;
