@@ -174,3 +174,5 @@ TestMeshProLearn/Library/
 TestMeshProLearn/obj/
 *.sln
 TestMeshProLearn/Temp/
+AVProVideo(3D)/obj/
+AVProVideo(3D)/.vs/
