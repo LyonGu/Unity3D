@@ -67,7 +67,6 @@ public class GPUInstace_LightMap_Shadow : MonoBehaviour
             //matrix[i].m00   = Mathf.Max(1, x);
             //matrix[i].m11   = Mathf.Max(1, y);
             //matrix[i].m22   = Mathf.Max(1, z);
-           // propertyBlock[i] = new MaterialPropertyBlock();
         }
     }
 

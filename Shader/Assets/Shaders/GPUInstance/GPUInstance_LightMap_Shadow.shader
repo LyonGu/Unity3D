@@ -33,7 +33,7 @@ Shader "GPUInstance/GPUInstance_LightMap_Shadow"
             /*
                 对Unity内置lightmap的获取。我们定义两个编译开关，然后在自定义顶点输入输出结构包含lightmap的uv。
             */
-            #pragma   multi_compile LIGHTMAP_OFF LIGHTMAP_ON
+            #pragma multi_compile LIGHTMAP_OFF LIGHTMAP_ON
 
             #include "UnityCG.cginc"
             #include "AutoLight.cginc"

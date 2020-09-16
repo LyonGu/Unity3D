@@ -22,7 +22,7 @@ public class GPUInstace_LightMap_Shadow_1 : MonoBehaviour
         var mat = GetComponent<Renderer>().sharedMaterial;
         //全局开启
         mat.EnableKeyword("LIGHTMAP_ON");//开启lightmap
-
+        //Shader.EnableKeyword("LIGHTMAP_ON");
         color = new Color(Random.Range(0, 255)/255.0f, Random.Range(0, 255) / 255.0f, Random.Range(0, 255) / 255.0f, Random.Range(0, 255) / 255.0f);
         castShadows = ShadowCastingMode.On;
 
@@ -42,4 +42,5 @@ public class GPUInstace_LightMap_Shadow_1 : MonoBehaviour
             
         }
     }
+
 }
