@@ -67,6 +67,7 @@ public class GPUInstace_LightMap_Shadow : MonoBehaviour
             //matrix[i].m00   = Mathf.Max(1, x);
             //matrix[i].m11   = Mathf.Max(1, y);
             //matrix[i].m22   = Mathf.Max(1, z);
+           // propertyBlock[i] = new MaterialPropertyBlock();
         }
     }
 
@@ -77,7 +78,7 @@ public class GPUInstace_LightMap_Shadow : MonoBehaviour
         if (turnOnInstance)
         {
             propertyBlock.SetColor("_Color", color);
-            m_prefab.GetComponent<Renderer>().SetPropertyBlock(propertyBlock);
+            //m_prefab.GetComponent<Renderer>().SetPropertyBlock(propertyBlock);
             castShadows = ShadowCastingMode.On;
             if (mesh)
             {

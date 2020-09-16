@@ -19,10 +19,9 @@ public class GPUInstace_LightMap_Shadow_1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        var mat = GetComponent<Renderer>().sharedMaterial;
         //全局开启
-        Shader.EnableKeyword("LIGHTMAP_ON");//开启lightmap
-
+        mat.EnableKeyword("LIGHTMAP_ON");//开启lightmap
 
         color = new Color(Random.Range(0, 255)/255.0f, Random.Range(0, 255) / 255.0f, Random.Range(0, 255) / 255.0f, Random.Range(0, 255) / 255.0f);
         castShadows = ShadowCastingMode.On;

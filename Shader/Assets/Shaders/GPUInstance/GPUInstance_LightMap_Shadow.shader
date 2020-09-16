@@ -74,9 +74,9 @@ Shader "GPUInstance/GPUInstance_LightMap_Shadow"
             float4 _DiffuseTexture_ST;
             float4 _DiffuseTint;
             float4 _LightColor0;
-            sampler2D _LightMap;//传进来的lightmap
+            //sampler2D _LightMap;//传进来的lightmap
+            UNITY_DECLARE_TEX2D(_LightMap);
             float4 _LightMap_ST;//
-
 
             v2f vert (appdata v)
             {
@@ -88,7 +88,7 @@ Shader "GPUInstance/GPUInstance_LightMap_Shadow"
                 o.lightDir = normalize(ObjSpaceLightDir(v.vertex)); //局部空间的方向
                 o.normal = normalize(v.normal).xyz;
                 #ifdef LIGHTMAP_ON
-                o.uv_LightMap = v.texcoord1.xy * _LightMap_ST.xy + _LightMap_ST.zw;
+                o.uv_LightMap = v.uv.xy * _LightMap_ST.xy + _LightMap_ST.zw;
                 #endif
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
                 return o;
@@ -109,6 +109,7 @@ Shader "GPUInstance/GPUInstance_LightMap_Shadow"
                 float4 finalColor = (ambient + diffuseTerm) * diffuse;
                 #ifdef LIGHTMAP_ON
                 //DecodeLightmap函数可以针对不同的平台对光照贴图进行解码。
+                // fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.uv_LightMap.xy));
                 fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(_LightMap, i.uv_LightMap.xy));
                 finalColor.rgb *= lm;
                 #endif
