@@ -203,6 +203,9 @@
     <Compile Include="Assets\Scripts\ShowNormals.cs" />
     <Compile Include="Assets\Scripts\TransparentControl.cs" />
     <Compile Include="Assets\Shaders\Common\UVAnimation.cs" />
+    <Compile Include="Assets\Shaders\GPUInstance\GPUInstace_LightMap_Shadow.cs" />
+    <Compile Include="Assets\Shaders\GPUInstance\GPUInstace_LightMap_Shadow_1.cs" />
+    <Compile Include="Assets\Shaders\GPUInstance\GPUInstancing.cs" />
     <Compile Include="Assets\Shaders\Surface\SwapCubemaps1.cs" />
     <Compile Include="Assets\Shaders\Surface\WaterFlow.cs" />
     <None Include="Assets\Colorful\Shaders\CC_CrossStitch.shader" />
@@ -272,6 +275,7 @@
     <None Include="Assets\Cookbook\Code\11_Code\OldFilmEffectShader.shader" />
     <None Include="Assets\Shaders\Surface\MaskedReflection.shader" />
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_shadow_alphaTest.shader" />
+    <None Include="Assets\Shaders\GPUInstance\DifferentCenter.shader" />
     <None Include="Assets\Colorful\Shaders\CC_DoubleVision.shader" />
     <None Include="Assets\Shaders\Chapter11\Water.shader" />
     <None Include="Assets\Cookbook\Code\05_Code\Velvet.shader" />
@@ -329,6 +333,7 @@
     <None Include="Assets\Cookbook\Code\11_Code\NightVisionEffectShader.shader" />
     <None Include="Assets\Cookbook\Code\02_Code\Shaders\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\Chapter15\DissolveNoNormal.shader" />
+    <None Include="Assets\Shaders\GPUInstance\GPUInstance_LightMap_Shadow.shader" />
     <None Include="Assets\Colorful\Shaders\CC_ContrastVignette.shader" />
     <None Include="Assets\Cookbook\Code\05_Code\CarPaint.shader" />
     <None Include="Assets\Shaders\Common\BaseSprite.shader" />
