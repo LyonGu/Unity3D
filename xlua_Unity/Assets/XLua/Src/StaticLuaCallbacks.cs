@@ -160,6 +160,7 @@ namespace XLua
         {
             try
             {
+                // udata就是obj的唯一id
                 int udata = LuaAPI.xlua_tocsobj_safe(L, 1);
                 if (udata != -1)
                 {

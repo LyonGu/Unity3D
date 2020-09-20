@@ -21,13 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.AnimationCurve);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 4, 3);
+			Utils.BeginObjectRegister(type, L, translator, 0, 7, 4, 3);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Evaluate", _m_Evaluate);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddKey", _m_AddKey);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MoveKey", _m_MoveKey);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "RemoveKey", _m_RemoveKey);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SmoothTangents", _m_SmoothTangents);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Equals", _m_Equals);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetHashCode", _m_GetHashCode);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "keys", _g_get_keys);
@@ -358,6 +360,78 @@ namespace XLua.CSObjectWrap
                     
                         UnityEngine.AnimationCurve gen_ret = UnityEngine.AnimationCurve.EaseInOut( _timeStart, _valueStart, _timeEnd, _valueEnd );
                         translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_Equals(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AnimationCurve gen_to_be_invoked = (UnityEngine.AnimationCurve)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<object>(L, 2)) 
+                {
+                    object _o = translator.GetObject(L, 2, typeof(object));
+                    
+                        bool gen_ret = gen_to_be_invoked.Equals( _o );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.AnimationCurve>(L, 2)) 
+                {
+                    UnityEngine.AnimationCurve _other = (UnityEngine.AnimationCurve)translator.GetObject(L, 2, typeof(UnityEngine.AnimationCurve));
+                    
+                        bool gen_ret = gen_to_be_invoked.Equals( _other );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.AnimationCurve.Equals!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetHashCode(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AnimationCurve gen_to_be_invoked = (UnityEngine.AnimationCurve)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        int gen_ret = gen_to_be_invoked.GetHashCode(  );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
                     

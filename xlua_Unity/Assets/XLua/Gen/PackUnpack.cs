@@ -17,6 +17,62 @@ namespace XLua
     {
         
 		
+		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out PushAsTableStruct val)
+		{
+		    val = new PushAsTableStruct();
+            int top = LuaAPI.lua_gettop(L);
+			
+			if (Utils.LoadField(L, idx, "x"))
+            {
+			    
+                translator.Get(L, top + 1, out val.x);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+			if (Utils.LoadField(L, idx, "y"))
+            {
+			    
+                translator.Get(L, top + 1, out val.y);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+		}
+		
+        public static bool Pack(IntPtr buff, int offset, PushAsTableStruct field)
+        {
+            
+            if(!Pack(buff, offset, field.x))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 4, field.y))
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        public static bool UnPack(IntPtr buff, int offset, out PushAsTableStruct field)
+        {
+            field = default(PushAsTableStruct);
+            
+            if(!UnPack(buff, offset, out field.x))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 4, out field.y))
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        
+		
 		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out XLuaTest.Pedding val)
 		{
 		    val = new XLuaTest.Pedding();
@@ -139,62 +195,6 @@ namespace XLua
             }
             
             if(!UnPack(buff, offset + 24, out field.e))
-            {
-                return false;
-            }
-            
-            return true;
-        }
-        
-		
-		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out PushAsTableStruct val)
-		{
-		    val = new PushAsTableStruct();
-            int top = LuaAPI.lua_gettop(L);
-			
-			if (Utils.LoadField(L, idx, "x"))
-            {
-			    
-                translator.Get(L, top + 1, out val.x);
-				
-            }
-            LuaAPI.lua_pop(L, 1);
-			
-			if (Utils.LoadField(L, idx, "y"))
-            {
-			    
-                translator.Get(L, top + 1, out val.y);
-				
-            }
-            LuaAPI.lua_pop(L, 1);
-			
-		}
-		
-        public static bool Pack(IntPtr buff, int offset, PushAsTableStruct field)
-        {
-            
-            if(!Pack(buff, offset, field.x))
-            {
-                return false;
-            }
-            
-            if(!Pack(buff, offset + 4, field.y))
-            {
-                return false;
-            }
-            
-            return true;
-        }
-        public static bool UnPack(IntPtr buff, int offset, out PushAsTableStruct field)
-        {
-            field = default(PushAsTableStruct);
-            
-            if(!UnPack(buff, offset, out field.x))
-            {
-                return false;
-            }
-            
-            if(!UnPack(buff, offset + 4, out field.y))
             {
                 return false;
             }

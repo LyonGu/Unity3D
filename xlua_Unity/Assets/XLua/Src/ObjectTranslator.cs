@@ -108,7 +108,12 @@ namespace XLua
         internal ObjectCheckers objectCheckers;
         internal ObjectCasters objectCasters;
 
+        // key是obj唯一id
+        // value是obj
         internal readonly ObjectPool objects = new ObjectPool();
+
+        // key是obj
+        // value是obj唯一id
         internal readonly Dictionary<object, int> reverseMap = new Dictionary<object, int>(new ReferenceEqualsComparer());
 		internal LuaEnv luaEnv;
 		internal StaticLuaCallbacks metaFunctions;
@@ -254,6 +259,9 @@ namespace XLua
             loadAssemblyFunction = new LuaCSFunction(StaticLuaCallbacks.LoadAssembly);
             castFunction = new LuaCSFunction(StaticLuaCallbacks.Cast);
 
+
+            // 下面代码可以理解为：
+            // cache = setmetatable({}, { __mode = 'v' })
             LuaAPI.lua_newtable(L);
             LuaAPI.lua_newtable(L);
             LuaAPI.xlua_pushasciistring(L, "__mode");
@@ -774,6 +782,7 @@ namespace XLua
 			
 			if (objects.TryGetValue(obj_index_to_collect, out o))
 			{
+                 // 清理objects
 				objects.Remove(obj_index_to_collect);
                 
                 if (o != null)
@@ -790,6 +799,7 @@ namespace XLua
                         }
                         else
                         {
+                            // 清理reverseMap
                             reverseMap.Remove(o);
                         }
                     }
@@ -799,6 +809,8 @@ namespace XLua
 		
 		int addObject(object obj, bool is_valuetype, bool is_enum)
 		{
+            // 这个index可以理解为就是obj的唯一id（其实就是obj在ObjectPool的数组下标）
+            // 后续可以通过objects.Get(index)查询到这个obj
             int index = objects.Add(obj);
             if (is_enum)
             {
@@ -806,6 +818,7 @@ namespace XLua
             }
             else if (!is_valuetype)
             {
+                // 反向引用, c#层可以通过这个map找到对应的lua userdata
                 reverseMap[obj] = index;
             }
 			
@@ -1272,7 +1285,39 @@ namespace XLua
             }
 
             index = addObject(o, is_valuetype, is_enum);
+            
             LuaAPI.xlua_pushcsobj(L, index, type_id, needcache, cacheRef);
+
+            /*
+            static void cacheud(lua_State *L, int key, int cache_ref) 
+            {
+                // 将userdata放入cache表中
+                // 下面代码可以理解为：cache[key] = userdata
+                lua_rawgeti(L, LUA_REGISTRYINDEX, cache_ref);
+                lua_pushvalue(L, -2);
+                lua_rawseti(L, -2, key);
+                lua_pop(L, 1);
+            }
+            
+            // 下面函数是第一次将csobj压入lua栈时调用，函数内部会先为csobj产生一个userdata
+            // 其中参数key就是csobj的唯一id
+            LUA_API void xlua_pushcsobj(lua_State *L, int key, int meta_ref, int need_cache, int cache_ref) 
+            {
+                // userdata就是一个大小为int的内存
+                int* pointer = (int*)lua_newuserdata(L, sizeof(int));
+
+                // 在userdata的内存里写入key
+                *pointer = key;
+
+                if (need_cache) cacheud(L, key, cache_ref);
+
+                lua_rawgeti(L, LUA_REGISTRYINDEX, meta_ref);
+
+                lua_setmetatable(L, -2);
+            }
+            
+            
+            */
         }
 
         public void PushObject(RealStatePtr L, object o, int type_id)
@@ -1319,6 +1364,7 @@ namespace XLua
             }
         }
 
+        // 参数udata就是obj的唯一id了
         private object getCsObj(RealStatePtr L, int index, int udata)
         {
             object obj;
@@ -1343,7 +1389,7 @@ namespace XLua
                     return null;
                 }
             }
-            else if (objects.TryGetValue(udata, out obj))
+            else if (objects.TryGetValue(udata, out obj))  // 这里通过udata查找obj并返回
             {
 #if !UNITY_5 && !XLUA_GENERAL && !UNITY_2017 && !UNITY_2017_1_OR_NEWER && !UNITY_2018
                 if (obj != null && obj is UnityEngine.Object && ((obj as UnityEngine.Object) == null))
@@ -1364,6 +1410,7 @@ namespace XLua
 
 		internal object FastGetCSObj(RealStatePtr L,int index)
 		{
+            // xlua_tocsobj_fast函数会返回index位置的userdata里保存的值，也就是之前我们存入的obj唯一id
             return getCsObj(L, index, LuaAPI.xlua_tocsobj_fast(L,index));
         }
 
