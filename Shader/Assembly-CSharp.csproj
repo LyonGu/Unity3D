@@ -190,6 +190,7 @@
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommoandBufferPostEffect.cs" />
     <Compile Include="Assets\Scripts\GraphicsTest.cs" />
+    <Compile Include="Assets\Scripts\GraphicsTestWithMask.cs" />
     <Compile Include="Assets\Scripts\HPFillCount.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Helpers\GirlActionByBendTrees.cs" />
@@ -462,6 +463,7 @@
     <None Include="Assets\Shaders\Surface\PhotoshopLevels.shader" />
     <None Include="Assets\Shaders\SampleUV\FlashEffect.shader" />
     <None Include="Assets\Colorful\Shaders\CC_Posterize.shader" />
+    <None Include="Assets\Materials\Test\GraphicsTest2.shader" />
     <None Include="Assets\Shaders\Common\OutLine3DHDRColor.shader" />
     <None Include="Assets\Shaders\Surface\BasicDiffuseHalfLambert_RampTex2.shader" />
     <None Include="Assets\Shaders\Surface\SimpleVertexColor.shader" />
