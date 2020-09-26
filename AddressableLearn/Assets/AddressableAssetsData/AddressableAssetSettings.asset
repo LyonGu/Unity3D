@@ -26,6 +26,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9c589428156102d47812f002952cf7fc, type: 2}
   - {fileID: 11400000, guid: 766043791c0068d4fbbbb6594066d3bf, type: 2}
   - {fileID: 11400000, guid: 4cdac0d14325fa942a3a51b0d33b6728, type: 2}
+  - {fileID: 11400000, guid: b93d716a1baf0f84983cd5fa79199320, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -68,6 +69,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Cube
+    - UICommon
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 9d1e2c7ee3b130041869a353f8963033, type: 2}
