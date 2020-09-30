@@ -189,6 +189,8 @@
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferRT.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommandBufferTest.cs" />
     <Compile Include="Assets\Scripts\CommandBuffer\CommoandBufferPostEffect.cs" />
+    <Compile Include="Assets\Scripts\CustomShaderGUI\CustomShaderGUI.cs" />
+    <Compile Include="Assets\Scripts\CustomShaderGUI\CustomShaderGUI1.cs" />
     <Compile Include="Assets\Scripts\GraphicsTest.cs" />
     <Compile Include="Assets\Scripts\GraphicsTestWithMask.cs" />
     <Compile Include="Assets\Scripts\HPFillCount.cs" />
@@ -353,6 +355,7 @@
     <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
     <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.shader" />
     <None Include="Assets\Shaders\Surface\BaseSpecaularMap.shader" />
+    <None Include="Assets\Shaders\CustomShaderGUI\MaterialPropertyDrawerExample.shader" />
     <None Include="Assets\PostProcessing\Resources\Shaders\FXAA.shader" />
     <None Include="Assets\Shaders\Common\FriendHpText.shader" />
     <None Include="Assets\Colorful\Shaders\CC_WhiteBalance.shader" />
@@ -418,6 +421,7 @@
     <None Include="Assets\Shaders\Chapter9\ForwardRendering_Texture.shader" />
     <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeRender.shader" />
     <None Include="Assets\Shaders\Surface\SimpleAlphaTest.shader" />
+    <None Include="Assets\Shaders\CustomShaderGUI\CustomShaderGUI.shader" />
     <None Include="Assets\Cookbook\Code\03_Code\Phong.shader" />
     <None Include="Assets\Colorful\Shaders\CC_GradientRamp.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
