@@ -486,6 +486,7 @@
     <None Include="Assets\Cookbook\Code\07_Code\VertexAnimation.shader" />
     <None Include="Assets\Colorful\Shaders\CC_Glitch.cginc" />
     <None Include="Assets\Shaders\Common\RimLightNoMask.shader" />
+    <None Include="Assets\Shaders\CustomShaderGUI\ShaderEditor.shader" />
     <None Include="Assets\Shaders\Chapter6\DiffusePixelLevel.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
     <None Include="Assets\Cookbook\Code\10_Code\BlendMode_Effect.shader" />
