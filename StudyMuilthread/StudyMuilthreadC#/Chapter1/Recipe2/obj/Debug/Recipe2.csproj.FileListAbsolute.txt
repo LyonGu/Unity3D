@@ -1,0 +1,6 @@
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\bin\Debug\Recipe2.exe.config
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\bin\Debug\Recipe2.exe
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\bin\Debug\Recipe2.pdb
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\obj\Debug\Recipe2.csproj.CoreCompileInputs.cache
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\obj\Debug\Recipe2.exe
+E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe2\obj\Debug\Recipe2.pdb
