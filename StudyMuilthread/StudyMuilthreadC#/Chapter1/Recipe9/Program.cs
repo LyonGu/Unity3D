@@ -17,6 +17,8 @@ namespace Recipe9
             t1.Start();
             t2.Start();
             t3.Start();
+
+            // 这么来看，必须等三个线程执行完，主线程才会继续执行
             t1.Join();
             t2.Join();
             t3.Join();

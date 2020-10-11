@@ -5,3 +5,10 @@ E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe1\obj\
 E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe1\obj\Debug\Recipe1.csproj.CoreCompileInputs.cache
 E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe1\obj\Debug\Recipe1.exe
 E:\360MoveData\Users\Administrator\Desktop\StudyMuilthread\Chapter1\Recipe1\obj\Debug\Recipe1.pdb
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\bin\Debug\Recipe1.exe.config
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\bin\Debug\Recipe1.exe
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\bin\Debug\Recipe1.pdb
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\obj\Debug\Recipe1.csprojAssemblyReference.cache
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\obj\Debug\Recipe1.csproj.CoreCompileInputs.cache
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\obj\Debug\Recipe1.exe
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe1\obj\Debug\Recipe1.pdb

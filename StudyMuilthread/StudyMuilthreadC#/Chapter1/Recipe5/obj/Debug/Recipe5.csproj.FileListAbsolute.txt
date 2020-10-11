@@ -1,0 +1,7 @@
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\bin\Debug\Recipe5.exe.config
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\bin\Debug\Recipe5.exe
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\bin\Debug\Recipe5.pdb
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\obj\Debug\Recipe5.csprojAssemblyReference.cache
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\obj\Debug\Recipe5.csproj.CoreCompileInputs.cache
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\obj\Debug\Recipe5.exe
+G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter1\Recipe5\obj\Debug\Recipe5.pdb
