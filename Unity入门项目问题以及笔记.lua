@@ -48,8 +48,10 @@
 	        transform.Rotate(cross, Mathf.Min(turnSpeed, Mathf.Abs(angle)));
 		}
 
-		transform.rotation --> 返回的是四元数
+		transform.rotation --> 返回的是四元数 this.transform.rotation = Quaternion.Euler(0f, 60.0f, 0f); //用四元素效率更高点
 		transform.eulerAngles = new Vector3(0,100,0);  //面板上roration属性为欧拉角
+
+		transform.rotation = 
 		
 		方法5
 		{

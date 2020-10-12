@@ -46,8 +46,6 @@ namespace Recipe8
             var threadFive = new Thread(() => PrintNumber(i));
             threadFour.Start();
             threadFive.Start();
-
-            Console.ReadKey();
         }
 
         static void Count(object iterations)

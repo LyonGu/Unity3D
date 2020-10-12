@@ -14,7 +14,7 @@ namespace Recipe3
             // 2.启动线程
             t.Start();
             // 3.等待线程结束
-            t.Join(); //这句代码会阻塞主线程，让子线程执行完主线程才会继续执行
+            t.Join();
 
             Console.WriteLine($"-------执行完毕 现在时间{DateTime.Now.ToString("HH:mm:ss.ffff")}-------");
             // 暂停一下

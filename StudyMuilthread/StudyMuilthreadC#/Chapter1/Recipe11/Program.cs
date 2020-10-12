@@ -34,18 +34,16 @@ namespace Recipe11
                 // 永远不会运行
                 Console.WriteLine($"异常处理 3 : {ex.Message}");
             }
-
-            Console.ReadKey();
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Console.WriteLine($"CurrentDomain_UnhandledException 异常处理 2 ：{(e.ExceptionObject as Exception).Message}");
+            Console.WriteLine($"异常处理 2 ：{(e.ExceptionObject as Exception).Message}");
         }
 
         static void BadFaultyThread()
         {
-            Console.WriteLine("BadFaultyThread 有异常的线程已启动...");
+            Console.WriteLine("有异常的线程已启动...");
             Thread.Sleep(TimeSpan.FromSeconds(2));
             throw new Exception("Boom!");
         }
@@ -54,13 +52,13 @@ namespace Recipe11
         {
             try
             {
-                Console.WriteLine("FaultyThread 有异常的线程已启动...");
+                Console.WriteLine("有异常的线程已启动...");
                 Thread.Sleep(TimeSpan.FromSeconds(1));
                 throw new Exception("Boom!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FaultyThread 异常处理 1 : {ex.Message}");
+                Console.WriteLine($"异常处理 1 : {ex.Message}");
             }
         }
     }

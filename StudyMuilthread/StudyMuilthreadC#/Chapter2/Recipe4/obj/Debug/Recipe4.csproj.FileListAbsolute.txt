@@ -1,7 +1,6 @@
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\bin\Debug\Recipe4.exe.config
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\bin\Debug\Recipe4.exe
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\bin\Debug\Recipe4.pdb
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\obj\Debug\Recipe4.csprojAssemblyReference.cache
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\obj\Debug\Recipe4.csproj.CoreCompileInputs.cache
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\obj\Debug\Recipe4.exe
-G:\GitResponse\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter2\Recipe4\obj\Debug\Recipe4.pdb
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\bin\Debug\Recipe4.exe.config
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\bin\Debug\Recipe4.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\bin\Debug\Recipe4.pdb
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\obj\Debug\Recipe4.csprojAssemblyReference.cache
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\obj\Debug\Recipe4.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe4\obj\Debug\Recipe4.pdb
