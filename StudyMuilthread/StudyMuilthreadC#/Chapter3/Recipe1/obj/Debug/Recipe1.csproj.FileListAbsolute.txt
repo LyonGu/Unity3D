@@ -1,0 +1,5 @@
+C:\Users\admin\Desktop\StudyMuilthread\Chapter3\Recipe1\bin\Debug\Recipe1.exe.config
+C:\Users\admin\Desktop\StudyMuilthread\Chapter3\Recipe1\bin\Debug\Recipe1.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter3\Recipe1\bin\Debug\Recipe1.pdb
+C:\Users\admin\Desktop\StudyMuilthread\Chapter3\Recipe1\obj\Debug\Recipe1.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter3\Recipe1\obj\Debug\Recipe1.pdb

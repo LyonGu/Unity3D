@@ -1,0 +1,6 @@
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\bin\Debug\Recipe8.exe.config
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\bin\Debug\Recipe8.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\bin\Debug\Recipe8.pdb
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\obj\Debug\Recipe8.csprojAssemblyReference.cache
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\obj\Debug\Recipe8.exe
+C:\Users\admin\Desktop\StudyMuilthread\Chapter2\Recipe8\obj\Debug\Recipe8.pdb
