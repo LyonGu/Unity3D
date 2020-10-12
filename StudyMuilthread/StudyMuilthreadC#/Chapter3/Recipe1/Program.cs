@@ -21,10 +21,11 @@ namespace Recipe1
             WriteLine($"手动创建线程 Id: {threadId}");
 
             // 使用APM方式 进行异步调用  异步调用会使用线程池中的线程
+            // 优先执行委托函数Test，在任务处理完成后调用Callback， 这里的任务处理完是调用了EndInvoke
             IAsyncResult r = poolDelegate.BeginInvoke(out threadId, Callback, "委托异步调用");
             r.AsyncWaitHandle.WaitOne();
 
-            // 获取异步调用结果
+            // 获取异步调用结果 ==》 任务处理完
             string result = poolDelegate.EndInvoke(out threadId, r);
 
             WriteLine($"Thread - 线程池工作线程Id: {threadId}");
