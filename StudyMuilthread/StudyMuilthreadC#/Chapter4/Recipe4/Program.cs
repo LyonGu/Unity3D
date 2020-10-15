@@ -15,16 +15,19 @@ namespace Recipe4
 
             // 使用 Task.Factory.FromAsync方法 转换为Task
             WriteLine("Option 1");
+            ////BeginInvoke(委托函数需要参数，委托函数执行完的回调函数，用户自定义的状态给回调函数)
             Task<string> task = Task<string>.Factory.FromAsync(d.BeginInvoke("异步任务线程", CallBack, "委托异步调用"), d.EndInvoke);
 
+
+            //Task的返回結果会当做参数传递给后面的任务函数
             task.ContinueWith(t => WriteLine($"回调函数执行完毕，现在运行续接函数！结果：{t.Result}"));
 
             while (!task.IsCompleted)
             {
-                WriteLine(task.Status);
+                WriteLine($"1----------------------------------------------{task.Status}");
                 Sleep(TimeSpan.FromSeconds(0.5));
             }
-            WriteLine(task.Status);
+            WriteLine($"1----------------------------------------------{task.Status}");
             Sleep(TimeSpan.FromSeconds(1));
 
             WriteLine("----------------------------------------------");
@@ -39,10 +42,10 @@ namespace Recipe4
 
             while (!task.IsCompleted)
             {
-                WriteLine(task.Status);
+                WriteLine($"2----------------------------------------------{task.Status}");
                 Sleep(TimeSpan.FromSeconds(0.5));
             }
-            WriteLine(task.Status);
+            WriteLine($"2----------------------------------------------{task.Status}");
             Sleep(TimeSpan.FromSeconds(1));
 
             WriteLine("----------------------------------------------");
@@ -58,10 +61,10 @@ namespace Recipe4
 
             while (!task.IsCompleted)
             {
-                WriteLine(task.Status);
+                WriteLine($"3----------------------------------------------{task.Status}");
                 Sleep(TimeSpan.FromSeconds(0.5));
             }
-            WriteLine(task.Status);
+            WriteLine($"3----------------------------------------------{task.Status}");
 
             ReadLine();
         }

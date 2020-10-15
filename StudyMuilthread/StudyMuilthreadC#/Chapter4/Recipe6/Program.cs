@@ -26,13 +26,13 @@ namespace Recipe6
             for (int i = 0; i < 5; i++)
             {
                 Sleep(TimeSpan.FromSeconds(0.5));
-                WriteLine(longTask.Status);
+                WriteLine($"longTask Status {longTask.Status}, 当前时间 {DateTime.Now.ToString("mm:ss.ffff")}");
             }
             cts.Cancel();
             for (int i = 0; i < 5; i++)
             {
                 Sleep(TimeSpan.FromSeconds(0.5));
-                WriteLine(longTask.Status);
+                WriteLine($"longTask Status {longTask.Status}, 当前时间 {DateTime.Now.ToString("mm:ss.ffff")}");
             }
 
             WriteLine($"这个任务已完成，结果为{longTask.Result}");

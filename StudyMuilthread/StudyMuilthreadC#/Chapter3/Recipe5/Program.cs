@@ -19,7 +19,7 @@ namespace Recipe5
 
         static void RunOperations(TimeSpan workerOperationTimeout)
         {
-            using (var evt = new ManualResetEvent(false))
+            using (var evt = new ManualResetEvent(false)) //跳出using语句会自动执行Dispose方法
             using (var cts = new CancellationTokenSource())
             {
                 WriteLine("注册超时操作...");

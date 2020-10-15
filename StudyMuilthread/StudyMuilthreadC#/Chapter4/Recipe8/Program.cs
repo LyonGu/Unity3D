@@ -45,7 +45,7 @@ namespace Recipe8
 
         static int TaskMethod(string name, int seconds)
         {
-            WriteLine($"任务运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
+            WriteLine($"{name} 任务运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
 
             Sleep(TimeSpan.FromSeconds(seconds));
             return 42 * seconds;

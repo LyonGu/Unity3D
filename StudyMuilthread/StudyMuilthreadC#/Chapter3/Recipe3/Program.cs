@@ -28,6 +28,7 @@ namespace Recipe3
 
         static void UseThreads(int numberOfOperations)
         {
+            //CountdownEvent 方式加锁
             using (var countdown = new CountdownEvent(numberOfOperations))
             {
                 WriteLine("通过创建线程调度工作");

@@ -1,0 +1,5 @@
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter3\Recipe4\bin\Debug\Recipe4.exe.config
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter3\Recipe4\bin\Debug\Recipe4.exe
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter3\Recipe4\bin\Debug\Recipe4.pdb
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter3\Recipe4\obj\Debug\Recipe4.exe
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter3\Recipe4\obj\Debug\Recipe4.pdb

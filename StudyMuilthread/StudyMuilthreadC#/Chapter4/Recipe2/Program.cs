@@ -24,22 +24,22 @@ namespace Recipe2
 
             // 使用当前线程，同步执行任务
             task = CreateTask("Task 2");
-            task.RunSynchronously();
+            task.RunSynchronously();  //居然在主线程上运行
             result = task.Result;
             WriteLine($"运算结果：{result}");
 
             // 通过循环等待 获取运行结果
             task = CreateTask("Task 3");
-            WriteLine(task.Status);
+            WriteLine($"1=====Task 3 {task.Status}");
             task.Start();
 
             while (!task.IsCompleted)
             {
-                WriteLine(task.Status);
+                WriteLine($"Task 3 Loop {task.Status}");
                 Sleep(TimeSpan.FromSeconds(0.5));
             }
 
-            WriteLine(task.Status);
+            WriteLine($"2=====Task 3 {task.Status}");
             result = task.Result;
             WriteLine($"运算结果：{result}");
 
@@ -48,7 +48,7 @@ namespace Recipe2
 
         static Task<int> CreateTask(string name)
         {
-            return new Task<int>(() => TaskMethod(name));
+            return new Task<int>(() => TaskMethod(name));  //结果值为int类型
         }
 
         static int TaskMethod(string name)

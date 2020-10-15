@@ -19,7 +19,7 @@ namespace Recipe7
             }
             catch (Exception ex)
             {
-                WriteLine($"异常被捕捉：{ex.Message}");
+                WriteLine($"Task 1 异常被捕捉：{ex.Message}");
             }
             WriteLine("------------------------------------------------");
             WriteLine();
@@ -33,7 +33,7 @@ namespace Recipe7
             }
             catch (Exception ex)
             {
-                WriteLine($"异常被捕捉: {ex.Message}");
+                WriteLine($"Task 2 异常被捕捉: {ex.Message}");
             }
             WriteLine("----------------------------------------------");
             WriteLine();
@@ -44,10 +44,10 @@ namespace Recipe7
             var complexTask = Task.WhenAll(t1, t2);
             // 通过ContinueWith TaskContinuationOptions.OnlyOnFaulted的方式 如果task出现异常 那么才会执行该方法
             var exceptionHandler = complexTask.ContinueWith(t => {
-                WriteLine($"异常被捕捉：{t.Exception.Message}");
+                WriteLine($"Task.WhenAll 异常被捕捉：{t.Exception.Message}");
                 foreach (var ex in t.Exception.InnerExceptions)
                 {
-                    WriteLine($"-------------------------- {ex.Message}");
+                    WriteLine($"Task.WhenAll-------------------------- {ex.Message}");
                 }
             },TaskContinuationOptions.OnlyOnFaulted);
 
@@ -59,11 +59,11 @@ namespace Recipe7
 
         static int TaskMethod(string name, int seconds)
         {
-            WriteLine($"任务运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
+            WriteLine($"{name} 任务运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
 
             Sleep(TimeSpan.FromSeconds(seconds));
             // 人为抛出一个异常
-            throw new Exception("Boom!");
+            throw new Exception($"{name} Boom!");
             return 42 * seconds;
         }
     }
