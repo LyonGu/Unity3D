@@ -25,7 +25,7 @@ namespace Recipe2
             ThreadPool.QueueUserWorkItem(state =>
             {
                 WriteLine($"Operation state: {state}");
-                WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId}");
+                WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId} 是否为线程池线程: {CurrentThread.IsThreadPoolThread}");
                 Sleep(TimeSpan.FromSeconds(2));
             }, "lambda state");
 
@@ -33,7 +33,7 @@ namespace Recipe2
             ThreadPool.QueueUserWorkItem(_ =>
             {
                 WriteLine($"Operation state: {x + y}, {lambdaState}");
-                WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId}");
+                WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId} 是否为线程池线程: {CurrentThread.IsThreadPoolThread}");
                 Sleep(TimeSpan.FromSeconds(2));
             }, "lambda state");
 
@@ -43,7 +43,7 @@ namespace Recipe2
         private static void AsyncOperation(object state)
         {
             WriteLine($"Operation state: {state ?? "(null)"}");
-            WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId}");
+            WriteLine($"工作线程 id: {CurrentThread.ManagedThreadId} 是否为线程池线程: {CurrentThread.IsThreadPoolThread}");
             Sleep(TimeSpan.FromSeconds(2));
         }
     }
