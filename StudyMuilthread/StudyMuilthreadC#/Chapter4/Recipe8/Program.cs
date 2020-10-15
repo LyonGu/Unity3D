@@ -35,7 +35,7 @@ namespace Recipe8
 
             while (tasks.Count > 0)
             {
-                var completedTask = Task.WhenAny(tasks).Result;
+                var completedTask = Task.WhenAny(tasks).Result; //这里会阻塞主线程
                 tasks.Remove(completedTask);
                 WriteLine($"一个任务已经完成，结果为 {completedTask.Result}");
             }

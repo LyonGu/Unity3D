@@ -18,6 +18,8 @@ namespace Recipe6
             WriteLine(longTask.Status);
             WriteLine("第一个任务在运行前被取消.");
 
+            WriteLine();
+            WriteLine();
             // 同样的 可以通过CancellationToken对象 取消正在运行的任务
             cts = new CancellationTokenSource();
             longTask = new Task<int>(() => TaskMethod("Task 2", 10, cts.Token), cts.Token);
@@ -28,7 +30,7 @@ namespace Recipe6
                 Sleep(TimeSpan.FromSeconds(0.5));
                 WriteLine($"longTask Status {longTask.Status}, 当前时间 {DateTime.Now.ToString("mm:ss.ffff")}");
             }
-            cts.Cancel();
+            cts.Cancel();  //提前取消了
             for (int i = 0; i < 5; i++)
             {
                 Sleep(TimeSpan.FromSeconds(0.5));
@@ -42,7 +44,7 @@ namespace Recipe6
 
         static int TaskMethod(string name, int seconds, CancellationToken token)
         {
-            WriteLine($"任务运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
+            WriteLine($"任务 {name} 运行在{CurrentThread.ManagedThreadId}上. 是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
 
             for (int i = 0; i < seconds; i++)
             {

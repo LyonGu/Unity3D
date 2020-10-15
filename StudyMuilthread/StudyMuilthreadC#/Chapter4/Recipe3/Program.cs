@@ -23,6 +23,8 @@ namespace Recipe2
             secondTask.Start();
 
             Sleep(TimeSpan.FromSeconds(4));
+            WriteLine();
+            WriteLine();
             WriteLine($"主线程延迟 线程 Id {CurrentThread.ManagedThreadId} 当前时间 {DateTime.Now.ToString("mm:ss.ffff")}");
             // 这里会紧接着 Second Task运行后运行， 但是由于添加了 OnlyOnRanToCompletion 和 ExecuteSynchronously 所以会由运行SecondTask的线程来 运行这个任务
             //secondTask.ContinueWith里的执行方法居然在主线程上执行？？？
@@ -34,14 +36,17 @@ namespace Recipe2
 
             Sleep(TimeSpan.FromSeconds(2));
             WriteLine();
+            WriteLine();
 
 
             WriteLine($"主线程 askCreationOptions.AttachedToParent=======线程 Id {CurrentThread.ManagedThreadId} 当前时间 {DateTime.Now.ToString("mm:ss.ffff")}");
             firstTask = new Task<int>(() =>
             {
                 // 使用了TaskCreationOptions.AttachedToParent 将这个Task和父Task关联， 当这个Task没有结束时  父Task 状态为 WaitingForChildrenToComplete
+                // 子任务和父任务同步执行
                 var innerTask = Task.Factory.StartNew(() => TaskMethod("Second Task", 5), TaskCreationOptions.AttachedToParent);
 
+                //
                 innerTask.ContinueWith(t => TaskMethod("Thrid Task", 2), TaskContinuationOptions.AttachedToParent);
 
                 return TaskMethod("First Task", 2);
@@ -57,7 +62,7 @@ namespace Recipe2
                 Sleep(TimeSpan.FromSeconds(0.5));
             }
 
-            WriteLine(firstTask.Status);
+            WriteLine($"firstTask final======={firstTask.Status}");
 
             Console.ReadLine();
         }

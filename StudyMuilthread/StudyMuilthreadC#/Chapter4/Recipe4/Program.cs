@@ -15,7 +15,8 @@ namespace Recipe4
 
             // 使用 Task.Factory.FromAsync方法 转换为Task
             WriteLine("Option 1");
-            ////BeginInvoke(委托函数需要参数，委托函数执行完的回调函数，用户自定义的状态给回调函数)
+            ////BeginInvoke(委托函数需要参数，委托函数执行完的回调函数，用户自定义的状态给回调函数
+            //CallBack 在d执行完后才会执行
             Task<string> task = Task<string>.Factory.FromAsync(d.BeginInvoke("异步任务线程", CallBack, "委托异步调用"), d.EndInvoke);
 
 
@@ -75,7 +76,7 @@ namespace Recipe4
         static void CallBack(IAsyncResult ar)
         {
             WriteLine("开始运行回调函数...");
-            WriteLine($"传递给回调函数的状态{ar.AsyncState}");
+            WriteLine($"传递给回调函数的状态: {ar.AsyncState}");
             WriteLine($"是否为线程池线程：{CurrentThread.IsThreadPoolThread}");
             WriteLine($"线程池工作线程Id：{CurrentThread.ManagedThreadId}");
         }
