@@ -43,7 +43,7 @@ namespace Recipe2
             firstTask = new Task<int>(() =>
             {
                 // 使用了TaskCreationOptions.AttachedToParent 将这个Task和父Task关联， 当这个Task没有结束时  父Task 状态为 WaitingForChildrenToComplete
-                // 子任务和父任务同步执行
+                // innerTask子任务执行完和父任务firstTask才会步执行
                 var innerTask = Task.Factory.StartNew(() => TaskMethod("Second Task", 5), TaskCreationOptions.AttachedToParent);
 
                 //

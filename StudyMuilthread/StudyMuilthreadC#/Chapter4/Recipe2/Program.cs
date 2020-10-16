@@ -27,7 +27,7 @@ namespace Recipe2
 
             // 使用当前线程，同步执行任务
             task = CreateTask("Task 2");
-            task.RunSynchronously();  //居然在主线程上运行
+            task.RunSynchronously();  //居然在主线程上运行 会卡主线程 Task实例化的方式，然后调用同步方法RunSynchronously ，进行线程启动
             result = task.Result;
             WriteLine($"2 task2------运算结果：{result} 现在时间{DateTime.Now.ToString("HH:mm:ss.ffff")}");
 

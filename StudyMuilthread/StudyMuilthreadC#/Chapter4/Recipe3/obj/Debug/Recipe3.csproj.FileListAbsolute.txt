@@ -3,3 +3,4 @@ E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\Recipe
 E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\Recipe3\bin\Debug\Recipe3.pdb
 E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\Recipe3\obj\Debug\Recipe3.exe
 E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\Recipe3\obj\Debug\Recipe3.pdb
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\Recipe3\obj\Debug\Recipe3.csprojAssemblyReference.cache

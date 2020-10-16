@@ -1,0 +1,6 @@
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\bin\Debug\StudyRecord.exe.config
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\bin\Debug\StudyRecord.exe
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\bin\Debug\StudyRecord.pdb
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\obj\Debug\StudyRecord.csprojAssemblyReference.cache
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\obj\Debug\StudyRecord.exe
+E:\hxp\GitRepositories\Unity3D\StudyMuilthread\StudyMuilthreadC#\Chapter4\RecipeRepeat\StudyRecord\obj\Debug\StudyRecord.pdb
