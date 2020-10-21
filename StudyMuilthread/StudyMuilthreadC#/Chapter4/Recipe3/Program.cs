@@ -46,7 +46,7 @@ namespace Recipe2
                 // innerTask子任务执行完和父任务firstTask才会步执行
                 var innerTask = Task.Factory.StartNew(() => TaskMethod("Second Task", 5), TaskCreationOptions.AttachedToParent);
 
-                //
+                //ContinueWith里的任务所在的线程并不一定跟innerTask所在线程一致，ContinueWith从线程池里新拿了一个线程
                 innerTask.ContinueWith(t => TaskMethod("Thrid Task", 2), TaskContinuationOptions.AttachedToParent);
 
                 return TaskMethod("First Task", 2);
