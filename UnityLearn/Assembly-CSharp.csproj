@@ -187,6 +187,7 @@
     <Compile Include="Assets\Scripts\DestroyGameobject.cs" />
     <Compile Include="Assets\Scripts\DestroyObjUseBufferPool.cs" />
     <Compile Include="Assets\Scripts\DotweenLearn.cs" />
+    <Compile Include="Assets\Scripts\DownLoadTest.cs" />
     <Compile Include="Assets\Scripts\DragTest.cs" />
     <Compile Include="Assets\Scripts\GCTest.cs" />
     <Compile Include="Assets\Scripts\GUI_demo1.cs" />
@@ -231,6 +232,12 @@
     <Compile Include="Assets\Scripts\TestManger.cs" />
     <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
     <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
+    <Compile Include="Assets\Scripts\Thread\HttpMultyThreadDownLoad.cs" />
+    <Compile Include="Assets\Scripts\Thread\Loom.cs" />
+    <Compile Include="Assets\Scripts\Thread\MonoSingleton.cs" />
+    <Compile Include="Assets\Scripts\Thread\TaskQueue.cs" />
+    <Compile Include="Assets\Scripts\Thread\TestScript.cs" />
+    <Compile Include="Assets\Scripts\Thread\UnityWebRequestManager.cs" />
     <Compile Include="Assets\Scripts\TimeLine\LightControlAsset.cs" />
     <Compile Include="Assets\Scripts\TimeLine\LightControlBehaviour.cs" />
     <Compile Include="Assets\Scripts\TimeLine\TestPlayableAsset.cs" />
@@ -253,6 +260,7 @@
     <None Include="Assets\Resources\Shaders\RampTexture.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+    <None Include="Assets\DownLoadTest\lookUp.txt" />
     <None Include="Assets\Resources\Shaders\Blue.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
