@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 public class DownLoadTest : MonoBehaviour
 {
     private HttpDownLoad httpDownLoad;
+    private System.Object loomParms = new System.Object();
 
     public GameObject ImageObj;
     void Start()
@@ -55,6 +56,30 @@ public class DownLoadTest : MonoBehaviour
         //    nFile.Write(File, 0, File.Length);
         //    nFile.Close();
         //});
+
+
+        //Unity 多线程和主线程的交互，使用Loom
+        //https://www.cnblogs.com/lancidie/p/5877696.html
+        Loom.Initialize();
+
+        url = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603263696553&di=c74c035d556e94d2514d4479cf7e6087&imgtype=0&src=http%3A%2F%2Ft8.baidu.com%2Fit%2Fu%3D3571592872%2C3353494284%26fm%3D79%26app%3D86%26f%3DJPEG%3Fw%3D1200%26h%3D1290";
+        saveFileName = "TestDownLoad2.jpg";
+        httpDownLoad.DownLoadWithTask(url, savePath, saveFileName, () =>
+        {
+            Loom.QueueOnMainThread((System.Object t) =>
+            {
+                ImageObj.SetActive(false);
+            }, loomParms);
+
+        });
+
+        //直接使用Loom开启多线程
+        Loom.RunAsync(() =>
+        {
+            //TODO
+        });
+
+
     }
 
     void DownLoadDone()
@@ -65,7 +90,7 @@ public class DownLoadTest : MonoBehaviour
 
     void DownLoadFileUseUnityWebRequest(string url, string downloadFilePathAndName, Action<UnityWebRequest> actionResult)
     {
-
+        //错误实例 UnityWebRequest不能放到子线程中
         Task task = new Task(()=> {
             var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
             uwr.downloadHandler = new DownloadHandlerFile(downloadFilePathAndName);
