@@ -232,6 +232,8 @@
     <Compile Include="Assets\Scripts\TestManger.cs" />
     <Compile Include="Assets\Scripts\TestMatrialShader.cs" />
     <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
+    <Compile Include="Assets\Scripts\Thread\DownLoadManager.cs" />
+    <Compile Include="Assets\Scripts\Thread\DownLoadTask.cs" />
     <Compile Include="Assets\Scripts\Thread\HttpMultyThreadDownLoad.cs" />
     <Compile Include="Assets\Scripts\Thread\Loom.cs" />
     <Compile Include="Assets\Scripts\Thread\MonoSingleton.cs" />
@@ -254,6 +256,7 @@
     <None Include="Assets\Resources\Models\SwordsMan\SwordsManResources\SwordsEffectResoures\ToolResources\EffectShader\FXMaker_Mask Additive Tint.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
+    <None Include="Assets\DownLoadTest\c4df2e5d205ac1e5055f140e15e22f4b.txt" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\codeandweb.com\Readme.txt" />
