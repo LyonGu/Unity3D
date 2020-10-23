@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using UnityEngine;
 
 public enum DownloadMacState
 {
@@ -92,7 +93,7 @@ public class DownloadFileMac
         if (md5 != _downUnit.md5)
         {
             File.Delete(_downUnit.savePath);
-            ThreadDebugLog.Log("文件MD5校验出错：" + _downUnit.name);
+            Debug.Log("文件MD5校验出错：" + _downUnit.name);
             _state = DownloadMacState.Error;
             _error = "Check MD5 Error ";
             return false;
@@ -203,7 +204,7 @@ public class DownloadFileMac
             if (File.Exists(_downUnit.savePath))
                 File.Delete(_downUnit.savePath);
             
-            ThreadDebugLog.Log("下载出错：" + ex.Message);
+            Debug.LogError("下载出错：" + ex.Message);
             _state = DownloadMacState.Error;
             _error = "Download Error " + ex.Message;
         }
@@ -235,7 +236,7 @@ public class DownloadFileMac
         }
         catch (WebException e)
         {
-            ThreadDebugLog.Log("获取文件长度出错：" + e.Message);
+            Debug.LogError("获取文件长度出错：" + e.Message);
             _state = DownloadMacState.Error;
             _error = "Request File Length Error " + e.Message;
         }

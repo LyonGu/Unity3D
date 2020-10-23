@@ -234,7 +234,9 @@
     <Compile Include="Assets\Scripts\TestResourceMsg.cs" />
     <Compile Include="Assets\Scripts\Thread\DownLoadManager.cs" />
     <Compile Include="Assets\Scripts\Thread\DownLoadTask.cs" />
+    <Compile Include="Assets\Scripts\Thread\DownloadMacState.cs" />
     <Compile Include="Assets\Scripts\Thread\HttpMultyThreadDownLoad.cs" />
+    <Compile Include="Assets\Scripts\Thread\LearnWangShangDownLoadFram.cs" />
     <Compile Include="Assets\Scripts\Thread\Loom.cs" />
     <Compile Include="Assets\Scripts\Thread\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\Thread\TaskQueue.cs" />
