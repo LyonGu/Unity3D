@@ -208,7 +208,7 @@ public class DownloadMgr
             }
             else
             {
-                ThreadDebugLog.Log("Error DownloadMacState " + mac._state + " " + mac._downUnit.name);
+                Debug.Log("Error DownloadMacState " + mac._state + " " + mac._downUnit.name);
                 break;
             }
         }
