@@ -43,10 +43,10 @@ public class DownloadMgr
     private static object _lock = new object();
     private const int MAX_THREAD_COUNT = 20;
 
-    private Queue<DownloadFileMac> _readyList;
-    private Dictionary<Thread, DownloadFileMac> _runningList;
-    private List<DownloadUnit> _completeList;
-    private List<DownloadFileMac> _errorList;
+    private Queue<DownloadFileMac> _readyList;   //请求队列
+    private Dictionary<Thread, DownloadFileMac> _runningList;  //运行队列
+    private List<DownloadUnit> _completeList;       //完成队列
+    private List<DownloadFileMac> _errorList;       //异常队列
 
     private DownloadMgr()
     {

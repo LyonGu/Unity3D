@@ -117,6 +117,7 @@ public class DownloadFileMac
         }
         else if (File.Exists(tempFile))
         {
+            //未下载完，继续下载
             fs = File.OpenWrite(tempFile);
             startPos = fs.Length;
             fs.Seek(startPos, SeekOrigin.Current); //移动文件流中的当前指针
@@ -136,6 +137,7 @@ public class DownloadFileMac
         }
         else
         {
+            //完全没有下载过
             string direName = Path.GetDirectoryName(tempFile);
             if (!Directory.Exists(direName)) Directory.CreateDirectory(direName);
             fs = new FileStream(tempFile, FileMode.Create);
