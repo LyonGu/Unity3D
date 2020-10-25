@@ -13,16 +13,17 @@ public class DownLoadManager
 {
     private static DownLoadManager _instance;
 
-    const string lookUpFile = "lookUp.txt";
+    const string lookUpFile = "lookUp.txt";  //不使用lookup表了，因为玩家可能手动删除，虽然不影响结果，但是还是会请求一遍url
     private Dictionary<string, string> lookUpDic = new Dictionary<string, string>();
     private static System.Object fileLocker = new System.Object();
     private static System.Object processLocker = new System.Object();
 
-    private string ConstSavePath = string.Empty; 
+    private string ConstSavePath = string.Empty;
     private string lookUpfilePath = string.Empty;
 
     const int ReadWriteTimeOut = 2 * 1000;//超时等待时间
     const int TimeOutWait = 5 * 1000;//超时等待时间
+    const int ConnectionLimit = 100;
 
 
     public static DownLoadManager GetInstance()
@@ -68,7 +69,7 @@ public class DownLoadManager
         return texture2D;
     }
 
-    private static string GetMD5(string str)
+    public string GetMD5(string str)
     {
 
         byte[] resultBytes = System.Text.Encoding.UTF8.GetBytes(str);
@@ -86,12 +87,34 @@ public class DownLoadManager
         return hashString.ToString();
     }
 
-    private static long GetLength(string url)
+    private void ClearHttpRequest(HttpWebRequest request, HttpWebResponse response)
     {
+
+        if (request != null)
+        {
+            request.Abort();
+            request = null;
+        }
+        if (response != null)
+        {
+            response.Close();
+            response = null;
+        }
+    }
+
+    public long GetLength(string url)
+    {
+        //System.GC.Collect();
         HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
-        request.Method = "HEAD";
+        request.Method = "GET";
         request.ReadWriteTimeout = ReadWriteTimeOut;
         request.Timeout = TimeOutWait;
+        /*
+         HTTP1.1 规定同一域名最多只能同时有两个连接，C# 是在 WebRequest 中实现的。 如果没有设置，则默认只有 2 个并发连接。
+         如果同时下载多个文件，只有 2 个可以同时下载，其他会一直等待。而且等待时间超过超时时间时会报超时异常 The operation has timed out。
+         */
+        request.ServicePoint.ConnectionLimit = ConnectionLimit; //默认同一个域名只能有2个alive状态的http的连接数
+        //request.KeepAlive = false;  //设置了ConnectionLimit就不要设置为flase了
         HttpWebResponse response = null;
         try
         {
@@ -99,11 +122,16 @@ public class DownLoadManager
         }
         catch (Exception ex)
         {
-
             Debug.LogError($"url == {url} |||| {ex.ToString()}");
+            //ClearHttpRequest(request, response);
+            return -1;
         }
+        long totalLenth = response.ContentLength;
 
-        return response.ContentLength;
+        //https://www.cnblogs.com/1175429393wljblog/p/8435049.html
+        //关闭连接数, 否则
+        //ClearHttpRequest(request, response);
+        return totalLenth;
     }
 
     #region 下载接口
@@ -111,20 +139,35 @@ public class DownLoadManager
     public void DownLoadTextureWithTaskAD(DownLoadImageTask downLoadTask)
     {
         if (downLoadTask == null) return;
+        DownLoadImageTask targetTask = downLoadTask;
         string filePath = string.Empty;
-        string url = downLoadTask.url;
-        if (lookUpDic.Count > 0)
+        string tempFilePath = string.Empty;
+        string url = targetTask.url;
+        //if (lookUpDic.Count > 0)
+        //{
+        //    if (lookUpDic.ContainsKey(url))
+        //    {
+        //        filePath = lookUpDic[url];
+        //    }
+        //}
+
+        if (string.IsNullOrEmpty(targetTask.saveFileName))
         {
-            if (lookUpDic.ContainsKey(url))
-            {
-                filePath = lookUpDic[url];
-            }
+            string fileName = GetMD5(url);
+            tempFilePath = $"{ConstSavePath}/{fileName}_temp.png";
+            filePath = $"{ConstSavePath}/{fileName}.png";
         }
-        if (!string.IsNullOrEmpty(filePath))
+        else
+        {
+            tempFilePath = $"{ConstSavePath}/{targetTask.saveFileName}_temp.png";
+            filePath = $"{ConstSavePath}/{targetTask.saveFileName}.png";
+        }
+
+        if (File.Exists(filePath))
         {
             //已经下载过了
-            downLoadTask.isDone = true;
-            downLoadTask.progress = 1;
+            targetTask.isDone = true;
+            targetTask.progress = 1;
             //子线程进行读取操作，读取完成回调到主线程
             Debug.Log($"文件:{filePath} 已下载完了 直接读取文件======");
             Task.Run(() =>
@@ -139,11 +182,11 @@ public class DownLoadManager
                     fs.Close();
                     fs.Dispose();
                 }
-               
+
                 //使用loom传回给主线程，执行主线程回调函数
                 Loom.QueueOnMainThread((System.Object t) =>
                 {
-                    Texture2D texture = BytesToTexture2D(fbuffer, downLoadTask.texW, downLoadTask.texH);
+                    Texture2D texture = BytesToTexture2D(fbuffer, targetTask.texW, targetTask.texH);
                     downLoadTask.ExcuteHandle(texture);
                 }, null);
 
@@ -164,49 +207,51 @@ public class DownLoadManager
                 }
                 long totalLength = GetLength(url);
 
-                if (string.IsNullOrEmpty(downLoadTask.saveFileName))
-                {
-                    string fileName = GetMD5(url);
-                    filePath = $"{ConstSavePath}/{fileName}.png";
-                }
-                else
-                {
-                    filePath = $"{ConstSavePath}/{downLoadTask.saveFileName}.png";
-                }
+
                 //获取文件现在的长度
-                FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                FileStream fs = new FileStream(tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 long fileLength = fs.Length;
 
                 //如果没下载完
                 byte[] fbuffer = null; //回调函数里需要的Byte数组
                 if (fileLength < totalLength)
                 {
-                    downLoadTask.progress = fileLength/ totalLength;
+                    downLoadTask.progress = fileLength / totalLength;
                     //断点续传核心，设置本地文件流的起始位置
                     fs.Seek(fileLength, SeekOrigin.Begin);
 
                     HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
                     request.ReadWriteTimeout = ReadWriteTimeOut;
                     request.Timeout = TimeOutWait;
+                    //request.KeepAlive = false;
+                    request.Method = "GET";
+                    request.ServicePoint.ConnectionLimit = ConnectionLimit;
                     Stream stream = null;
                     //断点续传核心，设置远程访问文件流的起始位置
                     request.AddRange((int)fileLength);
-
+                    HttpWebResponse response = null;
                     try
                     {
-                        stream = request.GetResponse().GetResponseStream();
+                        response = request.GetResponse() as HttpWebResponse;
+                        stream = response.GetResponseStream();
                     }
                     catch (Exception ex)
                     {
+                       
                         Debug.LogError($"url == {url} |||| {ex.ToString()}");
+                        //ClearHttpRequest(request, response);
+                        fs.Close();
+                        fs.Dispose();
                         cts.Cancel();
+                        return;
+                       
                     }
 
                     byte[] buffer = new byte[1024];
                     //使用流读取内容到buffer中
                     //返回值代表读取的实际长度,并不是buffer有多大，stream就会读进去多少
                     int length = stream.Read(buffer, 0, buffer.Length);
-                    
+
                     while (length > 0)
                     {
 
@@ -226,6 +271,8 @@ public class DownLoadManager
                     fs.Read(fbuffer, 0, fbuffer.Length);
                     stream.Close();
                     stream.Dispose();
+
+                    //ClearHttpRequest(request, response);
                 }
                 else
                 {
@@ -240,28 +287,31 @@ public class DownLoadManager
                 if (downLoadTask.progress == 1)
                 {
                     downLoadTask.isDone = true;
+
+                    //修改成正式文件
+                    File.Move(tempFilePath, filePath);
                     //使用loom传回给主线程，执行主线程回调函数
                     Loom.QueueOnMainThread((System.Object t) =>
                     {
-                        Texture2D texture = BytesToTexture2D(fbuffer, downLoadTask.texW, downLoadTask.texH);
+                        Texture2D texture = BytesToTexture2D(fbuffer, targetTask.texW, targetTask.texH);
                         downLoadTask.ExcuteHandle(texture);
                     }, null);
 
 
                     //子线程中写入lookup文件中，url和filePath 一一对应
-                    lock (fileLocker)
-                    {
-                        FileStream fs1 = new FileStream(lookUpfilePath, FileMode.Append, FileAccess.Write);
-                        string content = $"{url};{filePath} \n";
+                    //lock (fileLocker)
+                    //{
+                    //    FileStream fs1 = new FileStream(lookUpfilePath, FileMode.Append, FileAccess.Write);
+                    //    string content = $"{url};{filePath} \n";
 
-                        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(content);
-                        fs1.Write(bytes, 0, bytes.Length);
-                        fs1.Flush();
-                        fs1.Close();
-                        fs1.Dispose();
+                    //    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(content);
+                    //    fs1.Write(bytes, 0, bytes.Length);
+                    //    fs1.Flush();
+                    //    fs1.Close();
+                    //    fs1.Dispose();
 
-                        lookUpDic.Add(url, filePath);
-                    }
+                    //    lookUpDic.Add(url, filePath);
+                    //}
 
                     Debug.Log($"{url} download finished");
                     cts.Cancel();
@@ -284,25 +334,49 @@ public class DownLoadManager
             bool isDownLoadAllEnd = false;
             int idx = 0;
             float totalProgress = 0;
+
+
+            //if (lookUpDic.Count > 0)
+            //{
+            //    if (lookUpDic.ContainsKey(url))
+            //    {
+            //        filePath = lookUpDic[url];
+            //    }
+            //}
+
+
             foreach (var item in downLoadTaskList)
             {
                 DownLoadImageTask downLoadTask = item;
                 if (downLoadTask == null) return;
                 string filePath = string.Empty;
+                string tempFilePath = string.Empty;
                 string url = downLoadTask.url;
-                if (lookUpDic.Count > 0)
+                //if (lookUpDic.Count > 0)
+                //{
+                //    if (lookUpDic.ContainsKey(url))
+                //    {
+                //        filePath = lookUpDic[url];
+                //    }
+                //}
+                if (string.IsNullOrEmpty(downLoadTask.saveFileName))
                 {
-                    if (lookUpDic.ContainsKey(url))
-                    {
-                        filePath = lookUpDic[url];
-                    }
+                    string fileName = GetMD5(url);
+                    tempFilePath = $"{ConstSavePath}/{fileName}_temp.png";
+                    filePath = $"{ConstSavePath}/{fileName}.png";
                 }
-                if (!string.IsNullOrEmpty(filePath))
+                else
+                {
+                    tempFilePath = $"{ConstSavePath}/{downLoadTask.saveFileName}_temp.png";
+                    filePath = $"{ConstSavePath}/{downLoadTask.saveFileName}.png";
+                }
+
+                if (File.Exists(filePath))
                 {
                     //已经下载过了
                     //子线程进行读取操作，读取完成回调到主线程
                     Debug.Log($"文件:{filePath} 已下载完了 直接读取文件======");
-                    
+
                     downLoadTask.isDone = true;
                     downLoadTask.progress = 1;
 
@@ -329,7 +403,7 @@ public class DownLoadManager
                             fs.Close();
                             fs.Dispose();
                         }
-                        
+
                         //使用loom传回给主线程，执行主线程回调函数
                         Loom.QueueOnMainThread((System.Object t) =>
                         {
@@ -337,7 +411,7 @@ public class DownLoadManager
                             downLoadTask.ExcuteHandle(texture);
                         }, null);
 
-                        
+
                     });
                 }
                 else
@@ -355,17 +429,17 @@ public class DownLoadManager
                         }
                         long totalLength = GetLength(url);
 
-                        if (string.IsNullOrEmpty(downLoadTask.saveFileName))
-                        {
-                            string fileName = GetMD5(url);
-                            filePath = $"{ConstSavePath}/{fileName}.png";
-                        }
-                        else
-                        {
-                            filePath = $"{ConstSavePath}/{downLoadTask.saveFileName}.png";
-                        }
+                        //if (string.IsNullOrEmpty(downLoadTask.saveFileName))
+                        //{
+                        //    string fileName = GetMD5(url);
+                        //    filePath = $"{ConstSavePath}/{fileName}.png";
+                        //}
+                        //else
+                        //{
+                        //    filePath = $"{ConstSavePath}/{downLoadTask.saveFileName}.png";
+                        //}
                         //获取文件现在的长度
-                        FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                        FileStream fs = new FileStream(tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                         long fileLength = fs.Length;
 
                         //如果没下载完
@@ -379,6 +453,8 @@ public class DownLoadManager
                             HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
                             request.ReadWriteTimeout = ReadWriteTimeOut;
                             request.Timeout = TimeOutWait;
+                            request.Method = "GET";
+                            request.ServicePoint.ConnectionLimit = ConnectionLimit;
                             Stream stream = null;
                             //断点续传核心，设置远程访问文件流的起始位置
                             request.AddRange((int)fileLength);
@@ -424,7 +500,7 @@ public class DownLoadManager
                                 totalProgress = (float)idx / (float)totalTaskCount;
                                 Debug.Log($"totalProgress {totalProgress}");
                             }
-                            
+
                         }
                         else
                         {
@@ -445,6 +521,9 @@ public class DownLoadManager
                         if (downLoadTask.progress == 1)
                         {
                             downLoadTask.isDone = true;
+
+                            //修改成正式名字
+                            File.Move(tempFilePath, filePath);
                             //使用loom传回给主线程，执行主线程回调函数
                             Loom.QueueOnMainThread((System.Object t) =>
                             {
@@ -454,19 +533,19 @@ public class DownLoadManager
 
 
                             //子线程中写入lookup文件中，url和filePath 一一对应
-                            lock (fileLocker)
-                            {
-                                FileStream fs1 = new FileStream(lookUpfilePath, FileMode.Append, FileAccess.Write);
-                                string content = $"{url};{filePath} \n";
+                            //lock (fileLocker)
+                            //{
+                            //    FileStream fs1 = new FileStream(lookUpfilePath, FileMode.Append, FileAccess.Write);
+                            //    string content = $"{url};{filePath} \n";
 
-                                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(content);
-                                fs1.Write(bytes, 0, bytes.Length);
-                                fs1.Flush();
-                                fs1.Close();
-                                fs1.Dispose();
+                            //    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(content);
+                            //    fs1.Write(bytes, 0, bytes.Length);
+                            //    fs1.Flush();
+                            //    fs1.Close();
+                            //    fs1.Dispose();
 
-                                lookUpDic.Add(url, filePath);
-                            }
+                            //    lookUpDic.Add(url, filePath);
+                            //}
 
                             Debug.Log($"{url} download finished");
                             cts.Cancel();
@@ -485,8 +564,8 @@ public class DownLoadManager
                     task.Start();
                 }
             }
-        
-        
+
+
         }
     }
 

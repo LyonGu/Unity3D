@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -124,6 +125,7 @@ public class DownLoadTest : MonoBehaviour
         //downLoadImageTask2.downHandle = (Texture2D t) =>
         //{
         //    Debug.Log($"主线程回调1================");
+        //    rawImageList[1].texture = t;
         //};
         //downLoadManager.DownLoadTextureWithTaskAD(downLoadImageTask2);
 
@@ -132,28 +134,19 @@ public class DownLoadTest : MonoBehaviour
         //downLoadImageTask3.downHandle = (Texture2D t) =>
         //{
         //    Debug.Log($"主线程回调2================");
+        //    rawImageList[2].texture = t;
         //};
         //downLoadManager.DownLoadTextureWithTaskAD(downLoadImageTask3);
 
-        
 
+        System.GC.Collect();
         List<DownLoadImageTask> downTaskList = new List<DownLoadImageTask>();
+        int count = urlList.Count;
         for (int i = 0; i < urlList.Count; i++)
         {
             int index = i;
             DownLoadImageTask downLoadImageTask = new DownLoadImageTask();
             downLoadImageTask.url = urlList[i];
-            //if (index == 0)
-            //{
-            //    downLoadImageTask.downHandle = DownLoadDone;
-            //}
-            //else
-            //{
-            //    downLoadImageTask.downHandle = (Texture2D tex) =>
-            //    {
-            //        Debug.Log($"主线程回调{index}================");
-            //    };
-            //}
 
             downLoadImageTask.downHandle = (Texture2D tex) =>
             {
@@ -161,6 +154,7 @@ public class DownLoadTest : MonoBehaviour
                 rawImageList[index].texture = tex;
             };
             downTaskList.Add(downLoadImageTask);
+            //downLoadManager.DownLoadTextureWithTaskAD(downLoadImageTask);
         }
 
         downLoadManager.DownLoadTextureWithTaskADs(downTaskList, () =>
@@ -175,13 +169,99 @@ public class DownLoadTest : MonoBehaviour
         //    Debug.Log("主线程 downLoadFileTask======");
         //};
         //downLoadManager.DownLoadFileWithTaskAD(downLoadFileTask);
+
+
+        //全部用主线程下 测试是否是因为多线程引起的
+        //var ConstSavePath = Path.Combine(Application.dataPath, "DownLoadTest"); //TODO 需要修改成Application.persistentDataPath
+        //ConstSavePath = ConstSavePath.Replace(@"\", @"/");
+        //for (int i = 0; i < urlList.Count; i++)
+        //{
+
+        //    //if (i != 1)
+        //    //    continue;
+        //    int index = i;
+        //    var url = urlList[i];
+        //    var totalLength = downLoadManager.GetLength(url);
+        //    if (totalLength < 0)
+        //    {
+        //        Debug.LogError($"totalLength = -1 =====url == {url}");
+        //        continue;
+        //    }
+
+        //    string fileName = downLoadManager.GetMD5(url);
+        //    string filePath = $"{ConstSavePath}/{fileName}.png";
+        //    //获取文件现在的长度
+        //    FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        //    long fileLength = fs.Length;
+        //    if (fileLength < totalLength)
+        //    {
+
+        //        //断点续传核心，设置本地文件流的起始位置
+        //        fs.Seek(fileLength, SeekOrigin.Begin);
+
+        //        HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
+        //        request.ReadWriteTimeout = 5 * 1000;
+        //        request.Timeout = 2 * 1000;
+        //        //request.ServicePoint.Expect100Continue = false;
+        //        request.KeepAlive = false;
+        //        //request.ServicePoint.ConnectionLimit = 100;
+        //        Stream stream = null;
+        //        //断点续传核心，设置远程访问文件流的起始位置
+        //        request.AddRange((int)fileLength);
+        //        var response = request.GetResponse();
+        //        try
+        //        {
+        //            stream = response.GetResponseStream();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.LogError($"index========={index}");
+        //            Debug.LogError($"url == {url} |||| {ex.ToString()}");
+        //            continue;
+        //        }
+
+        //        byte[] buffer = new byte[1024];
+        //        //使用流读取内容到buffer中
+        //        //返回值代表读取的实际长度,并不是buffer有多大，stream就会读进去多少
+        //        int length = stream.Read(buffer, 0, buffer.Length);
+
+        //        while (length > 0)
+        //        {
+
+        //            //将内容再写入本地文件中
+        //            fs.Write(buffer, 0, length);
+        //            //计算进度
+        //            fileLength += length;
+
+        //            //类似尾递归
+        //            length = stream.Read(buffer, 0, buffer.Length);
+
+        //        }
+
+        //        stream.Close();
+        //        stream.Dispose();
+
+        //        if (request != null)
+        //        {
+        //            request.Abort();
+        //            request = null;
+        //        }
+        //        if (response != null)
+        //        {
+        //            response.Close();
+        //            response = null;
+        //        }
+        //    }
+        //    fs.Close();
+        //    fs.Dispose();
+        //}
     }
 
 
     void DownLoadDone(Texture2D texture)
     {
         Debug.Log($"主线程回调0================");
-        //RawImageCom.texture = texture;
+        rawImageList[0].texture = texture;
     }
 
 

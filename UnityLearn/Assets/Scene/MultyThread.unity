@@ -895,7 +895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0225a4795a79f3f449d4e760b85ce0d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImageObj: {fileID: 0}
+  ImageObj: {fileID: 1493402018}
   urlList:
   - https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603262053359&di=aaefa8e8a14e968682aa9dd3b9882e81&imgtype=0&src=http%3A%2F%2Ft7.baidu.com%2Fit%2Fu%3D378254553%2C3884800361%26fm%3D79%26app%3D86%26f%3DJPEG%3Fw%3D1280%26h%3D2030
   - https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603263696553&di=c74c035d556e94d2514d4479cf7e6087&imgtype=0&src=http%3A%2F%2Ft8.baidu.com%2Fit%2Fu%3D3571592872%2C3353494284%26fm%3D79%26app%3D86%26f%3DJPEG%3Fw%3D1200%26h%3D1290
@@ -3198,7 +3198,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140.5, y: 0}
+  m_AnchoredPosition: {x: -1, y: 111}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2124483171
