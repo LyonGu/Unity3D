@@ -89,15 +89,15 @@ namespace RenderHeads.Media.AVProVideo.Demos
 
 		public void OnOpenVideoFile()
  		{
-            LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
-            
+            //LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
 
-            //var path = _videoFiles[_VideoIndex];
-            //if (!path.Contains("http://"))
-            //{
-            //    path = Application.dataPath + "/" + System.IO.Path.Combine(_folder, path);
-            //}
-            //LoadingPlayer.m_VideoPath = path;
+
+            var path = _videoFiles[_VideoIndex];
+            if (!path.Contains("http://"))
+            {
+                path = Application.dataPath + "/" + System.IO.Path.Combine(_folder, path);
+            }
+            LoadingPlayer.m_VideoPath = path;
             _VideoIndex = (_VideoIndex + 1) % (_videoFiles.Length);
 			if (string.IsNullOrEmpty(LoadingPlayer.m_VideoPath))
 			{
@@ -252,12 +252,17 @@ namespace RenderHeads.Media.AVProVideo.Demos
             var Control1 = PlayingPlayer.Control;
    
             int a = 10;
+            _mediaDisplay._mediaPlayer.m_Resample = true;
 
         }
 
+
+
 		void Start()
 		{
-			if(PlayingPlayer)
+           
+
+            if (PlayingPlayer)
 			{
                 var Control = PlayingPlayer.Control;
 
