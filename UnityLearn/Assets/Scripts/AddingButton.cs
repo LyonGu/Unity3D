@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,10 @@ public class AddingButton : MonoBehaviour {
     public Image testImag;
 
     public GameObject goParent;
-	// Use this for initialization
-	void Start () {
+
+    public TextMeshProUGUI tMeshUGUI;
+    // Use this for initialization
+    void Start () {
 		//脚本创建一个button对象
 
         GameObject goNewObject = new GameObject("Button");
@@ -46,9 +49,10 @@ public class AddingButton : MonoBehaviour {
                 }
             );
 
+        tMeshUGUI.text = "dfasdfasdf";
 
-       
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
