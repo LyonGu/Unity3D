@@ -246,6 +246,7 @@
     <Compile Include="Assets\Scripts\TimeLine\LightControlBehaviour.cs" />
     <Compile Include="Assets\Scripts\TimeLine\TestPlayableAsset.cs" />
     <Compile Include="Assets\Scripts\TimeLine\TestPlayableBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Tools\C_Tool.cs" />
     <Compile Include="Assets\Scripts\TriggerDemo.cs" />
     <Compile Include="Assets\Scripts\WWWDemo1.cs" />
     <Compile Include="Assets\Scripts\playerPref_demo.cs" />
