@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -51,6 +52,22 @@ public class AddingButton : MonoBehaviour {
 
         tMeshUGUI.text = "dfasdfasdf";
 
+        Transform[] trans = goParent.GetComponentsInChildren<Transform>();
+        Image img = trans[1].GetComponent<Image>();
+        int a = 10;
+
+
+        int warrningTime = 500;
+        string showTime = warrningTime.ToString();
+        //showTime = DateTime.Parse(showTime).ToString("mm:ss");
+        //DateTime b = DateTime.ParseExact(showTime, "yyyyMMdd", System.Globalization.CurrentCulture);
+        ////var dt = DateTime.Now;
+        ////showTime = string.Format("{0:t}", dt);
+        //Debug.Log($"showTime =  {b.ToString()}");
+
+        int second = warrningTime % 60;
+        int min = (warrningTime - second) / 60;
+        Debug.Log($"showTime =  {min}:{second}");
 
     }
 	
