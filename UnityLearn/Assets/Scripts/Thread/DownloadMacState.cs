@@ -55,7 +55,7 @@ public class DownloadFileMac
         if (!ResetSize()) return;
 
         _state = DownloadMacState.Download;
-        if (!Download()) return;
+        if (!Download()) return; //返回false，直接终止子线程运行，让C# CLR 等待垃圾收集器自动回收
 
         _state = DownloadMacState.Md5;
         if (!CheckMd5()) //校验失败，重下一次
@@ -74,7 +74,7 @@ public class DownloadFileMac
     {
         if(_downUnit.size <= 0)
         {
-            _downUnit.size = GetWebFileSize(_downUnit.downUrl);
+            _downUnit.size = GetWebFileSize(_downUnit.downUrl); //用个变量存储文件下载大小
             if (_downUnit.size == 0) return false;
         }
 
@@ -92,7 +92,7 @@ public class DownloadFileMac
 
         if (md5 != _downUnit.md5)
         {
-            File.Delete(_downUnit.savePath);
+            File.Delete(_downUnit.savePath); //删除已下载文件
             Debug.Log("文件MD5校验出错：" + _downUnit.name);
             _state = DownloadMacState.Error;
             _error = "Check MD5 Error ";
@@ -232,7 +232,7 @@ public class DownloadFileMac
             request = WebRequest.Create(url) as HttpWebRequest;
             request.Timeout = TimeOutWait;
             request.ReadWriteTimeout = ReadWriteTimeOut;
-            //向服务器请求，获得服务器回应数据流
+            //向服务器请求，获得服务器回应数据流，这里会阻塞线程
             respone = request.GetResponse();
             length = (int)respone.ContentLength;
         }
@@ -244,6 +244,7 @@ public class DownloadFileMac
         }
         finally
         {
+            //关闭 HttpWebRequest 和 WebResponse
             if (respone != null) { respone.Close(); respone = null; }
             if (request != null) { request.Abort(); request = null; }
         }

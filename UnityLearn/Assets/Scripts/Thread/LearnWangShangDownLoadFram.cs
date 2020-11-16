@@ -94,7 +94,7 @@ public class DownloadMgr
 
         lock (_lock)
         {
-            _readyList.Enqueue(fileMac);
+            _readyList.Enqueue(fileMac); //加入请求队列
         }
 
         if (_runningList.Count < MAX_THREAD_COUNT)
@@ -164,6 +164,7 @@ public class DownloadMgr
 
     private void ThreadLoop()
     {
+        //子线程使用无限循环进行轮询操作
         while (true)
         {
             DownloadFileMac mac = null;
@@ -171,6 +172,7 @@ public class DownloadMgr
             {
                 if (_readyList.Count > 0)
                 {
+                    //从请求队列中拿出，放入运行对列
                     mac = _readyList.Dequeue();
                     _runningList[Thread.CurrentThread] = mac;
 
@@ -189,6 +191,7 @@ public class DownloadMgr
 
             if (mac._state == DownloadMacState.Complete)
             {
+                //下载任务执行完成，加入完成队列，从运行对列里删除
                 lock (_lock)
                 {
                     _completeList.Add(mac._downUnit);
@@ -197,6 +200,7 @@ public class DownloadMgr
             }
             else if (mac._state == DownloadMacState.Error)
             {
+                //下载任务执行出错，从新放入请求队列，这里为什么不从_runningList里删除
                 lock (_lock)
                 {
                     _readyList.Enqueue(mac);
@@ -364,8 +368,8 @@ public class DownloadMgr
 
     public void Update()
     {
-        UpdateComplete();
-        UpdateProgress();
+        UpdateComplete();  //_completeList 主线程进行回调处理
+        UpdateProgress();  //_runningList 主线程进行回调处理
         UpdateError();
         UpdateThread();
     }

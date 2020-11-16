@@ -25,7 +25,7 @@ namespace Recipe1
             // 优先执行委托函数Test，在任务处理完成后调用Callback， 这里的任务处理完是调用了EndInvoke  
 
             ////BeginInvoke(委托函数需要参数，委托函数执行完的回调函数，用户自定义的状态给回调函数) Callback也在是线程池里线程里工作
-            IAsyncResult r = poolDelegate.BeginInvoke(out threadId, Callback, "委托异步调用");
+            IAsyncResult r = poolDelegate.BeginInvoke(out threadId, Callback, "委托异步调用"); //BeginInvoke方式 就是异步调用
             r.AsyncWaitHandle.WaitOne();
             WriteLine("poolDelegate============EndInvoke");
             // 获取异步调用结果 ==》 任务处理完
