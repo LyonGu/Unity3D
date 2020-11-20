@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a2da150cfe2a24cb5b73d30b0a465c, type: 3}
+  m_Name: UIAnimationDefine
+  m_EditorClassIdentifier: 
+  INIT_MASK_MAX_ALPHA: 0.25
+  INIT_ANIMATION_TIME: 0.25
+  hasMask: 0
+  maskMaxAlpha: 0
+  maskColor: {r: 0, g: 0, b: 0, a: 0}
+  maskSprite: {fileID: 0}
+  useCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  useEase: 1

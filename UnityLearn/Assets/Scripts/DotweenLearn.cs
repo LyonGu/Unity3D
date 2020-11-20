@@ -286,7 +286,7 @@ public class DotweenLearn : MonoBehaviour {
         DoTweenUtils instance = DoTweenUtils.GetInstance();
         //instance.DOMove(gameObject, pos, MoveOver, time);
         //instance.DOColor(gameObject, Color.red, ChangeColorOver , time);
-
+        
         Tween twe1 = instance.DOMove(gameObject, pos, MoveOver, time, Ease.OutCubic, true);
         Tween twe2 = instance.DOColor(gameObject, Color.red, ChangeColorOver, time, Ease.OutCubic, true);
         List<Tween> tweList = new List<Tween> { twe1, twe2 };

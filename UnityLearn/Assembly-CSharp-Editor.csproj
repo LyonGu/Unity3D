@@ -108,6 +108,8 @@
     <Compile Include="Assets\Cinemachine\Timeline\Editor\CinemachineShotEditor.cs" />
     <Compile Include="Assets\Editor\BuildAssetBundle.cs" />
     <Compile Include="Assets\Editor\MyCustomDataEditor.cs" />
+    <Compile Include="Assets\UIAnimation\Editor\CreateUIAnimationDefine.cs" />
+    <Compile Include="Assets\UIAnimation\Editor\UIAnimationHxpEditor.cs" />
     <None Include="Assets\codeandweb.com\Editor\SettingsTexturePackerImporter.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

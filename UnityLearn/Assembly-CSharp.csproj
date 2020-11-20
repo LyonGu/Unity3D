@@ -285,6 +285,16 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+    <Compile Include="Assets\UIAnimation\EventTriggerListener.cs" />
+    <Compile Include="Assets\UIAnimation\TransformExpansion.cs" />
+    <Compile Include="Assets\UIAnimation\UIAnimation.cs" />
+    <Compile Include="Assets\UIAnimation\UIAnimationDefine.cs" />
+    <Compile Include="Assets\UIAnimation\UIAnimationExample\UIAnimationTest.cs" />
+    <Compile Include="Assets\UIAnimation\UIAnimationFramLearn.cs" />
+    <Compile Include="Assets\UIAnimation\UIAnimationHxp.cs" />
+    <Compile Include="Assets\UIAnimation\UIEnterAnimation.cs" />
+    <Compile Include="Assets\UIAnimation\UIExitAnimation.cs" />
+    <Compile Include="Assets\UIAnimationHxp1.cs" />
     <Compile Include="Assets\VM_CubeMove.cs" />
     <Compile Include="Assets\VideoGame.cs" />
     <None Include="Assets\Resources\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
