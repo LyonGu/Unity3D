@@ -296,9 +296,27 @@ public class DotweenLearn : MonoBehaviour {
         //instance.DOFade(txt, 1.0f, 5, FadeOver, 3.0f);
         //instance.DORotate(gameObject, new Vector3(0, 90, 0), RotateOver, 2.0f);
         //instance.DOScale(gameObject, new Vector3(2, 2, 2), ScaleOver, 2.0f);
+
+        
  
 
 	}
+
+    //private float jumpStartTime = 0;
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        if (Time.time - jumpStartTime > 2)
+    //        {
+    //            jumpStartTime = Time.time;
+    //            // todo jump
+    //        }
+
+
+    //    }
+
+    //}
 
     public void MoveOver()
     {

@@ -194,6 +194,7 @@
     <Compile Include="Assets\Scripts\GirlActionByBendTrees.cs" />
     <Compile Include="Assets\Scripts\GirlBaseActionControl.cs" />
     <Compile Include="Assets\Scripts\HelloWorld.cs" />
+    <Compile Include="Assets\Scripts\MaskUI.cs" />
     <Compile Include="Assets\Scripts\MyCustomData.cs" />
     <Compile Include="Assets\Scripts\MyCustomDataUtil.cs" />
     <Compile Include="Assets\Scripts\NavmeshObstacleControl.cs" />
@@ -294,6 +295,7 @@
     <Compile Include="Assets\UIAnimation\UIAnimationHxp.cs" />
     <Compile Include="Assets\UIAnimation\UIEnterAnimation.cs" />
     <Compile Include="Assets\UIAnimation\UIExitAnimation.cs" />
+    <Compile Include="Assets\UIAnimation\UITest.cs" />
     <Compile Include="Assets\UIAnimationHxp1.cs" />
     <Compile Include="Assets\VM_CubeMove.cs" />
     <Compile Include="Assets\VideoGame.cs" />

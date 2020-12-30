@@ -17,6 +17,7 @@ public class UIAnimationHxpEditor : Editor
     private float spaceHeight = 20.0f;
     private bool isExcuteSave = false;
 
+    private Dictionary<string, ReorderableList> innerList = new Dictionary<string, ReorderableList>();
 
 
     void CheckSavePrefab(GameObject instance)
@@ -107,7 +108,7 @@ public class UIAnimationHxpEditor : Editor
 
             }
 
-            float totoalH = 210;
+            float totoalH = 230;
             SerializedProperty uIAnimationControlType = element.FindPropertyRelative("uIAnimationControlType");
             if (uIAnimationControlType.intValue == (int)UIAnimationHxp.UIAnimationControlType.AnimationCurve)
             {
@@ -119,9 +120,28 @@ public class UIAnimationHxpEditor : Editor
             SerializedProperty isLoop = element.FindPropertyRelative("isLoop");
             if(isLoop.boolValue)
                 totoalH += spaceHeight;
+
+            if (animationT == UIAnimationHxp.AnimationType.DoPath)
+            {
+                var innerList = element.FindPropertyRelative("pathList");
+                if (innerList.arraySize == 0)
+                {
+                    totoalH += (innerList.arraySize + 3) * spaceHeight;
+                }
+                else
+                {
+                    totoalH += (innerList.arraySize + 2) * spaceHeight;
+                }
+            }
+
+            if (animationT == UIAnimationHxp.AnimationType.MaterialFloat || animationT == UIAnimationHxp.AnimationType.MaterialColor)
+            {
+                totoalH += spaceHeight;
+            }
             return totoalH;
 
         };
+
 
         m_compList.onAddCallback = (list) =>
         {
@@ -133,12 +153,17 @@ public class UIAnimationHxpEditor : Editor
 
 
             //默认值设置
+            int maxAnimId = data.GetMaxAnimId() + 1;
+            var animationId = addedElement.FindPropertyRelative("animationId");
+            animationId.intValue = maxAnimId;
+
+
             var animationType = addedElement.FindPropertyRelative("animationType");
             animationType.intValue =(int)UIAnimationHxp.AnimationType.MoveTo;
             var uIAnimationControlType = addedElement.FindPropertyRelative("uIAnimationControlType");
             uIAnimationControlType.intValue = (int)UIAnimationHxp.UIAnimationControlType.InSine;
 
-            var animationTime = addedElement.FindPropertyRelative("animationTime");
+            var animationTime = addedElement.FindPropertyRelative("duration");
             animationTime.floatValue = 1.0f;
 
             var startValue = addedElement.FindPropertyRelative("startValue");
@@ -166,6 +191,7 @@ public class UIAnimationHxpEditor : Editor
 
         m_compSequenceList.drawHeaderCallback = (Rect rect) =>
         {
+            
             GUI.Label(rect, "-------------------------顺序播放对列--------------------------");
         };
 
@@ -289,12 +315,93 @@ public class UIAnimationHxpEditor : Editor
                 compType = itemData.FindPropertyRelative("gradientColor");
                 EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("颜色渐变编辑器"), true);
                 break;
+            case UIAnimationHxp.AnimationType.MaterialFloat:
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("propertyName");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("要修改的属性名"), true);
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("startAlpha");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("起始值"), true);
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("endAlpha");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("目标值"), true);
+                break;
+            case UIAnimationHxp.AnimationType.MaterialColor:
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("propertyName");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("要修改的属性名"), true);
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("startColor");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("初始颜色"), true);
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("endColor");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("目标颜色"), true);
+                break;
+            case UIAnimationHxp.AnimationType.DoPath:
+
+                comTypeRect = new Rect(comTypeRect);
+                comTypeRect.y += spaceHeight;
+                compType = itemData.FindPropertyRelative("startValue");
+                EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("路径起始点"), true);
+
+                var pathList = itemData.FindPropertyRelative("pathList");
+                string listKey = itemData.propertyPath;
+                ReorderableList innerReorderableList;
+                if (innerList.ContainsKey(listKey))
+                {
+                    // fetch the reorderable list in dict
+                    innerReorderableList = innerList[listKey];
+                }
+                else
+                {
+                    innerReorderableList = new ReorderableList(itemData.serializedObject, pathList, true, true, true, true)
+                    {
+                        drawHeaderCallback = innerRect =>
+                        {
+                            GUIStyle pathStyle = new GUIStyle("Path属性");
+                            EditorGUI.LabelField(innerRect, "路点数据", pathStyle);
+                        },
+
+                        drawElementCallback = (innerRect, innerIndex, innerA, innerH) =>
+                        {
+                            // Get element of inner list
+                            var innerElement = pathList.GetArrayElementAtIndex(innerIndex);
+                            EditorGUI.PropertyField(innerRect, innerElement, new GUIContent("路点" + innerIndex), true);
+                        }
+                    };
+                    innerList[listKey] = innerReorderableList;
+                }
+                Rect pathListRect = new Rect(comTypeRect);
+                pathListRect.y += spaceHeight;
+                var height = (pathList.arraySize) * EditorGUIUtility.singleLineHeight;
+                innerReorderableList.DoList(new Rect(pathListRect.x, pathListRect.y, pathListRect.width, height));
+                if (pathList.arraySize == 0)
+                {
+                    comTypeRect.y += (pathList.arraySize + 4) * spaceHeight;
+                }
+                else
+                {
+                    comTypeRect.y += (pathList.arraySize + 3) * spaceHeight;
+                }
+                break;
 
         }
-            
+
         comTypeRect = new Rect(comTypeRect);
         comTypeRect.y += spaceHeight;
-        compType = itemData.FindPropertyRelative("animationTime");
+        compType = itemData.FindPropertyRelative("duration");
         EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("动作总时间"), true);
 
         comTypeRect = new Rect(comTypeRect);
@@ -315,7 +422,12 @@ public class UIAnimationHxpEditor : Editor
         comTypeRect = new Rect(comTypeRect);
         comTypeRect.y += spaceHeight;
         compType = itemData.FindPropertyRelative("obj");
-        EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("目标对象"), true);
+        EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("动作目标对象"), true);
+
+        comTypeRect = new Rect(comTypeRect);
+        comTypeRect.y += spaceHeight;
+        compType = itemData.FindPropertyRelative("particleSystemObj");
+        EditorGUI.PropertyField(comTypeRect, compType, new GUIContent("特效根对象"), true);
 
         if (!Application.isPlaying)
         {
@@ -325,21 +437,21 @@ public class UIAnimationHxpEditor : Editor
             {
                 var transCom = objR.transform;
                 var imgCom = objR.GetComponent<Image>();
-                var transValue = itemData.FindPropertyRelative("startValue");
+                var startValue = itemData.FindPropertyRelative("startValue");
 
                 switch (animationT)
                 {
                     case UIAnimationHxp.AnimationType.MoveTo:
-                        if (transValue.vector3Value == Vector3.zero)
-                            transValue.vector3Value = transCom.localPosition;
+                        if (startValue.vector3Value == Vector3.zero)
+                            startValue.vector3Value = transCom.localPosition;
                         break;
                     case UIAnimationHxp.AnimationType.ScaleTo:
-                        if (transValue.vector3Value == Vector3.zero)
-                            transValue.vector3Value = transCom.localScale;
+                        if (startValue.vector3Value == Vector3.zero)
+                            startValue.vector3Value = transCom.localScale;
                         break;
                     case UIAnimationHxp.AnimationType.RotateTo:
-                        if (transValue.vector3Value == Vector3.zero)
-                            transValue.vector3Value = transCom.eulerAngles;
+                        if (startValue.vector3Value == Vector3.zero)
+                            startValue.vector3Value = transCom.eulerAngles;
                         break;
                     case UIAnimationHxp.AnimationType.Color:
                         if (imgCom != null)
@@ -349,19 +461,22 @@ public class UIAnimationHxpEditor : Editor
                                 startColor.colorValue = imgCom.color;
                         }
                         break;
-                    case UIAnimationHxp.AnimationType.Fade:
+                    //case UIAnimationHxp.AnimationType.Fade:
 
-                        if (imgCom != null)
-                        {
-                            var startAlpha = itemData.FindPropertyRelative("startAlpha");
-                            if (startAlpha.floatValue == 0.0f)
-                                startAlpha.floatValue = imgCom.color.a;
-                        }
-                        break;
+                    //    if (imgCom != null)
+                    //    {
+                    //        var startAlpha = itemData.FindPropertyRelative("startAlpha");
+                    //        if (startAlpha.floatValue == 0.0f)
+                    //            startAlpha.floatValue = imgCom.color.a;
+                    //    }
+                    //    break;
+                    //case UIAnimationHxp.AnimationType.MaterialFloat:
+                    //    break;
+
                 }
             }
         }
-        
+
 
         comTypeRect = new Rect(comTypeRect);
         comTypeRect.y += spaceHeight;
@@ -398,16 +513,18 @@ public class UIAnimationHxpEditor : Editor
     public override void OnInspectorGUI()
     {
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("最大动作执行时间", GUILayout.MaxWidth(100));
+        EditorGUILayout.LabelField("最大等待执行时间", GUILayout.MaxWidth(100));
         data.maxAnimationTime = EditorGUILayout.FloatField(data.maxAnimationTime, GUILayout.MaxWidth(40));
         EditorGUILayout.EndHorizontal();
         
         serializedObject.Update();
         m_compList.DoLayoutList();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
         m_compSequenceList.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
 
-
+        EditorGUILayout.Space();
         EditorGUILayout.LabelField("--------------------------------操作--------------------------------");
         EditorGUILayout.BeginHorizontal();
 
@@ -444,16 +561,22 @@ public class UIAnimationHxpEditor : Editor
         {
             data.PlayById(data.debugAnimationId);
         }
-        GUILayout.Space(60);
+        GUILayout.Space(40);
         if (GUILayout.Button("PlayAll", GUILayout.MaxWidth(120)))
         {
-            data.Play();
+            data.Play(()=> {
+                Debug.Log("所有动作运动完毕====");
+            });
+        }
+
+        if (GUILayout.Button("PlayAllBack", GUILayout.MaxWidth(100)))
+        {
+            data.PlayBack(() =>
+            {
+                Debug.Log("所有动作运动完毕====");
+            });
         }
         EditorGUILayout.EndHorizontal();
-
-
-
-
 
 
         //修改脚本属性就能生效到对应的prefab上

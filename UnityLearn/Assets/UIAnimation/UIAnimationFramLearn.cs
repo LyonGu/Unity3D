@@ -12,7 +12,7 @@ public class UIAnimationFramLearn : MonoBehaviour
     // Start is called before the first frame update
 
     public AnimationCurve animationCurve;
-    public Transform transform;
+    public Transform cubeTransform;
     public Image image;
     public Text text;
     public Gradient gradient;
@@ -24,6 +24,13 @@ public class UIAnimationFramLearn : MonoBehaviour
     Sequence quence;
 
     private Vector3 curPos;
+
+    public List<Vector3> CubePathList = new List<Vector3>();
+    public List<Vector3> ImagePathList = new List<Vector3>();
+
+    public Transform lookAtTargetTran;
+
+    public GameObject particleSystemObj;
 
     void Start()
     {
@@ -67,20 +74,20 @@ public class UIAnimationFramLearn : MonoBehaviour
         //    Debug.Log("OnKill==============");
         //});
 
-        quence = DOTween.Sequence();
-        quence.Append(transform.DOMove(Vector3.one * 2, 2).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            Debug.Log("Move Action Over");
-        }));
-        quence.Join(transform.DOScale(Vector3.one * 5, 5).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            Debug.Log("Scale Action Over");
-        }));
-        quence.Join(transform.DORotate(Vector3.up * 360, 5).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            Debug.Log("Rotate Action Over");
-        }));
-        quence.Play();
+        //quence = DOTween.Sequence();
+        //quence.Append(transform.DOMove(Vector3.one * 2, 2).SetEase(Ease.Linear).OnComplete(() =>
+        //{
+        //    Debug.Log("Move Action Over");
+        //}));
+        //quence.Join(transform.DOScale(Vector3.one * 5, 5).SetEase(Ease.Linear).OnComplete(() =>
+        //{
+        //    Debug.Log("Scale Action Over");
+        //}));
+        //quence.Join(transform.DORotate(Vector3.up * 360, 5).SetEase(Ease.Linear).OnComplete(() =>
+        //{
+        //    Debug.Log("Rotate Action Over");
+        //}));
+        //quence.Play();
 
         //transform.DORotate(new Vector3(0, -360, 0), 5).SetEase(Ease.Linear).SetRelative(true);  //正数表示逆时针
 
@@ -93,6 +100,50 @@ public class UIAnimationFramLearn : MonoBehaviour
         //moveTween = transform.DOMove(Vector3.one * 2, 5).SetEase(Ease.Linear);
         //moveTween.SetId<Tween>(moveTween);
 
+
+        //DoPath
+        //cubeTransform.DOPath(CubePathList.ToArray(), 5, PathType.CatmullRom, PathMode.Full3D, 10, Color.clear).SetEase(Ease.InSine);
+        cubeTransform.DOLocalPath(CubePathList.ToArray(), 5, PathType.CatmullRom, PathMode.Full3D, 10, Color.clear).SetEase(Ease.InSine).OnComplete(()=> {
+            Debug.Log("Path Action is Done==========");
+        
+        });
+
+        //this.gameObject.transform.DOPath(CubePathList.ToArray(), 5, PathType.CatmullRom, PathMode.Full3D, 10, Color.clear).SetEase(Ease.InSine);
+        //var tweenPath = image.transform.DOLocalPath(ImagePathList.ToArray(), 5, PathType.CatmullRom).SetEase(Ease.InSine); // Ok
+        //tweenPath.SetLookAt(lookAtTargetTran);
+
+        //tweenPath.SetOptions(false, AxisConstraint.Z, AxisConstraint.Y);
+        //tweenPath.SetLookAt(1);
+
+        Renderer renderer = cubeTransform.gameObject.GetComponent<Renderer>();
+        var material = new Material(renderer.material);
+        material.name = "Test";
+        renderer.material = material;
+        //MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+        //renderer.SetPropertyBlock(propertyBlock);
+
+        //不存在的属性不会产生回调
+        material.DOColor(Color.blue, "_Color33333333", 5).OnComplete(()=> {
+            Debug.Log("material DOColor Action is Done==========");
+        });
+
+        //propertyBlock.SetColor()
+        //DOVector(this Material target, Vector4 endValue, string property, float duration);
+        //DOFloat(this Material target, float endValue, string property, float duration);
+        //DOColor(this Material target, Color endValue, float duration);
+        //DOColor(this Material target, Color endValue, string property, float duration);
+
+
+        //material.DOVector();
+        //material.DOFloat();
+        //material.DOColor()
+
+    }
+
+    public void TestPart()
+    {
+        particleSystemObj.SetActive(false);
+        particleSystemObj.SetActive(true);
     }
 
     public void Stop()
@@ -198,7 +249,7 @@ public class UIAnimationFramLearn : MonoBehaviour
         //transform.eulerAngles = new Vector3(0, r * 100, 0);
         //image.color = new Color(r, r, r, 1);
 
-        if (curPos != null)
-            Debug.Log($"x ==========={curPos.x}");
+        //if (curPos != null)
+        //    Debug.Log($"x ==========={curPos.x}");
     }
 }
