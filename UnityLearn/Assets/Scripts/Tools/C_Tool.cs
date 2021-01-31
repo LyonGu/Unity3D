@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System.IO;
+using UnityEngine.UI;
+using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -485,7 +487,70 @@ public class C_Tool : EditorWindow
             AssetDatabase.Refresh();
         }
 
+
+        if (GUILayout.Button("替换组件 text为textMeshPro"))
+        {
+
+            string AfontPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
+            string BfontPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset";
+            string[] LookFor = { mPath };
+            string[] guids = AssetDatabase.FindAssets("t:prefab", LookFor);
+            foreach (string guid in guids)
+            {
+                //Find Material
+                string Path = AssetDatabase.GUIDToAssetPath(guid);
+                GameObject prefab = AssetDatabase.LoadAssetAtPath(Path, typeof(GameObject)) as GameObject;
+
+
+                //GameObject rootG = GameObject.Instantiate(prefab); OK
+                //PrefabUtility.SaveAsPrefabAssetAndConnect(prefab, Path, InteractionMode.AutomatedAction);
+
+                var TextCom = prefab.GetComponentInChildren<Text>(true);
+                if (TextCom != null)
+                {
+                    string msg = TextCom.text;
+                    ///Debug.Log($"{TextCom.text}");
+                    if (!TextCom.gameObject.GetComponent<TextMeshProUGUI>())
+                    {
+
+                        GameObject targetObj = TextCom.gameObject;
+                        DestroyImmediate(TextCom, true);
+                        TextMeshProUGUI TextMeshProUGUICom = targetObj.AddComponent<TextMeshProUGUI>();
+                        TextMeshProUGUICom.text = msg;
+
+                        var font = AssetDatabase.LoadAssetAtPath(BfontPath, typeof(TMP_FontAsset)) as TMP_FontAsset;
+                        TextMeshProUGUICom.font = font;
+
+                        PrefabUtility.SavePrefabAsset(prefab);
+
+                        //不能直接替换，因为需要apply后才能找到对应的guid
+                        //再替换GUID
+                        //string AFont_GUID = AssetDatabase.AssetPathToGUID(AfontPath);
+                        //string BFont_GUID = AssetDatabase.AssetPathToGUID(BfontPath);
+
+                        //Debug.Log($"A == {AFont_GUID}");
+                        //Debug.Log($"B == {BFont_GUID}");
+                        //string Path_abs = ConvertRelativePathToAbsolutePath(Path);
+                        //if (File.Exists(Path_abs))
+                        //{
+
+                        //    string oldContent = File.ReadAllText(Path_abs);
+                        //    string oldContentModified = oldContent;
+
+                        //    oldContentModified = oldContentModified.Replace(AFont_GUID, BFont_GUID);
+                        //    File.WriteAllText(Path_abs, oldContentModified);
+                        //}
+                    }
+
+                }
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
     }
+
+
     
     [MenuItem("Tools/MyTool")]
     public static void PrecomputedLighting()
@@ -562,7 +627,7 @@ public class C_Tool : EditorWindow
                 if (exsion != ".meta")
                 {
                     if (Directory.Exists(filePath))
-                        Directory.Delete(filePath);
+                        Directory.Delete(filePath,true);
                     else
                         File.Delete(filePath);
                 }
@@ -571,5 +636,19 @@ public class C_Tool : EditorWindow
 
         }
     }
+
+
+    GameObject GetPrefabInstanceParent(GameObject obj, UnityEngine.Object prefabObj)
+    {
+        Transform parent;
+        while (true)
+        {
+            parent = obj.transform.parent;
+            if (parent == null || !PrefabUtility.GetPrefabObject(parent.gameObject).Equals(prefabObj))
+                return obj;
+            obj = parent.gameObject;
+        }
+    }
+
 
 }
