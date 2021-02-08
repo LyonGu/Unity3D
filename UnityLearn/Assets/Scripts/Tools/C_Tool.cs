@@ -609,6 +609,22 @@ public class C_Tool : EditorWindow
             }
 
         }
+
+        /*
+            //遍历指定目录下所有lua文件，包含子目录
+            const string LuaScriptsFolder = "Assets/Game/Lua";
+            string dirPath = Path.Combine(Application.dataPath, LuaScriptsFolder.Replace("Assets/", ""));
+            var dir = new DirectoryInfo(dirPath);
+            var files = dir.GetFiles("*.lua", SearchOption.AllDirectories);
+            foreach (var f in files)
+            {
+                //var data = File.ReadAllBytes(f.FullName);
+                var fn = Path.GetFileNameWithoutExtension(f.Name);
+                //_luaFileEditorMapping[fn] = f.FullName;
+
+                Debug.Log($"LuaFile = {f.Name}");
+            }
+        */
     }
 
     // 删除目录以及子目录中的所有文件
