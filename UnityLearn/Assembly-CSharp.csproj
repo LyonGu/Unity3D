@@ -211,7 +211,9 @@
     <Compile Include="Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
     <Compile Include="Assets\Scripts\Script.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObject\CreateShopConfig.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\SceneConfig.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObject\ShopConfig.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\sceneConfigObject.cs" />
     <Compile Include="Assets\Scripts\SelfRotation.cs" />
     <Compile Include="Assets\Scripts\SendObj.cs" />
