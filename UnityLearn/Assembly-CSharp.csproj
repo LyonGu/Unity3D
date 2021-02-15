@@ -207,6 +207,8 @@
     <Compile Include="Assets\Scripts\RayDemo.cs" />
     <Compile Include="Assets\Scripts\RayDemo2_CCWalking.cs" />
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
+    <Compile Include="Assets\Scripts\RefCounter\RefCounter.cs" />
+    <Compile Include="Assets\Scripts\RefCounter\RefCounterExample.cs" />
     <Compile Include="Assets\Scripts\ResourceMemeroyMsg.cs" />
     <Compile Include="Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
