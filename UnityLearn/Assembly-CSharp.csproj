@@ -218,6 +218,10 @@
     <Compile Include="Assets\Scripts\SelfRotation.cs" />
     <Compile Include="Assets\Scripts\SendObj.cs" />
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
+    <Compile Include="Assets\Scripts\Singleton\MonoSingleton\MonoSingletonCreator.cs" />
+    <Compile Include="Assets\Scripts\Singleton\MonoSingleton\MonoSingletonExample.cs" />
+    <Compile Include="Assets\Scripts\Singleton\MonoSingleton\MonoSingletonPath.cs" />
+    <Compile Include="Assets\Scripts\Singleton\MonoSingleton\MonoSingletonQF.cs" />
     <Compile Include="Assets\Scripts\Singleton\ObjectFactory.cs" />
     <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
     <Compile Include="Assets\Scripts\Singleton\SingletonCreator.cs" />
