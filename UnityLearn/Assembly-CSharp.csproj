@@ -218,6 +218,10 @@
     <Compile Include="Assets\Scripts\SelfRotation.cs" />
     <Compile Include="Assets\Scripts\SendObj.cs" />
     <Compile Include="Assets\Scripts\ShottingUseBufferPool.cs" />
+    <Compile Include="Assets\Scripts\Singleton\ObjectFactory.cs" />
+    <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
+    <Compile Include="Assets\Scripts\Singleton\SingletonCreator.cs" />
+    <Compile Include="Assets\Scripts\Singleton\SingletonExample.cs" />
     <Compile Include="Assets\Scripts\SpriteAnimatin.cs" />
     <Compile Include="Assets\Scripts\StataMachine\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\StataMachine\BaseEnitity.cs" />
