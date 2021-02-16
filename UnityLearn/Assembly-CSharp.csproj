@@ -200,6 +200,12 @@
     <Compile Include="Assets\Scripts\NavmeshObstacleControl.cs" />
     <Compile Include="Assets\Scripts\ObjectPoolManager.cs" />
     <Compile Include="Assets\Scripts\Particle_demo1.cs" />
+    <Compile Include="Assets\Scripts\Pool\CustomObjectFactory.cs" />
+    <Compile Include="Assets\Scripts\Pool\IObjectFactory.cs" />
+    <Compile Include="Assets\Scripts\Pool\IPool.cs" />
+    <Compile Include="Assets\Scripts\Pool\Pool.cs" />
+    <Compile Include="Assets\Scripts\Pool\SimpleObjectPool.cs" />
+    <Compile Include="Assets\Scripts\Pool\SimpleObjectPoolExample.cs" />
     <Compile Include="Assets\Scripts\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Pools.cs" />
     <Compile Include="Assets\Scripts\PositonConvert.cs" />
