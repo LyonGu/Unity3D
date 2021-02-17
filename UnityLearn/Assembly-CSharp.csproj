@@ -186,6 +186,7 @@
     <Compile Include="Assets\Scripts\Demo9.cs" />
     <Compile Include="Assets\Scripts\DestroyGameobject.cs" />
     <Compile Include="Assets\Scripts\DestroyObjUseBufferPool.cs" />
+    <Compile Include="Assets\Scripts\Disposable\DisposableObject.cs" />
     <Compile Include="Assets\Scripts\DotweenLearn.cs" />
     <Compile Include="Assets\Scripts\DownLoadTest.cs" />
     <Compile Include="Assets\Scripts\DragTest.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//https://liangxiegame.com/zhuanlan/content/detail/af3c535f-370a-408c-b4e2-cfed855f0afa
 public interface ISingleton
 {
     /// <summary>
