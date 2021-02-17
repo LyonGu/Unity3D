@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scene/UGUI.unity
+- path: Assets/Scripts/Pool/Pool.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

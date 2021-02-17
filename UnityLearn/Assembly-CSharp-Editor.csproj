@@ -319,6 +319,9 @@
     <Reference Include="DOTweenEditor">
       <HintPath>G:/GitResponse/Unity3D/UnityLearn/Assets/Demigiant/DOTween/Editor/DOTweenEditor.dll</HintPath>
     </Reference>
+    <Reference Include="QFramework.Log">
+      <HintPath>G:/GitResponse/Unity3D/UnityLearn/Assets/Scripts/QF/1.Core/Log/QFramework.Log.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>G:/GitResponse/Unity3D/UnityLearn/Library/PackageCache/com.unity.ads@3.4.5/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -717,9 +720,21 @@
       <Project>{3D914FDF-76AB-151A-368C-71FC5E0B740F}</Project>
       <Name>Unity.Timeline.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.Pool.csproj">
+      <Project>{06E1D0C6-DF4D-F2FB-0A7D-F498856F2004}</Project>
+      <Name>QFramework.Pool</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.Monetization.csproj">
       <Project>{CACBB9E3-FB73-335A-67A7-661538480B83}</Project>
       <Name>UnityEngine.Monetization</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.TypeEventSystem.csproj">
+      <Project>{65E7115A-2BF4-D9C6-A5EE-FBD642AF89F5}</Project>
+      <Name>QFramework.TypeEventSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Singleton.csproj">
+      <Project>{AB24CACD-BA64-112F-ED07-CCD7DAD36D0E}</Project>
+      <Name>QFramework.Singleton</Name>
     </ProjectReference>
     <ProjectReference Include="com.unity.multiplayer-hlapi.Editor.csproj">
       <Project>{942A7329-ECAF-9ADE-E4B7-E4C914E971BC}</Project>
@@ -729,13 +744,41 @@
       <Project>{23D76C4C-C638-DD75-B1C8-C8DF00A3D661}</Project>
       <Name>Unity.VSCode.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.BindableProperty.csproj">
+      <Project>{E1DD65D7-46AA-D329-3641-2DF27E166706}</Project>
+      <Name>QFramework.BindableProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Table.csproj">
+      <Project>{D8AC8E7C-1EF8-131B-A455-2EFE69977A03}</Project>
+      <Name>QFramework.Table</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.Advertisements.csproj">
       <Project>{217C3AE6-718D-94F0-3A58-E999AD2BC535}</Project>
       <Name>UnityEngine.Advertisements</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.Architecture.csproj">
+      <Project>{C511CAC9-AB6F-55C0-CBF3-CF20F44C3201}</Project>
+      <Name>QFramework.Architecture</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.RefCounter.csproj">
+      <Project>{06BDCC30-ACC4-2D7B-9631-9E6070C7B8E6}</Project>
+      <Name>QFramework.RefCounter</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Factory.csproj">
+      <Project>{71FBAEC1-B1B5-D7D2-173B-7592BD7CA659}</Project>
+      <Name>QFramework.Factory</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Disposable.csproj">
+      <Project>{12CE9D1F-3E1C-7CA8-2800-A9CC84B16089}</Project>
+      <Name>QFramework.Disposable</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{7B9AB38C-2C10-374F-3C48-B95BC61A55D7}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.ResKit.csproj">
+      <Project>{6C8C71EA-F94A-D31A-3819-63AC38C75D64}</Project>
+      <Name>QFramework.ResKit</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">
       <Project>{BE4825FC-8014-BF22-2A9B-11E0F94F4961}</Project>
@@ -749,6 +792,10 @@
       <Project>{B2368706-EB98-434B-9115-D98DE6297B05}</Project>
       <Name>Unity.CollabProxy.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.JsonSerialize.csproj">
+      <Project>{F59E7CAF-A19D-C8B1-46BF-BD112ECF5A2C}</Project>
+      <Name>QFramework.JsonSerialize</Name>
+    </ProjectReference>
     <ProjectReference Include="com.unity.multiplayer-weaver.Editor.csproj">
       <Project>{A12BADA4-3D1A-DD97-79B5-977250D0F456}</Project>
       <Name>com.unity.multiplayer-weaver.Editor</Name>
@@ -757,13 +804,33 @@
       <Project>{DF682DB5-9A42-A3C1-C569-E889D7424935}</Project>
       <Name>UnityEngine.XR.LegacyInputHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.FSM.csproj">
+      <Project>{BF361E1A-35A2-A506-F5CB-92315AB30209}</Project>
+      <Name>QFramework.FSM</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Rider.Editor.csproj">
       <Project>{408DABF1-5029-1546-384C-2683766AAE7D}</Project>
       <Name>Unity.Rider.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="QFramework.BinarySerializer.csproj">
+      <Project>{19E1C805-12FE-FBCA-54FB-5C28C1BE438F}</Project>
+      <Name>QFramework.BinarySerializer</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Device.csproj">
+      <Project>{EEBBA539-1142-A96A-95D6-7081F93215DB}</Project>
+      <Name>QFramework.Device</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.Zip.csproj">
+      <Project>{4B6D62C5-FE44-E841-D85E-F1A9DF940D63}</Project>
+      <Name>QFramework.Zip</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
       <Project>{84215CC5-3BE7-B3D0-4490-A6756B751BAE}</Project>
       <Name>Unity.2D.Sprite.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.CSharpExtension.csproj">
+      <Project>{3DA66CDA-65A1-5030-9E24-DEB11A1674C1}</Project>
+      <Name>QFramework.CSharpExtension</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.Tilemap.Editor.csproj">
       <Project>{0A8FB77B-7B65-9ACD-816A-9B9993FE0F44}</Project>
@@ -776,6 +843,10 @@
     <ProjectReference Include="UnityEngine.SpatialTracking.csproj">
       <Project>{2B69F216-AB04-A8E8-BB24-BD87E446EE66}</Project>
       <Name>UnityEngine.SpatialTracking</Name>
+    </ProjectReference>
+    <ProjectReference Include="QFramework.IOC.csproj">
+      <Project>{24FA2EEC-57F6-F63A-6284-88F9ED56CD85}</Project>
+      <Name>QFramework.IOC</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{465D01E4-7C62-D66A-EB4D-B3D0E91C66FB}</Project>
