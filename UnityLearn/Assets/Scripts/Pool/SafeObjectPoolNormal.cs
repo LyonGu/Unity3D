@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SafeObjectPool<T> : Pool<T>, ISingleton where T : IPoolable, new()
+public class SafeObjectPoolNormal<T> : Pool<T> where T : IPoolable, new()
 {
 
-    protected SafeObjectPool()
+    public SafeObjectPoolNormal()
     {
         mFactory = new DefaultObjectFactory<T>();
     }
@@ -98,20 +98,5 @@ public class SafeObjectPool<T> : Pool<T>, ISingleton where T : IPoolable, new()
         mCacheStack.Push(t);
 
         return true;
-    }
-
-    public void OnSingletonInit()
-    {
-       
-    }
-
-    public static SafeObjectPool<T> Instance
-    {
-        get { return SingletonProperty<SafeObjectPool<T>>.Instance; }
-    }
-
-    public void Dispose()
-    {
-        SingletonProperty<SafeObjectPool<T>>.Dispose();
     }
 }

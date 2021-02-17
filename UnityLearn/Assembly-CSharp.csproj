@@ -209,6 +209,7 @@
     <Compile Include="Assets\Scripts\Pool\Pool.cs" />
     <Compile Include="Assets\Scripts\Pool\SafeObjectPool.cs" />
     <Compile Include="Assets\Scripts\Pool\SafeObjectPoolExample.cs" />
+    <Compile Include="Assets\Scripts\Pool\SafeObjectPoolNormal.cs" />
     <Compile Include="Assets\Scripts\Pool\SimpleObjectPool.cs" />
     <Compile Include="Assets\Scripts\Pool\SimpleObjectPoolExample.cs" />
     <Compile Include="Assets\Scripts\PoolManager.cs" />
@@ -220,6 +221,8 @@
     <Compile Include="Assets\Scripts\ReceiveObj.cs" />
     <Compile Include="Assets\Scripts\RefCounter\RefCounter.cs" />
     <Compile Include="Assets\Scripts\RefCounter\RefCounterExample.cs" />
+    <Compile Include="Assets\Scripts\ResMgr\IResLoader.cs" />
+    <Compile Include="Assets\Scripts\ResMgr\ResLoader.cs" />
     <Compile Include="Assets\Scripts\ResourceMemeroyMsg.cs" />
     <Compile Include="Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\Scripts\RotateAroundByTarget.cs" />
