@@ -106,6 +106,7 @@ namespace RenderHeads.Media.AVProVideo.Demos
 			}
 			else
 			{
+
 				LoadingPlayer.OpenVideoFromFile(_location, LoadingPlayer.m_VideoPath, _AutoStartToggle.isOn);
 //				SetButtonEnabled( "PlayButton", !_mediaPlayer.m_AutoStart );
 //				SetButtonEnabled( "PauseButton", _mediaPlayer.m_AutoStart );
