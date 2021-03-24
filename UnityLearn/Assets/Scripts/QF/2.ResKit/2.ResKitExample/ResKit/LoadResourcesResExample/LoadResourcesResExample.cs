@@ -6,14 +6,16 @@ namespace QFramework.Example
 	public class LoadResourcesResExample : MonoBehaviour
 	{
 		public RawImage RawImage;
-		
-		private ResLoader mResLoader = ResLoader.Allocate();
+        public RawImage RawImage1;
+
+        private ResLoader mResLoader = ResLoader.Allocate();
 		
 		// Use this for initialization
 		private void Start()
 		{
 			RawImage.texture = mResLoader.LoadSync<Texture2D>("resources://TestTexture");
-		}
+            RawImage1.texture = mResLoader.LoadSync<Texture2D>("resources://TestTexture");
+        }
 
 		private void OnDestroy()
 		{

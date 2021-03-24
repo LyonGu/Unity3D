@@ -33,9 +33,17 @@ namespace QFramework
     {
         public static IRes Create(ResSearchKeys resSearchKeys)
         {
+            /*
+                new ResourcesResCreator(),
+                new AssetBundleResCreator(),
+                new AssetResCreator(),
+                new AssetBundleSceneResCreator(),
+                new NetImageResCreator(),
+                new LocalImageResCreator()
+             */
             var retRes = mResCreators
-                .Where(creator => creator.Match(resSearchKeys))
-                .Select(creator => creator.Create(resSearchKeys))
+                .Where(creator => creator.Match(resSearchKeys))  //根据配备规则找到对应的createtor
+                .Select(creator => creator.Create(resSearchKeys)) //用creator的create方法创建一个IRes对象
                 .FirstOrDefault();
 
             if (retRes == null)

@@ -78,7 +78,7 @@ namespace QFramework
         /// <returns></returns>
         public T LoadSync<T>(string assetName) where T : Object
         {
-            var resSearchKeys = ResSearchKeys.Allocate(assetName, null, typeof(T));
+            var resSearchKeys = ResSearchKeys.Allocate(assetName, null, typeof(T));//创建一个匹配数据，其实就是存了一些基础信息，对象池实例
             var retAsset = LoadResSync(resSearchKeys);
             resSearchKeys.Recycle2Cache();
             return retAsset.Asset as T;
@@ -100,8 +100,8 @@ namespace QFramework
 
         public IRes LoadResSync(ResSearchKeys resSearchKeys)
         {
-            Add2Load(resSearchKeys);
-            LoadSync();
+            Add2Load(resSearchKeys); // 这里会把资源加到等待加载列表
+            LoadSync(); //正式开始加载资源 ，遍历等待列表
 
             var res = ResMgr.Instance.GetRes(resSearchKeys, false);
             if (res == null)
@@ -125,7 +125,7 @@ namespace QFramework
                     return;
                 }
 
-                if (first.LoadSync())
+                if (first.LoadSync()) //调用不同res对象的LoadSync方法
                 {
                 }
             }
@@ -242,7 +242,7 @@ namespace QFramework
         private void Add2Load(ResSearchKeys resSearchKeys, Action<bool, IRes> listener = null,
             bool lastOrder = true)
         {
-            var res = FindResInArray(mResList, resSearchKeys);
+            var res = FindResInArray(mResList, resSearchKeys); //先从自身loader中判断res对象是否缓存过
             if (res != null)
             {
                 if (listener != null)
@@ -250,11 +250,11 @@ namespace QFramework
                     AddResListenerRecord(res, listener);
                     res.RegisteOnResLoadDoneEvent(listener);
                 }
-
+                //res.Retain(); // add by hxp 感觉这里要添加下引用计数
                 return;
             }
 
-            res = ResMgr.Instance.GetRes(resSearchKeys, true);
+            res = ResMgr.Instance.GetRes(resSearchKeys, true); // 根据规则类型创建不同res对象
 
             if (res == null)
             {
@@ -282,7 +282,7 @@ namespace QFramework
                 }
             }
 
-            AddRes2Array(res, lastOrder);
+            AddRes2Array(res, lastOrder); //缓存res对象，加入mResList中
         }
 
 
@@ -590,14 +590,14 @@ namespace QFramework
             }
 
             res.Retain();
-            mResList.Add(res);
+            mResList.Add(res); //把创建出来的res对象 存到list里 可以重复利用
 
             if (res.State != ResState.Ready)
             {
                 ++mLoadingCount;
                 if (lastOrder)
                 {
-                    mWaitLoadList.AddLast(res);
+                    mWaitLoadList.AddLast(res); //mWaitLoadList 为等待加载列表
                 }
                 else
                 {

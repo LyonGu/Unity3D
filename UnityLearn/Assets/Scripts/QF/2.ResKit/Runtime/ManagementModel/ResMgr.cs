@@ -192,7 +192,7 @@ namespace QFramework
 
         public IRes GetRes(ResSearchKeys resSearchKeys, bool createNew = false)
         {
-            var res = mTable.GetResBySearchKeys(resSearchKeys);
+            var res = mTable.GetResBySearchKeys(resSearchKeys); // 可以理解为一个全局存储容器，现在全局容器里查一遍是否有IRes对象
 
             if (res != null)
             {
@@ -205,11 +205,11 @@ namespace QFramework
                 return null;
             }
 
-            res = ResFactory.Create(resSearchKeys);
+            res = ResFactory.Create(resSearchKeys);// 根据规则类型创建不同res对象
 
             if (res != null)
             {
-                mTable.Add(res);
+                mTable.Add(res); //放入全局容器中
             }
 
             return res;

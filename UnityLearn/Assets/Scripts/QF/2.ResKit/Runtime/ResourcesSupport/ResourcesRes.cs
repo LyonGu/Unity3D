@@ -75,12 +75,12 @@ namespace QFramework
                 return false;
             }
 
-            State = ResState.Loading;
+            State = ResState.Loading; //更新状态为loading
 
             
             if (AssetType != null)
             {
-                mAsset = Resources.Load(mPath,AssetType);
+                mAsset = Resources.Load(mPath,AssetType); //真正的资源对象
             }
             else
             {
@@ -95,7 +95,7 @@ namespace QFramework
                 return false;
             }
 
-            State = ResState.Ready;
+            State = ResState.Ready; //更新状态为ready 已经准备好了
             return true;
         }
 
