@@ -172,6 +172,7 @@
     <Compile Include="Assets\Resources\ParticleProps\SkillThunders\thunderDestory.cs" />
     <Compile Include="Assets\Resources\ParticleProps\csPoint\csPoint.cs" />
     <Compile Include="Assets\Resources\ParticleProps\groundBrokeRed\DestroyForTime.cs" />
+    <Compile Include="Assets\Resources\ToolTest\FindScriptTest.cs" />
     <Compile Include="Assets\Scripts\AddingButton.cs" />
     <Compile Include="Assets\Scripts\AltasManager.cs" />
     <Compile Include="Assets\Scripts\AltasTest.cs" />

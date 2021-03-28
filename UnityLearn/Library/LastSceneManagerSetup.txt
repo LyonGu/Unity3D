@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scene/GameObjectFind.unity
+- path: Assets/Scripts/QF/2.ResKit/2.ResKitExample/ResKit/LoadAssetBundleResExample/Scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

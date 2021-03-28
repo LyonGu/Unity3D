@@ -548,6 +548,32 @@ public class C_Tool : EditorWindow
             AssetDatabase.Refresh();
         }
 
+
+        if (GUILayout.Button("查找挂有某个脚本的所有prefab"))
+        {
+            string[] LookFor = { mPath };
+            string[] guids = AssetDatabase.FindAssets("t:prefab", LookFor);
+            foreach (string guid in guids)
+            {
+                //Find Material
+                string Path = AssetDatabase.GUIDToAssetPath(guid);
+                GameObject prefab = AssetDatabase.LoadAssetAtPath(Path, typeof(GameObject)) as GameObject;
+                //Debug.Log($"prefabName === {prefab.name}");
+
+                //FindScriptTest findScriptTest = prefab.GetComponent<FindScriptTest>();
+                //if(findScriptTest!=null)
+                //    findScriptTest.PrintIndex();
+
+                FindScriptTest[] FindScriptTestAry = prefab.GetComponentsInChildren<FindScriptTest>();
+
+                for (int i = 0; i < FindScriptTestAry.Length; i++)
+                {
+                    FindScriptTest findScriptTest = FindScriptTestAry[i];
+                    Debug.Log($"prefabName === {findScriptTest.gameObject.name}, index = {findScriptTest.index}");
+                }
+            }
+        }
+
     }
 
 

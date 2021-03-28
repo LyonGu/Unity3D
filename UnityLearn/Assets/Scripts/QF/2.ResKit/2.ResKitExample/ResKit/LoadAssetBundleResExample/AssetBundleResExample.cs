@@ -19,9 +19,10 @@ namespace QFramework.Example
 		{
 			RawImage rawImage = transform.Find("RawImage").GetComponent<RawImage>();
 
-			RawImage.texture = mResLoader.LoadSync<Texture2D>("TestImage");
+            // resource资源加载
+			//RawImage.texture = mResLoader.LoadSync<Texture2D>("TestImage");
 			
-			// 通过下边方式也一样
+			// ab资源加载通过下边方式也一样
 			RawImage.texture = mResLoader.LoadSync<Texture2D>("testimage_png","TestImage");
 		}
 

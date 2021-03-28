@@ -24,6 +24,9 @@
  * THE SOFTWARE.
  ****************************************************************************/
 
+ /*
+    assetBundle 
+  */
 
 namespace QFramework
 {
@@ -33,7 +36,7 @@ namespace QFramework
     public class AssetBundleRes : Res
     {
         private bool                     mUnloadFlag = true;
-        private string[]                 mDependResList;
+        private string[]                 mDependResList;   //依赖项
         private AssetBundleCreateRequest mAssetBundleCreateRequest;
 
         public static AssetBundleRes Allocate(string name)
