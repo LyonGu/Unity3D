@@ -85,7 +85,8 @@ namespace QFramework
     {
         public bool Match(ResSearchKeys resSearchKeys)
         {
-            return resSearchKeys.AssetName.StartsWith("netimage:");
+            bool isMatch = resSearchKeys.AssetName.StartsWith("netimage:");
+            return isMatch;
         }
 
         public IRes Create(ResSearchKeys resSearchKeys)
@@ -98,7 +99,8 @@ namespace QFramework
     {
         public bool Match(ResSearchKeys resSearchKeys)
         {
-            return resSearchKeys.AssetName.StartsWith("localimage:");
+            bool isMatch = resSearchKeys.AssetName.StartsWith("localimage:");
+            return isMatch;
         }
 
         public IRes Create(ResSearchKeys resSearchKeys)

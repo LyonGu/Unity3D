@@ -49,8 +49,8 @@ namespace QFramework
 		
 		public static AssetRes Allocate(string name, string onwerBundleName, Type assetTypde)
 		{
-			var res = SafeObjectPool<AssetRes>.Instance.Allocate();
-			if (res != null)
+			var res = SafeObjectPool<AssetRes>.Instance.Allocate(); //AB里的asset
+            if (res != null)
 			{
 				res.AssetName = name;
 				res.mOwnerBundleName = onwerBundleName;
@@ -107,7 +107,7 @@ namespace QFramework
 					return false;
 				}
 				
-				HoldDependRes();
+				HoldDependRes(); //???? 对依赖项进行引用计数管理
 
 				State = ResState.Loading;
 
@@ -135,9 +135,9 @@ namespace QFramework
 					return false;
 				}
 				
-				HoldDependRes();
+				HoldDependRes(); //???? 对依赖项进行引用计数管理
 
-				State = ResState.Loading;
+                State = ResState.Loading;
 
 				if (AssetType != null)
 				{

@@ -272,7 +272,7 @@ namespace QFramework
 
             if (depends != null)
             {
-                foreach (var depend in depends)
+                foreach (var depend in depends)//ab中asset 要先加载对应的assetBundle
                 {
                     var searchRule = ResSearchKeys.Allocate(depend,null,typeof(AssetBundle));
                     

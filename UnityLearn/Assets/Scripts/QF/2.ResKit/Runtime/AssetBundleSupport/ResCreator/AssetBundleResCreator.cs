@@ -6,7 +6,8 @@ namespace QFramework
     {
         public bool Match(ResSearchKeys resSearchKeys)
         {
-            return resSearchKeys.AssetType == typeof(AssetBundle);
+            bool isMatch = resSearchKeys.AssetType == typeof(AssetBundle);
+            return isMatch;
         }
 
         public IRes Create(ResSearchKeys resSearchKeys)

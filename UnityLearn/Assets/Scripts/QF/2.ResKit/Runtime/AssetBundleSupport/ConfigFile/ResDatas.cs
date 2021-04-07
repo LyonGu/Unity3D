@@ -135,7 +135,7 @@ namespace QFramework
             if (mAssetDataTable == null)
             {
                 mAssetDataTable = new AssetDataTable();
-
+                //提前构建了一份查询数据
                 for (var i = mAllAssetDataGroup.Count - 1; i >= 0; --i)
                 {
                     foreach (var assetData in mAllAssetDataGroup[i].AssetDatas)

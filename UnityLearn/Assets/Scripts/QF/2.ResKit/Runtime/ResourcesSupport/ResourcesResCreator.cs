@@ -4,8 +4,10 @@ namespace QFramework
     {
         public bool Match(ResSearchKeys resSearchKeys)
         {
-            return resSearchKeys.AssetName.StartsWith("resources/") ||
+
+            bool isMatch = resSearchKeys.AssetName.StartsWith("resources/") ||
                    resSearchKeys.AssetName.StartsWith("resources://");
+            return isMatch;
         }
 
         public IRes Create(ResSearchKeys resSearchKeys)
