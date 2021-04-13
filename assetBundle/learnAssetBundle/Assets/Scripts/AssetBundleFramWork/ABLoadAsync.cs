@@ -11,12 +11,14 @@ public class ABLoadAsync : MonoBehaviour
     public RawImage rawimage;
 
     public Image image;
-    
+    private AssetBundleCreateRequest _request;
     void Start()
     {
         AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "Windows/scene_1/textures.ab"));
         request.completed -= abTextureLoadDone;
         request.completed += abTextureLoadDone;
+
+        _request = request;
 
         AssetBundleCreateRequest request1 = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "Windows/scene_1/atlas.ab"));
         request1.completed -= abSpriteLoadDone;
@@ -33,6 +35,7 @@ public class ABLoadAsync : MonoBehaviour
             Texture2D tex = assetBundle.LoadAsset<Texture2D>("WhileFloor"); // 只使用资源名就行
             rawimage.texture = tex;
         }
+       
     }
 
     void abSpriteLoadDone(AsyncOperation t)
@@ -47,9 +50,15 @@ public class ABLoadAsync : MonoBehaviour
         }
     }
 
+    bool isUpdate = true;
     // Update is called once per frame
     void Update()
     {
-        
+        if (!isUpdate) return;
+        Debug.Log($"progress ===== {_request.progress}");
+        if (_request.isDone)
+        {
+            isUpdate = false;
+        }
     }
 }
