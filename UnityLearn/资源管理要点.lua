@@ -97,7 +97,12 @@
             AssetBundleSceneResCreator <--IResCreator
             NetImageResCreator <--IResCreator
             LocalImageResCreator <--IResCreator
+
         }
+
+
+        
+        进度怎么弄==》AssetBundleCreateRequest 单个progress
 
     }
 
