@@ -193,3 +193,5 @@ StudyMuilthread/StudyMuilthreadC#/.vs/StudyMultithread/v16/Server/sqlite3/db.loc
 assetBundle/learnAssetBundle/.vs/learnAssetBundle/v16/Server/sqlite3/db.lock
 SRP_UDP/Library/
 SRP_UDP/Temp/
+SRP_UDP/obj/
+SRP_UDP/.vs/
