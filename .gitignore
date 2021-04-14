@@ -195,3 +195,5 @@ SRP_UDP/Library/
 SRP_UDP/Temp/
 SRP_UDP/obj/
 SRP_UDP/.vs/
+SRP_UDP/.vsconfig
+SRP_UDP/Logs/
