@@ -39,7 +39,7 @@ public class CreateURP : MonoBehaviour
         pipelineAsset.msaaSampleCount = 4;
 
         //动态设置分辨率
-        pipelineAsset.renderScale = 0.5f;
+        pipelineAsset.renderScale = 1.0f;
 
         //阴影最大距离
         pipelineAsset.shadowDistance = 50f;
