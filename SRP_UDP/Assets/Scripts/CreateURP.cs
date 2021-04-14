@@ -12,24 +12,24 @@ public class CreateURP : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //äÖÈ¾ÅäÖÃÎÄ¼şµÄÉèÖÃ
+        //æ¸²æŸ“é…ç½®æ–‡ä»¶çš„è®¾ç½®
 
-        //»ñÈ¡²»Í¸Ã÷ÎïÌåµÄÉî¶ÈÌùÍ¼
+        //è·å–ä¸é€æ˜ç‰©ä½“çš„æ·±åº¦è´´å›¾
         Shader.GetGlobalTexture("_CameraDepthTexture");
 
         UniversalRenderPipelineAsset pipelineAsset = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
 
-        //¶¯Ì¬Æô¶¯Éî¶ÈÍ¼
+        //åŠ¨æ€å¯åŠ¨æ·±åº¦å›¾
         pipelineAsset.supportsCameraDepthTexture = true;
 
-        //¶¯Ì¬Æô¶¯²»Í¸Ã÷Í¼
+        //åŠ¨æ€å¯åŠ¨ä¸é€æ˜å›¾
         pipelineAsset.supportsCameraOpaqueTexture = true;
 
-        //¶¯Ì¬Æô¶¯HDR
+        //åŠ¨æ€å¯åŠ¨HDR
         pipelineAsset.supportsHDR = true;
 
         /*
-            ¶¯Ì¬Æô¶¯4±¶¿¹¾â³İ
+            åŠ¨æ€å¯åŠ¨4å€æŠ—é”¯é½¿
 
             Disabled = 1,
             _2x = 2,
@@ -38,38 +38,38 @@ public class CreateURP : MonoBehaviour
          */
         pipelineAsset.msaaSampleCount = 4;
 
-        //¶¯Ì¬ÉèÖÃ·Ö±æÂÊ
+        //åŠ¨æ€è®¾ç½®åˆ†è¾¨ç‡
         pipelineAsset.renderScale = 0.5f;
 
-        //ÒõÓ°×î´ó¾àÀë
+        //é˜´å½±æœ€å¤§è·ç¦»
         pipelineAsset.shadowDistance = 50f;
 
-        //ÒõÓ°Áª¼¶ÊıÁ¿
+        //é˜´å½±è”çº§æ•°é‡
         pipelineAsset.shadowCascadeCount = 4;
 
-        //ÒõÓ°Éî¶ÈÆ«ÒÆ
+        //é˜´å½±æ·±åº¦åç§»
         pipelineAsset.shadowDepthBias = 2.5f;
 
-        //ÒõÓ°·¨ÏßÆ«ÒÆ
+        //é˜´å½±æ³•çº¿åç§»
         pipelineAsset.shadowNormalBias = 2.5f;
 
 
-        //ÉèÖÃColorGradingµÄÄ£Ê½ºÍLUTÌùÍ¼´óĞ¡
+        //è®¾ç½®ColorGradingçš„æ¨¡å¼å’ŒLUTè´´å›¾å¤§å°
         pipelineAsset.colorGradingMode = ColorGradingMode.LowDynamicRange;
         pipelineAsset.colorGradingLutSize = 32;
 
-        //ÉèÖÃSRPBatcherÆô¶¯
+        //è®¾ç½®SRPBatcherå¯åŠ¨
         pipelineAsset.useSRPBatcher = true;
 
-        //¶¯Ì¬ºÏÅúÊÇ·ñÆô¶¯
+        //åŠ¨æ€åˆæ‰¹æ˜¯å¦å¯åŠ¨
         pipelineAsset.supportsDynamicBatching = false;
 
 
-        //¸ßµÍÅäÅäÖÃ²»Í¬µÄäÖÈ¾ÅäÖÃÎÄ¼ş
+        //é«˜ä½é…é…ç½®ä¸åŒçš„æ¸²æŸ“é…ç½®æ–‡ä»¶
         if(hight!=null)
             GraphicsSettings.renderPipelineAsset = hight;
 
-        //ÉãÏñ»ú¿ÉÒÔ°ó¶¨¶à¸öäÖÈ¾Æ÷£¨¾ÍÊÇäÖÈ¾ÅäÖÃÎÄ¼ş renderlistÖĞµÄÎÄ¼ş£©£¬´úÂëÀï¶¯Ì¬ÇĞ»»Ã¿¸öäÖÈ¾Æ÷ ÉèÖÃindexË÷Òı¼´¿É
+        //æ‘„åƒæœºå¯ä»¥ç»‘å®šå¤šä¸ªæ¸²æŸ“å™¨ï¼ˆå°±æ˜¯æ¸²æŸ“é…ç½®æ–‡ä»¶ renderlistä¸­çš„æ–‡ä»¶ï¼‰ï¼Œä»£ç é‡ŒåŠ¨æ€åˆ‡æ¢æ¯ä¸ªæ¸²æŸ“å™¨ è®¾ç½®indexç´¢å¼•å³å¯
         Camera.main.GetComponent<UniversalAdditionalCameraData>().SetRenderer(0);
 
     }
@@ -77,6 +77,6 @@ public class CreateURP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
