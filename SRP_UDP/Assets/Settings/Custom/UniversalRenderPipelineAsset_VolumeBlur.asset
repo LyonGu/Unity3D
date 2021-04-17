@@ -65,12 +65,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
-  m_Name: UniversalRenderPipelineAsset_UIBlurRenderer
+  m_Name: UniversalRenderPipelineAsset_VolumeBlur
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: -8886952619667793837}
-  - {fileID: -2524544811132342296}
-  m_RendererFeatureMap: 5358f970ad33ab84e8afe6b0de03f7dc
+  - {fileID: 3851429646266679017}
+  m_RendererFeatureMap: e93e2287db067335
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -86,10 +85,10 @@ MonoBehaviour:
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -100,3 +99,18 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_AccurateGbufferNormals: 0
+--- !u!114 &3851429646266679017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96cb022a5443e2c468e3d9aeaa801b93, type: 3}
+  m_Name: BlurPostProcessRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    m_renderPassEvent: 500
