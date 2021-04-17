@@ -1,0 +1,10 @@
+1 源码修改 为什么没有生效 ==》 源码怎么修改？==》 直接从Library\PackageCache下吧URP的源码移动到packege目录下
+
+2 自定义后期pass的时候 为什么渲染事件设置成After Rendering Post processing 不会跟其他后期叠加
+
+3 怎样做到每一帧Blit次数减少：
+{
+	3D相机后处理完不用给_AfterPostProcessTexture，直接写入FrameBuffer，UI相机继续直接在FrameBuffer上画
+}	
+
+4 UI怎样添加后期处理
