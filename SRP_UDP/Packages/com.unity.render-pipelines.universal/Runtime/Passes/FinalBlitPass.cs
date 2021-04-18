@@ -1,4 +1,4 @@
-namespace UnityEngine.Rendering.Universal.Internal
+﻿namespace UnityEngine.Rendering.Universal.Internal
 {
     /// <summary>
     /// Copy the given color target to the current camera target
@@ -49,6 +49,18 @@ namespace UnityEngine.Rendering.Universal.Internal
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.FinalBlit)))
             {
 
+
+                /*
+                 FinalBlit一方面是把贴图拷贝到FrameBuffer中，另外还需要做SRGB转换功能
+                 由于在PBR中我们使用的多是线性空间，线性空间的颜色不尽兴伽玛校正是不能进行显示的
+                 现在有些硬件（高端手机都支持，低端手机不支持）都支持SRGB转换，这样就可以直接将线性空间的颜色直接给FrameBuffer
+                 */
+
+                /*
+                   为了兼容所有手机FinalBlit时，需要判断硬件是否支持SRGB转换，这段代码的含义就是当硬件不支持SRGB
+                   转换时，在Shader中开启ShaderKeywordStrings.LinearToSRGBConversion这个宏，shader使用的是Blit.shader,
+                   会在拷贝的同时进行一次伽马矫正
+                 */
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.LinearToSRGBConversion,
                     cameraData.requireSrgbConversion);
 
@@ -82,6 +94,10 @@ namespace UnityEngine.Rendering.Universal.Internal
                 }
                 else
 #endif
+                /*
+                 RenderBufferLoadAction : 表示GUP渲染时对当前目标像素加载的操作, 当给目标纹理绘制的时候，目标纹理时有颜色的
+                 RenderBufferStoreAction：表示GUP渲染结束后对当前目标像素保存的操作
+                 */
                 if (isSceneViewCamera || cameraData.isDefaultViewport)
                 {
                     // This set render target is necessary so we change the LOAD state to DontCare.
