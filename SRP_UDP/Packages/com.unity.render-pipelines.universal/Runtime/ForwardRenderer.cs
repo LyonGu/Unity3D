@@ -294,6 +294,8 @@ namespace UnityEngine.Rendering.Universal
 
             // Add render passes and gather the input requirements
             isCameraColorTargetValid = true;
+
+            //RenderFeature Pass
             AddRenderPasses(ref renderingData);
             isCameraColorTargetValid = false;
             RenderPassInputSummary renderPassInputs = GetRenderPassInputs(ref renderingData);

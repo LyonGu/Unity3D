@@ -850,7 +850,8 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     //主光源阴影和GI
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
 
-    //GI主要算的是环境漫反射和环境高光反射 漫反射通过光照贴图和环境遮蔽算出，高光反射由GlossyEnvironmentReflection方法算出, 也是间接光的PBR
+    //间接光的PBR
+    //GI主要算的是环境漫反射和环境高光反射 漫反射通过光照贴图和环境遮蔽算出，高光反射由GlossyEnvironmentReflection方法算出
     half3 color = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
                                      inputData.bakedGI, surfaceData.occlusion,
                                      inputData.normalWS, inputData.viewDirectionWS);
