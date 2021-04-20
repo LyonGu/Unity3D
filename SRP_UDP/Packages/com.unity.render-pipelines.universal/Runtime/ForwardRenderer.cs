@@ -35,6 +35,9 @@ namespace UnityEngine.Rendering.Universal
         // Actual rendering mode, which may be different (ex: wireframe rendering, harware not capable of deferred rendering).
         internal RenderingMode actualRenderingMode { get { return GL.wireframe || m_DeferredLights == null || !m_DeferredLights.IsRuntimeSupportedThisFrame()  ? RenderingMode.Forward : this.renderingMode; } }
         internal bool accurateGbufferNormals { get { return m_DeferredLights != null ? m_DeferredLights.AccurateGbufferNormals : false; } }
+        
+        /*一堆Pass*/
+        
         ColorGradingLutPass m_ColorGradingLutPass;
         DepthOnlyPass m_DepthPrepass;
         DepthNormalOnlyPass m_DepthNormalPrepass;
@@ -241,6 +244,7 @@ namespace UnityEngine.Rendering.Universal
             CoreUtils.Destroy(m_StencilDeferredMaterial);
         }
 
+        //根据配置确定是否加入对应的Pass参与渲染
         /// <inheritdoc />
         public override void Setup(ScriptableRenderContext context, ref RenderingData renderingData)
         {
@@ -255,17 +259,20 @@ namespace UnityEngine.Rendering.Universal
             bool isOffscreenDepthTexture = cameraData.targetTexture != null && cameraData.targetTexture.format == RenderTextureFormat.Depth;
             if (isOffscreenDepthTexture)
             {
+                //如果是渲染深度相机：RenderFeature 不透明物体pass 天空盒pass 透明物体pass
                 ConfigureCameraTarget(BuiltinRenderTextureType.CameraTarget, BuiltinRenderTextureType.CameraTarget);
+
+                //加入 RenderFeature
                 AddRenderPasses(ref renderingData);
-                EnqueuePass(m_RenderOpaqueForwardPass);
+                EnqueuePass(m_RenderOpaqueForwardPass); //渲染不透明物体pass
 
                 // TODO: Do we need to inject transparents and skybox when rendering depth only camera? They don't write to depth.
-                EnqueuePass(m_DrawSkyboxPass);
+                EnqueuePass(m_DrawSkyboxPass); //渲染天空盒pass
 #if ADAPTIVE_PERFORMANCE_2_1_0_OR_NEWER
                 if (!needTransparencyPass)
                     return;
 #endif
-                EnqueuePass(m_RenderTransparentForwardPass);
+                EnqueuePass(m_RenderTransparentForwardPass); //渲染透明物体pass
                 return;
             }
 
@@ -292,18 +299,22 @@ namespace UnityEngine.Rendering.Universal
             RenderPassInputSummary renderPassInputs = GetRenderPassInputs(ref renderingData);
 
             // Should apply post-processing after rendering this camera?
-            bool applyPostProcessing = cameraData.postProcessEnabled;
+            bool applyPostProcessing = cameraData.postProcessEnabled; //是否开启后期
 
             // There's at least a camera in the camera stack that applies post-processing
             bool anyPostProcessing = renderingData.postProcessingEnabled;
 
             // TODO: We could cache and generate the LUT before rendering the stack
-            bool generateColorGradingLUT = cameraData.postProcessEnabled;
-            bool isSceneViewCamera = cameraData.isSceneViewCamera;
+            bool generateColorGradingLUT = cameraData.postProcessEnabled; //是否生成LUT 表
+            bool isSceneViewCamera = cameraData.isSceneViewCamera; //Scene窗口相机
             bool requiresDepthTexture = cameraData.requiresDepthTexture || renderPassInputs.requiresDepthTexture || this.actualRenderingMode == RenderingMode.Deferred;
 
+            //主光源ShadowMap ShadowCasterPass.SetUp ==> 根据返回值确定是否开启屏幕空间阴影
             bool mainLightShadows = m_MainLightShadowCasterPass.Setup(ref renderingData);
+
+            //副光源ShadowMap ==> 根据返回值确定是否开启屏幕空间阴影
             bool additionalLightShadows = m_AdditionalLightsShadowCasterPass.Setup(ref renderingData);
+
             bool transparentsNeedSettingsPass = m_TransparentSettingsPass.Setup(ref renderingData);
 
             // Depth prepass is generated in the following cases:
@@ -319,7 +330,9 @@ namespace UnityEngine.Rendering.Universal
             // The copying of depth should normally happen after rendering opaques.
             // But if we only require it for post processing or the scene camera then we do it after rendering transparent objects
             m_CopyDepthPass.renderPassEvent = (!requiresDepthTexture && (applyPostProcessing || isSceneViewCamera)) ? RenderPassEvent.AfterRenderingTransparents : RenderPassEvent.AfterRenderingOpaques;
-            createColorTexture |= RequiresIntermediateColorTexture(ref cameraData);
+
+            //判断是否需要ColorTexture（绘制了不透明物体和天空盒的RT）
+            createColorTexture |= RequiresIntermediateColorTexture(ref cameraData); 
             createColorTexture |= renderPassInputs.requiresColorTexture;
             createColorTexture &= !isPreviewCamera;
 
@@ -353,7 +366,7 @@ namespace UnityEngine.Rendering.Universal
             // Configure all settings require to start a new camera stack (base camera only)
             if (cameraData.renderType == CameraRenderType.Base)
             {
-                RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
+                RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer
 
                 m_ActiveCameraColorAttachment = (createColorTexture) ? m_CameraColorAttachment : cameraTargetHandle;
                 m_ActiveCameraDepthAttachment = (createDepthTexture) ? m_CameraDepthAttachment : cameraTargetHandle;
@@ -363,7 +376,12 @@ namespace UnityEngine.Rendering.Universal
 
                 // Doesn't create texture for Overlay cameras as they are already overlaying on top of created textures.
                 if (intermediateRenderTexture)
+                {
+                    //生成一张_CameraColorTexture 临时RT
+                    //生成一张_CameraDepthTexture 临时RT
                     CreateCameraRenderTarget(context, ref cameraTargetDescriptor, createColorTexture, createDepthTexture);
+                }
+                    
             }
             else
             {
@@ -402,11 +420,14 @@ namespace UnityEngine.Rendering.Universal
                 ConfigureCameraTarget(activeColorRenderTargetId, activeDepthRenderTargetId);
             }
 
+            //后期处理完是否还有pass需要执行
             bool hasPassesAfterPostProcessing = activeRenderPassQueue.Find(x => x.renderPassEvent == RenderPassEvent.AfterRendering) != null;
 
+            //主光源ShadowMappass加入队列
             if (mainLightShadows)
                 EnqueuePass(m_MainLightShadowCasterPass);
 
+            //副光源ShadowMap pass加入队列
             if (additionalLightShadows)
                 EnqueuePass(m_AdditionalLightsShadowCasterPass);
 
@@ -414,11 +435,13 @@ namespace UnityEngine.Rendering.Universal
             {
                 if (renderPassInputs.requiresNormalsTexture)
                 {
+                    //需要法线图，会同时生成深度信息  m_DepthNormalPrepass加入对列
                     m_DepthNormalPrepass.Setup(cameraTargetDescriptor, m_DepthTexture, m_NormalsTexture);
                     EnqueuePass(m_DepthNormalPrepass);
                 }
                 else
                 {
+                    //只生成深度图  DepthPrePass加入对列
                     m_DepthPrepass.Setup(cameraTargetDescriptor, m_DepthTexture);
                     EnqueuePass(m_DepthPrepass);
                 }
@@ -426,6 +449,7 @@ namespace UnityEngine.Rendering.Universal
 
             if (generateColorGradingLUT)
             {
+                //LUT 查找表生成
                 m_ColorGradingLutPass.Setup(m_ColorGradingLut);
                 EnqueuePass(m_ColorGradingLutPass);
             }
@@ -438,13 +462,13 @@ namespace UnityEngine.Rendering.Universal
             if (this.actualRenderingMode == RenderingMode.Deferred)
                 EnqueueDeferred(ref renderingData, requiresDepthPrepass, mainLightShadows, additionalLightShadows);
             else
-                EnqueuePass(m_RenderOpaqueForwardPass);
+                EnqueuePass(m_RenderOpaqueForwardPass);// 不透明物体渲染队列
 
             Skybox cameraSkybox;
             cameraData.camera.TryGetComponent<Skybox>(out cameraSkybox);
             bool isOverlayCamera = cameraData.renderType == CameraRenderType.Overlay;
             if (camera.clearFlags == CameraClearFlags.Skybox && (RenderSettings.skybox != null || cameraSkybox?.material != null) && !isOverlayCamera)
-                EnqueuePass(m_DrawSkyboxPass);
+                EnqueuePass(m_DrawSkyboxPass); //天空盒渲染
 
             // If a depth texture was created we necessarily need to copy it, otherwise we could have render it to a renderbuffer.
             // If deferred rendering path was selected, it has already made a copy.
@@ -454,6 +478,7 @@ namespace UnityEngine.Rendering.Universal
                                          && this.actualRenderingMode != RenderingMode.Deferred;
             if (requiresDepthCopyPass)
             {
+                //CopyDepthPass
                 m_CopyDepthPass.Setup(m_ActiveCameraDepthAttachment, m_DepthTexture);
                 EnqueuePass(m_CopyDepthPass);
             }
@@ -466,9 +491,11 @@ namespace UnityEngine.Rendering.Universal
 
             if (renderingData.cameraData.requiresOpaqueTexture || renderPassInputs.requiresColorTexture)
             {
+                //CopyColor Pass
                 // TODO: Downsampling method should be store in the renderer instead of in the asset.
                 // We need to migrate this data to renderer. For now, we query the method in the active asset.
                 Downsampling downsamplingMethod = UniversalRenderPipeline.asset.opaqueDownsampling;
+                //Copy Color Pass ： 生成一张_CameraOpaqueColor的RT  downsamplingMethod降采样信息  _CameraOpaqueColor上只有不透明物体的信息
                 m_CopyColorPass.Setup(m_ActiveCameraColorAttachment.Identifier(), m_OpaqueColor, downsamplingMethod);
                 EnqueuePass(m_CopyColorPass);
             }
@@ -481,8 +508,11 @@ namespace UnityEngine.Rendering.Universal
                     EnqueuePass(m_TransparentSettingsPass);
                 }
 
+                //半透明渲染队列
                 EnqueuePass(m_RenderTransparentForwardPass);
             }
+
+            //ObjectPass 渲染事件回调Pass
             EnqueuePass(m_OnRenderObjectCallbackPass);
 
             bool lastCameraInTheStack = cameraData.resolveFinalTarget;
@@ -490,6 +520,7 @@ namespace UnityEngine.Rendering.Universal
             bool applyFinalPostProcessing = anyPostProcessing && lastCameraInTheStack &&
                                      renderingData.cameraData.antialiasing == AntialiasingMode.FastApproximateAntialiasing;
 
+            //后处理后如果还有Pass就继续绘制，不直接绘制到屏幕上
             // When post-processing is enabled we can use the stack to resolve rendering to camera target (screen or RT).
             // However when there are render passes executing after post we avoid resolving to screen so rendering continues (before sRGBConvertion etc)
             bool resolvePostProcessingToCameraTarget = !hasCaptureActions && !hasPassesAfterPostProcessing && !applyFinalPostProcessing;
@@ -503,8 +534,9 @@ namespace UnityEngine.Rendering.Universal
 
                     // if resolving to screen we need to be able to perform sRGBConvertion in post-processing if necessary
                     bool doSRGBConvertion = resolvePostProcessingToCameraTarget;
+                    //处理的原始图其实就是m_CameraColorAttachment==> "_CameraColorTexture"
                     m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, destination, m_ActiveCameraDepthAttachment, m_ColorGradingLut, applyFinalPostProcessing, doSRGBConvertion);
-                    EnqueuePass(m_PostProcessPass);
+                    EnqueuePass(m_PostProcessPass); //后效pass入队列
                 }
 
 
@@ -514,12 +546,14 @@ namespace UnityEngine.Rendering.Universal
                 // Do FXAA or any other final post-processing effect that might need to run after AA.
                 if (applyFinalPostProcessing)
                 {
+                    //后效之后的pass
                     m_FinalPostProcessPass.SetupFinalPass(sourceForFinalPass);
                     EnqueuePass(m_FinalPostProcessPass);
                 }
 
                 if (renderingData.cameraData.captureActions != null)
                 {
+                    //截屏pass
                     m_CapturePass.Setup(sourceForFinalPass);
                     EnqueuePass(m_CapturePass);
                 }
@@ -540,6 +574,7 @@ namespace UnityEngine.Rendering.Universal
                     //如果硬件不支持SRGB转换，直接启动FinalBlit，就需要FinalBlitPass，shader里面有个宏开关打开后会进行SRGB转换
                     if (Display.main.requiresSrgbBlitToBackbuffer)
                     {
+                        //FinalBlitPass
                         m_FinalBlitPass.Setup(cameraTargetDescriptor, sourceForFinalPass);
                         EnqueuePass(m_FinalBlitPass);
                     }
@@ -705,17 +740,22 @@ namespace UnityEngine.Rendering.Universal
 
         private RenderPassInputSummary GetRenderPassInputs(ref RenderingData renderingData)
         {
+            //activeRenderPassQueue 渲染对列
             RenderPassInputSummary inputSummary = new RenderPassInputSummary();
             for (int i = 0; i < activeRenderPassQueue.Count; ++i)
             {
                 ScriptableRenderPass pass = activeRenderPassQueue[i];
+
+                // 是否需要深度图 _CameraDepthTexture
                 bool needsDepth   = (pass.input & ScriptableRenderPassInput.Depth) != ScriptableRenderPassInput.None;
                 bool needsNormals = (pass.input & ScriptableRenderPassInput.Normal) != ScriptableRenderPassInput.None;
+
+                //  _CameraColorTexture
                 bool needsColor   = (pass.input & ScriptableRenderPassInput.Color) != ScriptableRenderPassInput.None;
                 bool eventBeforeOpaque = pass.renderPassEvent <= RenderPassEvent.BeforeRenderingOpaques;
 
                 inputSummary.requiresDepthTexture   |= needsDepth;
-                inputSummary.requiresDepthPrepass   |= needsNormals || needsDepth && eventBeforeOpaque;
+                inputSummary.requiresDepthPrepass   |= needsNormals || needsDepth && eventBeforeOpaque; //Eealy-Z
                 inputSummary.requiresNormalsTexture |= needsNormals;
                 inputSummary.requiresColorTexture   |= needsColor;
             }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Unity.Collections;
 using System.Collections.Generic;
 #if UNITY_EDITOR
@@ -200,6 +200,8 @@ namespace UnityEngine.Rendering.Universal
 #if UNITY_2021_1_OR_NEWER
         protected override void Render(ScriptableRenderContext renderContext, List<Camera> cameras)
 #else
+
+        //URP渲染管线的入口
         protected override void Render(ScriptableRenderContext renderContext, Camera[] cameras)
 #endif
         {
@@ -218,24 +220,30 @@ namespace UnityEngine.Rendering.Universal
                 BeginFrameRendering(renderContext, cameras);
             }
 #endif
-
+            //是否使用线性空间
             GraphicsSettings.lightsUseLinearIntensity = (QualitySettings.activeColorSpace == ColorSpace.Linear);
+
+            //是否开启SRP Batcher
             GraphicsSettings.useScriptableRenderPipelineBatching = asset.useSRPBatcher;
+
+            //主要设置了未开启环境反射时的默认颜色、阴影颜色
             SetupPerFrameShaderConstants();
 #if ENABLE_VR && ENABLE_XR_MODULE
             // Update XR MSAA level per frame.
             XRSystem.UpdateMSAALevel(asset.msaaSampleCount);
 #endif
 
-
+            //通过相机深度进行排序
             SortCameras(cameras);
 #if UNITY_2021_1_OR_NEWER
             for (int i = 0; i < cameras.Count; ++i)
 #else
+            //逐相机渲染
             for (int i = 0; i < cameras.Length; ++i)
 #endif
             {
                 var camera = cameras[i];
+                //Game窗口相机
                 if (IsGameCamera(camera))
                 {
                     RenderCameraStack(renderContext, camera);
@@ -334,6 +342,7 @@ namespace UnityEngine.Rendering.Universal
                 return;
             }
 
+            //调用裁剪接口 CPU层先裁剪一遍 避免多余的点进行空间位置转换
             if (!TryGetCullingParameters(cameraData, out var cullingParameters))
                 return;
 
@@ -350,10 +359,12 @@ namespace UnityEngine.Rendering.Universal
             ProfilingSampler sampler = Profiling.TryGetOrAddCameraSampler(camera);
             using (new ProfilingScope(cmd, sampler)) // Enqueues a "BeginSample" command into the CommandBuffer cmd
             {
+                //重置各种渲染对象以及执行状态
                 renderer.Clear(cameraData.renderType);
 
                 using (new ProfilingScope( cmd, Profiling.Pipeline.Renderer.setupCullingParameters))
                 {
+                    //override 方法  每个Render可以自己实现
                     renderer.SetupCullingParameters(ref cullingParameters, ref cameraData);
                 }
 
@@ -367,7 +378,7 @@ namespace UnityEngine.Rendering.Universal
                     ScriptableRenderContext.EmitWorldGeometryForSceneView(camera);
                 }
 #endif
-
+                //得到裁剪结果
                 var cullResults = context.Cull(ref cullingParameters);
                 InitializeRenderingData(asset, ref cameraData, ref cullResults, anyPostProcessingEnabled, out var renderingData);
 
@@ -378,6 +389,7 @@ namespace UnityEngine.Rendering.Universal
 
                 using (new ProfilingScope(cmd, Profiling.Pipeline.Renderer.setup))
                 {
+                    //抽象方法 每个Render自己实现
                     renderer.Setup(context, ref renderingData);
                 }
 
@@ -392,6 +404,7 @@ namespace UnityEngine.Rendering.Universal
 
             using (new ProfilingScope(cmd, Profiling.Pipeline.Context.submit))
             {
+                //真正执行command的地方，把之前的设置统一执行一遍
                 context.Submit(); // Actually execute the commands that we previously sent to the ScriptableRenderContext context
             }
 
@@ -408,6 +421,7 @@ namespace UnityEngine.Rendering.Universal
         {
             using var profScope = new ProfilingScope(null, ProfilingSampler.Get(URPProfileId.RenderCameraStack));
 
+            //UniversalAdditionalCameraDatas 组件上有一个相机的stack
             baseCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseCameraAdditionalData);
 
             // Overlay cameras will be rendered stacked while rendering base cameras
@@ -511,6 +525,7 @@ namespace UnityEngine.Rendering.Universal
                 if (asset.useAdaptivePerformance)
                     ApplyAdaptivePerformance(ref baseCameraData);
 #endif
+                //每个相机真正的渲染
                 RenderSingleCamera(context, baseCameraData, anyPostProcessingEnabled);
                 using (new ProfilingScope(null, Profiling.Pipeline.endCameraRendering))
                 {
@@ -843,6 +858,7 @@ namespace UnityEngine.Rendering.Universal
                 projectionMatrix.m00 = newCotangent;
             }
 
+            //每个相机设置自己的VP矩阵
             cameraData.SetViewAndProjectionMatrix(camera.worldToCameraMatrix, projectionMatrix);
         }
 
@@ -882,6 +898,7 @@ namespace UnityEngine.Rendering.Universal
                 }
             }
 
+            //填充renderingData的内容  光照 阴影 后效
             renderingData.cullResults = cullResults;
             renderingData.cameraData = cameraData;
             InitializeLightData(settings, visibleLights, mainLightIndex, out renderingData.lightData);
@@ -962,6 +979,7 @@ namespace UnityEngine.Rendering.Universal
         {
             using var profScope = new ProfilingScope(null, Profiling.Pipeline.initializeLightData);
 
+            //UniversalRenderPipeline.maxPerObjectLights属性限定了不同Level每个物体接受灯光数量的上限
             int maxPerObjectAdditionalLights = UniversalRenderPipeline.maxPerObjectLights;
             int maxVisibleAdditionalLights = UniversalRenderPipeline.maxVisibleAdditionalLights;
 
@@ -1047,6 +1065,8 @@ namespace UnityEngine.Rendering.Universal
 
         static void SetupPerFrameShaderConstants()
         {
+            //设置了未开启环境反射时的默认颜色、阴影颜色
+
             using var profScope = new ProfilingScope(null, Profiling.Pipeline.setupPerFrameShaderConstants);
 
             // When glossy reflections are OFF in the shader we set a constant color to use as indirect specular

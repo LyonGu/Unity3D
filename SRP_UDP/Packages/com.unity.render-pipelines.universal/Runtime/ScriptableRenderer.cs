@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -148,6 +148,8 @@ namespace UnityEngine.Rendering.Universal
             float renderScale = cameraData.isSceneViewCamera ? 1f : cameraData.renderScale;
             float scaledCameraWidth = (float)pixelRect.width * renderScale;
             float scaledCameraHeight = (float)pixelRect.height * renderScale;
+
+            //屏幕大小
             float cameraWidth = (float)pixelRect.width;
             float cameraHeight = (float)pixelRect.height;
 
@@ -181,7 +183,7 @@ namespace UnityEngine.Rendering.Universal
             // D3D is this:
             float zc0 = 1.0f - far * invNear;
             float zc1 = far * invNear;
-
+            // TODO  这个不太明白？ NDC？
             Vector4 zBufferParams = new Vector4(zc0, zc1, zc0 * invFar, zc1 * invFar);
 
             if (SystemInfo.usesReversedZBuffer)
@@ -202,7 +204,10 @@ namespace UnityEngine.Rendering.Universal
             Vector4 orthoParams = new Vector4(camera.orthographicSize * cameraData.aspectRatio, camera.orthographicSize, 0.0f, isOrthographic);
 
             // Camera and Screen variables as described in https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
+            //摄像机的世界坐标 "_WorldSpaceCameraPos"
             cmd.SetGlobalVector(ShaderPropertyId.worldSpaceCameraPos, camera.transform.position);
+
+            //屏幕参数 “_ScreenParams”
             cmd.SetGlobalVector(ShaderPropertyId.screenParams, new Vector4(cameraWidth, cameraHeight, 1.0f + 1.0f / cameraWidth, 1.0f + 1.0f / cameraHeight));
             cmd.SetGlobalVector(ShaderPropertyId.scaledScreenParams, new Vector4(scaledCameraWidth, scaledCameraHeight, 1.0f + 1.0f / scaledCameraWidth, 1.0f + 1.0f / scaledCameraHeight));
             cmd.SetGlobalVector(ShaderPropertyId.zBufferParams, zBufferParams);
@@ -487,10 +492,10 @@ namespace UnityEngine.Rendering.Universal
                 float smoothDeltaTime = Time.smoothDeltaTime;
 
                 // Initialize Camera Render State
-                ClearRenderingState(cmd);
-                SetPerCameraShaderVariables(cmd, ref cameraData);
-                SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime);
-                context.ExecuteCommandBuffer(cmd);
+                ClearRenderingState(cmd); //禁用一些shader里的宏设置
+                SetPerCameraShaderVariables(cmd, ref cameraData);  //设置一些摄像机相关shader的参数
+                SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime); //设置shader里的时间参数
+                context.ExecuteCommandBuffer(cmd);  //执行commandbuff
                 cmd.Clear();
                 using (new ProfilingScope(cmd, Profiling.sortRenderPasses))
                 {
@@ -502,9 +507,11 @@ namespace UnityEngine.Rendering.Universal
 
                 using (new ProfilingScope(cmd, Profiling.setupLights))
                 {
+                    //Render自己实现 设置光照数据
                     SetupLights(context, ref renderingData);
                 }
 
+                //BeforeRendering事件
                 using (new ProfilingScope(cmd, Profiling.RenderBlock.beforeRendering))
                 {
                     // Before Render Block. This render blocks always execute in mono rendering.
@@ -523,10 +530,10 @@ namespace UnityEngine.Rendering.Universal
                     // is because this need to be called for each eye in multi pass VR.
                     // The side effect is that this will override some shader properties we already setup and we will have to
                     // reset them.
+                    //设置摄像机数据
                     context.SetupCameraProperties(camera);
                     SetCameraMatrices(cmd, ref cameraData, true);
 
-                    // Reset shader time variables as they were overridden in SetupCameraProperties. If we don't do it we might have a mismatch between shadows and main rendering
                     SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime);
 
 #if VISUAL_EFFECT_GRAPH_0_0_1_OR_NEWER
@@ -535,13 +542,13 @@ namespace UnityEngine.Rendering.Universal
 #endif
                 }
 
-                context.ExecuteCommandBuffer(cmd);
+                context.ExecuteCommandBuffer(cmd); //继续执行cmd 
                 cmd.Clear();
 
                 BeginXRRendering(cmd, context, ref renderingData.cameraData);
 
                 // In the opaque and transparent blocks the main rendering executes.
-
+                //MainRenderingOpaque事件
                 // Opaque blocks...
                 if (renderBlocks.GetLength(RenderPassBlock.MainRenderingOpaque) > 0)
                 {
@@ -559,6 +566,7 @@ namespace UnityEngine.Rendering.Universal
                 // Draw Gizmos...
                 DrawGizmos(context, camera, GizmoSubset.PreImageEffects);
 
+                //AfterRendering事件
                 // In this block after rendering drawing happens, e.g, post processing, video player capture.
                 if (renderBlocks.GetLength(RenderPassBlock.AfterRendering) > 0)
                 {
@@ -571,6 +579,7 @@ namespace UnityEngine.Rendering.Universal
                 DrawWireOverlay(context, camera);
                 DrawGizmos(context, camera, GizmoSubset.PostImageEffects);
 
+                //cleanup了一下所有的pass，释放了RT，重置渲染对象，清空pass队列
                 InternalFinishRendering(context, cameraData.resolveFinalTarget);
             }
 
@@ -678,6 +687,7 @@ namespace UnityEngine.Rendering.Universal
 
         internal void Clear(CameraRenderType cameraType)
         {
+            //重置各种渲染对象以及执行状态
             m_ActiveColorAttachments[0] = BuiltinRenderTextureType.CameraTarget;
             for (int i = 1; i < m_ActiveColorAttachments.Length; ++i)
                 m_ActiveColorAttachments[i] = 0;
@@ -1022,6 +1032,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
                 {
+                    //每个pass 单独实现
                     m_ActiveRenderPassQueue[i].OnCameraSetup(cmd, ref renderingData);
                 }
             }
@@ -1032,6 +1043,7 @@ namespace UnityEngine.Rendering.Universal
 
         void InternalFinishRendering(ScriptableRenderContext context, bool resolveFinalTarget)
         {
+            //cleanup了一下所有的pass，释放了RT，重置渲染对象，清空pass队列
             CommandBuffer cmd = CommandBufferPool.Get();
             using (new ProfilingScope(cmd, Profiling.internalFinishRendering))
             {
