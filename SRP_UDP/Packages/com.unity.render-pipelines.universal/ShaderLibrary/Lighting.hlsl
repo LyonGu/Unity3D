@@ -309,15 +309,17 @@ inline void InitializeBRDFDataDirect(half3 diffuse, half3 specular, half reflect
 inline void InitializeBRDFData(half3 albedo, half metallic, half3 specular, half smoothness, inout half alpha, out BRDFData outBRDFData)
 {
 #ifdef _SPECULAR_SETUP
-    half reflectivity = ReflectivitySpecular(specular);
-    half oneMinusReflectivity = 1.0 - reflectivity;
-    half3 brdfDiffuse = albedo * (half3(1.0h, 1.0h, 1.0h) - specular);
-    half3 brdfSpecular = specular;
+    //如果是Specular workflow，则会通过Specular贴图来代表高光反射的颜色权重
+    half reflectivity = ReflectivitySpecular(specular); 
+    half oneMinusReflectivity = 1.0 - reflectivity; //漫反射权重为1-reflectivity
+    half3 brdfDiffuse = albedo * (half3(1.0h, 1.0h, 1.0h) - specular); //BRDF漫反射颜色
+    half3 brdfSpecular = specular; //BRDF高光反射颜色
 #else
+    //金属工作流使用金属度来漫反射，然后1-漫反射为高光反射
     half oneMinusReflectivity = OneMinusReflectivityMetallic(metallic);
     half reflectivity = 1.0 - oneMinusReflectivity;
-    half3 brdfDiffuse = albedo * oneMinusReflectivity;
-    half3 brdfSpecular = lerp(kDieletricSpec.rgb, albedo, metallic);
+    half3 brdfDiffuse = albedo * oneMinusReflectivity; //BRDF漫反射颜色，跟albedo有关系
+    half3 brdfSpecular = lerp(kDieletricSpec.rgb, albedo, metallic); //BRDF高光反射颜色 ，跟albedo有关系
 #endif
 
     InitializeBRDFDataDirect(brdfDiffuse, brdfSpecular, reflectivity, oneMinusReflectivity, smoothness, alpha, outBRDFData);
@@ -376,7 +378,12 @@ half3 EnvironmentBRDFSpecular(BRDFData brdfData, half fresnelTerm)
 
 half3 EnvironmentBRDF(BRDFData brdfData, half3 indirectDiffuse, half3 indirectSpecular, half fresnelTerm)
 {
+    //将brdf漫反射数据（非金属权重乘baseMap）和环境光漫反射（已经在烘焙光照的时候算好，从光照贴图中读取）相乘，得出最后环境光漫反射结果
     half3 c = indirectDiffuse * brdfData.diffuse;
+
+    //indirectSpecular 环境入射光
+    //brdfData.specular是高光颜色，brdfData.grazingTerm是光滑度+反射率 fresnelTerm是菲涅耳项
+    //高光输出 = 环境入射光*lerp（高光，（光滑度+反射率），菲涅耳项）/（粗糙度平方+1）
     c += indirectSpecular * EnvironmentBRDFSpecular(brdfData, fresnelTerm);
     return c;
 }
@@ -590,6 +597,7 @@ half3 GlossyEnvironmentReflection(half3 reflectVector, half perceptualRoughness,
 {
 #if !defined(_ENVIRONMENTREFLECTIONS_OFF)
     half mip = PerceptualRoughnessToMipmapLevel(perceptualRoughness);
+    //视野的反射方向采样cubemap得到环境光高光项入射光
     half4 encodedIrradiance = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectVector, mip);
 
 //TODO:DOTS - we need to port probes to live in c# so we can manage this manually.
@@ -599,7 +607,7 @@ half3 GlossyEnvironmentReflection(half3 reflectVector, half perceptualRoughness,
     half3 irradiance = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
 #endif
 
-    return irradiance * occlusion;
+    return irradiance * occlusion;//采样结果同样也会和环境遮蔽相乘
 #endif // GLOSSY_REFLECTIONS
 
     return _GlossyEnvironmentColor.rgb * occlusion;
@@ -641,9 +649,12 @@ half3 GlobalIllumination(BRDFData brdfData, BRDFData brdfDataClearCoat, float cl
     half NoV = saturate(dot(normalWS, viewDirectionWS));
     half fresnelTerm = Pow4(1.0 - NoV);
 
-    half3 indirectDiffuse = bakedGI * occlusion;
+    half3 indirectDiffuse = bakedGI * occlusion;//环境漫反射通过光照贴图和环境遮蔽算出
+
+    //计算环境高光反射
     half3 indirectSpecular = GlossyEnvironmentReflection(reflectVector, brdfData.perceptualRoughness, occlusion);
 
+    //环境光BRDF
     half3 color = EnvironmentBRDF(brdfData, indirectDiffuse, indirectSpecular, fresnelTerm);
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
@@ -707,10 +718,11 @@ half3 LightingPhysicallyBased(BRDFData brdfData, BRDFData brdfDataClearCoat,
     half NdotL = saturate(dot(normalWS, lightDirectionWS));
     half3 radiance = lightColor * (lightAttenuation * NdotL);
 
-    half3 brdf = brdfData.diffuse;
+    half3 brdf = brdfData.diffuse;//直接光漫反射部分
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
+        //直接光高光反射部分
         brdf += brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS);
 
 #if defined(_CLEARCOAT) || defined(_CLEARCOATMAP)
@@ -808,6 +820,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
 
     BRDFData brdfData;
 
+    //准备了BRDF的数据
     // NOTE: can modify alpha
     InitializeBRDFData(surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);
 
@@ -826,6 +839,7 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
     half4 shadowMask = half4(1, 1, 1, 1);
 #endif
 
+    //主光源光照信息
     Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
@@ -833,17 +847,22 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
         mainLight.color *= aoFactor.directAmbientOcclusion;
         surfaceData.occlusion = min(surfaceData.occlusion, aoFactor.indirectAmbientOcclusion);
     #endif
-
+    //主光源阴影和GI
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
+
+    //GI主要算的是环境漫反射和环境高光反射 漫反射通过光照贴图和环境遮蔽算出，高光反射由GlossyEnvironmentReflection方法算出, 也是间接光的PBR
     half3 color = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
                                      inputData.bakedGI, surfaceData.occlusion,
                                      inputData.normalWS, inputData.viewDirectionWS);
+
+    //直接光PBR
     color += LightingPhysicallyBased(brdfData, brdfDataClearCoat,
                                      mainLight,
                                      inputData.normalWS, inputData.viewDirectionWS,
                                      surfaceData.clearCoatMask, specularHighlightsOff);
 
 #ifdef _ADDITIONAL_LIGHTS
+    //其他光源
     uint pixelLightCount = GetAdditionalLightsCount();
     for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
     {
@@ -859,9 +878,10 @@ half4 UniversalFragmentPBR(InputData inputData, SurfaceData surfaceData)
 #endif
 
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
+    //顶点光照
     color += inputData.vertexLighting * brdfData.diffuse;
 #endif
-
+    //自发光
     color += surfaceData.emission;
 
     return half4(color, surfaceData.alpha);
@@ -893,10 +913,11 @@ half4 UniversalFragmentBlinnPhong(InputData inputData, half3 diffuse, half4 spec
 #else
     half4 shadowMask = half4(1, 1, 1, 1);
 #endif
-
+  
     Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
+        //SSAO
         AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(inputData.normalizedScreenSpaceUV);
         mainLight.color *= aoFactor.directAmbientOcclusion;
         inputData.bakedGI *= aoFactor.indirectAmbientOcclusion;
@@ -909,6 +930,7 @@ half4 UniversalFragmentBlinnPhong(InputData inputData, half3 diffuse, half4 spec
     half3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, inputData.normalWS, inputData.viewDirectionWS, specularGloss, smoothness);
 
 #ifdef _ADDITIONAL_LIGHTS
+    //其他光源
     uint pixelLightCount = GetAdditionalLightsCount();
     for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
     {

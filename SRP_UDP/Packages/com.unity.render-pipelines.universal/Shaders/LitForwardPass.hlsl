@@ -102,6 +102,16 @@ Varyings LitPassVertex(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
+    /*
+        input.positionWS = TransformObjectToWorld(positionOS);  //世界空间坐标
+        input.positionVS = TransformWorldToView(input.positionWS); //视觉空间坐标
+        input.positionCS = TransformWorldToHClip(input.positionWS); //裁剪空间坐标
+
+        float4 ndc = input.positionCS * 0.5f;
+        input.positionNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
+        input.positionNDC.zw = input.positionCS.zw;
+    */
+
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
 
     // normalWS and tangentWS already normalize.
@@ -109,18 +119,21 @@ Varyings LitPassVertex(Attributes input)
     // also required for per-vertex lighting and SH evaluation
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
+    //视线方向: 摄像机世界坐标-点的世界坐标
     half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+    //逐顶点光照
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
     half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
 
+    // 法线信息
     // already normalized from normal transform to WS.
     output.normalWS = normalInput.normalWS;
     output.viewDirWS = viewDirWS;
 #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
     real sign = input.tangentOS.w * GetOddNegativeScale();
-    half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
+    half4 tangentWS = half4(normalInput.tangentWS.xyz, sign); //切线信息
 #endif
 #if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
     output.tangentWS = tangentWS;
@@ -130,7 +143,7 @@ Varyings LitPassVertex(Attributes input)
     half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
     output.viewDirTS = viewDirTS;
 #endif
-
+    //光照贴图UV
     OUTPUT_LIGHTMAP_UV(input.lightmapUV, unity_LightmapST, output.lightmapUV);
     OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
 
@@ -141,10 +154,11 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+    //阴影坐标
     output.shadowCoord = GetShadowCoord(vertexInput);
 #endif
 
-    output.positionCS = vertexInput.positionCS;
+    output.positionCS = vertexInput.positionCS; //返回裁剪空间坐标
 
     return output;
 }
@@ -165,11 +179,13 @@ half4 LitPassFragment(Varyings input) : SV_Target
 #endif
 
     SurfaceData surfaceData;
+    //提前设置一下PBR需要的信息：albedo，金属度，粗糙度，AO ，切线空间法线
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
 
+    //PBR 计算
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);

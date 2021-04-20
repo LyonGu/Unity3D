@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
 
@@ -32,16 +32,18 @@ namespace UnityEngine.Rendering.Universal.Internal
             renderPassEvent = evt;
             m_FilteringSettings = new FilteringSettings(renderQueueRange, layerMask);
             m_RenderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
-            m_IsOpaque = opaque;
+            m_IsOpaque = opaque; //外部参数赋值，判断是用来渲染不透明物体还是半透明物体
 
             if (stencilState.enabled)
             {
+                //重写模板测试相关数据
                 m_RenderStateBlock.stencilReference = stencilReference;
                 m_RenderStateBlock.mask = RenderStateMask.Stencil;
                 m_RenderStateBlock.stencilState = stencilState;
             }
         }
 
+        //SRPDefaultUnlit  UniversalForward UniversalForwardOnly LightweightForward
         public DrawObjectsPass(string profilerTag, bool opaque, RenderPassEvent evt, RenderQueueRange renderQueueRange, LayerMask layerMask, StencilState stencilState, int stencilReference)
             : this(profilerTag,
                 new ShaderTagId[] { new ShaderTagId("SRPDefaultUnlit"), new ShaderTagId("UniversalForward"), new ShaderTagId("UniversalForwardOnly"), new ShaderTagId("LightweightForward")},
@@ -79,9 +81,10 @@ namespace UnityEngine.Rendering.Universal.Internal
                 cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBias);
 
                 context.ExecuteCommandBuffer(cmd);
-                cmd.Clear();
+                cmd.Clear(); //ExecuteCommandBuffer 执行后就把相关参数给设置好了，然后调用cmd.clear可以复用cmd对象
 
                 Camera camera = renderingData.cameraData.camera;
+                //排序设置是根据Opaque字段决定，DrawSettings通过CreateDrawingSettings方法生成
                 var sortFlags = (m_IsOpaque) ? renderingData.cameraData.defaultOpaqueSortFlags : SortingCriteria.CommonTransparent;
                 var drawSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, sortFlags);
                 var filterSettings = m_FilteringSettings;

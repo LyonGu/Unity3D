@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace UnityEngine.Rendering.Universal.Internal
 {
@@ -35,6 +35,10 @@ namespace UnityEngine.Rendering.Universal.Internal
             RenderTextureDescriptor baseDescriptor,
             RenderTargetHandle depthAttachmentHandle)
         {
+            /*
+             RenderTextureDescriptor 结构，里面记录的是对于RT的一些描述信息，depthBufferBits默认给的32bit。
+             RenderTargetHandle结构主要记录了一个shader property id
+             */
             this.depthAttachmentHandle = depthAttachmentHandle;
             baseDescriptor.colorFormat = RenderTextureFormat.Depth;
             baseDescriptor.depthBufferBits = kDepthBufferBits;

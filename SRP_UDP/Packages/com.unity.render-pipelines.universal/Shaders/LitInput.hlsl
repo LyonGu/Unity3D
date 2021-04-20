@@ -89,7 +89,7 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 #ifdef _METALLICSPECGLOSSMAP
     specGloss = SAMPLE_METALLICSPECULAR(uv);
     #ifdef _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-        specGloss.a = albedoAlpha * _Smoothness;
+        specGloss.a = albedoAlpha * _Smoothness;  //从a通道读取光滑度
     #else
         specGloss.a *= _Smoothness;
     #endif
@@ -97,7 +97,7 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
     #if _SPECULAR_SETUP
         specGloss.rgb = _SpecColor.rgb;
     #else
-        specGloss.rgb = _Metallic.rrr;
+        specGloss.rgb = _Metallic.rrr; //Metallic是放在金属度贴图的R通道
     #endif
 
     #ifdef _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -112,6 +112,7 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 
 half SampleOcclusion(float2 uv)
 {
+    //AO读取的是AO贴图的g通道
 #ifdef _OCCLUSIONMAP
 // TODO: Controls things like these by exposing SHADER_QUALITY levels (low, medium, high)
 #if defined(SHADER_API_GLES)
@@ -211,15 +212,20 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.albedo = albedoAlpha.rgb * _BaseColor.rgb;
 
 #if _SPECULAR_SETUP
+    //高光工作流
     outSurfaceData.metallic = 1.0h;
     outSurfaceData.specular = specGloss.rgb;
 #else
+    //金属工作流
     outSurfaceData.metallic = specGloss.r;
     outSurfaceData.specular = half3(0.0h, 0.0h, 0.0h);
 #endif
 
     outSurfaceData.smoothness = specGloss.a;
+
+    //得到切线空间的法线
     outSurfaceData.normalTS = SampleNormal(uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap), _BumpScale);
+    //从AO图上采样得到AO信息
     outSurfaceData.occlusion = SampleOcclusion(uv);
     outSurfaceData.emission = SampleEmission(uv, _EmissionColor.rgb, TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap));
 
