@@ -12,7 +12,7 @@ Shader "Unlit/TestOnlyRenderCustomPass"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalRenderPipeline" }
         LOD 100
 
         Pass
