@@ -200,6 +200,7 @@
     <Compile Include="Assets\Scripts\LockHPProperty.cs" />
     <Compile Include="Assets\Scripts\LockProperty.cs" />
     <Compile Include="Assets\Scripts\PhotoshopLevelsLockProperty.cs" />
+    <Compile Include="Assets\Scripts\PictureInPicture.cs" />
     <Compile Include="Assets\Scripts\PostEffectHelp.cs" />
     <Compile Include="Assets\Scripts\ShowNormals.cs" />
     <Compile Include="Assets\Scripts\TransparentControl.cs" />
@@ -425,6 +426,7 @@
     <None Include="Assets\Cookbook\Code\03_Code\Phong.shader" />
     <None Include="Assets\Colorful\Shaders\CC_GradientRamp.shader" />
     <None Include="Assets\Shaders\Surface\ScrollingUVs.shader" />
+    <None Include="Assets\Shaders\Common\PictureInPicture.shader" />
     <None Include="Assets\Shaders\Common\OutLine_origin.shader" />
     <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.shader" />
     <None Include="Assets\Shaders\Chapter5\SimpleShader_2.shader" />
