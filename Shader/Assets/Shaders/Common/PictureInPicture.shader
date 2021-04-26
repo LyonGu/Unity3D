@@ -1,6 +1,6 @@
 Shader "Common/PictureInPicture" {
 
-    
+
 	Properties {
 		_MainTex("Sprite Texture", 2D) = "white" {}
 		_MaskTex("Mask Texture", 2D) = "white" {}
@@ -9,19 +9,19 @@ Shader "Common/PictureInPicture" {
     SubShader
     {
     	Tags { "Queue"="Transparent" "RenderType"="Transparent" }
-        
+
         Cull Off
         ZWrite Off
         Blend One OneMinusSrcAlpha
 
         Pass {
             CGPROGRAM
-            
+
             #pragma vertex  vert
             #pragma fragment frag
 
             #pragma target 2.0
-            
+
             #include "UnityCG.cginc"
 
             struct a2v{
@@ -50,14 +50,17 @@ Shader "Common/PictureInPicture" {
 
 			fixed4 frag(v2f o) : SV_Target
 			{
-                fixed4 c =  tex2D (_MainTex, o.uv) * _Color * tex2D(_MaskTex, o.uv);
+                fixed4 MColor= tex2D(_MaskTex, o.uv);
+                if(MColor.a < 0.5)
+                    discard;
+                fixed4 c =  tex2D (_MainTex, o.uv)  * _Color + MColor;
                 c.rgb *= c.a;
                 return c;
             }
-            ENDCG     
+            ENDCG
         }
-       
+
     }
-    
+
    FallBack "VertexLit"
 }

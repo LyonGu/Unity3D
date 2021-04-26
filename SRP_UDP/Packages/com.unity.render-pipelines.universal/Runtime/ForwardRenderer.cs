@@ -388,20 +388,20 @@ namespace UnityEngine.Rendering.Universal
             else
             {
                 //URP 原本是将overlay的摄像机颜色和深度写入两张RT中，最后FInalBlit到FrameBuffer中
-                if (Display.main.requiresSrgbBlitToBackbuffer)
-                {
-                    m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
-                    m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
-                }
-                else
-                {
-                    //如果硬件支持SRGB转换，直接写入FrameBuffer
-                    m_ActiveCameraColorAttachment = RenderTargetHandle.CameraTarget;
-                    m_ActiveCameraDepthAttachment = RenderTargetHandle.CameraTarget;
-                }
+                //if (Display.main.requiresSrgbBlitToBackbuffer)
+                //{
+                //    m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
+                //    m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
+                //}
+                //else
+                //{
+                //    //如果硬件支持SRGB转换，直接写入FrameBuffer
+                //    m_ActiveCameraColorAttachment = RenderTargetHandle.CameraTarget;
+                //    m_ActiveCameraDepthAttachment = RenderTargetHandle.CameraTarget;
+                //}
 
-                //m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
-                //m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
+                m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
+                m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
 
 
             }
@@ -574,7 +574,7 @@ namespace UnityEngine.Rendering.Universal
                 if (!cameraTargetResolved)
                 {
                     //如果硬件不支持SRGB转换，直接启动FinalBlit，就需要FinalBlitPass，shader里面有个宏开关打开后会进行SRGB转换
-                    if (Display.main.requiresSrgbBlitToBackbuffer)
+                    //if (Display.main.requiresSrgbBlitToBackbuffer)
                     {
                         //FinalBlitPass
                         m_FinalBlitPass.Setup(cameraTargetDescriptor, sourceForFinalPass);
@@ -599,21 +599,21 @@ namespace UnityEngine.Rendering.Universal
             // stay in RT so we resume rendering on stack after post-processing
             else if (applyPostProcessing)
             {
-                if (Display.main.requiresSrgbBlitToBackbuffer)
-                {
-                    //如果硬件不支持SRGB转换，在 _AfterPostProcessColor 上画
-                    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-                    EnqueuePass(m_PostProcessPass);
-                }
-                else
-                {
-                    //如果硬件支持SRGB转换，在 FrameBuffer 上画
-                    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-                    EnqueuePass(m_PostProcessPass);
-                }
+                //if (Display.main.requiresSrgbBlitToBackbuffer)
+                //{
+                //    //如果硬件不支持SRGB转换，在 _AfterPostProcessColor 上画
+                //    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+                //    EnqueuePass(m_PostProcessPass);
+                //}
+                //else
+                //{
+                //    //如果硬件支持SRGB转换，在 FrameBuffer 上画
+                //    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+                //    EnqueuePass(m_PostProcessPass);
+                //}
 
-                //m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-                //EnqueuePass(m_PostProcessPass);
+                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+                EnqueuePass(m_PostProcessPass);
 
             }
 
@@ -633,11 +633,12 @@ namespace UnityEngine.Rendering.Universal
         {
             m_ForwardLights.Setup(context, ref renderingData);
 
-            // Perform per-tile light culling on CPU
+            // Perform per-tile light culling on CPU  延迟渲染TODO
             if (this.actualRenderingMode == RenderingMode.Deferred)
                 m_DeferredLights.SetupLights(context, ref renderingData);
         }
 
+        // 摄像机裁剪
         /// <inheritdoc />
         public override void SetupCullingParameters(ref ScriptableCullingParameters cullingParameters,
             ref CameraData cameraData)

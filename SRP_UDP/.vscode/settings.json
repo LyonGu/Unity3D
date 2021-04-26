@@ -60,7 +60,7 @@
         "temp/": true,
         "Temp/": true,
         "Logs/": true,
-        "Packages/": true,
+        //"Packages/": true,
         "Tools/": true,
         "A+/": true,
         "xLuaBuild/": true,

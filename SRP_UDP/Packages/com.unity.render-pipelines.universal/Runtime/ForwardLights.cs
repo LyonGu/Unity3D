@@ -10,10 +10,12 @@ namespace UnityEngine.Rendering.Universal.Internal
     {
         static class LightConstantBuffer
         {
+            //主光信息
             public static int _MainLightPosition;   // DeferredLights.LightConstantBuffer also refers to the same ShaderPropertyID - TODO: move this definition to a common location shared by other UniversalRP classes
             public static int _MainLightColor;      // DeferredLights.LightConstantBuffer also refers to the same ShaderPropertyID - TODO: move this definition to a common location shared by other UniversalRP classes
             public static int _MainLightOcclusionProbesChannel;    // Deferred?
 
+            //附加光信息
             public static int _AdditionalLightsCount;
             public static int _AdditionalLightsPosition;
             public static int _AdditionalLightsColor;
@@ -41,6 +43,8 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             m_UseStructuredBuffer = RenderingUtils.useStructuredBuffer;
 
+            //CBuffer: SRP Battch的优化点，GPU缓存了这些信息变化了更新
+            //shader中直接使用的_MainLightPosition 。。。
             LightConstantBuffer._MainLightPosition = Shader.PropertyToID("_MainLightPosition");
             LightConstantBuffer._MainLightColor = Shader.PropertyToID("_MainLightColor");
             LightConstantBuffer._MainLightOcclusionProbesChannel = Shader.PropertyToID("_MainLightOcclusionProbes");
@@ -68,6 +72,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             }
         }
 
+        //设置光照信息到shader里
         public void Setup(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             int additionalLightsCount = renderingData.lightData.additionalLightsCount;
@@ -77,6 +82,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             {
                 SetupShaderLightConstants(cmd, ref renderingData);
 
+                //设置shader中的KeyWords
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.AdditionalLightsVertex,
                     additionalLightsCount > 0 && additionalLightsPerVertex);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.AdditionalLightsPixel,

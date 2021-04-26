@@ -19,10 +19,10 @@ namespace UnityEngine.Rendering.Universal
     [MovedFrom("UnityEngine.Rendering.LWRP")] public struct RenderingData
     {
         public CullingResults cullResults;
-        public CameraData cameraData;
-        public LightData lightData;
-        public ShadowData shadowData;
-        public PostProcessingData postProcessingData;
+        public CameraData cameraData;  //相机数据
+        public LightData lightData;     //光照数据
+        public ShadowData shadowData;   //阴影数据
+        public PostProcessingData postProcessingData; //后效数据
         public bool supportsDynamicBatching;
         public PerObjectData perObjectData;
 
@@ -96,7 +96,7 @@ namespace UnityEngine.Rendering.Universal
         public Camera camera;
         public CameraRenderType renderType;
         public RenderTexture targetTexture;
-        public RenderTextureDescriptor cameraTargetDescriptor;
+        public RenderTextureDescriptor cameraTargetDescriptor; //RT描述器
         internal Rect pixelRect;
         internal int pixelWidth;
         internal int pixelHeight;
@@ -290,6 +290,7 @@ namespace UnityEngine.Rendering.Universal
         public int lutSize;
     }
 
+    //所有在Shader中宏开关，keywords
     public static class ShaderKeywordStrings
     {
         public static readonly string MainLightShadows = "_MAIN_LIGHT_SHADOWS";
