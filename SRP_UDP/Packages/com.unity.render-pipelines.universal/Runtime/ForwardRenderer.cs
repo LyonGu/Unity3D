@@ -4,6 +4,8 @@ using System.ComponentModel;
 
 namespace UnityEngine.Rendering.Universal
 {
+
+    // 正向渲染和延迟渲染
     /// <summary>
     /// Rendering modes for Universal renderer.
     /// </summary>
@@ -82,7 +84,10 @@ namespace UnityEngine.Rendering.Universal
         RenderTargetHandle m_DepthInfoTexture;
         RenderTargetHandle m_TileDepthInfoTexture;
 
+        //前向渲染光照信息
         ForwardLights m_ForwardLights;
+
+        //延迟渲染
         DeferredLights m_DeferredLights;
 #pragma warning disable 414
         RenderingMode m_RenderingMode;
@@ -92,7 +97,7 @@ namespace UnityEngine.Rendering.Universal
         Material m_BlitMaterial;
         Material m_CopyDepthMaterial;
         Material m_SamplingMaterial;
-        Material m_ScreenspaceShadowsMaterial;
+        Material m_ScreenspaceShadowsMaterial; //屏幕空间阴影
         Material m_TileDepthInfoMaterial;
         Material m_TileDeferredMaterial;
         Material m_StencilDeferredMaterial;
@@ -103,10 +108,10 @@ namespace UnityEngine.Rendering.Universal
             UniversalRenderPipeline.m_XRSystem.InitializeXRSystemData(data.xrSystemData);
 #endif
 
-            m_BlitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS);
-            m_CopyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS);
-            m_SamplingMaterial = CoreUtils.CreateEngineMaterial(data.shaders.samplingPS);
-            m_ScreenspaceShadowsMaterial = CoreUtils.CreateEngineMaterial(data.shaders.screenSpaceShadowPS);
+            m_BlitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS); //"Shaders/Utils/Blit.shader"  
+            m_CopyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS); //"Shaders/Utils/CopyDepth.shader"
+            m_SamplingMaterial = CoreUtils.CreateEngineMaterial(data.shaders.samplingPS); //"Shaders/Utils/Sampling.shader" 降采样
+            m_ScreenspaceShadowsMaterial = CoreUtils.CreateEngineMaterial(data.shaders.screenSpaceShadowPS); //"Shaders/Utils/ScreenSpaceShadows.shader")
             //m_TileDepthInfoMaterial = CoreUtils.CreateEngineMaterial(data.shaders.tileDepthInfoPS);
             //m_TileDeferredMaterial = CoreUtils.CreateEngineMaterial(data.shaders.tileDeferredPS);
             m_StencilDeferredMaterial = CoreUtils.CreateEngineMaterial(data.shaders.stencilDeferredPS);
@@ -114,15 +119,17 @@ namespace UnityEngine.Rendering.Universal
             StencilStateData stencilData = data.defaultStencilState;
             m_DefaultStencilState = StencilState.defaultValue;
             m_DefaultStencilState.enabled = stencilData.overrideStencilState;
-            m_DefaultStencilState.SetCompareFunction(stencilData.stencilCompareFunction);
-            m_DefaultStencilState.SetPassOperation(stencilData.passOperation);
-            m_DefaultStencilState.SetFailOperation(stencilData.failOperation);
-            m_DefaultStencilState.SetZFailOperation(stencilData.zFailOperation);
+            m_DefaultStencilState.SetCompareFunction(stencilData.stencilCompareFunction); //比较函数
+            m_DefaultStencilState.SetPassOperation(stencilData.passOperation); //模板测试通过处理
+            m_DefaultStencilState.SetFailOperation(stencilData.failOperation); //模板测试未通过处理
+            m_DefaultStencilState.SetZFailOperation(stencilData.zFailOperation); //模板测试通过 深度测试未通过处理
 
+            //光照信息处理类
             m_ForwardLights = new ForwardLights();
             //m_DeferredLights.LightCulling = data.lightCulling;
-            this.m_RenderingMode = RenderingMode.Forward;
+            this.m_RenderingMode = RenderingMode.Forward; //默认前向渲染
 
+            //定义一堆pass的事件处理
             // Note: Since all custom render passes inject first and we have stable sort,
             // we inject the builtin passes in the before events.
             m_MainLightShadowCasterPass = new MainLightShadowCasterPass(RenderPassEvent.BeforeRenderingShadows);
@@ -132,12 +139,16 @@ namespace UnityEngine.Rendering.Universal
             // Schedule XR copydepth right after m_FinalBlitPass(AfterRendering + 1)
             m_XRCopyDepthPass = new CopyDepthPass(RenderPassEvent.AfterRendering + 2, m_CopyDepthMaterial);
 #endif
+            //深度pass
             m_DepthPrepass = new DepthOnlyPass(RenderPassEvent.BeforeRenderingPrepasses, RenderQueueRange.opaque, data.opaqueLayerMask);
+            
+            //深度+法线pass
             m_DepthNormalPrepass = new DepthNormalOnlyPass(RenderPassEvent.BeforeRenderingPrepasses, RenderQueueRange.opaque, data.opaqueLayerMask);
             m_ColorGradingLutPass = new ColorGradingLutPass(RenderPassEvent.BeforeRenderingPrepasses, data.postProcessData);
 
             if (this.renderingMode == RenderingMode.Deferred)
             {
+                //后续看吧 TODO
                 m_DeferredLights = new DeferredLights(m_TileDepthInfoMaterial, m_TileDeferredMaterial, m_StencilDeferredMaterial);
                 m_DeferredLights.AccurateGbufferNormals = data.accurateGbufferNormals;
                 //m_DeferredLights.TiledDeferredShading = data.tiledDeferredShading;
@@ -167,6 +178,8 @@ namespace UnityEngine.Rendering.Universal
                 m_DeferredPass = new DeferredPass(RenderPassEvent.BeforeRenderingOpaques + 5, m_DeferredLights);
             }
 
+
+            //不透明物体pass
             // Always create this pass even in deferred because we use it for wireframe rendering in the Editor or offscreen depth texture rendering.
             m_RenderOpaqueForwardPass = new DrawObjectsPass(URPProfileId.DrawOpaqueObjects, true, RenderPassEvent.BeforeRenderingOpaques, RenderQueueRange.opaque, data.opaqueLayerMask, m_DefaultStencilState, stencilData.stencilReference);
 
@@ -190,6 +203,7 @@ namespace UnityEngine.Rendering.Universal
             m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, m_CopyDepthMaterial);
 #endif
 
+            //定义各种RT名称
             // RenderTexture format depends on camera and pipeline (HDR, non HDR, etc)
             // Samples (MSAA) depend on camera and pipeline
             m_CameraColorAttachment.Init("_CameraColorTexture");

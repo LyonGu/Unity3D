@@ -46,6 +46,7 @@ public class BlurRenderFeature : ScriptableRendererFeature
         }
     }
 
+  
     public override void Create()
     {
         //Debug.Log($"BlurRenderFeature Create=============={Time.frameCount}");
@@ -80,6 +81,12 @@ public class GrabPassImpl : ScriptableRenderPass
         base.profilingSampler = new ProfilingSampler(nameof(GrabPassImpl));
         m_BlurMaterial = blurMateral;
         m_BlurAmount = blurAmount;
+    }
+
+    public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+    {
+        //Debug.Log($"GrabPassImpl OnCameraSetup=============={Time.frameCount}");
+        base.OnCameraSetup(cmd, ref renderingData);
     }
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
@@ -135,4 +142,17 @@ public class GrabPassImpl : ScriptableRenderPass
     {
         m_BlurAmount = newBlurAmount;
     }
+
+    public override void OnFinishCameraStackRendering(CommandBuffer cmd)
+    {
+        //Debug.Log($"GrabPassImpl OnFinishCameraStackRendering=============={Time.frameCount}");
+        base.OnFinishCameraStackRendering(cmd);
+    }
+
+    public override void FrameCleanup(CommandBuffer cmd)
+    {
+        //Debug.Log($"GrabPassImpl FrameCleanup=============={Time.frameCount}");
+        base.FrameCleanup(cmd);
+    }
+
 }

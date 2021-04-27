@@ -5,7 +5,7 @@ namespace UnityEngine.Rendering.Universal.Internal
     // Note: this pass can't be done at the same time as post-processing as it needs to be done in
     // advance in case we're doing on-tile color grading.
     /// <summary>
-    /// Renders a color grading LUT texture.
+    /// Renders a color grading LUT texture.  //LUT贴图 根据一个像素的RGB查表取得另一个RGB并且替换
     /// </summary>
     public class ColorGradingLutPass : ScriptableRenderPass
     {
@@ -33,8 +33,8 @@ namespace UnityEngine.Rendering.Universal.Internal
                 return CoreUtils.CreateEngineMaterial(shader);
             }
 
-            m_LutBuilderLdr = Load(data.shaders.lutBuilderLdrPS);
-            m_LutBuilderHdr = Load(data.shaders.lutBuilderHdrPS);
+            m_LutBuilderLdr = Load(data.shaders.lutBuilderLdrPS); //"Shaders/PostProcessing/LutBuilderLdr.shader"
+            m_LutBuilderHdr = Load(data.shaders.lutBuilderHdrPS); //"Shaders/PostProcessing/LutBuilderHdr.shader"
 
             // Warm up lut format as IsFormatSupported adds GC pressure...
             const FormatUsage kFlags = FormatUsage.Linear | FormatUsage.Render;
@@ -64,6 +64,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.ColorGradingLUT)))
             {
                 // Fetch all color grading settings
+                //Volume下的后效效果组件: ChannelMixer,ColorAdjustments,ColorCurves,LiftGammaGain,ShadowsMidtonesHighlights....
                 var stack = VolumeManager.instance.stack;
                 var channelMixer = stack.GetComponent<ChannelMixer>();
                 var colorAdjustments = stack.GetComponent<ColorAdjustments>();
@@ -77,7 +78,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 ref var postProcessingData = ref renderingData.postProcessingData;
                 bool hdr = postProcessingData.gradingMode == ColorGradingMode.HighDynamicRange;
 
-                // Prepare texture & material
+                // Prepare texture & material  RT
                 int lutHeight = postProcessingData.lutSize;
                 int lutWidth = lutHeight * lutHeight;
                 var format = hdr ? m_HdrLutFormat : m_LdrLutFormat;
@@ -191,6 +192,7 @@ namespace UnityEngine.Rendering.Universal.Internal
         // Precomputed shader ids to same some CPU cycles (mostly affects mobile)
         static class ShaderConstants
         {
+            // shader内置属性
             public static readonly int _Lut_Params        = Shader.PropertyToID("_Lut_Params");
             public static readonly int _ColorBalance      = Shader.PropertyToID("_ColorBalance");
             public static readonly int _ColorFilter       = Shader.PropertyToID("_ColorFilter");
