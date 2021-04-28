@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine.Scripting.APIUpdating;
@@ -19,10 +19,10 @@ namespace UnityEngine.Rendering.Universal
     [MovedFrom("UnityEngine.Rendering.LWRP")] public struct RenderingData
     {
         public CullingResults cullResults;
-        public CameraData cameraData;  //Ïà»úÊý¾Ý
-        public LightData lightData;     //¹âÕÕÊý¾Ý
-        public ShadowData shadowData;   //ÒõÓ°Êý¾Ý
-        public PostProcessingData postProcessingData; //ºóÐ§Êý¾Ý
+        public CameraData cameraData;  //ç›¸æœºæ•°æ®
+        public LightData lightData;     //å…‰ç…§æ•°æ®
+        public ShadowData shadowData;   //é˜´å½±æ•°æ®
+        public PostProcessingData postProcessingData; //åŽæ•ˆæ•°æ®
         public bool supportsDynamicBatching;
         public PerObjectData perObjectData;
 
@@ -96,7 +96,7 @@ namespace UnityEngine.Rendering.Universal
         public Camera camera;
         public CameraRenderType renderType;
         public RenderTexture targetTexture;
-        public RenderTextureDescriptor cameraTargetDescriptor; //RTÃèÊöÆ÷
+        public RenderTextureDescriptor cameraTargetDescriptor; //RTæè¿°å™¨
         internal Rect pixelRect;
         internal int pixelWidth;
         internal int pixelHeight;
@@ -290,7 +290,7 @@ namespace UnityEngine.Rendering.Universal
         public int lutSize;
     }
 
-    //ËùÓÐÔÚShaderÖÐºê¿ª¹Ø£¬keywords
+    //æ‰€æœ‰åœ¨Shaderä¸­å®å¼€å…³ï¼Œkeywords
     public static class ShaderKeywordStrings
     {
         public static readonly string MainLightShadows = "_MAIN_LIGHT_SHADOWS";
@@ -427,6 +427,7 @@ namespace UnityEngine.Rendering.Universal
                 cameras.Sort(cameraComparison);
         }
 #else
+        //æŒ‰æ·±åº¦æŽ’åº
         void SortCameras(Camera[] cameras)
         {
             if (cameras.Length > 1)

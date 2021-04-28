@@ -246,6 +246,7 @@ namespace UnityEngine.Rendering.Universal
                 //Game窗口相机
                 if (IsGameCamera(camera))
                 {
+                    //每个相机选入的总入口
                     RenderCameraStack(renderContext, camera);
                 }
                 else
@@ -281,6 +282,7 @@ namespace UnityEngine.Rendering.Universal
 #endif
         }
 
+        //每个相机单独的渲染入口
         /// <summary>
         /// Standalone camera rendering. Use this to render procedural cameras.
         /// This method doesn't call <c>BeginCameraRendering</c> and <c>EndCameraRendering</c> callbacks.
@@ -489,8 +491,10 @@ namespace UnityEngine.Rendering.Universal
 
             bool isStackedRendering = lastActiveOverlayCameraIndex != -1;
 
-            // Update volumeframework before initializing additional camera data
+            // Update volumeframework before initializing additional camera data  更新后期
             UpdateVolumeFramework(baseCamera, baseCameraAdditionalData);
+
+            //设置相机数据
             InitializeCameraData(baseCamera, baseCameraAdditionalData, !isStackedRendering, out var baseCameraData);
 
 #if ENABLE_VR && ENABLE_XR_MODULE
@@ -532,8 +536,10 @@ namespace UnityEngine.Rendering.Universal
                     EndCameraRendering(context, baseCamera);
                 }
 
+                
                 if (isStackedRendering)
                 {
+                    //Stack里的overlay相机开始渲染, 走一遍跟base相机一样的流程
                     for (int i = 0; i < cameraStack.Count; ++i)
                     {
                         var currCamera = cameraStack[i];
@@ -634,6 +640,7 @@ namespace UnityEngine.Rendering.Universal
 
             var stack = VolumeManager.instance.stack;
 
+            //如果开启了景深和运动模糊后期效果，会自动生成深度图
             if (stack.GetComponent<DepthOfField>().IsActive())
                 return true;
 
@@ -668,6 +675,7 @@ namespace UnityEngine.Rendering.Universal
             using var profScope = new ProfilingScope(null, Profiling.Pipeline.initializeCameraData);
 
             cameraData = new CameraData();
+            //每个相机都有自己的CameraData对象  additionalCameraData可以理解成为camera组件的一个副身 跟camera有一样的功能
             InitializeStackedCameraData(camera, additionalCameraData, ref cameraData);
             InitializeAdditionalCameraData(camera, additionalCameraData, resolveFinalTarget, ref cameraData);
         }
@@ -693,6 +701,7 @@ namespace UnityEngine.Rendering.Universal
             ///////////////////////////////////////////////////////////////////
             if (isSceneViewCamera)
             {
+                //场景相机
                 cameraData.volumeLayerMask = 1; // "Default"
                 cameraData.volumeTrigger = null;
                 cameraData.isStopNaNEnabled = false;
@@ -705,6 +714,7 @@ namespace UnityEngine.Rendering.Universal
             }
             else if (baseAdditionalCameraData != null)
             {
+                // 基本都走这
                 cameraData.volumeLayerMask = baseAdditionalCameraData.volumeLayerMask;
                 cameraData.volumeTrigger = baseAdditionalCameraData.volumeTrigger == null ? baseCamera.transform : baseAdditionalCameraData.volumeTrigger;
                 cameraData.isStopNaNEnabled = baseAdditionalCameraData.stopNaN && SystemInfo.graphicsShaderLevel >= 35;
@@ -810,7 +820,8 @@ namespace UnityEngine.Rendering.Universal
             }
             else if (additionalCameraData != null)
             {
-                cameraData.renderType = additionalCameraData.renderType;
+                //基本都走这
+                cameraData.renderType = additionalCameraData.renderType; //取的其实是camera组件上的信息 additionalCameraData可以理解为camera组件的副身
                 cameraData.clearDepth = (additionalCameraData.renderType != CameraRenderType.Base) ? additionalCameraData.clearDepth : true;
                 cameraData.postProcessEnabled = additionalCameraData.renderPostProcessing;
                 cameraData.maxShadowDistance = (additionalCameraData.renderShadows) ? cameraData.maxShadowDistance : 0.0f;
@@ -839,6 +850,7 @@ namespace UnityEngine.Rendering.Universal
             bool isOverlayCamera = (cameraData.renderType == CameraRenderType.Overlay);
             if (isOverlayCamera)
             {
+                //overlayer相机不需要生成DepthTexture和OpaqueTexture
                 cameraData.requiresDepthTexture = false;
                 cameraData.requiresOpaqueTexture = false;
             }

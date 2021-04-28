@@ -97,11 +97,18 @@
 	7 每次切换rendertarget都会出现切换出去的rendertarget发生aa的resolve操作  rendertarget的resolveAA
 	{
 		https://github.com/sienaiwun/Unity_AAResolveOnCommand
-		
+
 		LWRP,URP模板使用RenderTargetIdentifier进行RT的切换，这个类很难设置resolve的频率，但是RT也可以由RenderTexture设置，
 		这个类的创建时候的bindMS参数来控制是否自动进行RT的resolve和ResolveAntiAliasedSurface手动控制resolve的操作。具体修改可见resolve rendertarget on command修改。
 		存储上，本修改在使用msaa的rendertarget通过开启bindms设置增加一个带msaa的rendertexure(m_color_handle)和一个不带msaa的rendertexture(m_resolve_handle)。
 		看上去增加一个rt，但是在unity本身中如果关闭bindms,只用一个rt内部也会有两个rendertexutre handle,一个带msaa的texture2dMS，一个不带msaatexture2d。所以概念上是等同的。
+	}
+
+	8 后期组件 Volume ==》 可以拿到stack 后直接获取对应组件
+	{
+		 var stack = VolumeManager.instance.stack;
+		 stack.GetComponent<DepthOfField>()
+		 stack.GetComponent<MotionBlur>()
 	}
 
 ]==]
