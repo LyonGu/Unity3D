@@ -75,7 +75,9 @@ public class GrabPassImpl : ScriptableRenderPass
     private Vector2 m_BlurAmount;
 
     private RenderTextureDescriptor m_OpaqueDesc;  //RenderTexture的描述类
-    private RenderTargetIdentifier m_CamerColorTexture;  
+    private RenderTargetIdentifier m_CamerColorTexture;
+    int blurredID = Shader.PropertyToID("_BlurRT1");
+    int blurredID2 = Shader.PropertyToID("_BlurRT2");
     public GrabPassImpl(Material blurMateral, Vector2 blurAmount)
     {
         base.profilingSampler = new ProfilingSampler(nameof(GrabPassImpl));
@@ -98,8 +100,8 @@ public class GrabPassImpl : ScriptableRenderPass
             m_OpaqueDesc.width /= 4;
             m_OpaqueDesc.height /= 4;
 
-            int blurredID = Shader.PropertyToID("_BlurRT1");
-            int blurredID2 = Shader.PropertyToID("_BlurRT2");
+            //int blurredID = Shader.PropertyToID("_BlurRT1");
+            //int blurredID2 = Shader.PropertyToID("_BlurRT2");
 
             //获得两张RT  using过后会自动调用 cmd.ReleaseTemporaryRT?
             cmd.GetTemporaryRT(blurredID, m_OpaqueDesc, FilterMode.Bilinear);
@@ -147,6 +149,8 @@ public class GrabPassImpl : ScriptableRenderPass
     {
         //Debug.Log($"GrabPassImpl OnFinishCameraStackRendering=============={Time.frameCount}");
         base.OnFinishCameraStackRendering(cmd);
+        cmd.ReleaseTemporaryRT(blurredID);
+        cmd.ReleaseTemporaryRT(blurredID2);
     }
 
     public override void FrameCleanup(CommandBuffer cmd)

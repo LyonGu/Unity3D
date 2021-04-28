@@ -41,41 +41,41 @@ namespace UnityEngine.Rendering.Universal
         /*一堆Pass*/
         
         ColorGradingLutPass m_ColorGradingLutPass;
-        DepthOnlyPass m_DepthPrepass;
-        DepthNormalOnlyPass m_DepthNormalPrepass;
-        MainLightShadowCasterPass m_MainLightShadowCasterPass;
-        AdditionalLightsShadowCasterPass m_AdditionalLightsShadowCasterPass;
-        GBufferPass m_GBufferPass;
-        CopyDepthPass m_GBufferCopyDepthPass;
+        DepthOnlyPass m_DepthPrepass;  //渲染深度的pass  ==》 RT: _CameraDepthTexture
+        DepthNormalOnlyPass m_DepthNormalPrepass; //渲染深度+法线的pass ==》 RT: _CameraDepthTexture 和 _CameraNormalsTexture
+        MainLightShadowCasterPass m_MainLightShadowCasterPass; //主光生成shadowMap Pass
+        AdditionalLightsShadowCasterPass m_AdditionalLightsShadowCasterPass; //副光生成shadowMap Pass
+        GBufferPass m_GBufferPass; //延迟渲染专用：储存一系列光照数据
+        CopyDepthPass m_GBufferCopyDepthPass; //延迟渲染专用：拷贝深度信息， 目标RT: _CameraDepthTexture
         TileDepthRangePass m_TileDepthRangePass;
         TileDepthRangePass m_TileDepthRangeExtraPass; // TODO use subpass API to hide this pass
         DeferredPass m_DeferredPass;
         DrawObjectsPass m_RenderOpaqueForwardOnlyPass;
-        DrawObjectsPass m_RenderOpaqueForwardPass;
+        DrawObjectsPass m_RenderOpaqueForwardPass;  //不透明物体前向渲染
         DrawSkyboxPass m_DrawSkyboxPass;
-        CopyDepthPass m_CopyDepthPass;
-        CopyColorPass m_CopyColorPass;
+        CopyDepthPass m_CopyDepthPass; //这个pass 会把深度信息从_CameraDepthAttachment Copy到 _CameraDepthTexture上
+        CopyColorPass m_CopyColorPass; //这个pass 会把颜色信息从_CameraColorTexture Copy到 _CameraOpaqueTexture上，这个时候只有不透明物体信息
         TransparentSettingsPass m_TransparentSettingsPass;
-        DrawObjectsPass m_RenderTransparentForwardPass;
+        DrawObjectsPass m_RenderTransparentForwardPass;  //透明物体前向渲染
         InvokeOnRenderObjectCallbackPass m_OnRenderObjectCallbackPass;
-        PostProcessPass m_PostProcessPass;
-        PostProcessPass m_FinalPostProcessPass;
-        FinalBlitPass m_FinalBlitPass;
-        CapturePass m_CapturePass;
+        PostProcessPass m_PostProcessPass;  //后期pass
+        PostProcessPass m_FinalPostProcessPass; //后期pass
+        FinalBlitPass m_FinalBlitPass; //FinalBlitPass ==》 最后输出到屏幕上
+        CapturePass m_CapturePass; //抓屏Pass
 #if ENABLE_VR && ENABLE_XR_MODULE
         XROcclusionMeshPass m_XROcclusionMeshPass;
         CopyDepthPass m_XRCopyDepthPass;
 #endif
 #if UNITY_EDITOR
-        SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
+        SceneViewDepthCopyPass m_SceneViewDepthCopyPass;  //Scene窗口深度拷贝pass
 #endif
 
         RenderTargetHandle m_ActiveCameraColorAttachment; //激活目标ColorTexture
         RenderTargetHandle m_ActiveCameraDepthAttachment; //激活目标DepthTexture
-        RenderTargetHandle m_CameraColorAttachment;
-        RenderTargetHandle m_CameraDepthAttachment;
-        RenderTargetHandle m_DepthTexture; //一张用于copy深度的临时RT
-        RenderTargetHandle m_NormalsTexture;
+        RenderTargetHandle m_CameraColorAttachment; // RT:_CameraColorTexture
+        RenderTargetHandle m_CameraDepthAttachment; // RT:_CameraDepthAttachment
+        RenderTargetHandle m_DepthTexture; //RT:_CameraDepthTexture   m_DepthPrepass和m_DepthNormalPrepass使用
+        RenderTargetHandle m_NormalsTexture; //RT:_CameraNormalsTexture   m_DepthNormalPrepass使用
         RenderTargetHandle[] m_GBufferHandles;
         RenderTargetHandle m_OpaqueColor;
         RenderTargetHandle m_AfterPostProcessColor;
@@ -395,7 +395,7 @@ namespace UnityEngine.Rendering.Universal
                 if (intermediateRenderTexture)
                 {
                     //生成一张_CameraColorTexture 临时RT
-                    //生成一张_CameraDepthTexture 临时RT
+                    //生成一张_CameraDepthAttachment 临时RT
                     CreateCameraRenderTarget(context, ref cameraTargetDescriptor, createColorTexture, createDepthTexture);
                 }
                     
@@ -495,7 +495,7 @@ namespace UnityEngine.Rendering.Universal
                                          && this.actualRenderingMode != RenderingMode.Deferred;
             if (requiresDepthCopyPass)
             {
-                //CopyDepthPass
+                //CopyDepthPass  
                 m_CopyDepthPass.Setup(m_ActiveCameraDepthAttachment, m_DepthTexture);
                 EnqueuePass(m_CopyDepthPass);
             }
@@ -514,6 +514,9 @@ namespace UnityEngine.Rendering.Universal
                 // We need to migrate this data to renderer. For now, we query the method in the active asset.
                 Downsampling downsamplingMethod = UniversalRenderPipeline.asset.opaqueDownsampling;
                 //Copy Color Pass ： 生成一张_CameraOpaqueColor的RT  downsamplingMethod降采样信息  _CameraOpaqueColor上只有不透明物体的信息
+                //m_CopyColorPass这个pass的事件是AfterRenderingSkybox
+                //m_RenderTransparentForwardPass 透明pass的事件是BeforeRenderingTransparents
+                //m_CopyColorPass会优先 m_RenderTransparentForwardPass渲染，pass内部会排序，越小越先渲染
                 m_CopyColorPass.Setup(m_ActiveCameraColorAttachment.Identifier(), m_OpaqueColor, downsamplingMethod);
                 EnqueuePass(m_CopyColorPass);
             }

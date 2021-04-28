@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace UnityEngine.Rendering.Universal.Internal
 {
@@ -34,7 +34,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             baseDescriptor.colorFormat = RenderTextureFormat.Depth;
             baseDescriptor.depthBufferBits = k_DepthBufferBits;
             baseDescriptor.msaaSamples = 1;// Depth-Only pass don't use MSAA
-            depthDescriptor = baseDescriptor;
+            depthDescriptor = baseDescriptor; //结构体 每次都是拷贝
 
             this.normalHandle = normalHandle;
             baseDescriptor.colorFormat = RenderTextureFormat.RGHalf;

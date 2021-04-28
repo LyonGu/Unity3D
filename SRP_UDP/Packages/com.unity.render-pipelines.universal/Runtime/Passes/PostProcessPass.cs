@@ -81,7 +81,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             base.profilingSampler = new ProfilingSampler(nameof(PostProcessPass));
             renderPassEvent = evt;
             m_Data = data;
-            m_Materials = new MaterialLibrary(data);
+            m_Materials = new MaterialLibrary(data); //定义了一堆后期材质
             m_BlitMaterial = blitMaterial;
 
             // Texture format pre-lookup
@@ -118,6 +118,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             for (int i = 0; i < k_MaxPyramidSize; i++)
             {
+                //bloom效果的升降采样图
                 ShaderConstants._BloomMipUp[i] = Shader.PropertyToID("_BloomMipUp" + i);
                 ShaderConstants._BloomMipDown[i] = Shader.PropertyToID("_BloomMipDown" + i);
             }
@@ -227,6 +228,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             }
             else
             {
+                //后期pass
                 // Regular render path (not on-tile) - we do everything in a single command buffer as it
                 // makes it easier to manage temporary targets' lifetime
                 var cmd = CommandBufferPool.Get();
@@ -357,6 +359,21 @@ namespace UnityEngine.Rendering.Universal.Internal
                     Swap();
                 }
             }
+
+            //后效的顺序都是固定的
+            /*
+                DepthOfField ;
+                MotionBlur ;
+                PaniniProjection ;
+                Bloom ;
+                LensDistortion ;
+                ChromaticAberration ;
+                Vignette ;
+                ColorLookup ;
+                ColorAdjustments ;
+                Tonemapping ;
+                FilmGrain ;
+             */
 
             // Depth of Field
             if (m_DepthOfField.IsActive() && !isSceneViewCamera)
@@ -1199,7 +1216,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             var colorLoadAction = cameraData.isDefaultViewport ? RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
 
-            RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
+            RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer
 
 #if ENABLE_VR && ENABLE_XR_MODULE
             if (cameraData.xr.enabled)
