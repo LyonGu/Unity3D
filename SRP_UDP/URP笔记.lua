@@ -42,6 +42,10 @@
 
 		//blitTargetDescriptor 为一个RenderTextureDescriptor对象
         cmd.GetTemporaryRT(sourceId, blitTargetDescriptor, filterMode); //创建一张临时RT
+
+
+		//m_ActiveCameraColorAttachment为一个RenderTargetHandle对象，必须调用过RenderTargetHandle.Init
+        cmd.GetTemporaryRT(m_ActiveCameraColorAttachment.id, colorDescriptor, FilterMode.Bilinear);
 	}
 
 	5 两种blit方法
@@ -68,11 +72,36 @@
 
             cmd.Blit(blurredID2, blurredID, m_BlurMaterial);
 		}
+
+		**** RenderTargetIdentifier类型参数都可以用 int类型代替，一个id就行
+		cmd.SetGlobalTexture("_GrabBlurTexture", this.blurTemp1.id);
 	}
 
 	6 设置渲染器配置文件
 	{
 		GraphicsSettings.renderPipelineAsset = pipelineAsset;
+	}
+
+	7 如果一个场景里具有摄像机组 MainCamera相机，UI相机 Blur相机
+	{
+		MainCamera 为Base类型
+		UICamera 为OverLay
+		BlurCamera 为OverLay
+
+		MainCamera的stack里为UICamera和BlurCamera
+		
+		blit到frameBuffer只会在最后一个相机里执行（BlurCamera）
+
+	}
+
+	7 每次切换rendertarget都会出现切换出去的rendertarget发生aa的resolve操作  rendertarget的resolveAA
+	{
+		https://github.com/sienaiwun/Unity_AAResolveOnCommand
+		
+		LWRP,URP模板使用RenderTargetIdentifier进行RT的切换，这个类很难设置resolve的频率，但是RT也可以由RenderTexture设置，
+		这个类的创建时候的bindMS参数来控制是否自动进行RT的resolve和ResolveAntiAliasedSurface手动控制resolve的操作。具体修改可见resolve rendertarget on command修改。
+		存储上，本修改在使用msaa的rendertarget通过开启bindms设置增加一个带msaa的rendertexure(m_color_handle)和一个不带msaa的rendertexture(m_resolve_handle)。
+		看上去增加一个rt，但是在unity本身中如果关闭bindms,只用一个rt内部也会有两个rendertexutre handle,一个带msaa的texture2dMS，一个不带msaatexture2d。所以概念上是等同的。
 	}
 
 ]==]

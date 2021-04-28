@@ -70,11 +70,11 @@ namespace UnityEngine.Rendering.Universal
         SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
 #endif
 
-        RenderTargetHandle m_ActiveCameraColorAttachment;
-        RenderTargetHandle m_ActiveCameraDepthAttachment;
+        RenderTargetHandle m_ActiveCameraColorAttachment; //激活目标ColorTexture
+        RenderTargetHandle m_ActiveCameraDepthAttachment; //激活目标DepthTexture
         RenderTargetHandle m_CameraColorAttachment;
         RenderTargetHandle m_CameraDepthAttachment;
-        RenderTargetHandle m_DepthTexture;
+        RenderTargetHandle m_DepthTexture; //一张用于copy深度的临时RT
         RenderTargetHandle m_NormalsTexture;
         RenderTargetHandle[] m_GBufferHandles;
         RenderTargetHandle m_OpaqueColor;
@@ -258,7 +258,7 @@ namespace UnityEngine.Rendering.Universal
             CoreUtils.Destroy(m_StencilDeferredMaterial);
         }
 
-        //根据配置确定是否加入对应的Pass参与渲染
+        //根据配置确定是否加入对应的Pass参与渲染  UniversalRenderPipeline.RenderSingleCamera 会调用这个方法
         /// <inheritdoc />
         public override void Setup(ScriptableRenderContext context, ref RenderingData renderingData)
         {
@@ -298,6 +298,7 @@ namespace UnityEngine.Rendering.Universal
             var createColorTexture = rendererFeatures.Count != 0 && !isPreviewCamera;
             if (createColorTexture)
             {
+                //配置ColorTexture渲染目标
                 m_ActiveCameraColorAttachment = m_CameraColorAttachment;
                 var activeColorRenderTargetId = m_ActiveCameraColorAttachment.Identifier();
 #if ENABLE_VR && ENABLE_XR_MODULE
@@ -321,7 +322,7 @@ namespace UnityEngine.Rendering.Universal
             bool anyPostProcessing = renderingData.postProcessingEnabled;
 
             // TODO: We could cache and generate the LUT before rendering the stack
-            bool generateColorGradingLUT = cameraData.postProcessEnabled; //是否生成LUT 表
+            bool generateColorGradingLUT = cameraData.postProcessEnabled; //是否生成LUT 表  后期开启了就会生成LUT表
             bool isSceneViewCamera = cameraData.isSceneViewCamera; //Scene窗口相机
             bool requiresDepthTexture = cameraData.requiresDepthTexture || renderPassInputs.requiresDepthTexture || this.actualRenderingMode == RenderingMode.Deferred;
 
@@ -432,7 +433,7 @@ namespace UnityEngine.Rendering.Universal
                     activeDepthRenderTargetId = new RenderTargetIdentifier(activeDepthRenderTargetId, 0, CubemapFace.Unknown, -1);
                 }
 #endif
-
+                //配置渲染目标
                 ConfigureCameraTarget(activeColorRenderTargetId, activeDepthRenderTargetId);
             }
 
@@ -502,6 +503,7 @@ namespace UnityEngine.Rendering.Universal
             // For Base Cameras: Set the depth texture to the far Z if we do not have a depth prepass or copy depth
             if (cameraData.renderType == CameraRenderType.Base && !requiresDepthPrepass && !requiresDepthCopyPass)
             {
+                //如果不生成深度图就会往shader里赋值一个属性名为 _CameraDepthTexture，shader里可以直接使用
                 Shader.SetGlobalTexture(m_DepthTexture.id, SystemInfo.usesReversedZBuffer ? Texture2D.blackTexture : Texture2D.whiteTexture);
             }
 
@@ -531,8 +533,10 @@ namespace UnityEngine.Rendering.Universal
             //ObjectPass 渲染事件回调Pass
             EnqueuePass(m_OnRenderObjectCallbackPass);
 
-            bool lastCameraInTheStack = cameraData.resolveFinalTarget;
+            bool lastCameraInTheStack = cameraData.resolveFinalTarget; //判断是否是最后一个渲染目标
             bool hasCaptureActions = renderingData.cameraData.captureActions != null && lastCameraInTheStack;
+
+            //判断是否执行最后后效处理：开启后效&&最后一个渲染目标&&抗锯齿为FAXX
             bool applyFinalPostProcessing = anyPostProcessing && lastCameraInTheStack &&
                                      renderingData.cameraData.antialiasing == AntialiasingMode.FastApproximateAntialiasing;
 
@@ -581,9 +585,9 @@ namespace UnityEngine.Rendering.Universal
                     applyFinalPostProcessing ||
                     // no final PP but we have PP stack. In that case it blit unless there are render pass after PP
                     (applyPostProcessing && !hasPassesAfterPostProcessing) ||
-                    // offscreen camera rendering to a texture, we don't need a blit pass to resolve to screen
+                    // offscreen camera rendering to a texture, we don't need a blit pass to resolve to screen 绘制到屏幕
                     m_ActiveCameraColorAttachment == RenderTargetHandle.GetCameraTarget(cameraData.xr);
-
+          
                 // We need final blit to resolve to screen
                 if (!cameraTargetResolved)
                 {
@@ -683,6 +687,7 @@ namespace UnityEngine.Rendering.Universal
             cullingParameters.shadowDistance = cameraData.maxShadowDistance;
         }
 
+        //清理操作
         /// <inheritdoc />
         public override void FinishRendering(CommandBuffer cmd)
         {
@@ -764,7 +769,8 @@ namespace UnityEngine.Rendering.Universal
                 ScriptableRenderPass pass = activeRenderPassQueue[i];
 
                 // 是否需要深度图 _CameraDepthTexture
-                bool needsDepth   = (pass.input & ScriptableRenderPassInput.Depth) != ScriptableRenderPassInput.None;
+                //pass.input & ScriptableRenderPassInput.Depth   xxx & 1 ==> 取二进制的末位 
+                bool needsDepth   = (pass.input & ScriptableRenderPassInput.Depth) != ScriptableRenderPassInput.None; 
                 bool needsNormals = (pass.input & ScriptableRenderPassInput.Normal) != ScriptableRenderPassInput.None;
 
                 //  _CameraColorTexture
@@ -787,6 +793,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 if (createColor)
                 {
+                    // RenderTargetHandle.CameraTarget 直接代表FrameBuffer
                     bool useDepthRenderBuffer = m_ActiveCameraDepthAttachment == RenderTargetHandle.CameraTarget;
                     var colorDescriptor = descriptor;
                     colorDescriptor.useMipMap = false;
