@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -367,6 +367,7 @@ namespace UnityEngine.Rendering.Universal
             return settings;
         }
 
+        //重载了操作符
         public static bool operator <(ScriptableRenderPass lhs, ScriptableRenderPass rhs)
         {
             return lhs.renderPassEvent < rhs.renderPassEvent;

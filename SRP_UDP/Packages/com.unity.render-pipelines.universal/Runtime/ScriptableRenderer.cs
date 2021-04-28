@@ -164,6 +164,7 @@ namespace UnityEngine.Rendering.Universal
 
             if (camera.allowDynamicResolution)
             {
+                //动态分辨率
                 scaledCameraWidth *= ScalableBufferManager.widthScaleFactor;
                 scaledCameraHeight *= ScalableBufferManager.heightScaleFactor;
             }
@@ -234,6 +235,7 @@ namespace UnityEngine.Rendering.Universal
             Vector4 deltaTimeVector = new Vector4(deltaTime, 1f / deltaTime, smoothDeltaTime, 1f / smoothDeltaTime);
             Vector4 timeParametersVector = new Vector4(time, Mathf.Sin(time), Mathf.Cos(time), 0.0f);
 
+            //Shader里的时间属性
             cmd.SetGlobalVector(ShaderPropertyId.time, timeVector);
             cmd.SetGlobalVector(ShaderPropertyId.sinTime, sinTimeVector);
             cmd.SetGlobalVector(ShaderPropertyId.cosTime, cosTimeVector);
@@ -241,6 +243,8 @@ namespace UnityEngine.Rendering.Universal
             cmd.SetGlobalVector(ShaderPropertyId.timeParameters, timeParametersVector);
         }
 
+
+        // CloreTexture
         /// <summary>
         /// Returns the camera color target for this renderer.
         /// It's only valid to call cameraColorTarget in the scope of <c>ScriptableRenderPass</c>.
@@ -261,6 +265,8 @@ namespace UnityEngine.Rendering.Universal
             }
         }
 
+
+        // DepthTexture
         /// <summary>
         /// Returns the camera depth target for this renderer.
         /// It's only valid to call cameraDepthTarget in the scope of <c>ScriptableRenderPass</c>.
@@ -281,6 +287,7 @@ namespace UnityEngine.Rendering.Universal
             }
         }
 
+        //渲染器文件里Feature列表
         /// <summary>
         /// Returns a list of renderer features added to this renderer.
         /// <seealso cref="ScriptableRendererFeature"/>
@@ -290,6 +297,8 @@ namespace UnityEngine.Rendering.Universal
             get => m_RendererFeatures;
         }
 
+
+        //Feature中激活的renderPass
         /// <summary>
         /// Returns a list of render passes scheduled to be executed by this renderer.
         /// <seealso cref="ScriptableRenderPass"/>
@@ -328,7 +337,9 @@ namespace UnityEngine.Rendering.Universal
 
         const int k_RenderPassBlockCount = 4;
 
+        //激活的RenderPass 队列
         List<ScriptableRenderPass> m_ActiveRenderPassQueue = new List<ScriptableRenderPass>(32);
+
         List<ScriptableRendererFeature> m_RendererFeatures = new List<ScriptableRendererFeature>(10);
         RenderTargetIdentifier m_CameraColorTarget;
         RenderTargetIdentifier m_CameraDepthTarget;
@@ -463,6 +474,8 @@ namespace UnityEngine.Rendering.Universal
         {
         }
 
+
+        //UniversalRenderPipeline.RenderSingleCamera 会调用
         /// <summary>
         /// Execute the enqueued render passes. This automatically handles editor and stereo rendering.
         /// </summary>
@@ -477,6 +490,7 @@ namespace UnityEngine.Rendering.Universal
             CommandBuffer cmd = CommandBufferPool.Get();
             using (new ProfilingScope(cmd, profilingExecute))
             {
+                //渲染开始 调用每个激活pass的OnCameraSetup方法
                 InternalStartRendering(context, ref renderingData);
 
                 // Cache the time for after the call to `SetupCameraProperties` and set the time variables in shader
@@ -496,10 +510,10 @@ namespace UnityEngine.Rendering.Universal
                 SetPerCameraShaderVariables(cmd, ref cameraData);  //设置一些摄像机相关shader的参数
                 SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime); //设置shader里的时间参数
                 context.ExecuteCommandBuffer(cmd);  //执行commandbuff
-                cmd.Clear();
+                cmd.Clear(); //cmd清理，可以重复使用同一个实例对象
                 using (new ProfilingScope(cmd, Profiling.sortRenderPasses))
                 {
-                    // Sort the render pass queue
+                    // Sort the render pass queue   renderpass的排序，重载了< 操作符,根据pass的渲染事件 ，越小的排在越前
                     SortStable(m_ActiveRenderPassQueue);
                 }
 
@@ -517,6 +531,7 @@ namespace UnityEngine.Rendering.Universal
                     // Before Render Block. This render blocks always execute in mono rendering.
                     // Camera is not setup. Lights are not setup.
                     // Used to render input textures like shadowmaps.
+                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
                     ExecuteBlock(RenderPassBlock.BeforeRendering, in renderBlocks, context, ref renderingData);
                 }
 
@@ -549,16 +564,18 @@ namespace UnityEngine.Rendering.Universal
 
                 // In the opaque and transparent blocks the main rendering executes.
                 //MainRenderingOpaque事件
-                // Opaque blocks...
+                // Opaque blocks... 主要的渲染基本都在这里
                 if (renderBlocks.GetLength(RenderPassBlock.MainRenderingOpaque) > 0)
                 {
                     using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.mainRenderingOpaque);
+                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
                     ExecuteBlock(RenderPassBlock.MainRenderingOpaque, in renderBlocks, context, ref renderingData);
                 }
 
-                // Transparent blocks...
+                // Transparent blocks...  主要的渲染基本都在这里
                 if (renderBlocks.GetLength(RenderPassBlock.MainRenderingTransparent) > 0)
                 {
+                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
                     using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.mainRenderingTransparent);
                     ExecuteBlock(RenderPassBlock.MainRenderingTransparent, in renderBlocks, context, ref renderingData);
                 }
@@ -707,7 +724,9 @@ namespace UnityEngine.Rendering.Universal
             foreach (int currIndex in renderBlocks.GetRange(blockIndex))
             {
                 var renderPass = m_ActiveRenderPassQueue[currIndex];
-                ExecuteRenderPass(context, renderPass, ref renderingData);
+                //if(!submit)
+                //    Debug.Log($"{Time.frameCount} blockIndex:{blockIndex} ====  {renderPass.profilingSampler.name}  {submit}  {renderingData.cameraData.camera.name}");
+                ExecuteRenderPass(context, renderPass, ref renderingData); //Pass执行的地方  先调用pass的Configure方法 再调用pass的Execute方法
             }
 
             if (submit)
@@ -716,7 +735,7 @@ namespace UnityEngine.Rendering.Universal
 
         void ExecuteRenderPass(ScriptableRenderContext context, ScriptableRenderPass renderPass, ref RenderingData renderingData)
         {
-            using var profScope = new ProfilingScope(null, renderPass.profilingSampler);
+            using var profScope = new ProfilingScope(null, renderPass.profilingSampler); //Profile 里看到是每个pass的名字
 
             ref CameraData cameraData = ref renderingData.cameraData;
 
@@ -725,7 +744,10 @@ namespace UnityEngine.Rendering.Universal
             // Track CPU only as GPU markers for this scope were "too noisy".
             using (new ProfilingScope(cmd, Profiling.RenderPass.configure))
             {
+                //先调用pass的Configure方法
                 renderPass.Configure(cmd, cameraData.cameraTargetDescriptor);
+
+                //设置pass的渲染目标对象，Clore和Depth
                 SetRenderPassAttachments(cmd, renderPass, ref cameraData);
             }
 
@@ -733,6 +755,7 @@ namespace UnityEngine.Rendering.Universal
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
 
+            //再调用pass的Execute方法
             renderPass.Execute(context, ref renderingData);
         }
 
@@ -1049,13 +1072,13 @@ namespace UnityEngine.Rendering.Universal
             {
 
                 for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
-                    m_ActiveRenderPassQueue[i].FrameCleanup(cmd);
+                    m_ActiveRenderPassQueue[i].FrameCleanup(cmd); //执行pass的FrameCleanup方法
 
                 // Happens when rendering the last camera in the camera stack.
                 if (resolveFinalTarget)
                 {
                     for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
-                        m_ActiveRenderPassQueue[i].OnFinishCameraStackRendering(cmd);
+                        m_ActiveRenderPassQueue[i].OnFinishCameraStackRendering(cmd); //执行pass的OnFinishCameraStackRendering方法
 
                     FinishRendering(cmd);
 
@@ -1071,12 +1094,14 @@ namespace UnityEngine.Rendering.Universal
 
         internal static void SortStable(List<ScriptableRenderPass> list)
         {
+            //冒泡算法，数据不太多， 可优化TODO
             int j;
             for (int i = 1; i < list.Count; ++i)
             {
                 ScriptableRenderPass curr = list[i];
 
                 j = i - 1;
+                ////重载了< 操作符,根据pass的渲染事件 ，越小的排在越前
                 for (; j >= 0 && curr < list[j]; --j)
                     list[j + 1] = list[j];
 

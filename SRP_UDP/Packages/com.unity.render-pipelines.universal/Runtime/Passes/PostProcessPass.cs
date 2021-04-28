@@ -1261,7 +1261,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 cameraMotionBlur = Load(data.shaders.cameraMotionBlurPS);
                 paniniProjection = Load(data.shaders.paniniProjectionPS);
                 bloom = Load(data.shaders.bloomPS);
-                uber = Load(data.shaders.uberPostPS);
+                uber = Load(data.shaders.uberPostPS); //"Shaders/PostProcessing/UberPost.shader"
                 finalPass = Load(data.shaders.finalPostPassPS);
             }
 
