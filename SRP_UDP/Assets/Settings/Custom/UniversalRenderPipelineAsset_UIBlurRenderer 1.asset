@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    m_renderPassEvent: 500
+    m_renderPassEvent: 1000
     m_BlurAmount: {x: 1, y: 1}
 --- !u!114 &-2524544811132342296
 MonoBehaviour:
@@ -31,7 +31,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: NewRenderObjects
-    Event: 500
+    Event: 1000
     filterSettings:
       RenderQueueType: 1
       LayerMask:

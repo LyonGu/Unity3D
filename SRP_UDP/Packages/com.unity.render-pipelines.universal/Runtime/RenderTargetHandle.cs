@@ -6,12 +6,15 @@ namespace UnityEngine.Rendering.Universal
     [MovedFrom("UnityEngine.Rendering.LWRP")] public struct RenderTargetHandle
     {
         public int id { set; get; }
+
+        public string shaderProperty { set; get; }
         private RenderTargetIdentifier rtid { set; get; }
 
         public static readonly RenderTargetHandle CameraTarget = new RenderTargetHandle {id = -1 };
 
         public RenderTargetHandle(RenderTargetIdentifier renderTargetIdentifier)
         {
+            shaderProperty = string.Empty;
             id = -2;
             rtid = renderTargetIdentifier;
         }
@@ -31,6 +34,7 @@ namespace UnityEngine.Rendering.Universal
             // Shader.PropertyToID returns what is internally referred to as a "ShaderLab::FastPropertyName".
             // It is a value coming from an internal global std::map<char*,int> that converts shader property strings into unique integer handles (that are faster to work with).
             id = Shader.PropertyToID(shaderProperty);
+            this.shaderProperty = shaderProperty;
         }
 
         public void Init(RenderTargetIdentifier renderTargetIdentifier)
