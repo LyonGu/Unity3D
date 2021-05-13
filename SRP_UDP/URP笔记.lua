@@ -128,18 +128,23 @@
 	Pass
 	{
 		
-		1 OnCameraSetup
-		2 Configure
-		3 Execute
-		4 FrameCleanup
-		{
-			//销毁临时RT
-			if (destinationId != -1)
-            cmd.ReleaseTemporaryRT(destinationId);
-		}
-		5 OnFinishCameraStackRendering // 一些清理工作
 
-		12345 每一帧都会调用
+		以下方法都是在Render的Execute里被调用
+		{
+			1 OnCameraSetup
+			2 Configure
+			3 Execute
+			4 FrameCleanup
+			{
+				//销毁临时RT
+				if (destinationId != -1)
+	            cmd.ReleaseTemporaryRT(destinationId);
+			}
+			5 OnFinishCameraStackRendering // 一些清理工作
+
+			12345 每一帧都会调用
+		}
+		
 
 	}
 
