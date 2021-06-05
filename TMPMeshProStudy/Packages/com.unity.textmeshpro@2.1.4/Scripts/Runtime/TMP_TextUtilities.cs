@@ -1427,7 +1427,7 @@ namespace TMPro
                 }
 
                 //Debug.Log("Word at Index: " + i + " is located at (" + bl + ", " + tl + ", " + tr + ", " + br + ").");
-
+                text.textInfo.linkInfo[i] = linkInfo;
             }
 
             return -1;
@@ -1767,7 +1767,7 @@ namespace TMPro
                 }
 
                 //Debug.Log("Word at Index: " + i + " is located at (" + bl + ", " + tl + ", " + tr + ", " + br + ").");
-
+                text.textInfo.linkInfo[i] = linkInfo;
             }
 
             return closest;

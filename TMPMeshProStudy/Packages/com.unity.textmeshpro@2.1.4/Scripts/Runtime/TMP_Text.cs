@@ -4938,22 +4938,24 @@ namespace TMPro
 
             for (int i = startIndex; i <= endIndex; i++)
             {
-                m_textInfo.characterInfo[i].bottomLeft -= vertexOffset;
-                m_textInfo.characterInfo[i].topLeft -= vertexOffset;
-                m_textInfo.characterInfo[i].topRight -= vertexOffset;
-                m_textInfo.characterInfo[i].bottomRight -= vertexOffset;
+                var _characterInfo = m_textInfo.characterInfo[i];
+                _characterInfo.bottomLeft -= vertexOffset;
+                _characterInfo.topLeft -= vertexOffset;
+                _characterInfo.topRight -= vertexOffset;
+                _characterInfo.bottomRight -= vertexOffset;
 
-                m_textInfo.characterInfo[i].ascender -= vertexOffset.y;
-                m_textInfo.characterInfo[i].baseLine -= vertexOffset.y;
-                m_textInfo.characterInfo[i].descender -= vertexOffset.y;
+                _characterInfo.ascender -= vertexOffset.y;
+                _characterInfo.baseLine -= vertexOffset.y;
+                _characterInfo.descender -= vertexOffset.y;
 
-                if (m_textInfo.characterInfo[i].isVisible)
+                if (_characterInfo.isVisible)
                 {
-                    m_textInfo.characterInfo[i].vertex_BL.position -= vertexOffset;
-                    m_textInfo.characterInfo[i].vertex_TL.position -= vertexOffset;
-                    m_textInfo.characterInfo[i].vertex_TR.position -= vertexOffset;
-                    m_textInfo.characterInfo[i].vertex_BR.position -= vertexOffset;
+                    _characterInfo.vertex_BL.position -= vertexOffset;
+                    _characterInfo.vertex_TL.position -= vertexOffset;
+                    _characterInfo.vertex_TR.position -= vertexOffset;
+                    _characterInfo.vertex_BR.position -= vertexOffset;
                 }
+                m_textInfo.characterInfo[i] = _characterInfo;
             }
         }
 
@@ -4981,7 +4983,7 @@ namespace TMPro
                 }
             }
 
-            m_textInfo.lineInfo = temp_lineInfo;
+            m_textInfo.lineInfo.tMP_LineInfos = temp_lineInfo;
         }
         protected static Vector2 k_LargePositiveVector2 = new Vector2(TMP_Math.INT_MAX, TMP_Math.INT_MAX);
         protected static Vector2 k_LargeNegativeVector2 = new Vector2(TMP_Math.INT_MIN, TMP_Math.INT_MIN);
@@ -5095,7 +5097,9 @@ namespace TMPro
 
             float maxAdvanceOffset = (glyphAdjustment * currentElementScale + (m_currentFontAsset.normalSpacingOffset + characterSpacingAdjustment + boldSpacingAdjustment) * currentEmScale - m_cSpacing) * (1 - m_charWidthAdjDelta);
             float adjustedHorizontalAdvance = m_textInfo.lineInfo[m_lineNumber].maxAdvance = m_textInfo.characterInfo[m_lastVisibleCharacterOfLine].xAdvance + (m_isRightToLeft ? maxAdvanceOffset : - maxAdvanceOffset);
-            m_textInfo.characterInfo[lastCharacterIndex].xAdvance = adjustedHorizontalAdvance;
+            var _characterInfo = m_textInfo.characterInfo[lastCharacterIndex];
+            _characterInfo.xAdvance = adjustedHorizontalAdvance;
+            m_textInfo.characterInfo[lastCharacterIndex] = _characterInfo;
 
             m_textInfo.lineInfo[m_lineNumber].baseline = 0 - m_lineOffset;
             m_textInfo.lineInfo[m_lineNumber].ascender = lineAscender;
@@ -5327,10 +5331,12 @@ namespace TMPro
         {
             // Save the Vertex Position for the Character
             #region Setup Mesh Vertices
-            m_textInfo.characterInfo[m_characterCount].vertex_BL.position = m_textInfo.characterInfo[m_characterCount].bottomLeft;
-            m_textInfo.characterInfo[m_characterCount].vertex_TL.position = m_textInfo.characterInfo[m_characterCount].topLeft;
-            m_textInfo.characterInfo[m_characterCount].vertex_TR.position = m_textInfo.characterInfo[m_characterCount].topRight;
-            m_textInfo.characterInfo[m_characterCount].vertex_BR.position = m_textInfo.characterInfo[m_characterCount].bottomRight;
+            var _characterInfo = m_textInfo.characterInfo[m_characterCount];
+            _characterInfo.vertex_BL.position = _characterInfo.bottomLeft;
+            _characterInfo.vertex_TL.position = _characterInfo.topLeft;
+            _characterInfo.vertex_TR.position = _characterInfo.topRight;
+            _characterInfo.vertex_BR.position = _characterInfo.bottomRight;
+            m_textInfo.characterInfo[m_characterCount] = _characterInfo;
             #endregion
 
 
@@ -5555,28 +5561,28 @@ namespace TMPro
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + 4) / 4));
 
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+    
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
-            m_textInfo.meshInfo[materialIndex].vertices[0 + index_X4] = characterInfoArray[i].vertex_BL.position;
-            m_textInfo.meshInfo[materialIndex].vertices[1 + index_X4] = characterInfoArray[i].vertex_TL.position;
-            m_textInfo.meshInfo[materialIndex].vertices[2 + index_X4] = characterInfoArray[i].vertex_TR.position;
-            m_textInfo.meshInfo[materialIndex].vertices[3 + index_X4] = characterInfoArray[i].vertex_BR.position;
+            m_textInfo.meshInfo[materialIndex].vertices[0 + index_X4] = m_textInfo.characterInfo[i].vertex_BL.position;
+            m_textInfo.meshInfo[materialIndex].vertices[1 + index_X4] = m_textInfo.characterInfo[i].vertex_TL.position;
+            m_textInfo.meshInfo[materialIndex].vertices[2 + index_X4] = m_textInfo.characterInfo[i].vertex_TR.position;
+            m_textInfo.meshInfo[materialIndex].vertices[3 + index_X4] = m_textInfo.characterInfo[i].vertex_BR.position;
 
 
             // Setup UVS0
-            m_textInfo.meshInfo[materialIndex].uvs0[0 + index_X4] = characterInfoArray[i].vertex_BL.uv;
-            m_textInfo.meshInfo[materialIndex].uvs0[1 + index_X4] = characterInfoArray[i].vertex_TL.uv;
-            m_textInfo.meshInfo[materialIndex].uvs0[2 + index_X4] = characterInfoArray[i].vertex_TR.uv;
-            m_textInfo.meshInfo[materialIndex].uvs0[3 + index_X4] = characterInfoArray[i].vertex_BR.uv;
+            m_textInfo.meshInfo[materialIndex].uvs0[0 + index_X4] = m_textInfo.characterInfo[i].vertex_BL.uv;
+            m_textInfo.meshInfo[materialIndex].uvs0[1 + index_X4] = m_textInfo.characterInfo[i].vertex_TL.uv;
+            m_textInfo.meshInfo[materialIndex].uvs0[2 + index_X4] = m_textInfo.characterInfo[i].vertex_TR.uv;
+            m_textInfo.meshInfo[materialIndex].uvs0[3 + index_X4] = m_textInfo.characterInfo[i].vertex_BR.uv;
 
 
             // Setup UVS2
-            m_textInfo.meshInfo[materialIndex].uvs2[0 + index_X4] = characterInfoArray[i].vertex_BL.uv2;
-            m_textInfo.meshInfo[materialIndex].uvs2[1 + index_X4] = characterInfoArray[i].vertex_TL.uv2;
-            m_textInfo.meshInfo[materialIndex].uvs2[2 + index_X4] = characterInfoArray[i].vertex_TR.uv2;
-            m_textInfo.meshInfo[materialIndex].uvs2[3 + index_X4] = characterInfoArray[i].vertex_BR.uv2;
+            m_textInfo.meshInfo[materialIndex].uvs2[0 + index_X4] = m_textInfo.characterInfo[i].vertex_BL.uv2;
+            m_textInfo.meshInfo[materialIndex].uvs2[1 + index_X4] = m_textInfo.characterInfo[i].vertex_TL.uv2;
+            m_textInfo.meshInfo[materialIndex].uvs2[2 + index_X4] = m_textInfo.characterInfo[i].vertex_TR.uv2;
+            m_textInfo.meshInfo[materialIndex].uvs2[3 + index_X4] = m_textInfo.characterInfo[i].vertex_BR.uv2;
 
 
             // Setup UVS4
@@ -5587,10 +5593,10 @@ namespace TMPro
 
 
             // setup Vertex Colors
-            m_textInfo.meshInfo[materialIndex].colors32[0 + index_X4] = characterInfoArray[i].vertex_BL.color;
-            m_textInfo.meshInfo[materialIndex].colors32[1 + index_X4] = characterInfoArray[i].vertex_TL.color;
-            m_textInfo.meshInfo[materialIndex].colors32[2 + index_X4] = characterInfoArray[i].vertex_TR.color;
-            m_textInfo.meshInfo[materialIndex].colors32[3 + index_X4] = characterInfoArray[i].vertex_BR.color;
+            m_textInfo.meshInfo[materialIndex].colors32[0 + index_X4] = m_textInfo.characterInfo[i].vertex_BL.color;
+            m_textInfo.meshInfo[materialIndex].colors32[1 + index_X4] = m_textInfo.characterInfo[i].vertex_TL.color;
+            m_textInfo.meshInfo[materialIndex].colors32[2 + index_X4] = m_textInfo.characterInfo[i].vertex_TR.color;
+            m_textInfo.meshInfo[materialIndex].colors32[3 + index_X4] = m_textInfo.characterInfo[i].vertex_BR.color;
 
             m_textInfo.meshInfo[materialIndex].vertexCount = index_X4 + 4;
         }
@@ -5605,7 +5611,7 @@ namespace TMPro
             if (index_X4 >= m_textInfo.meshInfo[materialIndex].vertices.Length)
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + (isVolumetric ? 8 : 4)) / 4));
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+            var characterInfoArray = m_textInfo.characterInfo;
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
@@ -5693,7 +5699,7 @@ namespace TMPro
             if (index_X4 >= m_textInfo.meshInfo[materialIndex].vertices.Length)
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + 4) / 4));
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+            var characterInfoArray = m_textInfo.characterInfo;
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
@@ -7690,15 +7696,19 @@ namespace TMPro
                         {
                             int index = m_textInfo.linkCount;
 
-                            if (index + 1 > m_textInfo.linkInfo.Length)
-                                TMP_TextInfo.Resize(ref m_textInfo.linkInfo, index + 1);
+                            //if (index + 1 > m_textInfo.linkInfo.Length)
+                            //    TMP_TextInfo.Resize(ref m_textInfo.linkInfo, index + 1);
 
-                            m_textInfo.linkInfo[index].textComponent = this;
-                            m_textInfo.linkInfo[index].hashCode = m_xmlAttribute[0].valueHashCode;
-                            m_textInfo.linkInfo[index].linkTextfirstCharacterIndex = m_characterCount;
+                            var _LinkInfo = m_textInfo.linkInfo[index];
 
-                            m_textInfo.linkInfo[index].linkIdFirstCharacterIndex = startIndex + m_xmlAttribute[0].valueStartIndex;
-                            m_textInfo.linkInfo[index].linkIdLength = m_xmlAttribute[0].valueLength;
+
+                            _LinkInfo.textComponent = this;
+                            _LinkInfo.hashCode = m_xmlAttribute[0].valueHashCode;
+                            _LinkInfo.linkTextfirstCharacterIndex = m_characterCount;
+
+                            _LinkInfo.linkIdFirstCharacterIndex = startIndex + m_xmlAttribute[0].valueStartIndex;
+                            _LinkInfo.linkIdLength = m_xmlAttribute[0].valueLength;
+                            m_textInfo.linkInfo[index] = _LinkInfo;
                             m_textInfo.linkInfo[index].SetLinkID(m_htmlTag, m_xmlAttribute[0].valueStartIndex, m_xmlAttribute[0].valueLength);
                         }
                         return true;
@@ -7708,8 +7718,9 @@ namespace TMPro
                         {
                             if (m_textInfo.linkCount < m_textInfo.linkInfo.Length)
                             {
-                                m_textInfo.linkInfo[m_textInfo.linkCount].linkTextLength = m_characterCount - m_textInfo.linkInfo[m_textInfo.linkCount].linkTextfirstCharacterIndex;
-
+                                var _linkInfo = m_textInfo.linkInfo[m_textInfo.linkCount];
+                                _linkInfo.linkTextLength = m_characterCount - m_textInfo.linkInfo[m_textInfo.linkCount].linkTextfirstCharacterIndex;
+                                m_textInfo.linkInfo[m_textInfo.linkCount] = _linkInfo;
                                 m_textInfo.linkCount += 1;
                             }
                         }

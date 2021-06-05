@@ -987,7 +987,7 @@ namespace TMPro
             if (m_textInfo == null)
                 m_textInfo = new TMP_TextInfo(m_InternalTextProcessingArraySize);
             else if (m_textInfo.characterInfo.Length < m_InternalTextProcessingArraySize)
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_InternalTextProcessingArraySize, false);
+                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_InternalTextProcessingArraySize, false);
 
             m_textElementType = TMP_TextElementType.Character;
 
@@ -1050,8 +1050,8 @@ namespace TMPro
             for (int i = 0; i < unicodeChars.Length && unicodeChars[i].unicode != 0; i++)
             {
                 //Make sure the characterInfo array can hold the next text element.
-                if (m_textInfo.characterInfo == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
-                    TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_totalCharacterCount + 1, true);
+                if (m_textInfo.characterInfo.tMP_CharacterInfos == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
+                    TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_totalCharacterCount + 1, true);
 
                 int unicode = unicodeChars[i].unicode;
 
@@ -1075,15 +1075,17 @@ namespace TMPro
                         {
                             m_materialReferences[m_currentMaterialIndex].referenceCount += 1;
 
-                            m_textInfo.characterInfo[m_totalCharacterCount].character = (char)(57344 + m_spriteIndex);
-                            m_textInfo.characterInfo[m_totalCharacterCount].spriteIndex = m_spriteIndex;
-                            m_textInfo.characterInfo[m_totalCharacterCount].fontAsset = m_currentFontAsset;
-                            m_textInfo.characterInfo[m_totalCharacterCount].spriteAsset = m_currentSpriteAsset;
-                            m_textInfo.characterInfo[m_totalCharacterCount].materialReferenceIndex = m_currentMaterialIndex;
-                            m_textInfo.characterInfo[m_totalCharacterCount].textElement = m_currentSpriteAsset.spriteCharacterTable[m_spriteIndex];
-                            m_textInfo.characterInfo[m_totalCharacterCount].elementType = m_textElementType;
-                            m_textInfo.characterInfo[m_totalCharacterCount].index = tagStartIndex;
-                            m_textInfo.characterInfo[m_totalCharacterCount].stringLength = unicodeChars[i].stringIndex - tagStartIndex + 1;
+                            var _characterInfo = m_textInfo.characterInfo[m_totalCharacterCount];
+                            _characterInfo.character = (char)(57344 + m_spriteIndex);
+                            _characterInfo.spriteIndex = m_spriteIndex;
+                            _characterInfo.fontAsset = m_currentFontAsset;
+                            _characterInfo.spriteAsset = m_currentSpriteAsset;
+                            _characterInfo.materialReferenceIndex = m_currentMaterialIndex;
+                            _characterInfo.textElement = m_currentSpriteAsset.spriteCharacterTable[m_spriteIndex];
+                            _characterInfo.elementType = m_textElementType;
+                            _characterInfo.index = tagStartIndex;
+                            _characterInfo.stringLength = unicodeChars[i].stringIndex - tagStartIndex + 1;
+                            m_textInfo.characterInfo[m_totalCharacterCount] = _characterInfo;
 
                             // Restore element type and material index to previous values.
                             m_textElementType = TMP_TextElementType.Character;
@@ -1214,13 +1216,14 @@ namespace TMPro
                 #endregion
 
                 // Save text element data
-                m_textInfo.characterInfo[m_totalCharacterCount].elementType = TMP_TextElementType.Character;
-                m_textInfo.characterInfo[m_totalCharacterCount].textElement = character;
-                m_textInfo.characterInfo[m_totalCharacterCount].isUsingAlternateTypeface = isUsingAlternativeTypeface;
-                m_textInfo.characterInfo[m_totalCharacterCount].character = (char)unicode;
-                m_textInfo.characterInfo[m_totalCharacterCount].index = unicodeChars[i].stringIndex;
-                m_textInfo.characterInfo[m_totalCharacterCount].stringLength = unicodeChars[i].length;
-                m_textInfo.characterInfo[m_totalCharacterCount].fontAsset = m_currentFontAsset;
+                var _characterInfo1 = m_textInfo.characterInfo[m_totalCharacterCount];
+                _characterInfo1.elementType = TMP_TextElementType.Character;
+                _characterInfo1.textElement = character;
+                _characterInfo1.isUsingAlternateTypeface = isUsingAlternativeTypeface;
+                _characterInfo1.character = (char)unicode;
+                _characterInfo1.index = unicodeChars[i].stringIndex;
+                _characterInfo1.stringLength = unicodeChars[i].length;
+                _characterInfo1.fontAsset = m_currentFontAsset;
 
                 // Special handling if the character is a sprite.
                 if (character.elementType == TextElementType.Sprite)
@@ -1229,10 +1232,10 @@ namespace TMPro
                     m_currentMaterialIndex = MaterialReference.AddMaterialReference(spriteAssetRef.material, spriteAssetRef, ref m_materialReferences, m_materialReferenceIndexLookup);
                     m_materialReferences[m_currentMaterialIndex].referenceCount += 1;
 
-                    m_textInfo.characterInfo[m_totalCharacterCount].elementType = TMP_TextElementType.Sprite;
-                    m_textInfo.characterInfo[m_totalCharacterCount].materialReferenceIndex = m_currentMaterialIndex;
-                    m_textInfo.characterInfo[m_totalCharacterCount].spriteAsset = spriteAssetRef;
-                    m_textInfo.characterInfo[m_totalCharacterCount].spriteIndex = (int)character.glyphIndex;
+                    _characterInfo1.elementType = TMP_TextElementType.Sprite;
+                    _characterInfo1.materialReferenceIndex = m_currentMaterialIndex;
+                    _characterInfo1.spriteAsset = spriteAssetRef;
+                    _characterInfo1.spriteIndex = (int)character.glyphIndex;
 
                     // Restore element type and material index to previous values.
                     m_textElementType = TMP_TextElementType.Character;
@@ -1277,8 +1280,8 @@ namespace TMPro
                     }
                 }
 
-                m_textInfo.characterInfo[m_totalCharacterCount].material = m_currentMaterial;
-                m_textInfo.characterInfo[m_totalCharacterCount].materialReferenceIndex = m_currentMaterialIndex;
+                _characterInfo1.material = m_currentMaterial;
+                _characterInfo1.materialReferenceIndex = m_currentMaterialIndex;
                 m_materialReferences[m_currentMaterialIndex].isFallbackMaterial = isUsingFallbackOrAlternativeTypeface;
 
                 // Restore previous font asset and material if fallback font was used.
@@ -1308,7 +1311,7 @@ namespace TMPro
 
             // Check if we need to resize the MeshInfo array for handling different materials.
             if (materialCount > m_textInfo.meshInfo.Length)
-                TMP_TextInfo.Resize(ref m_textInfo.meshInfo, materialCount, false);
+                TMP_TextInfo.Resize(ref m_textInfo.meshInfo.tMP_MeshInfos, materialCount, false);
 
             // Resize SubTextObject array if necessary
             if (materialCount > m_subTextObjects.Length)
@@ -1316,7 +1319,7 @@ namespace TMPro
 
             // Resize CharacterInfo[] if allocations are excessive
             if (m_VertexBufferAutoSizeReduction && m_textInfo.characterInfo.Length - m_totalCharacterCount > 256)
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo, Mathf.Max(m_totalCharacterCount + 1, 256), true);
+                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, Mathf.Max(m_totalCharacterCount + 1, 256), true);
 
 
             // Iterate through the material references to set the mesh buffer allocations
@@ -1827,22 +1830,26 @@ namespace TMPro
                     charCode = (int)characterToSubstitute.unicode;
                     m_textElementType = TMP_TextElementType.Character;
                     isInjectingCharacter = true;
-
+                    
                     switch (charCode)
                     {
                         case 0x03:
-                            m_textInfo.characterInfo[m_characterCount].textElement = m_currentFontAsset.characterLookupTable[0x03];
+                            var _characterInfo = m_textInfo.characterInfo[m_characterCount];
+                            _characterInfo.textElement = m_currentFontAsset.characterLookupTable[0x03];
+                            m_textInfo.characterInfo[m_characterCount] = _characterInfo;
                             m_isTextTruncated = true;
                             break;
                         case 0x2D:
                             //
                             break;
                         case 0x2026:
-                            m_textInfo.characterInfo[m_characterCount].textElement = m_Ellipsis.character;
-                            m_textInfo.characterInfo[m_characterCount].elementType = TMP_TextElementType.Character;
-                            m_textInfo.characterInfo[m_characterCount].fontAsset = m_Ellipsis.fontAsset;
-                            m_textInfo.characterInfo[m_characterCount].material = m_Ellipsis.material;
-                            m_textInfo.characterInfo[m_characterCount].materialReferenceIndex = m_Ellipsis.materialIndex;
+                            var _characterInfo1 = m_textInfo.characterInfo[m_characterCount];
+                            _characterInfo1.textElement = m_Ellipsis.character;
+                            _characterInfo1.elementType = TMP_TextElementType.Character;
+                            _characterInfo1.fontAsset = m_Ellipsis.fontAsset;
+                            _characterInfo1.material = m_Ellipsis.material;
+                            _characterInfo1.materialReferenceIndex = m_Ellipsis.materialIndex;
+                            m_textInfo.characterInfo[m_characterCount] = _characterInfo1;
 
                             // Indicates the source parsing data has been modified.
                             m_isTextTruncated = true;
@@ -1860,9 +1867,11 @@ namespace TMPro
                 #region Linked Text
                 if (m_characterCount < m_firstVisibleCharacter && charCode != 0x03)
                 {
-                    m_textInfo.characterInfo[m_characterCount].isVisible = false;
-                    m_textInfo.characterInfo[m_characterCount].character = (char)0x200B;
-                    m_textInfo.characterInfo[m_characterCount].lineNumber = 0;
+                    var _characterInfo = m_textInfo.characterInfo[m_characterCount];
+                    _characterInfo.isVisible = false;
+                    _characterInfo.character = (char)0x200B;
+                    _characterInfo.lineNumber = 0;
+                    m_textInfo.characterInfo[m_characterCount] = _characterInfo;
                     m_characterCount += 1;
                     continue;
                 }
@@ -1950,11 +1959,14 @@ namespace TMPro
 
                     m_cached_TextElement = sprite;
 
-                    m_textInfo.characterInfo[m_characterCount].elementType = TMP_TextElementType.Sprite;
-                    m_textInfo.characterInfo[m_characterCount].scale = currentElementScale;
-                    m_textInfo.characterInfo[m_characterCount].spriteAsset = m_currentSpriteAsset;
-                    m_textInfo.characterInfo[m_characterCount].fontAsset = m_currentFontAsset;
-                    m_textInfo.characterInfo[m_characterCount].materialReferenceIndex = m_currentMaterialIndex;
+                    var _characterInfo = m_textInfo.characterInfo[m_characterCount];
+                    _characterInfo.elementType = TMP_TextElementType.Sprite;
+                    _characterInfo.scale = currentElementScale;
+                    _characterInfo.spriteAsset = m_currentSpriteAsset;
+                    _characterInfo.fontAsset = m_currentFontAsset;
+                    _characterInfo.materialReferenceIndex = m_currentMaterialIndex;
+
+                    m_textInfo.characterInfo[m_characterCount] = _characterInfo;
 
                     m_currentMaterialIndex = previousMaterialIndex;
 
@@ -3304,7 +3316,7 @@ namespace TMPro
                 {
                     // Check if we need to increase allocations for the pageInfo array.
                     if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
-                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, true);
+                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo.tMP_PageInfos, m_pageNumber + 1, true);
 
                     m_textInfo.pageInfo[m_pageNumber].ascender = m_PageAscender;
                     m_textInfo.pageInfo[m_pageNumber].descender = m_ElementDescender < m_textInfo.pageInfo[m_pageNumber].descender
@@ -3539,7 +3551,7 @@ namespace TMPro
             float strikethroughScale = 0;
             float strikethroughBaseline = 0;
 
-            TMP_CharacterInfo[] characterInfos = m_textInfo.characterInfo;
+            var characterInfos = m_textInfo.characterInfo;
             #region Handle Line Justification & UV Mapping & Character Visibility & More
             for (int i = 0; i < m_characterCount; i++)
             {
@@ -3920,15 +3932,16 @@ namespace TMPro
                         int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
 
-                        if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                        //if (m_textInfo.wordCount + 1 > size)
+                        //    TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
 
                         wordLastChar = i;
 
-                        m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
-                        m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
-                        m_textInfo.wordInfo[index].characterCount = wordLastChar - wordFirstChar + 1;
-                        m_textInfo.wordInfo[index].textComponent = this;
+                        var _wordInfo = m_textInfo.wordInfo[index];
+                        _wordInfo.firstCharacterIndex = wordFirstChar;
+                        _wordInfo.lastCharacterIndex = wordLastChar;
+                        _wordInfo.characterCount = wordLastChar - wordFirstChar + 1;
+                        _wordInfo.textComponent = this;
 
                         wordCount += 1;
                         m_textInfo.wordCount += 1;
@@ -3949,13 +3962,13 @@ namespace TMPro
                         int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
 
-                        if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
-
-                        m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
-                        m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
-                        m_textInfo.wordInfo[index].characterCount = wordLastChar - wordFirstChar + 1;
-                        m_textInfo.wordInfo[index].textComponent = this;
+                        //if (m_textInfo.wordCount + 1 > size)
+                        //    TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                        var _wordInfo = m_textInfo.wordInfo[index];
+                        _wordInfo.firstCharacterIndex = wordFirstChar;
+                        _wordInfo.lastCharacterIndex = wordLastChar;
+                        _wordInfo.characterCount = wordLastChar - wordFirstChar + 1;
+                        _wordInfo.textComponent = this;
 
                         wordCount += 1;
                         m_textInfo.wordCount += 1;
