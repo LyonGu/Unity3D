@@ -192,7 +192,7 @@ namespace TMPro
         public string GetWord()
         {
             string word = string.Empty;
-            TMP_CharacterInfo[] charInfo = textComponent.textInfo.characterInfo;
+            TMP_CharacterInfo[] charInfo = textComponent.textInfo.characterInfo.tMP_CharacterInfos;
 
             for (int i = firstCharacterIndex; i < lastCharacterIndex + 1; i++)
             {

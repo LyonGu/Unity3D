@@ -4981,7 +4981,7 @@ namespace TMPro
                 }
             }
 
-            m_textInfo.lineInfo = temp_lineInfo;
+            m_textInfo.lineInfo.tMP_LineInfos = temp_lineInfo;
         }
         protected static Vector2 k_LargePositiveVector2 = new Vector2(TMP_Math.INT_MAX, TMP_Math.INT_MAX);
         protected static Vector2 k_LargeNegativeVector2 = new Vector2(TMP_Math.INT_MIN, TMP_Math.INT_MIN);
@@ -5555,7 +5555,7 @@ namespace TMPro
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + 4) / 4));
 
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo.tMP_CharacterInfos;
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
@@ -5605,7 +5605,7 @@ namespace TMPro
             if (index_X4 >= m_textInfo.meshInfo[materialIndex].vertices.Length)
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + (isVolumetric ? 8 : 4)) / 4));
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo.tMP_CharacterInfos;
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
@@ -5693,7 +5693,7 @@ namespace TMPro
             if (index_X4 >= m_textInfo.meshInfo[materialIndex].vertices.Length)
                 m_textInfo.meshInfo[materialIndex].ResizeMeshInfo(Mathf.NextPowerOfTwo((index_X4 + 4) / 4));
 
-            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo;
+            TMP_CharacterInfo[] characterInfoArray = m_textInfo.characterInfo.tMP_CharacterInfos;
             m_textInfo.characterInfo[i].vertexIndex = index_X4;
 
             // Setup Vertices for Characters
@@ -7691,7 +7691,7 @@ namespace TMPro
                             int index = m_textInfo.linkCount;
 
                             if (index + 1 > m_textInfo.linkInfo.Length)
-                                TMP_TextInfo.Resize(ref m_textInfo.linkInfo, index + 1);
+                                TMP_TextInfo.Resize(ref m_textInfo.linkInfo.tMP_LinkInfos, index + 1);
 
                             m_textInfo.linkInfo[index].textComponent = this;
                             m_textInfo.linkInfo[index].hashCode = m_xmlAttribute[0].valueHashCode;

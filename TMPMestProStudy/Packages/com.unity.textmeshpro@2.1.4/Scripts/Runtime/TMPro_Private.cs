@@ -987,7 +987,7 @@ namespace TMPro
             if (m_textInfo == null)
                 m_textInfo = new TMP_TextInfo(m_InternalTextProcessingArraySize);
             else if (m_textInfo.characterInfo.Length < m_InternalTextProcessingArraySize)
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_InternalTextProcessingArraySize, false);
+                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_InternalTextProcessingArraySize, false);
 
             m_textElementType = TMP_TextElementType.Character;
 
@@ -1050,8 +1050,8 @@ namespace TMPro
             for (int i = 0; i < unicodeChars.Length && unicodeChars[i].unicode != 0; i++)
             {
                 //Make sure the characterInfo array can hold the next text element.
-                if (m_textInfo.characterInfo == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
-                    TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_totalCharacterCount + 1, true);
+                if (m_textInfo.characterInfo.tMP_CharacterInfos == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
+                    TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_totalCharacterCount + 1, true);
 
                 int unicode = unicodeChars[i].unicode;
 
@@ -1308,7 +1308,7 @@ namespace TMPro
 
             // Check if we need to resize the MeshInfo array for handling different materials.
             if (materialCount > m_textInfo.meshInfo.Length)
-                TMP_TextInfo.Resize(ref m_textInfo.meshInfo, materialCount, false);
+                TMP_TextInfo.Resize(ref m_textInfo.meshInfo.tMP_MeshInfos, materialCount, false);
 
             // Resize SubTextObject array if necessary
             if (materialCount > m_subTextObjects.Length)
@@ -1316,7 +1316,7 @@ namespace TMPro
 
             // Resize CharacterInfo[] if allocations are excessive
             if (m_VertexBufferAutoSizeReduction && m_textInfo.characterInfo.Length - m_totalCharacterCount > 256)
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo, Mathf.Max(m_totalCharacterCount + 1, 256), true);
+                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, Mathf.Max(m_totalCharacterCount + 1, 256), true);
 
 
             // Iterate through the material references to set the mesh buffer allocations
@@ -3304,7 +3304,7 @@ namespace TMPro
                 {
                     // Check if we need to increase allocations for the pageInfo array.
                     if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
-                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, true);
+                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo.tMP_PageInfos, m_pageNumber + 1, true);
 
                     m_textInfo.pageInfo[m_pageNumber].ascender = m_PageAscender;
                     m_textInfo.pageInfo[m_pageNumber].descender = m_ElementDescender < m_textInfo.pageInfo[m_pageNumber].descender
@@ -3539,7 +3539,7 @@ namespace TMPro
             float strikethroughScale = 0;
             float strikethroughBaseline = 0;
 
-            TMP_CharacterInfo[] characterInfos = m_textInfo.characterInfo;
+            TMP_CharacterInfo[] characterInfos = m_textInfo.characterInfo.tMP_CharacterInfos;
             #region Handle Line Justification & UV Mapping & Character Visibility & More
             for (int i = 0; i < m_characterCount; i++)
             {
@@ -3921,7 +3921,7 @@ namespace TMPro
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo.tMP_WordInfos, size + 1);
 
                         wordLastChar = i;
 
@@ -3950,7 +3950,7 @@ namespace TMPro
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo.tMP_WordInfos, size + 1);
 
                         m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
                         m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;

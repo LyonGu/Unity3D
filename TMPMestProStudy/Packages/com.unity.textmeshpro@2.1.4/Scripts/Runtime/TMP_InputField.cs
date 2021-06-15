@@ -3349,7 +3349,7 @@ namespace TMPro
             TMP_TextInfo textInfo = m_TextComponent.textInfo;
 
             // Check to make sure we have valid data and lines to query.
-            if (textInfo == null || textInfo.lineInfo == null || textInfo.lineCount == 0 || textInfo.lineCount > textInfo.lineInfo.Length) return;
+            if (textInfo == null || textInfo.lineInfo.tMP_LineInfos == null || textInfo.lineCount == 0 || textInfo.lineCount > textInfo.lineInfo.Length) return;
 
             float verticalAlignmentOffset = 0;
             float textHeight = m_TextComponent.preferredHeight;
