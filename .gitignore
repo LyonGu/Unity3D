@@ -199,3 +199,7 @@ SRP_UDP/.vsconfig
 SRP_UDP/Logs/
 TMPMeshProStudy/Library/
 TMPMeshProStudy/Temp/
+TMPMestProStudy/Temp/
+TMPMestProStudy/obj/
+TMPMestProStudy/Library/
+TMPMestProStudy/.vs/
