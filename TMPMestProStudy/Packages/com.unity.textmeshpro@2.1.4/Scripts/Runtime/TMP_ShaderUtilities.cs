@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections;
-
+using System.Collections.Generic;
 
 namespace TMPro
 {
@@ -91,6 +91,8 @@ namespace TMPro
 
         private static float m_clamp = 1.0f;
         public static bool isInitialized = false;
+
+        private static Dictionary<int, List<string>> _materialKeyMap = new Dictionary<int, List<string>>();
 
 
         /// <summary>
@@ -230,8 +232,19 @@ namespace TMPro
             float ratio_A = 1;
             float ratio_B = 1;
             float ratio_C = 1;
+            int id = mat.GetInstanceID();
+            if (!_materialKeyMap.TryGetValue(id, out var shaderKeywords))
+            {
+                shaderKeywords = new List<string>();
+                var sKeys = mat.shaderKeywords;
+                for (int i = 0; i < sKeys.Length; i++)
+                {
+                    shaderKeywords.Add(sKeys[i]);
+                }
+                _materialKeyMap.Add(id, shaderKeywords);
+            }
 
-            bool isRatioEnabled = !mat.shaderKeywords.Contains(Keyword_Ratios);
+            bool isRatioEnabled = !shaderKeywords.Contains(Keyword_Ratios);
 
             if (!mat.HasProperty(ID_GradientScale) || !mat.HasProperty(ID_FaceDilate))
                 return;
@@ -323,12 +336,38 @@ namespace TMPro
             if (material == null || !material.HasProperty(ShaderUtilities.ID_ClipRect))
                 return false;
 
-            if (material.shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_SOFT) || material.shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_HARD) || material.shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_TEX))
+            int id = material.GetInstanceID();
+            if (!_materialKeyMap.TryGetValue(id, out var shaderKeywords))
+            {
+                shaderKeywords = new List<string>();
+                var sKeys = material.shaderKeywords;
+                for (int i = 0; i < sKeys.Length; i++)
+                {
+                    shaderKeywords.Add(sKeys[i]); 
+                }
+                _materialKeyMap.Add(id, shaderKeywords);
+            }
+            if (shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_SOFT) || shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_HARD) || shaderKeywords.Contains(ShaderUtilities.Keyword_MASK_TEX))
                 return true;
 
             return false;
         }
 
+
+        //public static void AddMaterialShadeKeys(Material material)
+        //{
+        //    int id = material.GetInstanceID();
+        //    if (!_materialKeyMap.TryGetValue(material.GetInstanceID(), out var shaderKeywords))
+        //    {
+        //        shaderKeywords = new List<string>();
+        //        var sKeys = material.shaderKeywords;
+        //        for (int i = 0; i < sKeys.Length; i++)
+        //        {
+        //            shaderKeywords.Add(sKeys[i]);
+        //        }
+        //        _materialKeyMap.Add(id, shaderKeywords);
+        //    }
+        //}
 
         // Function to determine how much extra padding is required as a result of material properties like dilate, outline thickness, softness, glow, etc...
         public static float GetPadding(Material material, bool enableExtraPadding, bool isBold)
@@ -370,9 +409,23 @@ namespace TMPro
             // Iterate through each of the assigned materials to find the max values to set the padding.
 
             // Update Shader Ratios prior to computing padding
+
+            //string[] shaderKeywords = material.shaderKeywords;
+
+            int id = material.GetInstanceID();
+            if (!_materialKeyMap.TryGetValue(material.GetInstanceID(), out var shaderKeywords))
+            {
+                shaderKeywords = new List<string>();
+                var sKeys = material.shaderKeywords;
+                for (int i = 0; i < sKeys.Length; i++)
+                {
+                    shaderKeywords.Add(sKeys[i]);
+                }
+                _materialKeyMap.Add(id, shaderKeywords);
+            }
             UpdateShaderRatios(material);
 
-            string[] shaderKeywords = material.shaderKeywords;
+            
 
             if (material.HasProperty(ID_ScaleRatio_A))
                 scaleRatio_A = material.GetFloat(ID_ScaleRatio_A);
@@ -487,8 +540,19 @@ namespace TMPro
             {
                 // Update Shader Ratios prior to computing padding
                 ShaderUtilities.UpdateShaderRatios(materials[i]);
+                int id = materials[i].GetInstanceID();
+                if (!_materialKeyMap.TryGetValue(materials[i].GetInstanceID(), out var shaderKeywords))
+                {
+                    shaderKeywords = new List<string>();
+                    var sKeys = materials[i].shaderKeywords;
+                    for (int j = 0; j < sKeys.Length; j++)
+                    {
+                        shaderKeywords.Add(sKeys[j]);
+                    }
+                    _materialKeyMap.Add(id, shaderKeywords);
+                }
 
-                string[] shaderKeywords = materials[i].shaderKeywords;
+                //string[] shaderKeywords = materials[i].shaderKeywords;
 
                 if (materials[i].HasProperty(ShaderUtilities.ID_ScaleRatio_A))
                     scaleRatio_A = materials[i].GetFloat(ShaderUtilities.ID_ScaleRatio_A);
