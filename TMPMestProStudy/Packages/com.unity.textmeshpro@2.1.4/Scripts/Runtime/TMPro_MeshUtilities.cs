@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define OPTIMIZE_TMP 
+using UnityEngine;
 using UnityEngine.TextCore;
 using System;
 
@@ -192,7 +193,12 @@ namespace TMPro
         public string GetWord()
         {
             string word = string.Empty;
+#if OPTIMIZE_TMP
             TMP_CharacterInfo[] charInfo = textComponent.textInfo.characterInfo.tMP_CharacterInfos;
+#else
+            TMP_CharacterInfo[] charInfo = textComponent.textInfo.characterInfo;
+#endif
+
 
             for (int i = firstCharacterIndex; i < lastCharacterIndex + 1; i++)
             {

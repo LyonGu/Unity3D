@@ -86,15 +86,9 @@ namespace TMPro
 
         public void Add(System.Action<A, B> rhs)
         {
-            //if (lookup.ContainsKey(rhs)) return;
+            if (lookup.ContainsKey(rhs)) return;
 
-            //lookup[rhs] = delegates.AddLast(rhs);
-
-            if (!lookup.TryGetValue(rhs, out var result))
-            {
-                result = delegates.AddLast(rhs);
-                lookup.Add(rhs, result);
-            }
+            lookup[rhs] = delegates.AddLast(rhs);
         }
 
         public void Remove(System.Action<A, B> rhs)

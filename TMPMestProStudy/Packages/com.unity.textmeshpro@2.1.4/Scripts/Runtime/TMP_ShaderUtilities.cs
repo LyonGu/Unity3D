@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿#define OPTIMIZE_TMP
+using UnityEngine;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+
+
 
 namespace TMPro
 {
@@ -92,7 +95,10 @@ namespace TMPro
         private static float m_clamp = 1.0f;
         public static bool isInitialized = false;
 
+#if OPTIMIZE_TMP
         private static Dictionary<int, List<string>> _materialKeyMap = new Dictionary<int, List<string>>();
+#endif
+
 
 
         /// <summary>
@@ -232,6 +238,8 @@ namespace TMPro
             float ratio_A = 1;
             float ratio_B = 1;
             float ratio_C = 1;
+            bool isRatioEnabled = false;
+#if OPTIMIZE_TMP
             int id = mat.GetInstanceID();
             if (!_materialKeyMap.TryGetValue(id, out var shaderKeywords))
             {
@@ -243,8 +251,14 @@ namespace TMPro
                 }
                 _materialKeyMap.Add(id, shaderKeywords);
             }
+            isRatioEnabled = !shaderKeywords.Contains(Keyword_Ratios);
+#else
+            isRatioEnabled = ! mat.shaderKeywords.Contains(Keyword_Ratios);
+#endif
 
-            bool isRatioEnabled = !shaderKeywords.Contains(Keyword_Ratios);
+
+
+
 
             if (!mat.HasProperty(ID_GradientScale) || !mat.HasProperty(ID_FaceDilate))
                 return;
@@ -410,8 +424,8 @@ namespace TMPro
 
             // Update Shader Ratios prior to computing padding
 
-            //string[] shaderKeywords = material.shaderKeywords;
 
+#if OPTIMIZE_TMP
             int id = material.GetInstanceID();
             if (!_materialKeyMap.TryGetValue(material.GetInstanceID(), out var shaderKeywords))
             {
@@ -423,6 +437,10 @@ namespace TMPro
                 }
                 _materialKeyMap.Add(id, shaderKeywords);
             }
+#else
+            string[] shaderKeywords = material.shaderKeywords; 
+#endif
+
             UpdateShaderRatios(material);
 
             
@@ -540,6 +558,8 @@ namespace TMPro
             {
                 // Update Shader Ratios prior to computing padding
                 ShaderUtilities.UpdateShaderRatios(materials[i]);
+
+#if OPTIMIZE_TMP
                 int id = materials[i].GetInstanceID();
                 if (!_materialKeyMap.TryGetValue(materials[i].GetInstanceID(), out var shaderKeywords))
                 {
@@ -552,7 +572,9 @@ namespace TMPro
                     _materialKeyMap.Add(id, shaderKeywords);
                 }
 
-                //string[] shaderKeywords = materials[i].shaderKeywords;
+#else
+                string[] shaderKeywords = materials[i].shaderKeywords;
+#endif
 
                 if (materials[i].HasProperty(ShaderUtilities.ID_ScaleRatio_A))
                     scaleRatio_A = materials[i].GetFloat(ShaderUtilities.ID_ScaleRatio_A);
