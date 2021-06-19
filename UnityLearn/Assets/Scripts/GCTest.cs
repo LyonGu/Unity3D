@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 
@@ -21,6 +22,9 @@ public class GCTest : MonoBehaviour
     public Button btnAdd;
     public Button btnDel;
 
+
+    public Transform testTransform;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,8 +33,45 @@ public class GCTest : MonoBehaviour
         btnDel.onClick.AddListener(OnClckDel);
         proc = Process.GetCurrentProcess();
         pf1 = new PerformanceCounter("Process", "Working Set - Private", proc.ProcessName);   //第二个参数就是得到只有工作集
-    }
 
+
+        //验证
+        //int childCount = testTransform.childCount;
+
+        //for (int i = 0; i < childCount; i++)
+        //{
+        //    var t = testTransform.GetChild(i);
+        //    UnityEngine.Debug.Log($"name is {t.name}");
+        //}
+
+
+        //GetChild(testTransform);
+
+
+
+
+    }
+    private static void GetChild(Transform trans)
+    {
+        int childCount = trans.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            var t = trans.GetChild(i);
+            //UnityEngine.Debug.Log($"name is {t.name}");
+            if (t.childCount > 0)
+            {
+                GetChild(t);
+            }
+        }
+        //foreach (Transform node in trans)
+        //{
+        //    //UnityEngine.Debug.Log($"name is {node.name}");
+        //    if (node.childCount > 0)
+        //    {
+        //        GetChild(node.transform);
+        //    }
+        //}
+    }
     void OnClckAdd()
     {
         for (int i = 0; i< 20; ++i)        
@@ -69,6 +110,20 @@ public class GCTest : MonoBehaviour
             txt.text = ((int)(value)).ToString();
         }
         timer += Time.deltaTime;
+
+        //Profiler.BeginSample("TransForm array1");
+        //Transform[] transformsAry = testTransform.GetComponentsInChildren<Transform>(true);
+        //int length = transformsAry.Length;
+        //for (int i = 0; i < length; i++)
+        //{
+        //    var t = transformsAry[i];
+        //    //UnityEngine.Debug.Log($"name is {t.name}");
+        //}
+        //Profiler.EndSample();
+
+        //Profiler.BeginSample("TransForm array2");
+        //GetChild(testTransform);
+        //Profiler.EndSample();
 
     }
 }

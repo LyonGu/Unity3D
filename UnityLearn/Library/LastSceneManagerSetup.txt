@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scripts/QF/2.ResKit/2.ResKitExample/ResKit/LoadAssetBundleResExample/Scene.unity
+- path: Assets/Scene/GCTest.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
