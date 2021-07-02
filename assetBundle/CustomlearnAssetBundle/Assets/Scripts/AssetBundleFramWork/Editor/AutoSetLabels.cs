@@ -23,7 +23,9 @@ public class AutoSetLabels  {
 	[MenuItem("AssetBundleTools/Set AB Label")]
 	public static void setABLable()
 	{
-        string targetPath = Path.Combine(Application.dataPath, saveFolderPath.Replace("Assets/", ""));
+		lookupList.Clear();
+
+		string targetPath = Path.Combine(Application.dataPath, saveFolderPath.Replace("Assets/", ""));
 		if(File.Exists(targetPath))
         {
             File.Delete(targetPath);
@@ -69,7 +71,12 @@ public class AutoSetLabels  {
 
 		}
 		File.WriteAllText(targetPath,conent);
+
 		// File.WriteAllLines(targetPath, lookupList);
+
+		string saveABResLookUpFolderPath = "Assets/AB_Res/lookup.txt";
+		saveABResLookUpFolderPath = Path.Combine(Application.dataPath, saveABResLookUpFolderPath.Replace("Assets/", ""));
+		File.Copy(targetPath, saveABResLookUpFolderPath, true);
 		AssetDatabase.Refresh();
 		Debug.Log("AssetBundle 本次操作设置标记完成");
 	}

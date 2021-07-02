@@ -60,6 +60,10 @@ public class MultiABMgr
         }
     }
 
+    public SingleABLoader GetSingleABLoader(string abName)
+    {
+        return _DicSingleABLoaderCache[abName];
+    }
 
     public void LoadAssetBundeler(string abName)
     {

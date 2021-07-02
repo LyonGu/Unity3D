@@ -16,6 +16,7 @@ public class SingleABLoader : System.IDisposable {
 	//AssetBundle 下载路径
 	private string _ABDownLoadPath;
 
+
 	//构造函数
 	public SingleABLoader(string abName,DelLoadComplete loadComplete)
 	{
@@ -30,10 +31,43 @@ public class SingleABLoader : System.IDisposable {
 
 	}
 
+	public AssetLoader GetLoader()
+	{
+		return _AssetLoader;
+	}
+
+	
+
 	public void LoadAssetBundleNew()
 	{
-        AssetBundle abObj = AssetBundle.LoadFromFile(_ABDownLoadPath);
-		_AssetLoader = new AssetLoader(abObj);
+
+		//bool isHaveLoad = assetbundlMgr.IsHaveLoadDone(_ABName);
+		//if (!isHaveLoad)
+		//{
+		//	AssetBundle abObj = AssetBundle.LoadFromFile(_ABDownLoadPath);
+		//	_AssetLoader = new AssetLoader(abObj);
+		//}
+		//      else
+		//      {
+		//	_AssetLoader = assetbundlMgr.GetAssetLoad(_ABName);
+
+		//}
+
+		var assetbundlMgr = AssetBundleMgr.GetInstance();
+		var assetLoader = assetbundlMgr.GetLoader(_ABDownLoadPath);
+		if (assetLoader == null)
+		{
+			AssetBundle abObj = AssetBundle.LoadFromFile(_ABDownLoadPath);
+			_AssetLoader = new AssetLoader(abObj, _ABDownLoadPath);
+			assetbundlMgr.AddLoader(_ABDownLoadPath, _AssetLoader);
+		}
+        else
+        {
+			_AssetLoader = assetLoader;
+
+		}
+		
+
 	}
 
 
@@ -62,11 +96,14 @@ public class SingleABLoader : System.IDisposable {
 	}
 
 
+
 	/// 释放资源
 	public void Dispose()
 	{
 		if (_AssetLoader != null)
 		{
+			var assetbundlMgr = AssetBundleMgr.GetInstance();
+			assetbundlMgr.RemoveLoader(_ABDownLoadPath);
 			_AssetLoader.Dispose();
 			_AssetLoader = null;
 		}
@@ -82,6 +119,8 @@ public class SingleABLoader : System.IDisposable {
 	{
 		if (_AssetLoader != null)
 		{
+			var assetbundlMgr = AssetBundleMgr.GetInstance();
+			assetbundlMgr.RemoveLoader(_ABDownLoadPath);
 			_AssetLoader.DisposeALL();
 			_AssetLoader = null;
 		}

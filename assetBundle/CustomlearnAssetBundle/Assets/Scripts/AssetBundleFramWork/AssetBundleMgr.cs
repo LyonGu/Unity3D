@@ -24,8 +24,34 @@ public class AssetBundleMgr:MonoBehaviour
     private Dictionary<string, string> _DicFilePath = new Dictionary<string, string>();
     private Dictionary<string, string> _DicABPath = new Dictionary<string, string>();
 
-
+    private Dictionary<string, AssetLoader> _DicAB = new Dictionary<string, AssetLoader>(100);
     private  AssetBundleMgr(){}
+
+    public void AddLoader(string abPath, AssetLoader assetLoader)
+    {
+        if (!_DicAB.ContainsKey(abPath))
+        {
+            _DicAB.Add(abPath, assetLoader);
+        }
+    }
+
+    public AssetLoader GetLoader(string abPath)
+    {
+        if (_DicAB.TryGetValue(abPath, out var assetLoader))
+        {
+            return assetLoader;
+        }
+        return null;
+    }
+
+    public void RemoveLoader(string abPath)
+    {
+        if (!_DicAB.ContainsKey(abPath))
+        {
+            return;
+        }
+        _DicAB.Remove(abPath);
+    }
 
     //得到本类实例
     public static AssetBundleMgr GetInstance()
@@ -107,7 +133,8 @@ public class AssetBundleMgr:MonoBehaviour
     // }
 
 
-     public void LoadAssetBundlePack(string abName, DelLoadComplete loadAllCompleteHandle = null)
+
+    public void LoadAssetBundlePack(string abName, DelLoadComplete loadAllCompleteHandle = null)
     {
         //参数检查
         if ( string.IsNullOrEmpty(abName))
@@ -220,7 +247,9 @@ public class AssetBundleMgr:MonoBehaviour
                 string abName = names[0];
                 string filePath = names[1];
                 string fileName = names[2];
-
+                abName = abName.Replace("\r", "");
+                filePath = filePath.Replace("\r", "");
+                fileName = fileName.Replace("\r", "");
                 if (_DicABPath.ContainsKey(fileName))
                 {
                     Debug.LogError("_DicABPath is have exsit key :"+ fileName);

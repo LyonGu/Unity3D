@@ -53,7 +53,9 @@ public class BuildAssetBundle  {
                 const string saveFolderPath = "Assets/AB_Res/lookup.txt";
                 string srcPath = Path.Combine(Application.dataPath, saveFolderPath.Replace("Assets/", ""));
                 //拷贝lookup表
-                File.Copy(srcPath, strABoutPath+"/lookup.txt", true);
+                var targetPath = strABoutPath + "/lookup.txt";
+               
+                File.Copy(srcPath, targetPath, true);
 
 
 

@@ -12,15 +12,17 @@ public class AssetLoader: System.IDisposable {
 
 	//当前Assetbundle
 	private AssetBundle _currentAssetBundle;
+	private string _loadName;
 
 	//缓存容器集合 哈希表
 	private Hashtable _htTable;
 
-	public AssetLoader(AssetBundle abObj)
+	public AssetLoader(AssetBundle abObj, string loadName = "")
 	{
 		if (abObj != null)
 		{
 			_currentAssetBundle = abObj;
+			_loadName = loadName;
 			_htTable = new Hashtable();
 		}
 

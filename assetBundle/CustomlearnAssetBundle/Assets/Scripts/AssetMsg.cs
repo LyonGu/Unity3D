@@ -25,11 +25,13 @@ public class AssetMsg
 
 	 private AssetMsg()
 	 {
-		#if UNITY_EDITOR
-			InitLookUp();
-		#else
-			assetBundleMgr = AssetBundleMgr.GetInstance();
-		#endif
+//#if UNITY_EDITOR
+//        InitLookUp();
+//#else
+//			assetBundleMgr = AssetBundleMgr.GetInstance();
+//#endif
+       
+		assetBundleMgr = AssetBundleMgr.GetInstance();
 	 }
 
 	   public void InitLookUp()
@@ -47,6 +49,10 @@ public class AssetMsg
                 string abName = names[0];
                 string filePath = names[1];
                 string fileName = names[2];
+
+                abName = abName.Replace("\r", "");
+                filePath = filePath.Replace("\r", "");
+                fileName = fileName.Replace("\r", "");
 
                 if (_DicABPath.ContainsKey(fileName))
                 {
@@ -77,24 +83,31 @@ public class AssetMsg
 			return null;
 		}
 
-#if UNITY_EDITOR
-		string path = "Assets/AB_Res/" + _DicFilePath[assetName];
-		T obj = AssetDatabase.LoadAssetAtPath<T>(path);
+//#if UNITY_EDITOR
+//		string path = "Assets/AB_Res/" + _DicFilePath[assetName];
+//		T obj = AssetDatabase.LoadAssetAtPath<T>(path);
 
-		if(typeof(T) == typeof(GameObject))
-		{
-			return GameObject.Instantiate(obj);
-		}
-		return obj;
-#else
-		//todo 使用AssetBundle
+//		if(typeof(T) == typeof(GameObject))
+//		{
+//			return GameObject.Instantiate(obj);
+//		}
+//		return obj;
+//#else
+//		//todo 使用AssetBundle
+//		T obj = (T)assetBundleMgr.LoadAsset(assetName, isCache);
+//		if(typeof(T) == typeof(GameObject))
+//		{
+//			return GameObject.Instantiate(obj);
+//		}
+//		return obj;
+//#endif
+
 		T obj = (T)assetBundleMgr.LoadAsset(assetName, isCache);
-		if(typeof(T) == typeof(GameObject))
+		if (typeof(T) == typeof(GameObject))
 		{
 			return GameObject.Instantiate(obj);
 		}
 		return obj;
-#endif
-	 }
+	}
 
 }
