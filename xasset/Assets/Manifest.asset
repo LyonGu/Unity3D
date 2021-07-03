@@ -1,0 +1,2205 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7882bd278763c45f49cef7deeae496e5, type: 3}
+  m_Name: Manifest
+  m_EditorClassIdentifier: 
+  activeVariants: []
+  dirs:
+  - Assets/XAsset/Demo/Materials
+  - Assets/XAsset/Demo/Prefabs
+  - Assets/XAsset/Demo/Scenes
+  - Assets/XAsset/Demo/UI/10Character
+  - Assets/XAsset/Demo/UI/11NotEnoughMoney
+  - Assets/XAsset/Demo/UI/12Recharge
+  - Assets/XAsset/Demo/UI/13Ranking
+  - Assets/XAsset/Demo/UI/14Pause
+  - Assets/XAsset/Demo/UI/15Opotions
+  - Assets/XAsset/Demo/UI/16Victory1
+  - Assets/XAsset/Demo/UI/17Victory2
+  - Assets/XAsset/Demo/UI/18Warning
+  - Assets/XAsset/Demo/UI/19Died
+  - Assets/XAsset/Demo/UI/1LoadingPage
+  - Assets/XAsset/Demo/UI/20GameOver
+  - Assets/XAsset/Demo/UI/2MainMenu
+  - Assets/XAsset/Demo/UI/3StageSelect
+  - Assets/XAsset/Demo/UI/4Levels
+  - Assets/XAsset/Demo/UI/5Login1
+  - Assets/XAsset/Demo/UI/7Scence1
+  - Assets/XAsset/Demo/UI/8Scence2
+  - Assets/XAsset/Demo/UI/9Store
+  - Assets/XAsset/Demo/UI/Backgrounds
+  - Assets/XAsset/Demo/UI/Components1
+  - Assets/XAsset/Demo/UI/Components2
+  - Assets/XAsset/Demo/UI/Components3
+  - Assets/XAsset/Demo/UI/Components4
+  - Assets/XAsset/Demo/UI/Components5
+  - Assets/XAsset/Demo/UI/Components6
+  - Assets/XAsset/Demo/UI/Components7
+  - Assets/XAsset/Demo/UI/Components8
+  - Assets/XAsset/Demo/UI/Components9
+  assets:
+  - name: Mat_HotTest.mat
+    bundle: 12
+    dir: 0
+  - name: HotUpdateTest.prefab
+    bundle: 21
+    dir: 1
+  - name: Game.unity
+    bundle: 17
+    dir: 2
+  - name: Btn_Buy1_h.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Buy1_n.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Buy1_p.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Role_h.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Role_n.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Role_p.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Money.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Role.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Role1.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Role2.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Role3.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Role4.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Skill.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Skill1.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Skill2.png
+    bundle: 7
+    dir: 3
+  - name: Icon_Skill3.png
+    bundle: 7
+    dir: 3
+  - name: Panel1.png
+    bundle: 7
+    dir: 3
+  - name: Partition line.png
+    bundle: 7
+    dir: 3
+  - name: ProgressBar_Attack.png
+    bundle: 7
+    dir: 3
+  - name: ProgressBar_Defense.png
+    bundle: 7
+    dir: 3
+  - name: ProgressBar_Speed.png
+    bundle: 7
+    dir: 3
+  - name: Stage light01.png
+    bundle: 7
+    dir: 3
+  - name: Stage light02.png
+    bundle: 7
+    dir: 3
+  - name: Stage light03.png
+    bundle: 7
+    dir: 3
+  - name: Stage_bg01.png
+    bundle: 7
+    dir: 3
+  - name: Stage_bg02.png
+    bundle: 7
+    dir: 3
+  - name: Stage_bg03.png
+    bundle: 7
+    dir: 3
+  - name: bg_CHARACTOR.png
+    bundle: 7
+    dir: 3
+  - name: bg_ProgressBar_Attack.png
+    bundle: 7
+    dir: 3
+  - name: bg_RECHARGE.png
+    bundle: 7
+    dir: 3
+  - name: bg_RoleBackground.png
+    bundle: 7
+    dir: 3
+  - name: bg_describtion.png
+    bundle: 7
+    dir: 3
+  - name: Btn_Buy_h.png
+    bundle: 23
+    dir: 4
+  - name: Btn_Buy_n.png
+    bundle: 23
+    dir: 4
+  - name: Btn_Buy_p.png
+    bundle: 23
+    dir: 4
+  - name: bg_NotEnoughMoney.png
+    bundle: 23
+    dir: 4
+  - name: bg_black.png
+    bundle: 23
+    dir: 4
+  - name: Btn_Buy2_h.png
+    bundle: 11
+    dir: 5
+  - name: Btn_Buy2_n.png
+    bundle: 11
+    dir: 5
+  - name: Btn_Buy2_p.png
+    bundle: 11
+    dir: 5
+  - name: Btn_Buy_Yellow_h.png
+    bundle: 11
+    dir: 5
+  - name: Btn_Buy_Yellow_n.png
+    bundle: 11
+    dir: 5
+  - name: Btn_Buy_Yellow_p.png
+    bundle: 11
+    dir: 5
+  - name: Icon_Coins.png
+    bundle: 11
+    dir: 5
+  - name: Icon_Emerald.png
+    bundle: 11
+    dir: 5
+  - name: Icon_Gems.png
+    bundle: 11
+    dir: 5
+  - name: Icon_Sale.png
+    bundle: 11
+    dir: 5
+  - name: Icon_dolor.png
+    bundle: 11
+    dir: 5
+  - name: Radiated light1.png
+    bundle: 11
+    dir: 5
+  - name: Radiated light2.png
+    bundle: 11
+    dir: 5
+  - name: bg_BuyCoins.png
+    bundle: 11
+    dir: 5
+  - name: bg_BuyCoins2.png
+    bundle: 11
+    dir: 5
+  - name: 1st.png
+    bundle: 2
+    dir: 6
+  - name: 2st.png
+    bundle: 2
+    dir: 6
+  - name: 3rd.png
+    bundle: 2
+    dir: 6
+  - name: Btn_Tab1_n.png
+    bundle: 2
+    dir: 6
+  - name: Btn_Tab1_s.png
+    bundle: 2
+    dir: 6
+  - name: Icon_Role1.png
+    bundle: 2
+    dir: 6
+  - name: Icon_Role2.png
+    bundle: 2
+    dir: 6
+  - name: Icon_Role3.png
+    bundle: 2
+    dir: 6
+  - name: Icon_Role4.png
+    bundle: 2
+    dir: 6
+  - name: bg_Ranking.png
+    bundle: 2
+    dir: 6
+  - name: bg_Ranking1.png
+    bundle: 2
+    dir: 6
+  - name: bg_TitleRanking.png
+    bundle: 2
+    dir: 6
+  - name: Btn_Continue0_h.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Continue0_n.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Continue0_p.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Continue_h.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Continue_n.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Continue_p.png
+    bundle: 9
+    dir: 7
+  - name: PAUSE.png
+    bundle: 9
+    dir: 7
+  - name: TitleLine_Left.png
+    bundle: 9
+    dir: 7
+  - name: TitleLine_Right.png
+    bundle: 9
+    dir: 7
+  - name: bg_black.png
+    bundle: 9
+    dir: 7
+  - name: Btn_Previous1_h.png
+    bundle: 3
+    dir: 8
+  - name: Btn_Previous1_n.png
+    bundle: 3
+    dir: 8
+  - name: Btn_Previous1_p.png
+    bundle: 3
+    dir: 8
+  - name: Btn_Tab1_n.png
+    bundle: 3
+    dir: 8
+  - name: Btn_Tab1_s.png
+    bundle: 3
+    dir: 8
+  - name: Btn_slider1.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_Btn_h.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_Btn_n.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_Btn_p.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_bg_n.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_bg_s.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_menu.png
+    bundle: 3
+    dir: 8
+  - name: Dropdown_menu_bg.png
+    bundle: 3
+    dir: 8
+  - name: Icon_Music.png
+    bundle: 3
+    dir: 8
+  - name: Icon_Sound.png
+    bundle: 3
+    dir: 8
+  - name: Partition line.png
+    bundle: 3
+    dir: 8
+  - name: Radio_null.png
+    bundle: 3
+    dir: 8
+  - name: Radio_selected.png
+    bundle: 3
+    dir: 8
+  - name: Slider2.png
+    bundle: 3
+    dir: 8
+  - name: Slider2_Btn.png
+    bundle: 3
+    dir: 8
+  - name: Slider2_bg.png
+    bundle: 3
+    dir: 8
+  - name: Window_Settings.png
+    bundle: 3
+    dir: 8
+  - name: bg_LeftTab.png
+    bundle: 3
+    dir: 8
+  - name: bg_SettingsTitle.png
+    bundle: 3
+    dir: 8
+  - name: bg_Title line.png
+    bundle: 3
+    dir: 8
+  - name: bg_black.png
+    bundle: 3
+    dir: 8
+  - name: bg_slider1.png
+    bundle: 3
+    dir: 8
+  - name: checkbox_normal.png
+    bundle: 3
+    dir: 8
+  - name: checkbox_select.png
+    bundle: 3
+    dir: 8
+  - name: slider1.png
+    bundle: 3
+    dir: 8
+  - name: switch01-off.png
+    bundle: 3
+    dir: 8
+  - name: switch01-on.png
+    bundle: 3
+    dir: 8
+  - name: switch02-off.png
+    bundle: 3
+    dir: 8
+  - name: switch02-on.png
+    bundle: 3
+    dir: 8
+  - name: Btn_Next_h.png
+    bundle: 4
+    dir: 9
+  - name: Btn_Next_n.png
+    bundle: 4
+    dir: 9
+  - name: Btn_Next_p.png
+    bundle: 4
+    dir: 9
+  - name: Btn_Restart_h.png
+    bundle: 4
+    dir: 9
+  - name: Btn_Restart_n.png
+    bundle: 4
+    dir: 9
+  - name: Btn_Restart_p.png
+    bundle: 4
+    dir: 9
+  - name: Icon_Potion.png
+    bundle: 4
+    dir: 9
+  - name: Icon_Ring.png
+    bundle: 4
+    dir: 9
+  - name: Icon_Shield.png
+    bundle: 4
+    dir: 9
+  - name: Icon_SmallStar_Gray.png
+    bundle: 4
+    dir: 9
+  - name: Icon_SmallStar_Light.png
+    bundle: 4
+    dir: 9
+  - name: Icon_reward.png
+    bundle: 4
+    dir: 9
+  - name: Icon_star1_gray.png
+    bundle: 4
+    dir: 9
+  - name: Icon_star1_light.png
+    bundle: 4
+    dir: 9
+  - name: Light line.png
+    bundle: 4
+    dir: 9
+  - name: Lights1.png
+    bundle: 4
+    dir: 9
+  - name: Lights2.png
+    bundle: 4
+    dir: 9
+  - name: ProgressLv.png
+    bundle: 4
+    dir: 9
+  - name: bg_ProgressLv.png
+    bundle: 4
+    dir: 9
+  - name: bg_Victory1.png
+    bundle: 4
+    dir: 9
+  - name: bg_Victory2.png
+    bundle: 4
+    dir: 9
+  - name: bg_block.png
+    bundle: 4
+    dir: 9
+  - name: title_Victory.png
+    bundle: 4
+    dir: 9
+  - name: VICTORY.png
+    bundle: 25
+    dir: 10
+  - name: bg_Victory.png
+    bundle: 25
+    dir: 10
+  - name: Btn_RedOk_h.png
+    bundle: 27
+    dir: 11
+  - name: Btn_RedOk_n.png
+    bundle: 27
+    dir: 11
+  - name: Btn_RedOk_p.png
+    bundle: 27
+    dir: 11
+  - name: bg_Warning.png
+    bundle: 27
+    dir: 11
+  - name: bg_WarningTitle.png
+    bundle: 27
+    dir: 11
+  - name: bg_Warning_Red.png
+    bundle: 27
+    dir: 11
+  - name: Icon_Died.png
+    bundle: 26
+    dir: 12
+  - name: Progress1.png
+    bundle: 29
+    dir: 13
+  - name: Progress2.png
+    bundle: 29
+    dir: 13
+  - name: Title2_bg.png
+    bundle: 29
+    dir: 13
+  - name: bg_Progress.png
+    bundle: 29
+    dir: 13
+  - name: GAME OVER.png
+    bundle: 20
+    dir: 14
+  - name: GameOver.png
+    bundle: 20
+    dir: 14
+  - name: Btn_Character_h.png
+    bundle: 22
+    dir: 15
+  - name: Btn_Character_n.png
+    bundle: 22
+    dir: 15
+  - name: Btn_Character_p.png
+    bundle: 22
+    dir: 15
+  - name: Btn_MainMenu_h.png
+    bundle: 22
+    dir: 15
+  - name: Btn_MainMenu_n.png
+    bundle: 22
+    dir: 15
+  - name: Btn_MainMenu_p.png
+    bundle: 22
+    dir: 15
+  - name: Btn_User_h.png
+    bundle: 22
+    dir: 15
+  - name: Btn_User_n.png
+    bundle: 22
+    dir: 15
+  - name: Btn_User_p.png
+    bundle: 22
+    dir: 15
+  - name: Icon_Character.png
+    bundle: 22
+    dir: 15
+  - name: Icon_Ranking.png
+    bundle: 22
+    dir: 15
+  - name: Icon_Recharge.png
+    bundle: 22
+    dir: 15
+  - name: Icon_Shop.png
+    bundle: 22
+    dir: 15
+  - name: Icon_User.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi Circle_Large Line.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi Circle_Large stars.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi-Circle_Large1.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi-Circle_Large2.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi-Circle_Large3.png
+    bundle: 22
+    dir: 15
+  - name: Sci-fi-Circle_Large4.png
+    bundle: 22
+    dir: 15
+  - name: bg_Title.png
+    bundle: 22
+    dir: 15
+  - name: bg_Title1.png
+    bundle: 22
+    dir: 15
+  - name: bg_Title2 .png
+    bundle: 22
+    dir: 15
+  - name: Battlefield 2.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Next_h.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Next_n.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Next_p.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Previous_h.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Previous_n.png
+    bundle: 31
+    dir: 16
+  - name: Btn_Previous_p.png
+    bundle: 31
+    dir: 16
+  - name: Radio1_null.png
+    bundle: 31
+    dir: 16
+  - name: Radio1_select.png
+    bundle: 31
+    dir: 16
+  - name: bg_Name1.png
+    bundle: 31
+    dir: 16
+  - name: bg_Stage1_01.png
+    bundle: 31
+    dir: 16
+  - name: bg_Stage1_02.png
+    bundle: 31
+    dir: 16
+  - name: bg_Stage2_01.png
+    bundle: 31
+    dir: 16
+  - name: bg_Stage2_02.png
+    bundle: 31
+    dir: 16
+  - name: Btn_GoBack.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack1_h.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack1_n.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack1_p.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack2_h.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack2_n.png
+    bundle: 13
+    dir: 17
+  - name: Btn_GoBack2_p.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level Locked.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level1_h.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level1_n.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level1_p.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level2_h.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level2_n.png
+    bundle: 13
+    dir: 17
+  - name: Btn_Level2_p.png
+    bundle: 13
+    dir: 17
+  - name: Icon_Lock0.png
+    bundle: 13
+    dir: 17
+  - name: Icon_Role.png
+    bundle: 13
+    dir: 17
+  - name: Icon_Settings.png
+    bundle: 13
+    dir: 17
+  - name: Icon_star0.png
+    bundle: 13
+    dir: 17
+  - name: Level star_Gray.png
+    bundle: 13
+    dir: 17
+  - name: Level star_Light.png
+    bundle: 13
+    dir: 17
+  - name: Progress-bar_Energy.png
+    bundle: 13
+    dir: 17
+  - name: Progress-bar_life.png
+    bundle: 13
+    dir: 17
+  - name: bg_EnergyProgress bar.png
+    bundle: 13
+    dir: 17
+  - name: bg_LifeProgress bar.png
+    bundle: 13
+    dir: 17
+  - name: bg_RoleDown.png
+    bundle: 13
+    dir: 17
+  - name: bg_RoleUp.png
+    bundle: 13
+    dir: 17
+  - name: checkbox_nul.png
+    bundle: 13
+    dir: 17
+  - name: checkbox_select.png
+    bundle: 13
+    dir: 17
+  - name: Btn_LOGIN_h.png
+    bundle: 5
+    dir: 18
+  - name: Btn_LOGIN_n.png
+    bundle: 5
+    dir: 18
+  - name: Btn_LOGIN_p.png
+    bundle: 5
+    dir: 18
+  - name: Icon_Password.png
+    bundle: 5
+    dir: 18
+  - name: Icon_Password1.png
+    bundle: 5
+    dir: 18
+  - name: Icon_UserName.png
+    bundle: 5
+    dir: 18
+  - name: Icon_UserName1.png
+    bundle: 5
+    dir: 18
+  - name: Window_Login.png
+    bundle: 5
+    dir: 18
+  - name: bg_Input0_n.png
+    bundle: 5
+    dir: 18
+  - name: bg_Input0_s .png
+    bundle: 5
+    dir: 18
+  - name: bg_Input1_n.png
+    bundle: 5
+    dir: 18
+  - name: bg_Input1_s .png
+    bundle: 5
+    dir: 18
+  - name: bg_Input2_n.png
+    bundle: 5
+    dir: 18
+  - name: bg_Input2_s.png
+    bundle: 5
+    dir: 18
+  - name: bg_black.png
+    bundle: 5
+    dir: 18
+  - name: checkbox_nul.png
+    bundle: 5
+    dir: 18
+  - name: checkbox_select.png
+    bundle: 5
+    dir: 18
+  - name: close_hover.png
+    bundle: 5
+    dir: 18
+  - name: close_normal.png
+    bundle: 5
+    dir: 18
+  - name: close_pressed.png
+    bundle: 5
+    dir: 18
+  - name: line.png
+    bundle: 5
+    dir: 18
+  - name: Btn_Add_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Add_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Add_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Attack_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Attack_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Attack_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Down_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Down_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Down_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Guns_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Guns_s.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Left_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Left_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Left_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_OpenArrow.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Right_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Right_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Right_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Skill_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Skill_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Skill_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Up_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Up_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Up_p.png
+    bundle: 30
+    dir: 19
+  - name: Btn_pause_h.png
+    bundle: 30
+    dir: 19
+  - name: Btn_pause_n.png
+    bundle: 30
+    dir: 19
+  - name: Btn_pause_p.png
+    bundle: 30
+    dir: 19
+  - name: Bullet.png
+    bundle: 30
+    dir: 19
+  - name: Circle_Black Mask.png
+    bundle: 30
+    dir: 19
+  - name: Circle_Progress.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Add1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_AtackTarget.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Diamond.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Diamond1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_DistanceTarget.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Gun1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Light.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Money.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Money1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Skill1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Skill2.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Skill3.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Sword.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Sword1.png
+    bundle: 30
+    dir: 19
+  - name: Icon_Target.png
+    bundle: 30
+    dir: 19
+  - name: TargetGreen.png
+    bundle: 30
+    dir: 19
+  - name: TargetRed.png
+    bundle: 30
+    dir: 19
+  - name: Tips.png
+    bundle: 30
+    dir: 19
+  - name: bg_Direction1.png
+    bundle: 30
+    dir: 19
+  - name: bg_Direction2.png
+    bundle: 30
+    dir: 19
+  - name: bg_Map.png
+    bundle: 30
+    dir: 19
+  - name: bg_MoneyBar1.png
+    bundle: 30
+    dir: 19
+  - name: bg_MoneyBar2.png
+    bundle: 30
+    dir: 19
+  - name: Btn_Add_h.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Add_n.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Add_p.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Prop_h.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Prop_n.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Prop_p.png
+    bundle: 8
+    dir: 20
+  - name: DialogWindow1.png
+    bundle: 8
+    dir: 20
+  - name: DialogWindow2.png
+    bundle: 8
+    dir: 20
+  - name: Icon_AddProp.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Attack.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Attack1.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Jump.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Jump1.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop1.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop2.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop3.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop4.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop5.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Prop6.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Role.png
+    bundle: 8
+    dir: 20
+  - name: Icon_Task.png
+    bundle: 8
+    dir: 20
+  - name: Progress-bar_Energy.png
+    bundle: 8
+    dir: 20
+  - name: Progress-bar_life.png
+    bundle: 8
+    dir: 20
+  - name: Slider1.png
+    bundle: 8
+    dir: 20
+  - name: Slider1_Btn.png
+    bundle: 8
+    dir: 20
+  - name: Slider1_bg.png
+    bundle: 8
+    dir: 20
+  - name: bg_EnergyProgress bar.png
+    bundle: 8
+    dir: 20
+  - name: bg_Item.png
+    bundle: 8
+    dir: 20
+  - name: bg_ItemIntrudction.png
+    bundle: 8
+    dir: 20
+  - name: bg_LifeProgress bar.png
+    bundle: 8
+    dir: 20
+  - name: bg_Popup1.png
+    bundle: 8
+    dir: 20
+  - name: bg_Popup1Title.png
+    bundle: 8
+    dir: 20
+  - name: bg_RoleDown.png
+    bundle: 8
+    dir: 20
+  - name: bg_RoleUp.png
+    bundle: 8
+    dir: 20
+  - name: bg_Title.png
+    bundle: 8
+    dir: 20
+  - name: Btn_Back1_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Back1_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Back1_p.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Back_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Back_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Back_p.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Buy_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Buy_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Buy_p.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Home_h .png
+    bundle: 10
+    dir: 21
+  - name: Btn_Home_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Home_p .png
+    bundle: 10
+    dir: 21
+  - name: Btn_Next_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Next_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Next_p.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Previous_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Previous_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Previous_p.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Title_h.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Title_n.png
+    bundle: 10
+    dir: 21
+  - name: Btn_Title_p.png
+    bundle: 10
+    dir: 21
+  - name: Icon_Back.png
+    bundle: 10
+    dir: 21
+  - name: Icon_Gun.png
+    bundle: 10
+    dir: 21
+  - name: Icon_LargeLocked.png
+    bundle: 10
+    dir: 21
+  - name: Icon_Money.png
+    bundle: 10
+    dir: 21
+  - name: Icon_OrangeDiamond.png
+    bundle: 10
+    dir: 21
+  - name: Icon_Silver.png
+    bundle: 10
+    dir: 21
+  - name: Icon_Trigonometry.png
+    bundle: 10
+    dir: 21
+  - name: Parting line.png
+    bundle: 10
+    dir: 21
+  - name: Radio_null.png
+    bundle: 10
+    dir: 21
+  - name: Radio_select.png
+    bundle: 10
+    dir: 21
+  - name: Title spacer.png
+    bundle: 10
+    dir: 21
+  - name: bg_Black Mask2.png
+    bundle: 10
+    dir: 21
+  - name: bg_Good.png
+    bundle: 10
+    dir: 21
+  - name: bg_GoodsTitle.png
+    bundle: 10
+    dir: 21
+  - name: bg_SHOP.png
+    bundle: 10
+    dir: 21
+  - name: bg_Title.png
+    bundle: 10
+    dir: 21
+  - name: background1_v2.png
+    bundle: 6
+    dir: 22
+  - name: background2_v2.png
+    bundle: 6
+    dir: 22
+  - name: background3_v2.png
+    bundle: 6
+    dir: 22
+  - name: background4_v2.png
+    bundle: 6
+    dir: 22
+  - name: background5_v2.png
+    bundle: 6
+    dir: 22
+  - name: background6_v2.png
+    bundle: 6
+    dir: 22
+  - name: bg_LoadingPage.png
+    bundle: 24
+    dir: 23
+  - name: line01.png
+    bundle: 24
+    dir: 23
+  - name: line02.png
+    bundle: 24
+    dir: 23
+  - name: Btn_Login_h.png
+    bundle: 1
+    dir: 24
+  - name: Btn_Login_n.png
+    bundle: 1
+    dir: 24
+  - name: Btn_Login_p.png
+    bundle: 1
+    dir: 24
+  - name: Input_h.png
+    bundle: 1
+    dir: 24
+  - name: bg_Input_n.png
+    bundle: 1
+    dir: 24
+  - name: bg_Input_s.png
+    bundle: 1
+    dir: 24
+  - name: bg_Login.png
+    bundle: 1
+    dir: 24
+  - name: login bg.png
+    bundle: 1
+    dir: 24
+  - name: Btn_Cancle_h.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Cancle_n.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Cancle_p.png
+    bundle: 0
+    dir: 25
+  - name: Btn_OK_P.png
+    bundle: 0
+    dir: 25
+  - name: Btn_OK_h.png
+    bundle: 0
+    dir: 25
+  - name: Btn_OK_n.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Resume_h.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Resume_n.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Resume_p.png
+    bundle: 0
+    dir: 25
+  - name: Btn_number_h.png
+    bundle: 0
+    dir: 25
+  - name: Btn_number_n.png
+    bundle: 0
+    dir: 25
+  - name: Btn_number_p.png
+    bundle: 0
+    dir: 25
+  - name: Icon_Quit.png
+    bundle: 0
+    dir: 25
+  - name: Icon_Restart.png
+    bundle: 0
+    dir: 25
+  - name: Icon_Resume.png
+    bundle: 0
+    dir: 25
+  - name: Icon_Target.png
+    bundle: 0
+    dir: 25
+  - name: Icon_TargetGreen.png
+    bundle: 0
+    dir: 25
+  - name: Icon_TargetYellow.png
+    bundle: 0
+    dir: 25
+  - name: background.png
+    bundle: 0
+    dir: 25
+  - name: bg_LargeTitle1.png
+    bundle: 0
+    dir: 25
+  - name: bg_Time.png
+    bundle: 0
+    dir: 25
+  - name: bg_Title_Window1.png
+    bundle: 0
+    dir: 25
+  - name: bg_Title_Window2.png
+    bundle: 0
+    dir: 25
+  - name: bg_Title_Window3.png
+    bundle: 0
+    dir: 25
+  - name: bg_Window1.png
+    bundle: 0
+    dir: 25
+  - name: bg_Window2.png
+    bundle: 0
+    dir: 25
+  - name: bg_Window3.png
+    bundle: 0
+    dir: 25
+  - name: bg_block.png
+    bundle: 0
+    dir: 25
+  - name: bg_map.png
+    bundle: 0
+    dir: 25
+  - name: close_hover.png
+    bundle: 0
+    dir: 25
+  - name: close_normal.png
+    bundle: 0
+    dir: 25
+  - name: close_pressed.png
+    bundle: 0
+    dir: 25
+  - name: Btn_Previous_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Previous_n.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Previous_p.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Start_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Start_n.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Start_p.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button01_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button01_n.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button01_p.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button02_P.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button02_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button02_n.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button03_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button03_n.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi button03_p.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi-button04_P.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi-button04_h.png
+    bundle: 15
+    dir: 26
+  - name: Btn_sci-fi-button04_n.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Earth_n.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Next.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Pause.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Plaly.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Previous.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Setting.png
+    bundle: 15
+    dir: 26
+  - name: Icon_Stop.png
+    bundle: 15
+    dir: 26
+  - name: Icoon_Person.png
+    bundle: 15
+    dir: 26
+  - name: bg_Title_textbox01.png
+    bundle: 15
+    dir: 26
+  - name: bg_loading-bar01.png
+    bundle: 15
+    dir: 26
+  - name: checkbox_hover.png
+    bundle: 15
+    dir: 26
+  - name: checkbox_normal.png
+    bundle: 15
+    dir: 26
+  - name: checkbox_select.png
+    bundle: 15
+    dir: 26
+  - name: circle01-1.png
+    bundle: 15
+    dir: 26
+  - name: circle01-2.png
+    bundle: 15
+    dir: 26
+  - name: circle01.png
+    bundle: 15
+    dir: 26
+  - name: loading bar02.png
+    bundle: 15
+    dir: 26
+  - name: loading-bar01.png
+    bundle: 15
+    dir: 26
+  - name: loading-bar02_01.png
+    bundle: 15
+    dir: 26
+  - name: loading-bar02_02.png
+    bundle: 15
+    dir: 26
+  - name: radio_hover.png
+    bundle: 15
+    dir: 26
+  - name: radio_normal.png
+    bundle: 15
+    dir: 26
+  - name: radio_selected.png
+    bundle: 15
+    dir: 26
+  - name: switch01-off.png
+    bundle: 15
+    dir: 26
+  - name: switch01-on.png
+    bundle: 15
+    dir: 26
+  - name: switch02-off.png
+    bundle: 15
+    dir: 26
+  - name: switch02-on.png
+    bundle: 15
+    dir: 26
+  - name: textbox01.png
+    bundle: 15
+    dir: 26
+  - name: textbox02.png
+    bundle: 15
+    dir: 26
+  - name: textbox03.png
+    bundle: 15
+    dir: 26
+  - name: textbox04.png
+    bundle: 15
+    dir: 26
+  - name: textbox05.png
+    bundle: 15
+    dir: 26
+  - name: Btn_Button5-1_n.png
+    bundle: 19
+    dir: 27
+  - name: Btn_Button5-2_h.png
+    bundle: 19
+    dir: 27
+  - name: Btn_Button5-2_p.png
+    bundle: 19
+    dir: 27
+  - name: Btn_Button5-3_yellow.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button01_h.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button01_n.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button01_p.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button01_yellow.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button02_Yellow.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button02_h.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button02_n.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button02_p.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button03_Yellow.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button03_h.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button03_n.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button03_p.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button04_Yellow.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button04_h.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button04_n.png
+    bundle: 19
+    dir: 27
+  - name: Btn_button04_p.png
+    bundle: 19
+    dir: 27
+  - name: Icon00.png
+    bundle: 19
+    dir: 27
+  - name: Icon3-1.png
+    bundle: 19
+    dir: 27
+  - name: Icon3-2.png
+    bundle: 19
+    dir: 27
+  - name: Icon4-1.png
+    bundle: 19
+    dir: 27
+  - name: Icon4-2.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle01_01.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle01_02.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle01_03.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle01_04.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle02_01.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle02_02.png
+    bundle: 19
+    dir: 27
+  - name: Sci-fi-Circle02_03.png
+    bundle: 19
+    dir: 27
+  - name: SmallTitle1-1.png
+    bundle: 19
+    dir: 27
+  - name: SmallTitle2-1.png
+    bundle: 19
+    dir: 27
+  - name: Tips.png
+    bundle: 19
+    dir: 27
+  - name: bg_LargeTitle2.png
+    bundle: 19
+    dir: 27
+  - name: bg_Title_small panel03.png
+    bundle: 19
+    dir: 27
+  - name: small panel01.png
+    bundle: 19
+    dir: 27
+  - name: small panel02.png
+    bundle: 19
+    dir: 27
+  - name: small panel03.png
+    bundle: 19
+    dir: 27
+  - name: small panel04.png
+    bundle: 19
+    dir: 27
+  - name: small panel05.png
+    bundle: 19
+    dir: 27
+  - name: small title01_bg.png
+    bundle: 19
+    dir: 27
+  - name: small title02_bg.png
+    bundle: 19
+    dir: 27
+  - name: Btn_LargeClose_h.png
+    bundle: 14
+    dir: 28
+  - name: Btn_LargeClose_n.png
+    bundle: 14
+    dir: 28
+  - name: Btn_LargeClose_p.png
+    bundle: 14
+    dir: 28
+  - name: Btn_MiddleClose_h.png
+    bundle: 14
+    dir: 28
+  - name: Btn_MiddleClose_n.png
+    bundle: 14
+    dir: 28
+  - name: Btn_MiddleClose_p.png
+    bundle: 14
+    dir: 28
+  - name: Large panel01.png
+    bundle: 14
+    dir: 28
+  - name: Large panel02.png
+    bundle: 14
+    dir: 28
+  - name: Large panel03.png
+    bundle: 14
+    dir: 28
+  - name: Large panel04.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_LargePanel01.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_LargePanel02.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_LargePanel03.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_middlePanel01.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_middlePanel02.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_middlePanel03.png
+    bundle: 14
+    dir: 28
+  - name: middle panel01.png
+    bundle: 14
+    dir: 28
+  - name: middle panel02.png
+    bundle: 14
+    dir: 28
+  - name: middle panel03.png
+    bundle: 14
+    dir: 28
+  - name: middle panel04.png
+    bundle: 14
+    dir: 28
+  - name: bg_Title_small panel03_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: bg_Title_textbox01_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: middle panel01_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: middle panel02_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: middle panel03_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: middle panel04_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: small panel01_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: small panel02_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: small panel03_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: small panel04 _Opaque.png
+    bundle: 28
+    dir: 29
+  - name: small panel05_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: textbox01_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: textbox02_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: textbox03_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: textbox04_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: textbox05_Opaque.png
+    bundle: 28
+    dir: 29
+  - name: 0.png
+    bundle: 18
+    dir: 30
+  - name: 1.png
+    bundle: 18
+    dir: 30
+  - name: 2.png
+    bundle: 18
+    dir: 30
+  - name: 3.png
+    bundle: 18
+    dir: 30
+  - name: 4.png
+    bundle: 18
+    dir: 30
+  - name: 5.png
+    bundle: 18
+    dir: 30
+  - name: 6.png
+    bundle: 18
+    dir: 30
+  - name: 7.png
+    bundle: 18
+    dir: 30
+  - name: 8.png
+    bundle: 18
+    dir: 30
+  - name: 9.png
+    bundle: 18
+    dir: 30
+  - name: Btn1_c.png
+    bundle: 18
+    dir: 30
+  - name: Btn1_h.png
+    bundle: 18
+    dir: 30
+  - name: Btn1_n.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Next_c .png
+    bundle: 18
+    dir: 30
+  - name: Btn_Next_h.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Next_n.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Previous_c.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Previous_h.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Previous_n.png
+    bundle: 18
+    dir: 30
+  - name: Circle.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Complete1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Defeat1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_GameOver2.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Go1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Level up1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Start1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_Victory1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_You lose2.png
+    bundle: 18
+    dir: 30
+  - name: Icon_YouWin1.png
+    bundle: 18
+    dir: 30
+  - name: Icon_pause.png
+    bundle: 18
+    dir: 30
+  - name: Line0.png
+    bundle: 18
+    dir: 30
+  - name: Point_Color2.png
+    bundle: 18
+    dir: 30
+  - name: Point_Green.png
+    bundle: 18
+    dir: 30
+  - name: Point_Red.png
+    bundle: 18
+    dir: 30
+  - name: Point_Yellow.png
+    bundle: 18
+    dir: 30
+  - name: Prop.png
+    bundle: 18
+    dir: 30
+  - name: Btn_Attack0_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Attack0_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Attack1_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Attack1_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Back_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Back_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Back_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Previouspage_gray.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Previouspage_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Previouspage_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Previouspage_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Right_h .png
+    bundle: 16
+    dir: 31
+  - name: Btn_Right_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_Right_p .png
+    bundle: 16
+    dir: 31
+  - name: Btn_down_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_down_n .png
+    bundle: 16
+    dir: 31
+  - name: Btn_down_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_exit_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_exit_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_exit_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_left_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_left_n .png
+    bundle: 16
+    dir: 31
+  - name: Btn_left_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_nextpage_gray.png
+    bundle: 16
+    dir: 31
+  - name: Btn_nextpage_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_nextpage_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_nextpage_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_tool_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_tool_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_tool_p.png
+    bundle: 16
+    dir: 31
+  - name: Btn_up_h.png
+    bundle: 16
+    dir: 31
+  - name: Btn_up_n.png
+    bundle: 16
+    dir: 31
+  - name: Btn_up_p.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Blue.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Green.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Green_bg.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Red.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Yellow.png
+    bundle: 16
+    dir: 31
+  - name: Hp_Yellow_bg.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Attack0.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Exit.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight1.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight2.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight3.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight4.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight5.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight6.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Front sight7.png
+    bundle: 16
+    dir: 31
+  - name: Icon_GreenPoint.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Jump .png
+    bundle: 16
+    dir: 31
+  - name: Icon_Prostrate.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Range.png
+    bundle: 16
+    dir: 31
+  - name: Icon_RedPoint.png
+    bundle: 16
+    dir: 31
+  - name: Icon_Run .png
+    bundle: 16
+    dir: 31
+  - name: Icon_Spanner.png
+    bundle: 16
+    dir: 31
+  - name: Icon_YellowPoint.png
+    bundle: 16
+    dir: 31
+  - name: Icon_back.png
+    bundle: 16
+    dir: 31
+  - name: Icon_target.png
+    bundle: 16
+    dir: 31
+  - name: Progress2.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle1.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle1_Ball.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle2.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle2_01.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle2_02.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle2_03.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle3.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle3_bg.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle4.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle4_bg.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Circle5.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line1.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line1_bg.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line2.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line2_bg.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line3.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line3_bg.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line4.png
+    bundle: 16
+    dir: 31
+  - name: ProgressBar_Line4_bg.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_a1.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_a2.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_a3.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_a4.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_b1.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_b2.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_b3.png
+    bundle: 16
+    dir: 31
+  - name: Sci-fi-Mouse-cursor_b4.png
+    bundle: 16
+    dir: 31
+  - name: bg_CircleMap.png
+    bundle: 16
+    dir: 31
+  - name: bg_Direction1.png
+    bundle: 16
+    dir: 31
+  - name: bg_Direction2.png
+    bundle: 16
+    dir: 31
+  - name: bg_toolbox.png
+    bundle: 16
+    dir: 31
+  bundles:
+  - name: 037294d567b2c9de638cdf1810dcb52c.unity3d
+    id: 0
+    deps: 
+    len: 1049023
+    hash: e66d196035943a8b8d88f513d57d1561
+  - name: 15699ef11fb8a0e612311411fdb207c7.unity3d
+    id: 1
+    deps: 
+    len: 658373
+    hash: 1c8359f01bcd586de30051704ecbd2aa
+  - name: 36b74253533cd801f2efc42fbd2e2959.unity3d
+    id: 2
+    deps: 
+    len: 247492
+    hash: 09f9760e2d00fd7962e845a4b81193e4
+  - name: 373fd813028c5f2ac09cd01eb2fc9161.unity3d
+    id: 3
+    deps: 
+    len: 242167
+    hash: 35cc7ef81b1e6300592d1464a48304e2
+  - name: 43037a82c34a66c3cfade923078202fa.unity3d
+    id: 4
+    deps: 
+    len: 886892
+    hash: 332d3f44d1ee6999579a07dc24a6a021
+  - name: 4899e71d32d6a21f4870e84d905dd6f1.unity3d
+    id: 5
+    deps: 
+    len: 720802
+    hash: 8ea09f6d9e02ee9512471f323d17c3f4
+  - name: 48ffeb663a9f3e4c9ab69463a6a0a998.unity3d
+    id: 6
+    deps: 
+    len: 2885563
+    hash: 2e3cf1ca517a362de2b480892dca7b56
+  - name: 4a668588d6510f5f0943d60252ce18cd.unity3d
+    id: 7
+    deps: 
+    len: 1009585
+    hash: 24e0c06cbf2e470f4022135ed205f6c5
+  - name: 54af4ce5056f6473fa1538f178eff62e.unity3d
+    id: 8
+    deps: 
+    len: 277573
+    hash: 840aa6c77558d1a0ab1ef87e15a03269
+  - name: 583fac5bf806d2693f46e9cdf1fe6c35.unity3d
+    id: 9
+    deps: 
+    len: 813484
+    hash: ef1db439a3ec1c826c2ecff7a3188092
+  - name: 6629e0a557bc27aa5a542ec76d9abd42.unity3d
+    id: 10
+    deps: 
+    len: 437218
+    hash: bbaef20ef7cf7b0117b2589457b4b1c7
+  - name: 72c31fb04179923b119e43dc7c11fee8.unity3d
+    id: 11
+    deps: 
+    len: 452681
+    hash: 77973287f454e52d2e918d346e4c4bd6
+  - name: 743a49d60961e58a2333052182097f0b.unity3d
+    id: 12
+    deps: 02000000
+    len: 50021
+    hash: b17a59418e256c754807d647450ff54d
+  - name: 8bb7326338246b283383d10d46e62f7f.unity3d
+    id: 13
+    deps: 
+    len: 152800
+    hash: 8f4278bd339ad436339b9a71ba13b7e1
+  - name: 8e8653de1292a9c6d7f13d5296abc944.unity3d
+    id: 14
+    deps: 
+    len: 239358
+    hash: 8ef6b4d9d12f13028dbd1d3194d76804
+  - name: 9de4016e20e0b8ff8fe69566043f40f2.unity3d
+    id: 15
+    deps: 
+    len: 498014
+    hash: 7fd0f53eae0fd03af05356c901864f6e
+  - name: a001220a1b2528fc4acaf85917f8882a.unity3d
+    id: 16
+    deps: 
+    len: 489110
+    hash: c2c04f977d4f8733c6bb24bf8658785a
+  - name: b26a9bac179b4418b47a45737a4c6673.unity3d
+    id: 17
+    deps: 0300000008000000
+    len: 121732
+    hash: 873ca5e890cd63ac2ffd8576ed028d8a
+  - name: bce96525d50821efa962a1762e6ad327.unity3d
+    id: 18
+    deps: 
+    len: 402526
+    hash: f65847c8794487d7ed19a87f6f400930
+  - name: c2371608a59f360ef93799b190c943f5.unity3d
+    id: 19
+    deps: 
+    len: 755005
+    hash: d41d00a27885a94cb6e2dd2a2b982b63
+  - name: c4f8a957bb7d46fa53f3f9e4c65d37ab.unity3d
+    id: 20
+    deps: 
+    len: 73749
+    hash: 030d93c9df9f3cfac423c46f16a1ba40
+  - name: d018cdf07f043d12edf35c96f3668dab.unity3d
+    id: 21
+    deps: 020000000c000000
+    len: 3064
+    hash: a0455ccc2f9c063752b839caa21aafdd
+  - name: d5d7dfbb272e3bd0a3ab935564a7f4ad.unity3d
+    id: 22
+    deps: 
+    len: 2247423
+    hash: 28a6dd9295528d1d00fad81f29473155
+  - name: d76d7f89666b4f98f2723d5f3f9043a3.unity3d
+    id: 23
+    deps: 
+    len: 53803
+    hash: f28333c2aa0e199facdedaf7c08c444c
+  - name: debbc47b5b3a2f87edfd10b1b3e339a1.unity3d
+    id: 24
+    deps: 
+    len: 689778
+    hash: 95c200848050729fba8ad778dd5d0e8c
+  - name: f06980f5b57ce4f072e223f58ddf3bff.unity3d
+    id: 25
+    deps: 
+    len: 369453
+    hash: 850aa6de5d4d84e2f6ec297654a161e1
+  - name: f1b506cf4bdcb530ccc230de9996dfbc.unity3d
+    id: 26
+    deps: 
+    len: 93386
+    hash: 21a218f24bd27e45c6a0d0693f322881
+  - name: f7a9e454952200090e54c3c1aa63eabd.unity3d
+    id: 27
+    deps: 
+    len: 134760
+    hash: 2f9ea8a83a443acfca6169ec167be859
+  - name: fb1be8ab9a7ed17c3f123f42065a5a6c.unity3d
+    id: 28
+    deps: 
+    len: 167673
+    hash: 946c82f163fdeb3d81ebfab82427e758
+  - name: fdf89e8c87f40d9d2d85581df966f861.unity3d
+    id: 29
+    deps: 
+    len: 149948
+    hash: bfa5819bc4faa82fabbf8490c556e8fc
+  - name: feb49e8407fc56d9ad9549fea42c4713.unity3d
+    id: 30
+    deps: 
+    len: 453172
+    hash: f1d22d6e012edde62e21f24c0d84b939
+  - name: ff93a0d56b6c33f1033d64ecf8c13777.unity3d
+    id: 31
+    deps: 
+    len: 642616
+    hash: 8552b572ea8872067ffc173262ed1fcc
