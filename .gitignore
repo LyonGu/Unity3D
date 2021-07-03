@@ -209,3 +209,5 @@ xasset/obj/
 xasset/ProjectSettings/ProjectSettings.asset
 xasset/ProjectSettings/ProjectVersion.txt
 xasset/Packages/manifest.json
+xasset/Temp/
+xasset/APK/
