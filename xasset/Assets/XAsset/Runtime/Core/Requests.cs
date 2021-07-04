@@ -1,4 +1,4 @@
-//
+ï»¿//
 // Requests.cs
 //
 // Author:
@@ -281,15 +281,19 @@ namespace libx
 
         internal override void Load()
         {
+            //å…ˆåŠ è½½å¯¹åº”bundle
             BundleRequest = Assets.LoadBundle(assetBundleName);
             var names = Assets.GetAllDependencies(assetBundleName);
 
-            //ÓĞÒÀÀµÏîÓÅÏÈ¼ÓÔØÒÀÀµÏî
+            //bundleå¦‚æœæœ‰ä¾èµ–é¡¹ä¼˜å…ˆåŠ è½½ä¾èµ–é¡¹
             foreach (var item in names) 
                 children.Add(Assets.LoadBundle(item));
             var assetName = Path.GetFileName(name);
             var ab = BundleRequest.assetBundle;
-            if (ab != null) asset = ab.LoadAsset(assetName, assetType);
+
+            //ä»bundleä¸­åŠ è½½asset
+            if (ab != null) 
+                asset = ab.LoadAsset(assetName, assetType);
             if (asset == null) error = "asset == null";
             loadState = LoadState.Loaded;
         }

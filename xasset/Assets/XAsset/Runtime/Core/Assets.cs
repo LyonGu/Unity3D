@@ -272,9 +272,18 @@ namespace libx
             string assetBundleName;
             if (GetAssetBundleName(path, out assetBundleName))
             {
-                request = async
-                    ? new BundleAssetRequestAsync(assetBundleName)
-                    : new BundleAssetRequest(assetBundleName);
+
+                if (async)
+                {
+                    request = new BundleAssetRequestAsync(assetBundleName);
+                }
+                else
+                {
+                    request = new BundleAssetRequest(assetBundleName);
+                }
+                //request = async
+                //    ? new BundleAssetRequestAsync(assetBundleName)
+                //    : new BundleAssetRequest(assetBundleName);
             }
             else
             {

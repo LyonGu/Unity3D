@@ -10,6 +10,7 @@ public class Game : MonoBehaviour
 {
 	public Dropdown dropdown;
 	public Image temp;
+    public Slider hotUpdateTestSlider;
 	private string[] _assets;
 	private int _optionIndex;
 
@@ -28,7 +29,14 @@ public class Game : MonoBehaviour
 		return request;
 	}
 
-	AssetRequest LoadGameObjectAsync(string path)
+    AssetRequest LoadSpriteAsync(string path)
+    {
+        var request = Assets.LoadAssetAsync(path, typeof(Sprite));
+        _requests.Add(request);
+        return request;
+    }
+
+    AssetRequest LoadGameObjectAsync(string path)
 	{
 		var request = Assets.LoadAssetAsync(path, typeof(GameObject));
 		_requests.Add(request);
@@ -47,7 +55,12 @@ public class Game : MonoBehaviour
 		StartCoroutine (LoadAll (_assets.Length));
 	}
 
-	IEnumerator LoadAll (int size)
+    public void OnLoadAllAsync()
+    {
+        StartCoroutine(LoadAllAsync(_assets.Length));
+    }
+
+    IEnumerator LoadAll (int size)
 	{
 		var count = 0; 
 		List<AssetRequest> list = new List<AssetRequest> ();
@@ -70,7 +83,35 @@ public class Game : MonoBehaviour
 		}));
 	}
 
-	private void OnCompleted (AssetRequest request)
+
+    IEnumerator LoadAllAsync(int size)
+    {
+        var count = 0;
+        List<AssetRequest> list = new List<AssetRequest>();
+        for (int i = _optionIndex; i < _assets.Length; i++)
+        {
+            var asset = _assets[i];
+            var ext = Path.GetExtension(asset);
+            if (count >= size)
+            {
+                _optionIndex = i;
+                break;
+            }
+            if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase))
+            {
+                var request = LoadSpriteAsync(asset);
+                request.completed += OnCompleted;
+                list.Add(request);
+                count++;
+            }
+        }
+        yield return new WaitUntil(() => list.TrueForAll(o =>
+        {
+            return o.isDone;
+        }));
+    }
+
+    private void OnCompleted (AssetRequest request)
 	{
 		if (!string.IsNullOrEmpty (request.error)) {
 			request.Release ();
@@ -128,7 +169,7 @@ public class Game : MonoBehaviour
 		yield return null; 
 	}
 
-	private string hotUpatePrefabPath;
+    private string hotUpatePrefabPath;
 	// Use this for initialization
 	void Start ()
 	{
@@ -147,44 +188,94 @@ public class Game : MonoBehaviour
 		dropdown.onValueChanged.AddListener (OnDropdown);
 
 
-		if (!string.IsNullOrEmpty(hotUpatePrefabPath))
-		{
+        Test();
 
-			//同步加载
-			var abRequest = LoadGameObject(hotUpatePrefabPath);
-			abRequest.completed += delegate(AssetRequest request) {
-				if (!string.IsNullOrEmpty(request.error))
-				{
-					request.Release();
-					return;
-				}
-				var go = Instantiate(request.asset) as GameObject;
-				go.SetActive(true);
-				go.name = "HotTestSync";
+    }
+    #region 测试下一些常用接口
 
-			};
+    private void Test()
+    {
+        if (!string.IsNullOrEmpty(hotUpatePrefabPath))
+        {
 
-			//异步加载
-			var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
-			abRequestAsync.completed += delegate (AssetRequest request) {
-				if (!string.IsNullOrEmpty(request.error))
-				{
-					request.Release();
-					return;
-				}
-				var go = Instantiate(request.asset) as GameObject;
-				go.SetActive(true);
-				go.name = "HotTestAsync";
-				go.transform.position = new Vector3(2, 0, 0);
+            ////同步加载
+            //var abRequest = LoadGameObject(hotUpatePrefabPath);
+            //abRequest.completed += delegate (AssetRequest request)
+            //{
+            //    if (!string.IsNullOrEmpty(request.error))
+            //    {
+            //        request.Release();
+            //        return;
+            //    }
+            //    var go = Instantiate(request.asset) as GameObject;
+            //    go.SetActive(true);
+            //    go.name = "HotTestSync";
 
-			};
+            //};
 
-			//加载进度
-		}
+            ////异步加载
+            //var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
+            //abRequestAsync.completed += delegate (AssetRequest request)
+            //{
+            //    if (!string.IsNullOrEmpty(request.error))
+            //    {
+            //        request.Release();
+            //        return;
+            //    }
+            //    var go = Instantiate(request.asset) as GameObject;
+            //    go.SetActive(true);
+            //    go.name = "HotTestAsync";
+            //    go.transform.position = new Vector3(2, 0, 0);
 
-	}
+            //};
 
-	private void OnDropdown (int index)
+            //加载进度
+            /*
+                从Bundle中加载始终返回的是BundleAssetRequest或者BundleAssetRequestAsync
+                1 同步加载  AssetRequest上progress始终为1 （BundleAssetRequest）
+                2 异步加载  AssetRequest上progress ==》 BundleAssetRequestAsync
+            */
+        }
+    }
+
+    private void Update()
+    {
+        
+        int count = _requests.Count;
+        if (count == 0)
+        {
+            hotUpdateTestSlider.value = 0;
+            return;
+        }
+        //根据数量来标识进度  ==> 用数量来表现感觉更好
+        int doneCount = 0;
+        for (int i = 0; i < count; i++)
+        {
+            var request = _requests[i];
+            if (request.isDone)
+                doneCount++;
+        }
+        float pro = (float)doneCount / count;
+        Debug.Log($"curProgress == {pro} {doneCount} {count}");
+        hotUpdateTestSlider.value = pro;
+
+        //根据request的progr来标识进度
+
+        //float rPro = 1.0f / count;
+        //float curProgress = 0f;
+        //for (int i = 0; i < count; i++)
+        //{
+        //    var request = _requests[i];
+        //    //if (request.isDone)
+        //    //    doneCount++;
+        //    curProgress += request.progress * rPro;
+        //}
+        //Debug.Log($"curProgress == {curProgress}");
+        //hotUpdateTestSlider.value = curProgress;
+    }
+    #endregion
+
+    private void OnDropdown (int index)
 	{
 		_optionIndex = index;
 	}
