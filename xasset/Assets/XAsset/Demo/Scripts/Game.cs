@@ -83,9 +83,10 @@ public class Game : MonoBehaviour
 		}));
 	}
 
-
+    private bool _isLoadAllAsync = false;
     IEnumerator LoadAllAsync(int size)
     {
+        _isLoadAllAsync = true;
         var count = 0;
         List<AssetRequest> list = new List<AssetRequest>();
         for (int i = _optionIndex; i < _assets.Length; i++)
@@ -197,37 +198,37 @@ public class Game : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(hotUpatePrefabPath))
         {
+            Debug.Log($"hotUpatePrefabPath == {hotUpatePrefabPath}");
+            //同步加载
+            var abRequest = LoadGameObject(hotUpatePrefabPath);
+            abRequest.completed += delegate (AssetRequest request)
+            {
+                if (!string.IsNullOrEmpty(request.error))
+                {
+                    request.Release();
+                    return;
+                }
+                var go = Instantiate(request.asset) as GameObject;
+                go.SetActive(true);
+                go.name = "HotTestSync";
 
-            ////同步加载
-            //var abRequest = LoadGameObject(hotUpatePrefabPath);
-            //abRequest.completed += delegate (AssetRequest request)
-            //{
-            //    if (!string.IsNullOrEmpty(request.error))
-            //    {
-            //        request.Release();
-            //        return;
-            //    }
-            //    var go = Instantiate(request.asset) as GameObject;
-            //    go.SetActive(true);
-            //    go.name = "HotTestSync";
+            };
 
-            //};
+            //异步加载
+            var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
+            abRequestAsync.completed += delegate (AssetRequest request)
+            {
+                if (!string.IsNullOrEmpty(request.error))
+                {
+                    request.Release();
+                    return;
+                }
+                var go = Instantiate(request.asset) as GameObject;
+                go.SetActive(true);
+                go.name = "HotTestAsync";
+                go.transform.position = new Vector3(2, 0, 0);
 
-            ////异步加载
-            //var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
-            //abRequestAsync.completed += delegate (AssetRequest request)
-            //{
-            //    if (!string.IsNullOrEmpty(request.error))
-            //    {
-            //        request.Release();
-            //        return;
-            //    }
-            //    var go = Instantiate(request.asset) as GameObject;
-            //    go.SetActive(true);
-            //    go.name = "HotTestAsync";
-            //    go.transform.position = new Vector3(2, 0, 0);
-
-            //};
+            };
 
             //加载进度
             /*
@@ -240,7 +241,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        
+        if (!_isLoadAllAsync) return;
         int count = _requests.Count;
         if (count == 0)
         {

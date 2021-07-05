@@ -20,7 +20,7 @@ MonoBehaviour:
   searchPatternPrefab: '*.prefab'
   searchPatternScene: '*.unity'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 25
+  version: 41
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -41,11 +41,27 @@ MonoBehaviour:
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
+  - searchPath: Assets/XAsset/Demo/AnimClips
+    searchPattern: '*.anim'
+    nameBy: 2
+    assetBundleName: 
+  - searchPath: Assets/XAsset/Demo/AnimControls
+    searchPattern: '*'
+    nameBy: 2
+    assetBundleName: 
   ruleAssets:
+  - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
+    path: Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate.anim
+  - bundle: e37bc5d1b94a58094869c065db1edc0f.unity3d
+    path: Assets/XAsset/Demo/AnimControls/HotUpdate/AnimControl_HotUpdate.controller
   - bundle: 743a49d60961e58a2333052182097f0b.unity3d
     path: Assets/XAsset/Demo/Materials/Mat_HotTest.mat
+  - bundle: 749cfeed8015c66fd80588b048e27a4c.unity3d
+    path: Assets/XAsset/Demo/Prefabs/HotUpdateEx/HotUpdateTest2.prefab
   - bundle: d018cdf07f043d12edf35c96f3668dab.unity3d
     path: Assets/XAsset/Demo/Prefabs/HotUpdateTest.prefab
+  - bundle: d018cdf07f043d12edf35c96f3668dab.unity3d
+    path: Assets/XAsset/Demo/Prefabs/HotUpdateTest1.prefab
   - bundle: b26a9bac179b4418b47a45737a4c6673.unity3d
     path: Assets/XAsset/Demo/Scenes/Game.unity
   - bundle: 4a668588d6510f5f0943d60252ce18cd.unity3d
@@ -2102,3 +2118,13 @@ MonoBehaviour:
   - name: d018cdf07f043d12edf35c96f3668dab.unity3d
     assets:
     - Assets/XAsset/Demo/Prefabs/HotUpdateTest.prefab
+    - Assets/XAsset/Demo/Prefabs/HotUpdateTest1.prefab
+  - name: 749cfeed8015c66fd80588b048e27a4c.unity3d
+    assets:
+    - Assets/XAsset/Demo/Prefabs/HotUpdateEx/HotUpdateTest2.prefab
+  - name: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
+    assets:
+    - Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate.anim
+  - name: e37bc5d1b94a58094869c065db1edc0f.unity3d
+    assets:
+    - Assets/XAsset/Demo/AnimControls/HotUpdate/AnimControl_HotUpdate.controller
