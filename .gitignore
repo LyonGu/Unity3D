@@ -211,3 +211,5 @@ xasset/ProjectSettings/ProjectVersion.txt
 xasset/Packages/manifest.json
 xasset/Temp/
 xasset/APK/
+xasset/.vs/
+xasset/Logs/

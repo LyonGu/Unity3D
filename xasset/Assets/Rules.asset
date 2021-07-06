@@ -20,7 +20,7 @@ MonoBehaviour:
   searchPatternPrefab: '*.prefab'
   searchPatternScene: '*.unity'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 49
+  version: 59
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -46,6 +46,10 @@ MonoBehaviour:
     nameBy: 2
     assetBundleName: 
   - searchPath: Assets/XAsset/Demo/AnimControls
+    searchPattern: '*'
+    nameBy: 2
+    assetBundleName: 
+  - searchPath: Assets/XAsset/Demo/Scenes/Game.unity
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
@@ -358,6 +362,14 @@ MonoBehaviour:
     path: Assets/XAsset/Demo/UI/20GameOver/GAME OVER.png
   - bundle: c4f8a957bb7d46fa53f3f9e4c65d37ab.unity3d
     path: Assets/XAsset/Demo/UI/20GameOver/GameOver.png
+  - bundle: dfce3b545c7b11e95e44abe7e4abc336.unity3d
+    path: Assets/XAsset/Demo/UI/21LoadingPage/Progress1Ex.png
+  - bundle: dfce3b545c7b11e95e44abe7e4abc336.unity3d
+    path: Assets/XAsset/Demo/UI/21LoadingPage/Progress2Ex.png
+  - bundle: dfce3b545c7b11e95e44abe7e4abc336.unity3d
+    path: Assets/XAsset/Demo/UI/21LoadingPage/Title2_bgEx.png
+  - bundle: dfce3b545c7b11e95e44abe7e4abc336.unity3d
+    path: Assets/XAsset/Demo/UI/21LoadingPage/bg_ProgressEx.png
   - bundle: d5d7dfbb272e3bd0a3ab935564a7f4ad.unity3d
     path: Assets/XAsset/Demo/UI/2MainMenu/Btn_Character_h.png
   - bundle: d5d7dfbb272e3bd0a3ab935564a7f4ad.unity3d
@@ -1561,6 +1573,12 @@ MonoBehaviour:
     assets:
     - Assets/XAsset/Demo/UI/20GameOver/GAME OVER.png
     - Assets/XAsset/Demo/UI/20GameOver/GameOver.png
+  - name: dfce3b545c7b11e95e44abe7e4abc336.unity3d
+    assets:
+    - Assets/XAsset/Demo/UI/21LoadingPage/bg_ProgressEx.png
+    - Assets/XAsset/Demo/UI/21LoadingPage/Progress1Ex.png
+    - Assets/XAsset/Demo/UI/21LoadingPage/Progress2Ex.png
+    - Assets/XAsset/Demo/UI/21LoadingPage/Title2_bgEx.png
   - name: d5d7dfbb272e3bd0a3ab935564a7f4ad.unity3d
     assets:
     - Assets/XAsset/Demo/UI/2MainMenu/bg_Title.png
