@@ -20,7 +20,7 @@ MonoBehaviour:
   searchPatternPrefab: '*.prefab'
   searchPatternScene: '*.unity'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 59
+  version: 60
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -49,7 +49,11 @@ MonoBehaviour:
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
-  - searchPath: Assets/XAsset/Demo/Scenes/Game.unity
+  - searchPath: Assets/XAsset/Demo/Fbxs
+    searchPattern: '*.fbx'
+    nameBy: 2
+    assetBundleName: 
+  - searchPath: Assets/XAsset/Demo/Textures
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
@@ -60,16 +64,72 @@ MonoBehaviour:
     path: Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate1.anim
   - bundle: e37bc5d1b94a58094869c065db1edc0f.unity3d
     path: Assets/XAsset/Demo/AnimControls/HotUpdate/AnimControl_HotUpdate.controller
+  - bundle: 04a820c5aa8987aa384a1bab95822a55.unity3d
+    path: Assets/XAsset/Demo/AnimControls/MiniLegion/FootmanFreeModel.controller
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Attack01.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Attack02.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Death.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Default.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Defend.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_GetHit.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Idle.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Polyart.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Run.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Victory.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Walk.fbx
+  - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    path: Assets/XAsset/Demo/Fbxs/MiniLegion/Stage.fbx
   - bundle: 743a49d60961e58a2333052182097f0b.unity3d
     path: Assets/XAsset/Demo/Materials/Mat_HotTest.mat
+  - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    path: Assets/XAsset/Demo/Materials/MiniLegion/HP.mat
+  - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    path: Assets/XAsset/Demo/Materials/MiniLegion/PBR.mat
+  - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    path: Assets/XAsset/Demo/Materials/MiniLegion/PolyartStandard.mat
+  - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    path: Assets/XAsset/Demo/Materials/MiniLegion/Skybox_Mat.mat
+  - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    path: Assets/XAsset/Demo/Materials/MiniLegion/Stage.mat
   - bundle: 749cfeed8015c66fd80588b048e27a4c.unity3d
     path: Assets/XAsset/Demo/Prefabs/HotUpdateEx/HotUpdateTest2.prefab
   - bundle: d018cdf07f043d12edf35c96f3668dab.unity3d
     path: Assets/XAsset/Demo/Prefabs/HotUpdateTest.prefab
   - bundle: d018cdf07f043d12edf35c96f3668dab.unity3d
     path: Assets/XAsset/Demo/Prefabs/HotUpdateTest1.prefab
+  - bundle: a45667c7448039b95a9fefe80ee1171e.unity3d
+    path: Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanHP.prefab
+  - bundle: a45667c7448039b95a9fefe80ee1171e.unity3d
+    path: Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanPBR.prefab
+  - bundle: a45667c7448039b95a9fefe80ee1171e.unity3d
+    path: Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanPolyart.prefab
   - bundle: b26a9bac179b4418b47a45737a4c6673.unity3d
     path: Assets/XAsset/Demo/Scenes/Game.unity
+  - bundle: 29b5b528e5e7c8e33456a5edebbfe82c.unity3d
+    path: Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
+  - bundle: 0bf95fdd3eb90de8a6c5e8669defa666.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/HP/footmanBlue.png
+  - bundle: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/PBR/AO.png
+  - bundle: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/PBR/Albedo.png
+  - bundle: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/PBR/MatallicSmoothness.png
+  - bundle: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/PBR/Normal.png
+  - bundle: f8e2aef48315c7dc027960d5ea4388d2.unity3d
+    path: Assets/XAsset/Demo/Textures/MiniLegion/PolyartStandard.png
   - bundle: 4a668588d6510f5f0943d60252ce18cd.unity3d
     path: Assets/XAsset/Demo/UI/10Character/Btn_Buy1_h.png
   - bundle: 4a668588d6510f5f0943d60252ce18cd.unity3d
@@ -2132,9 +2192,19 @@ MonoBehaviour:
   - name: b26a9bac179b4418b47a45737a4c6673.unity3d
     assets:
     - Assets/XAsset/Demo/Scenes/Game.unity
+  - name: 29b5b528e5e7c8e33456a5edebbfe82c.unity3d
+    assets:
+    - Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
   - name: 743a49d60961e58a2333052182097f0b.unity3d
     assets:
     - Assets/XAsset/Demo/Materials/Mat_HotTest.mat
+  - name: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
+    assets:
+    - Assets/XAsset/Demo/Materials/MiniLegion/HP.mat
+    - Assets/XAsset/Demo/Materials/MiniLegion/PBR.mat
+    - Assets/XAsset/Demo/Materials/MiniLegion/PolyartStandard.mat
+    - Assets/XAsset/Demo/Materials/MiniLegion/Skybox_Mat.mat
+    - Assets/XAsset/Demo/Materials/MiniLegion/Stage.mat
   - name: d018cdf07f043d12edf35c96f3668dab.unity3d
     assets:
     - Assets/XAsset/Demo/Prefabs/HotUpdateTest.prefab
@@ -2142,6 +2212,11 @@ MonoBehaviour:
   - name: 749cfeed8015c66fd80588b048e27a4c.unity3d
     assets:
     - Assets/XAsset/Demo/Prefabs/HotUpdateEx/HotUpdateTest2.prefab
+  - name: a45667c7448039b95a9fefe80ee1171e.unity3d
+    assets:
+    - Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanHP.prefab
+    - Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanPBR.prefab
+    - Assets/XAsset/Demo/Prefabs/MiniLegion/FootmanPolyart.prefab
   - name: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
     assets:
     - Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate.anim
@@ -2149,3 +2224,32 @@ MonoBehaviour:
   - name: e37bc5d1b94a58094869c065db1edc0f.unity3d
     assets:
     - Assets/XAsset/Demo/AnimControls/HotUpdate/AnimControl_HotUpdate.controller
+  - name: 04a820c5aa8987aa384a1bab95822a55.unity3d
+    assets:
+    - Assets/XAsset/Demo/AnimControls/MiniLegion/FootmanFreeModel.controller
+  - name: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
+    assets:
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Attack01.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Attack02.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Death.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Default.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Defend.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_GetHit.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Idle.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Polyart.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Run.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Victory.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Walk.fbx
+    - Assets/XAsset/Demo/Fbxs/MiniLegion/Stage.fbx
+  - name: f8e2aef48315c7dc027960d5ea4388d2.unity3d
+    assets:
+    - Assets/XAsset/Demo/Textures/MiniLegion/PolyartStandard.png
+  - name: 0bf95fdd3eb90de8a6c5e8669defa666.unity3d
+    assets:
+    - Assets/XAsset/Demo/Textures/MiniLegion/HP/footmanBlue.png
+  - name: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
+    assets:
+    - Assets/XAsset/Demo/Textures/MiniLegion/PBR/Albedo.png
+    - Assets/XAsset/Demo/Textures/MiniLegion/PBR/AO.png
+    - Assets/XAsset/Demo/Textures/MiniLegion/PBR/MatallicSmoothness.png
+    - Assets/XAsset/Demo/Textures/MiniLegion/PBR/Normal.png

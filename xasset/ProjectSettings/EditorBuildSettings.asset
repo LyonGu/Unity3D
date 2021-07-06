@@ -14,3 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/XAsset/Demo/Scenes/Game.unity
     guid: d9f2c870487b3492a97fe55f70b65202
+  - enabled: 1
+    path: Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
+    guid: 1615bed2de60d3d46900915f8b8b14de
+  m_configObjects: {}

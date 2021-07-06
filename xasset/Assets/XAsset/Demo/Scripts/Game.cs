@@ -178,6 +178,7 @@ public class Game : MonoBehaviour
 		_assets = Assets.GetAllAssetPaths ();
 		foreach (var item in _assets) {
 
+            Debug.Log($"#### {item}");
 			var ext = Path.GetExtension(item);
 			if (ext.Equals(".prefab", StringComparison.OrdinalIgnoreCase))
 			{
@@ -238,7 +239,10 @@ public class Game : MonoBehaviour
             */
 
             // animationClip 嵌入到gameObject上 OK
-            // altas 测下
+            // altas 测下 ==》OK  图集不打AB，对应的散图打成一个AB
+
+            //打了一个资源模型 含有fbx texture material mesh 都通过了
+
         
         }
     }
