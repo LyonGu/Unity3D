@@ -202,22 +202,14 @@ public class Game : MonoBehaviour
             Debug.Log($"hotUpatePrefabPath == {hotUpatePrefabPath}");
             //同步加载
             var abRequest = LoadGameObject(hotUpatePrefabPath);
-            abRequest.completed += delegate (AssetRequest request)
-            {
-                if (!string.IsNullOrEmpty(request.error))
-                {
-                    request.Release();
-                    return;
-                }
-                var go = Instantiate(request.asset) as GameObject;
-                go.SetActive(true);
-                go.name = "HotTestSync";
+            var goSync = Instantiate(abRequest.asset) as GameObject;
+            goSync.SetActive(true);
+            goSync.name = "HotTestSync";
 
-            };
 
             //异步加载
             var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
-            abRequestAsync.completed += delegate (AssetRequest request)
+            abRequestAsync.completed += (AssetRequest request) =>
             {
                 if (!string.IsNullOrEmpty(request.error))
                 {
