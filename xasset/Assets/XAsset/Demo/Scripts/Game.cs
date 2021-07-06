@@ -43,7 +43,15 @@ public class Game : MonoBehaviour
 		return request;
 	}
 
-	AssetRequest LoadGameObject(string path)
+
+    AssetRequest LoadSceneAsync(string path)
+    {
+        var request = Assets.LoadSceneAsync(path, false);
+        _requests.Add(request);
+        return request;
+    }
+
+    AssetRequest LoadGameObject(string path)
 	{
 		var request = Assets.LoadAsset(path, typeof(GameObject));
 		_requests.Add(request);
@@ -58,6 +66,15 @@ public class Game : MonoBehaviour
     public void OnLoadAllAsync()
     {
         StartCoroutine(LoadAllAsync(_assets.Length));
+    }
+
+    public void OnLoadScenelAsync()
+    {
+        string path = _assets[_optionIndex];
+        if (string.IsNullOrEmpty(path)) return;
+        var ext = Path.GetExtension(path);
+        if (ext.Equals(".unity", StringComparison.OrdinalIgnoreCase))
+                StartCoroutine(LoadSceneAsync(path));
     }
 
     IEnumerator LoadAll (int size)
@@ -171,6 +188,7 @@ public class Game : MonoBehaviour
 	}
 
     private string hotUpatePrefabPath;
+    private string hotUpdateScenePath;
 	// Use this for initialization
 	void Start ()
 	{
@@ -202,6 +220,7 @@ public class Game : MonoBehaviour
             Debug.Log($"hotUpatePrefabPath == {hotUpatePrefabPath}");
             //同步加载
             var abRequest = LoadGameObject(hotUpatePrefabPath);
+            _requests.Add(abRequest);
             var goSync = Instantiate(abRequest.asset) as GameObject;
             goSync.SetActive(true);
             goSync.name = "HotTestSync";
@@ -209,6 +228,7 @@ public class Game : MonoBehaviour
 
             //异步加载
             var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
+            _requests.Add(abRequestAsync);
             abRequestAsync.completed += (AssetRequest request) =>
             {
                 if (!string.IsNullOrEmpty(request.error))
@@ -235,44 +255,49 @@ public class Game : MonoBehaviour
 
             //打了一个资源模型 含有fbx texture material mesh 都通过了
 
-        
+
+            //场景加载
+            //var scene = Assets.LoadSceneAsync(gameScene, false);
         }
     }
 
     private void Update()
     {
         if (!_isLoadAllAsync) return;
-        int count = _requests.Count;
-        if (count == 0)
+        if (_isLoadAllAsync)
         {
-            hotUpdateTestSlider.value = 0;
-            return;
-        }
-        //根据数量来标识进度  ==> 用数量来表现感觉更好
-        int doneCount = 0;
-        for (int i = 0; i < count; i++)
-        {
-            var request = _requests[i];
-            if (request.isDone)
-                doneCount++;
-        }
-        float pro = (float)doneCount / count;
-        Debug.Log($"curProgress == {pro} {doneCount} {count}");
-        hotUpdateTestSlider.value = pro;
+            int count = _requests.Count;
+            if (count == 0)
+            {
+                hotUpdateTestSlider.value = 0;
+                return;
+            }
+            //根据数量来标识进度  ==> 用数量来表现感觉更好
+            int doneCount = 0;
+            for (int i = 0; i < count; i++)
+            {
+                var request = _requests[i];
+                if (request.isDone)
+                    doneCount++;
+            }
+            float pro = (float)doneCount / count;
+            Debug.Log($"curProgress == {pro} {doneCount} {count}");
+            hotUpdateTestSlider.value = pro;
 
-        //根据request的progr来标识进度
+            //根据request的progr来标识进度
 
-        //float rPro = 1.0f / count;
-        //float curProgress = 0f;
-        //for (int i = 0; i < count; i++)
-        //{
-        //    var request = _requests[i];
-        //    //if (request.isDone)
-        //    //    doneCount++;
-        //    curProgress += request.progress * rPro;
-        //}
-        //Debug.Log($"curProgress == {curProgress}");
-        //hotUpdateTestSlider.value = curProgress;
+            //float rPro = 1.0f / count;
+            //float curProgress = 0f;
+            //for (int i = 0; i < count; i++)
+            //{
+            //    var request = _requests[i];
+            //    //if (request.isDone)
+            //    //    doneCount++;
+            //    curProgress += request.progress * rPro;
+            //}
+            //Debug.Log($"curProgress == {curProgress}");
+            //hotUpdateTestSlider.value = curProgress;
+        }
     }
     #endregion
 
