@@ -53,6 +53,9 @@ MonoBehaviour:
   - name: AnimClip_HotUpdate.anim
     bundle: 0
     dir: 0
+  - name: AnimClip_HotUpdate1.anim
+    bundle: 0
+    dir: 0
   - name: AnimControl_HotUpdate.controller
     bundle: 27
     dir: 1
@@ -2061,8 +2064,8 @@ MonoBehaviour:
   - name: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
     id: 0
     deps: 
-    len: 6026
-    hash: bae171c0b438feef13cb5554b663af28
+    len: 6139
+    hash: cf36147731c7a82db2c168d81a170918
   - name: 037294d567b2c9de638cdf1810dcb52c.unity3d
     id: 1
     deps: 
@@ -2132,7 +2135,7 @@ MonoBehaviour:
     id: 14
     deps: 000000000d00000022000000
     len: 3440
-    hash: 755cf5a78ff1f0335d752b7729625a2b
+    hash: 033565b0f54a361a8cf2504579140fc7
   - name: 8bb7326338246b283383d10d46e62f7f.unity3d
     id: 15
     deps: 
@@ -2156,8 +2159,8 @@ MonoBehaviour:
   - name: b26a9bac179b4418b47a45737a4c6673.unity3d
     id: 19
     deps: 0400000009000000
-    len: 43865
-    hash: ad0f81b4ac98bfdbd8b111c66fbed667
+    len: 139190
+    hash: a3c4bdc4aa53f64300d4d99c3c3f0fae
   - name: bce96525d50821efa962a1762e6ad327.unity3d
     id: 20
     deps: 
@@ -2177,7 +2180,7 @@ MonoBehaviour:
     id: 23
     deps: 000000000d00000022000000
     len: 3672
-    hash: 58baebcaad18b3989c167906591d6010
+    hash: 53f21f19a7fbf0551d9175e8c50ec909
   - name: d5d7dfbb272e3bd0a3ab935564a7f4ad.unity3d
     id: 24
     deps: 

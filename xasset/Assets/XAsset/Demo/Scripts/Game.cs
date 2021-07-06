@@ -236,6 +236,10 @@ public class Game : MonoBehaviour
                 1 同步加载  AssetRequest上progress始终为1 （BundleAssetRequest）
                 2 异步加载  AssetRequest上progress ==》 BundleAssetRequestAsync
             */
+
+            // animationClip 嵌入到gameObject上 OK
+            // altas 测下
+        
         }
     }
 
