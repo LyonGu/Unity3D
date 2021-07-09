@@ -340,7 +340,7 @@ namespace libx
                     return existPath;
             }
 
-            Debug.LogError("资源没有收集打包" + path);
+            Debug.LogWarning("资源没有收集打包" + path);
             return path;
         }
 

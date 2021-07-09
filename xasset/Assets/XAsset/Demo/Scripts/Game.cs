@@ -17,6 +17,9 @@ public class Game : MonoBehaviour
 	List<GameObject> _gos = new List<GameObject> ();
 	List<AssetRequest> _requests = new List<AssetRequest> ();
 
+    public RawImage urlRawImage;
+    public RawImage localRawImage;
+
 	public void OnLoad ()
 	{
 		StartCoroutine (LoadAsset ());
@@ -256,8 +259,52 @@ public class Game : MonoBehaviour
             //打了一个资源模型 含有fbx texture material mesh 都通过了
 
 
-            //场景加载
+            //场景加载 OK
             //var scene = Assets.LoadSceneAsync(gameScene, false);
+
+            //网络加载 内部使用的是UnityWebRequest封装的
+            /*
+               if (path.StartsWith("http://", StringComparison.Ordinal) ||
+                    path.StartsWith("https://", StringComparison.Ordinal) ||
+                    path.StartsWith("file://", StringComparison.Ordinal) ||
+                    path.StartsWith("ftp://", StringComparison.Ordinal) ||
+                    path.StartsWith("jar:file://", StringComparison.Ordinal))
+             */
+
+            //网络资源  测试OK
+            string url = "https://ss0.baidu.com/94o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/8326cffc1e178a82b13fb3d1f703738da977e844.jpg";
+            var trequest = Assets.LoadAssetAsync(url, typeof(Texture2D));
+            trequest.completed += (AssetRequest request) =>
+            {
+                var tex = request.asset as Texture2D;
+                urlRawImage.texture = tex;
+            };
+
+
+            //本地资源 ==>TODO 后面写一个跨平台的接口获取本地路径
+            string path = "file://" + Application.dataPath + "/hotUpdateTemp.jpg";
+            var filerequest = Assets.LoadAssetAsync(path, typeof(Texture2D));
+            filerequest.completed += (AssetRequest request) =>
+            {
+                var tex = request.asset as Texture2D;
+                localRawImage.texture = tex;
+            };
+
+            path = "file://" + Application.dataPath + "/Title.txt";
+            var textrequest = Assets.LoadAssetAsync(path, typeof(TextAsset));
+            textrequest.completed += (AssetRequest request) =>
+            {
+                string str = request.text;
+                Debug.Log($"Title.txt 内容是=={str}");
+            };
+
+
+            //UnityWebRequest request = UnityWebRequest.Get(@"http://localhost/fish.lua.txt");
+            //yield return request.SendWebRequest();
+            //string str = request.downloadHandler.text;
+            //File.WriteAllText(@"D:\PlayerGamePackage\fish.lua.txt", str);
+
+
         }
     }
 
