@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class UndoTest
 {
-    [MenuItem("Tools/Create Obj")]
+    [MenuItem("Tools/DefaultEditor/Create Obj")]
     private static void CreateObj()
     {
         GameObject newObj = new GameObject("Undo");
         Undo.RegisterCreatedObjectUndo(newObj, "CreateObj");
     }
 
-    [MenuItem("Tools/Move Obj")]
+    [MenuItem("Tools/DefaultEditor/Move Obj")]
     private static void MoveObj()
     {
         //获取选中的场景对象
@@ -22,7 +22,7 @@ public class UndoTest
         }
     }
 
-    [MenuItem("Tools/AddComponent Obj")]
+    [MenuItem("Tools/DefaultEditor/AddComponent Obj")]
     private static void AddComponentObj()
     {
         //获取选中的场景对象
@@ -33,7 +33,7 @@ public class UndoTest
         }
     }
 
-    [MenuItem("Tools/Destroy Obj")]
+    [MenuItem("Tools/DefaultEditor/Destroy Obj")]
     private static void DestroyObj()
     {
         //获取选中的场景对象
@@ -44,7 +44,7 @@ public class UndoTest
         }
     }
 
-    [MenuItem("Tools/SetParent Obj")]
+    [MenuItem("Tools/DefaultEditor/SetParent Obj")]
     private static void SetParentObj()
     {
         //获取选中的场景对象
