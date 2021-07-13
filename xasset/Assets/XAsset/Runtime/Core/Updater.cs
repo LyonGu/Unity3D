@@ -301,6 +301,7 @@ namespace libx
                 var item = _versions[i];
                 if (Versions.IsNew(string.Format("{0}{1}", _savePath, item.name), item.len, item.hash))
                 {
+                    //加入下载列表
                     AddDownload(item);
                 }
             }
@@ -309,6 +310,8 @@ namespace libx
         private IEnumerator RequestVFS()
         {
             var mb = MessageBox.Show("提示", "是否开启VFS？开启有助于提升IO性能和数据安全。", "开启");
+
+            //为什么这里会暂停程序，上面的逻辑代码不是执行完了吗
             yield return mb;
             enableVFS = mb.isOk;
         }
