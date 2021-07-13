@@ -41,6 +41,7 @@ public class MessageBox : IEnumerator
 
     public bool MoveNext()
     {
+        //每一帧都调用MoveNext 返回true的话 就会调用Current方法 返回里面的值
         return _visible;
     }
 
@@ -204,6 +205,6 @@ public class MessageBox : IEnumerator
     private void Hide()
     {
         gameObject.SetActive(false);
-        _visible = false;
+        _visible = false; //只有_visible为false的时候 MoveNext返回为false，迭代器不进行执行退出，
     }
 }
