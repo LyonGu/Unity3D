@@ -1,4 +1,4 @@
-//
+﻿//
 // Versions.cs
 //
 // Author:
@@ -28,6 +28,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+
+/*
+ 主要是负责资源版本信息的构建与加载的，并且在构建和加载版本信息时就已经用到了VFS
+
+ Versions因为底层实现依赖了VFS，所以支持任意格式的资源文件的版本管理，可以非常方便的对Wwise、Fmod等自定义格式的文件进行版本控制。
+*/
 
 namespace libx
 {
@@ -74,7 +80,8 @@ namespace libx
 			return AssetBundle.LoadFromFileAsync (url);
 		}
 
-		public static void BuildVersions (string outputPath, string[] bundles, int version)
+        //构建版本信息
+        public static void BuildVersions (string outputPath, string[] bundles, int version)
 		{
 			var path = outputPath + "/" + Filename;
 			if (File.Exists (path)) {
@@ -95,6 +102,7 @@ namespace libx
 			disk.name = dataPath;
 			disk.Save ();   
 
+            //VFS 相关逻辑
 			using (var stream = File.OpenWrite (path)) {
 				var writer = new BinaryWriter (stream);
 				writer.Write (version);
@@ -126,8 +134,8 @@ namespace libx
 				return -1;
 			} 
 		}
-
-		public static List<VFile> LoadVersions (string filename, bool update = false)
+        //加载版本信息
+        public static List<VFile> LoadVersions (string filename, bool update = false)
 		{
             var rootDir = Path.GetDirectoryName(filename);
 			var data = update ? _updateData : _baseData;

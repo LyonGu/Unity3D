@@ -29,6 +29,12 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/*
+ 
+Download.cs继承DownloadHandlerScript实现了一套自己的下载处理逻辑，
+而Downloader.cs就是用来管理所有的Download对象的，并且做了一些附加功能，比如记录当前下载进度，用于做断点续传     
+     
+*/
 namespace libx
 {
     public class Download : DownloadHandlerScript, IDisposable, ICloneable

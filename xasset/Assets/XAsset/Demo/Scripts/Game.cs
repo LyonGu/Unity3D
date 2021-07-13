@@ -150,21 +150,26 @@ public class Game : MonoBehaviour
 	{
 		if (_assets == null || _assets.Length == 0) {
 			yield break;
-		} 
-		var path = _assets [_optionIndex];
-		var ext = Path.GetExtension (path);
+		}
+        //根据当前下拉框选择的值去选取AB路径
+        var path = _assets [_optionIndex];
+        //获取拓展名
+        var ext = Path.GetExtension (path);
 		if (ext.Equals (".png", StringComparison.OrdinalIgnoreCase)) {
-			var request = LoadSprite (path);
+            //拿着这个路径去加载精灵图片
+            var request = LoadSprite (path);
 			yield return request;
 			if (!string.IsNullOrEmpty (request.error)) {
 				request.Release ();
 				yield break;
-			} 
-			var go = Instantiate (temp.gameObject, temp.transform.parent);
+			}
+            //实例化
+            var go = Instantiate (temp.gameObject, temp.transform.parent);
 			go.SetActive (true);
 			go.name = request.asset.name;
 			var image = go.GetComponent<Image> ();
-			image.sprite = request.asset as Sprite; 
+            //设置从AB加载出来的精灵图片
+            image.sprite = request.asset as Sprite; 
 			_gos.Add (go);
 		}
 	}
@@ -183,7 +188,8 @@ public class Game : MonoBehaviour
 		_gos.Clear ();
         
 		foreach (var request in _requests) {
-			request.Release ();
+            //减少引用计数
+            request.Release ();
 		}
 
 		_requests.Clear ();

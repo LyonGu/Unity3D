@@ -102,6 +102,7 @@ namespace libx
 
         private void Start()
         {
+            //初始化downloder并绑定委托
             _downloader = gameObject.GetComponent<Downloader>();
             _downloader.onUpdate = OnUpdate;
             _downloader.onFinished = OnComplete;
@@ -109,6 +110,7 @@ namespace libx
             _monitor = gameObject.GetComponent<NetworkMonitor>();
             _monitor.listener = this;
 
+            //获取版本信息文件保存的本地位置
             _savePath = string.Format("{0}/DLC/", Application.persistentDataPath);
             _platform = GetPlatformForAssetBundles(Application.platform);
 
@@ -249,6 +251,7 @@ namespace libx
 
         private IEnumerator _checking;
 
+        //点击 TOUCH TO START 按钮时，会执行
         public void StartUpdate()
         {
             Debug.Log("StartUpdate.Development:" + development);
@@ -260,8 +263,10 @@ namespace libx
                 return;
             }
 #endif
+            //告知UI进行初始化
             OnStart();
 
+            //如果当前Check协程不为空，就终止
             if (_checking != null)
             {
                 StopCoroutine(_checking);
@@ -342,6 +347,7 @@ namespace libx
                 Directory.CreateDirectory(_savePath);
             }
 
+            //询问是否开启VFS
             if (_step == Step.Wait)
             {
                 yield return RequestVFS();
@@ -350,6 +356,7 @@ namespace libx
 
             if (_step == Step.Copy)
             {
+                //加载本地版本信息文件，如果StreamingAssets下面有资源会询问是否复制资源
                 yield return RequestCopy();
             }
 
@@ -364,6 +371,7 @@ namespace libx
 
             if (_step == Step.Versions)
             {
+                //请求并加载云端版本信息文件
                 yield return RequestVersions();
             }
 
@@ -378,6 +386,7 @@ namespace libx
                     yield return mb;
                     if (mb.isOk)
                     {
+                        //开始正式下载资源，并记录当前的下载进度，用于做断点续传
                         _downloader.StartDownload();
                         _step = Step.Download;
                     }
@@ -388,11 +397,13 @@ namespace libx
                 }
                 else
                 {
+                    //所有文件更新完成，再次更新本地版本信息文件
                     OnComplete();
                 }
             } 
         }
 
+        //向服务器请求版本信息
         private IEnumerator RequestVersions()
         {
             OnMessage("正在获取版本信息...");
@@ -583,6 +594,7 @@ namespace libx
         private IEnumerator LoadGameScene()
         {
             OnMessage("正在初始化");
+            //初始化AB系统，加载Manifest文件
             var init = Assets.Initialize();
             yield return init;
             if (string.IsNullOrEmpty(init.error))
@@ -591,6 +603,7 @@ namespace libx
                 init.Release();
                 OnProgress(0);
                 OnMessage("加载游戏场景");
+                //异步加载 Game.unity 这里使用了更智能的寻址模式，在上一个版本中 需要输出 Assets/XAsset/Demo/Scenes/Game.unity, 具体参考 SearchPath
                 var scene = Assets.LoadSceneAsync(gameScene, false);
                 while (!scene.isDone)
                 {

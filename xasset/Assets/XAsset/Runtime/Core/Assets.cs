@@ -131,7 +131,9 @@ namespace libx
                 }
                 _runningScene = asset;
             }
+            //加载资源
             asset.Load();
+            //资源引用计数
             asset.Retain();
             _scenes.Add(asset);
             Log(string.Format("LoadScene:{0}", path));
@@ -143,11 +145,13 @@ namespace libx
             scene.Release();
         }
 
+        //异步加载资源，path为资源寻址路径，Type为资源类型
         public static AssetRequest LoadAssetAsync(string path, Type type)
         {
             return LoadAsset(path, type, true);
         }
 
+        //同步加载资源，path为资源寻址路径，Type为资源类型
         public static AssetRequest LoadAsset(string path, Type type)
         {
             return LoadAsset(path, type, false);
@@ -211,7 +215,7 @@ namespace libx
                 _loadingAssets.RemoveAt(i);
                 --i;
             }
-
+            //移除无用资产
             foreach (var item in _assets)
             {
                 if (item.Value.isDone && item.Value.IsUnused())
@@ -261,6 +265,7 @@ namespace libx
 
             path = GetExistPath(path);
 
+            //先尝试从已加载Asset获取目标Asset
             AssetRequest request;
             if (_assets.TryGetValue(path, out request))
             {
@@ -269,7 +274,9 @@ namespace libx
                 return request;
             }
 
+            //如果没找到就需要去获取AB
             string assetBundleName;
+            //如果此AB已存在于本地记录（从Manifest文件读取的），就直接取得AB名，准备加载AB
             if (GetAssetBundleName(path, out assetBundleName))
             {
 
@@ -287,6 +294,8 @@ namespace libx
             }
             else
             {
+                //如果此AB在本地记录未找到
+                //如果是网络路径/本地路径（注意一定要有以下前缀之一，否则会被忽略而取不到对象）
                 if (path.StartsWith("http://", StringComparison.Ordinal) ||
                     path.StartsWith("https://", StringComparison.Ordinal) ||
                     path.StartsWith("file://", StringComparison.Ordinal) ||
@@ -294,12 +303,15 @@ namespace libx
                     path.StartsWith("jar:file://", StringComparison.Ordinal))
                     request = new WebAssetRequest();
                 else
+                    //如果是本地路径（事实上这个是用AssetDatabase.LoadAssetAtPath去编辑器找的，所以想要读取本地的非AB文件还是用上面的UWR吧，注意加上前缀)
                     request = new AssetRequest();
             }
 
             request.name = path;
             request.assetType = type;
+            //新增资产请求
             AddAssetRequest(request);
+            //引用计数+1
             request.Retain();
             Log(string.Format("LoadAsset:{0}", path));
             return request;
@@ -475,6 +487,7 @@ namespace libx
                 --i;
             }
 
+            //移除无用AB
             foreach (var item in _bundles)
             {
                 if (item.Value.isDone && item.Value.IsUnused())
