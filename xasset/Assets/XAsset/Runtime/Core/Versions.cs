@@ -134,7 +134,7 @@ namespace libx
 				return -1;
 			} 
 		}
-        //加载版本信息
+        //加载版本信息 返回对应的版本的所有文件列表数据
         public static List<VFile> LoadVersions (string filename, bool update = false)
 		{
             var rootDir = Path.GetDirectoryName(filename);
@@ -216,7 +216,8 @@ namespace libx
 				if (verifyBy != VerifyBy.Hash)
 					return false;
                 //比较本地文件和服务器文件的hash值，不等的话需要更新
-				return !Utility.GetCRC32Hash (stream).Equals (hash, StringComparison.OrdinalIgnoreCase);
+                bool isSameHash = Utility.GetCRC32Hash(stream).Equals(hash, StringComparison.OrdinalIgnoreCase);
+                return !isSameHash;
 			}
 		} 
 	}

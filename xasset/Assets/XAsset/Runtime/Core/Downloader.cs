@@ -63,9 +63,14 @@ namespace libx
             var downloadSize = 0L;
             foreach (var download in _downloads)
             {
-                downloadSize += download.position;
+                downloadSize += download.position; //每次有数据更新都会去设置download.position
                 len += download.len;
-            } 
+            }
+
+            //感觉挺绕的
+            //len 表示服务器记录的文件大小
+            //downloadSize 表示已经下载过的文件大小+再次下载的大小 ==》 总下载大小
+            //size 需要下载的大小
             return downloadSize - (len - size);
         }
 
@@ -142,13 +147,15 @@ namespace libx
                 completed = OnFinished
             };
             _downloads.Add(download);
-            var info = new FileInfo(download.tempPath); //断点续传 下到一半可以继续下
+            var info = new FileInfo(download.tempPath); //判断临时文件是否存在
             if (info.Exists)
             {
+                //临时文件存在，计算再次下载的大小时需要用 总大小 - 已经下载过的大小
                 size += len - info.Length; 
             }
             else
             {
+                //临时文件不存在，需要下载的大小直接就是中大小
                 size += len; 
             }
         }
@@ -238,6 +245,7 @@ namespace libx
             speed = (position - _lastSize) / deltaTime;
             if (onUpdate != null)
             {
+                //更新进度UI
                 onUpdate(position, size, speed);
             }
             

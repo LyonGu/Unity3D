@@ -111,16 +111,16 @@ public class Game : MonoBehaviour
         List<AssetRequest> list = new List<AssetRequest>();
         for (int i = _optionIndex; i < _assets.Length; i++)
         {
-            var asset = _assets[i];
-            var ext = Path.GetExtension(asset);
+            var assetPath = _assets[i];
+            var ext = Path.GetExtension(assetPath);
             if (count >= size)
             {
                 _optionIndex = i;
                 break;
             }
-            if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase))
+            if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) && assetPath.IndexOf("Demo/UI/") > -1)
             {
-                var request = LoadSpriteAsync(asset);
+                var request = LoadSpriteAsync(assetPath);
                 request.completed += OnCompleted;
                 list.Add(request);
                 count++;
@@ -159,7 +159,8 @@ public class Game : MonoBehaviour
         var path = _assets [_optionIndex];
         //获取拓展名
         var ext = Path.GetExtension (path);
-		if (ext.Equals (".png", StringComparison.OrdinalIgnoreCase)) {
+
+        if (ext.Equals (".png", StringComparison.OrdinalIgnoreCase) && path.IndexOf("Demo/UI/")>-1) {
             //拿着这个路径去加载精灵图片
             var request = LoadSprite (path);
 			yield return request;
@@ -338,7 +339,7 @@ public class Game : MonoBehaviour
                     doneCount++;
             }
             float pro = (float)doneCount / count;
-            Debug.Log($"curProgress == {pro} {doneCount} {count}");
+            ///Debug.Log($"curProgress == {pro} {doneCount} {count}");
             hotUpdateTestSlider.value = pro;
 
             //根据request的progr来标识进度

@@ -126,8 +126,8 @@ namespace libx
 				var count = reader.ReadInt32 ();
 				for (var i = 0; i < count; i++) {
 					var file = new VFile { id = i };
-					file.Deserialize (reader);
-					AddFile (file); 
+					file.Deserialize (reader); //从res文件里读取每个文件的信息
+					AddFile (file); //加入文件列表
 				} 
 				_pos = reader.BaseStream.Position;  
 			}
@@ -138,6 +138,7 @@ namespace libx
 		public void Reindex ()
 		{
 			_len = 0L;
+            //记录每个文件偏移量
 			for (var i = 0; i < files.Count; i++) {
 				var file = files [i];
 				file.offset = _pos + _len;
