@@ -41,6 +41,7 @@ namespace libx
                 {
                     if (listener != null)
                     {
+                        //监听网络状态发生变化
                         listener.OnReachablityChanged(state);
                     }
                     _reachability = state;

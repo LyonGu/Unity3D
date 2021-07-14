@@ -149,6 +149,7 @@ namespace libx
 
         private bool _reachabilityChanged;
 
+        //网络状态发生变化
         public void OnReachablityChanged(NetworkReachability reachability)
         {
             if (_step == Step.Wait)
@@ -295,10 +296,11 @@ namespace libx
 
                 Versions.LoadDisk(path);
             }
-
+            //第一个数据是版本信息 下标从1开始是文件信息
             for (var i = 1; i < _versions.Count; i++)
             {
                 var item = _versions[i];
+                //与本地的文件进行对比
                 if (Versions.IsNew(string.Format("{0}{1}", _savePath, item.name), item.len, item.hash))
                 {
                     //加入下载列表
@@ -379,6 +381,7 @@ namespace libx
             {
                 //请求并加载云端版本信息文件
                 yield return RequestVersions();
+               
             }
 
             if (_step == Step.Prepared)
@@ -428,8 +431,10 @@ namespace libx
                 yield break;
             }
 
-            var request = UnityWebRequest.Get(GetDownloadURL(Versions.Filename));
-            request.downloadHandler = new DownloadHandlerFile(_savePath + Versions.Filename);
+            string remoteVerPath = GetDownloadURL(Versions.Filename); //服务器版本文件路径
+            string localVerPath = _savePath + Versions.Filename; //本地版本文件路径
+            var request = UnityWebRequest.Get(remoteVerPath);//加载资源服务器版本文件
+            request.downloadHandler = new DownloadHandlerFile(localVerPath); //设置本地版本文件存储路径
             yield return request.SendWebRequest();
             var error = request.error;
             request.Dispose();
@@ -449,10 +454,10 @@ namespace libx
             } 
             try
             {
-                _versions = Versions.LoadVersions(_savePath + Versions.Filename, true);
+                _versions = Versions.LoadVersions(localVerPath, true); //localVerPath 已经从服务器下载完成的版本文件 版本文件里有需要下载的文件列表数据
                 if (_versions.Count > 0)
                 {
-                    PrepareDownloads();
+                    PrepareDownloads();//检测是否有需要下载的
                     _step = Step.Prepared;
                 }
                 else
@@ -500,7 +505,7 @@ namespace libx
             var basePath = GetStreamingAssetsPath() + "/";
             var request = UnityWebRequest.Get(basePath + Versions.Filename);
             var path = _savePath + Versions.Filename + ".tmp";
-            request.downloadHandler = new DownloadHandlerFile(path);
+            request.downloadHandler = new DownloadHandlerFile(path);//path 储存文件的路径和文件名 这句代码会生成一个对应文件
             yield return request.SendWebRequest();
             if (string.IsNullOrEmpty(request.error))
             {

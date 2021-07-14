@@ -141,12 +141,13 @@ namespace libx
 			var data = update ? _updateData : _baseData;
 			data.Clear ();
 			using (var stream = File.OpenRead (filename)) {
-				var reader = new BinaryReader (stream);
+				var reader = new BinaryReader (stream); //二进制读取
 				var list = new List<VFile> ();
-				var ver = reader.ReadInt32 ();
-				Debug.Log ("LoadVersions:" + ver);
-				var count = reader.ReadInt32 ();
+				var ver = reader.ReadInt32 (); //第一个4个字节为版本号
+				Debug.Log ("LoadVersions:" + ver); //第二个4个字节为文件数量
+                var count = reader.ReadInt32 ();
 				for (var i = 0; i < count; i++) {
+                    //构建VFile信息：文件名字，文件大小，哈希值
 					var version = new VFile ();
 					version.Deserialize (reader);
 					list.Add (version);
@@ -177,6 +178,12 @@ namespace libx
 			return _disk.Load (filename);
 		}
 
+
+        /// </summary>
+        /// <param name="path">本地文件路径</param>
+        /// <param name="len">服务器记录的文件大小</param>
+        /// <param name="hash">服务器记录的文件hash值</param>
+        /// <returns></returns>
 		public static bool IsNew (string path, long len, string hash)
 		{
 			VFile file;
@@ -195,16 +202,20 @@ namespace libx
 				}
 			}
 
+            //本地文件不存在 需要更新
 			if (!File.Exists (path)) {
 				return true;
 			}
 
+            //读取本地文件内容进行比对
 			using (var stream = File.OpenRead (path)) {
+                //本地文件大小和服务器文件大小不一致 需要更新
 				if (stream.Length != len) {
 					return true;
 				} 
 				if (verifyBy != VerifyBy.Hash)
 					return false;
+                //比较本地文件和服务器文件的hash值，不等的话需要更新
 				return !Utility.GetCRC32Hash (stream).Equals (hash, StringComparison.OrdinalIgnoreCase);
 			}
 		} 

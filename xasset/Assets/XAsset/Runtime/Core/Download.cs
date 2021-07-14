@@ -76,7 +76,8 @@ namespace libx
             get
             { 
                 var dir = Path.GetDirectoryName(savePath);
-                return string.Format("{0}/{1}", dir, hash);
+                string tPath = string.Format("{0}/{1}", dir, hash);
+                return tPath;
             }
         }
 
@@ -103,20 +104,23 @@ namespace libx
         {
         }
 
+        //Callback, invoked as data is received from the remote server.
         protected override bool ReceiveData(byte[] buffer, int dataLength)
         {
             if (!string.IsNullOrEmpty(_request.error))
             {
+                //下载数据发生错误 直接Complete
                 error = _request.error;
                 Complete();
                 return true;
             }
-
+            //每次接收到数据都往_stream里写
             _stream.Write(buffer, 0, dataLength);
             position += dataLength;
             return _running;
         }
 
+        //下载完成会调用这个方法  重写的DownloadHandler方法
         protected override void CompleteContent()
         {
             Complete();
@@ -137,14 +141,16 @@ namespace libx
             error = null;
             finished = false;
             _running = true;
+            
+            //先下载到本地临时文件，最后下载完成后会把临时文件内容复制到正式文件，然后删除临时文件
             _stream = new FileStream(tempPath, FileMode.OpenOrCreate, FileAccess.Write);
-            position = _stream.Length;
+            position = _stream.Length; //先读取本地文件的大小，预防未下完的情况
             if (position < len)
             {
-                _stream.Seek(position, SeekOrigin.Begin);
+                _stream.Seek(position, SeekOrigin.Begin); //设置文件写入的起始位置，如果已经下载过，就是断点续传的位置
                 _request = UnityWebRequest.Get(url);
                 _request.SetRequestHeader("Range", "bytes=" + position + "-");
-                _request.downloadHandler = this;
+                _request.downloadHandler = this;  //下载完成会调用CompleteContent
                 _request.SendWebRequest();
                 Debug.Log("Start Download：" + url); 
             }
@@ -190,11 +196,14 @@ namespace libx
 
         public void Complete(bool stop = false)
         {
+            //是否一些非托管内存，设置该loader下载完成
             Dispose(); 
             if (stop)
             {
                 return;   
             } 
+            
+            //下载完成后再检测下异常
             CheckError();
         }
 
@@ -222,16 +231,21 @@ namespace libx
                 } 
                 if (string.IsNullOrEmpty(error))
                 {
+                    //成功下载后把临时文件拷贝到最终文件里
                     File.Copy(tempPath, savePath, true);
+                    //删除临时文件
                     File.Delete(tempPath); 
                     Debug.Log("Complete Download：" + url);
                     if (completed == null)
                         return;
+
+                    //成功下载后调用completed，即Downloader.OnFinished 方法
                     completed.Invoke(this);
                     completed = null; 
                 }
                 else
                 {
+                    //如果下载发生错误，直接删除临时文件
                     File.Delete(tempPath);
                 } 
             }
