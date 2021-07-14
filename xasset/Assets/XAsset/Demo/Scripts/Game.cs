@@ -134,10 +134,14 @@ public class Game : MonoBehaviour
 
     private void OnCompleted (AssetRequest request)
 	{
+        if (request == null)
+            return;
 		if (!string.IsNullOrEmpty (request.error)) {
 			request.Release ();
 			return;
 		}
+        if (request.asset == null)
+            return;
 		var go = Instantiate (temp.gameObject, temp.transform.parent);
 		go.SetActive (true);
 		go.name = request.asset.name;

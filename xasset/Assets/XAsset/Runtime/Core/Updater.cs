@@ -593,12 +593,16 @@ namespace libx
 
             OnProgress(1);
             OnMessage("更新完成");
+
+            //读取最新版本号
             var version = Versions.LoadVersion(_savePath + Versions.Filename);
             if (version > 0)
             {
+                //显示最新版本号再UI上
                 OnVersion(version.ToString());
             }
 
+            //进入游戏场景
             StartCoroutine(LoadGameScene());
         }
 

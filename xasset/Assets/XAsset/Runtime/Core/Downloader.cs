@@ -155,8 +155,9 @@ namespace libx
 
         private void OnFinished(Download download)
         {
-            if (_downloadIndex < _downloads.Count)
+            if (_downloadIndex < _downloads.Count) 
             {
+                //为什么这里又要加进去？？ 异常了
                 _tostart.Add(_downloads[_downloadIndex]);
                 _downloadIndex++;    
             } 
@@ -166,7 +167,8 @@ namespace libx
                 return;
             if (onFinished != null)
             {
-                onFinished.Invoke(); 
+                //所有文件下载完毕
+                onFinished.Invoke(); //Updater.OnComplete
             } 
             _started = false;
         }
