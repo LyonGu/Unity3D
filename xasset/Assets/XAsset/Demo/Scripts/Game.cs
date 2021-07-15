@@ -293,7 +293,7 @@ public class Game : MonoBehaviour
 
 
             //本地资源 ==>TODO 后面写一个跨平台的接口获取本地路径
-            string path = "file://" + Application.dataPath + "/hotUpdateTemp.jpg";
+            string path = Updater.GetStreamingAssetsPath() + "/hotUpdateTemp.jpg";
             var filerequest = Assets.LoadAssetAsync(path, typeof(Texture2D));
             filerequest.completed += (AssetRequest request) =>
             {
@@ -301,7 +301,8 @@ public class Game : MonoBehaviour
                 localRawImage.texture = tex;
             };
 
-            path = "file://" + Application.dataPath + "/Title.txt";
+            path = Updater.GetStreamingAssetsPath() + "/Title.txt";
+      
             var textrequest = Assets.LoadAssetAsync(path, typeof(TextAsset));
             textrequest.completed += (AssetRequest request) =>
             {

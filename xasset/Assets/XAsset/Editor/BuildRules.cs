@@ -66,8 +66,10 @@ namespace libx
 
         [Tooltip("Explicit的名称")] public string assetBundleName;
 
+        //返回的是对应规则所有文件的路径集合
         public string[] GetAssets()
         {
+            //，区分不同的匹配格式 根据匹配格式筛选出对应的assest
             var patterns = searchPattern.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             if (!Directory.Exists(searchPath))
             {
@@ -78,13 +80,18 @@ namespace libx
             var getFiles = new List<string>();
             foreach (var item in patterns)
             {
+                //递归所有的文件夹
                 var files = Directory.GetFiles(searchPath, item, SearchOption.AllDirectories);
                 foreach (var file in files)
                 {
                     if (Directory.Exists(file)) continue;
                     var ext = Path.GetExtension(file).ToLower();
+                    //当后缀为fbx或者anim时，检查是否匹配
                     if ((ext == ".fbx" || ext == ".anim") && !item.Contains(ext)) continue;
-                    if (!BuildRules.ValidateAsset(file)) continue;
+
+                    //验证Asset是否有效，后缀为".dll" ".cs"  ".meta" ".js" ".boo" 直接返回
+                    if (!BuildRules.ValidateAsset(file)) 
+                        continue;
                     var asset = file.Replace("\\", "/");
                     getFiles.Add(asset);
                 }
@@ -94,11 +101,12 @@ namespace libx
         }
     }
 
+    //BuildRules 管理着一系列BuildRule
     public class BuildRules : ScriptableObject
     {
-        private readonly Dictionary<string, string> _asset2Bundles = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _asset2Bundles = new Dictionary<string, string>(); //Key：文件路径名，Value:BundleName
         private readonly Dictionary<string, string[]> _conflicted = new Dictionary<string, string[]>();
-        private readonly List<string> _duplicated = new List<string>();
+        private readonly List<string> _duplicated = new List<string>(); //重复列表
         private readonly Dictionary<string, HashSet<string>> _tracker = new Dictionary<string, HashSet<string>>();
 		[Header("Patterns")]
 		public string searchPatternAsset = "*.asset";
@@ -117,11 +125,13 @@ namespace libx
 		[Tooltip("构建的版本号")]
 		[Header("Builds")] 
         public int version;
-        [Tooltip("BuildPlayer 的时候被打包的场景")] public SceneAsset[] scenesInBuild = new SceneAsset[0]; 
+        [Tooltip("BuildPlayer 的时候被打包的场景")] 
+        public SceneAsset[] scenesInBuild = new SceneAsset[0]; 
+
         public BuildRule[] rules = new BuildRule[0]; 
 		[Header("Assets")]
-		[HideInInspector]public RuleAsset[] ruleAssets = new RuleAsset[0];
-        [HideInInspector]public RuleBundle[] ruleBundles = new RuleBundle[0];
+		[HideInInspector]public RuleAsset[] ruleAssets = new RuleAsset[0];  // 文件全路径+bundleName ==》 每个asset的信息
+        [HideInInspector]public RuleBundle[] ruleBundles = new RuleBundle[0]; //bundleName+文件列表信息 ==》每个Bundle的信息
         #region API
 
         public int AddVersion()
@@ -134,10 +144,19 @@ namespace libx
 
         public void Apply()
         {
+            //先清一遍数据
             Clear();
+
+            //收集Assets
             CollectAssets();
+
+            //分析Assets，记录ab之间的依赖项
             AnalysisAssets();
+
+            //优化Asset，处理重复资源
             OptimizeAssets();
+
+            //保存数据
             Save();
         }
 
@@ -182,6 +201,7 @@ namespace libx
             return name.Replace("\\", "/").ToLower() + Assets.Extension;
         }
 
+        //asset 是全路径
         private void Track(string asset, string bundle)
         {
             HashSet<string> assets;
@@ -194,6 +214,7 @@ namespace libx
             assets.Add(bundle);
             if (assets.Count > 1)
             {
+                //重复资源
                 string bundleName;
                 _asset2Bundles.TryGetValue(asset, out bundleName);
                 if (string.IsNullOrEmpty(bundleName))
@@ -205,7 +226,7 @@ namespace libx
 
         private Dictionary<string, List<string>> GetBundles()
         {
-            var bundles = new Dictionary<string, List<string>>();
+            var bundles = new Dictionary<string, List<string>>(); //bundleName --》 文件Files
             foreach (var item in _asset2Bundles)
             {
                 var bundle = item.Value;
@@ -232,15 +253,15 @@ namespace libx
 
         private void Save()
         {
-            var getBundles = GetBundles();
+            var getBundles = GetBundles(); //返回的是一个Dictionary<BundleName, List<FilePath>>
             ruleBundles = new RuleBundle[getBundles.Count];
             var i = 0;
             foreach (var item in getBundles)
             {
                 ruleBundles[i] = new RuleBundle
                 {
-                    name = item.Key,
-                    assets = item.Value.ToArray()
+                    name = item.Key, //BundleName
+                    assets = item.Value.ToArray() //文件列表
                 };
                 i++;
             }
@@ -252,6 +273,7 @@ namespace libx
 
         private void OptimizeAssets()
         {
+            //如果有冲突资源处理
             int i = 0, max = _conflicted.Count;
             foreach (var item in _conflicted)
             {
@@ -275,7 +297,7 @@ namespace libx
 
         private void AnalysisAssets()
         {
-            var getBundles = GetBundles();
+            var getBundles = GetBundles(); //返回的是一个Dictionary<BundleName, List<FilePath>>
             int i = 0, max = getBundles.Count;
             foreach (var item in getBundles)
             {
@@ -283,8 +305,12 @@ namespace libx
                 if (EditorUtility.DisplayCancelableProgressBar(string.Format("分析依赖{0}/{1}", i, max), bundle,
                     i / (float) max)) break;
                 var assetPaths = getBundles[bundle];
+
+                //判断list里有场景资源 && 并且所有的都为场景
                 if (assetPaths.Exists(IsScene) && !assetPaths.TrueForAll(IsScene))
                     _conflicted.Add(bundle, assetPaths.ToArray());
+
+                //AssetDatabase.GetDependencies ==> 返回文件依赖项，第二个参数为true的话连间接依赖也能获取
                 var dependencies = AssetDatabase.GetDependencies(assetPaths.ToArray(), true);
                 if (dependencies.Length > 0)
                     foreach (var asset in dependencies)
@@ -296,6 +322,7 @@ namespace libx
 
         private void CollectAssets()
         {
+            //遍历所有的规则信息，把对应文件的ab包存在_asset2Bundles里 一一映射
             for (int i = 0, max = rules.Length; i < max; i++)
             {
                 var rule = rules[i];
@@ -337,14 +364,24 @@ namespace libx
                 }
                 case NameBy.Path:
                 {
-                    foreach (var asset in assets) _asset2Bundles[asset] = RuledAssetBundleName(asset);
-
+                    
+                    foreach (var asset in assets)
+                    {
+                        //利用md5算法把文件路径转成hash值，当做bundleName
+                        var bundleName = RuledAssetBundleName(asset);
+                        _asset2Bundles[asset] = bundleName;
+                    }
                     break;
                 }
                 case NameBy.Directory:
                 {
-                    foreach (var asset in assets)
-                        _asset2Bundles[asset] = RuledAssetBundleName(Path.GetDirectoryName(asset));
+                        foreach (var asset in assets)
+                        {
+                            //利用md5算法把目录名字转成hash值，当做bundleName
+                            var bundleName = RuledAssetBundleName(Path.GetDirectoryName(asset));
+                            _asset2Bundles[asset] = bundleName;
+                        }
+                        
 
                     break;
                 }

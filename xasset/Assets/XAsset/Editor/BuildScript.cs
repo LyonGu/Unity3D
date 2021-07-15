@@ -82,6 +82,7 @@ namespace libx
 
 		public static string GetPlatformName ()
 		{
+            //根据编辑器设置平台输出不同的文件夹名字
 			return GetPlatformForAssetBundles (EditorUserBuildSettings.activeBuildTarget);
 		}
 
@@ -139,8 +140,10 @@ namespace libx
                         .ToLower ()); //EditorUtility.SaveFolderPanel("Choose Location of the Built Game", "", "");
 			if (outputPath.Length == 0)
 				return;
+            if (Directory.Exists(outputPath))
+                Directory.Delete(outputPath, true);
 
-			var levels = GetLevelsFromBuildSettings ();
+            var levels = GetLevelsFromBuildSettings ();
 			if (levels.Length == 0) {
 				Debug.Log ("Nothing to build.");
 				return;
@@ -161,6 +164,8 @@ namespace libx
 				options = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None
 			};
 			BuildPipeline.BuildPlayer (buildPlayerOptions);
+
+            Debug.Log($"BuildPlayer Done, OutPut Path is {buildPlayerOptions.locationPathName.Replace("\\", "/")}");
 #endif
 		}
 
@@ -177,80 +182,107 @@ namespace libx
 		{
 			// Choose the output path according to the build target.
 			var outputPath = CreateAssetBundleDirectory ();
-			const BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
+
+            //使用LZ4压缩格式
+            /*
+             LZMA ==》对整个ab包的字节数组进行压缩
+`````````````LZ4 ==》对单独的Assets的字节进行压缩
+
+
+            AssetBundle.LoadFromFile==>加载LZ4的ab包，API将只加载AssetBundle的头部，并将剩余的数据留在磁盘上。
+
+            AssetBundle的Objects 会按需加载，比如加载方法(例如AssetBundle.Load)被调用或其InstanceID被间接引用的时候。在这种情况下，不会消耗过多的内存。
+             */
+            const BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
+
+
 			var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
 			var rules = GetBuildRules ();
 			var builds = rules.GetBuilds ();
-			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform);
+            //打不同的ab包
+			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform); //先构建Manifest
 			if (assetBundleManifest == null) {
 				return;
 			}
 
-			var manifest = GetManifest ();
-			var dirs = new List<string> ();
-			var assets = new List<AssetRef> ();
-			var bundles = assetBundleManifest.GetAllAssetBundles ();
-			var bundle2Ids = new Dictionary<string, int> ();
-			for (var index = 0; index < bundles.Length; index++) {
-				var bundle = bundles [index];
-				bundle2Ids [bundle] = index;
-			}
+            //刷新Manifest.assets文件
+            var manifest = GetManifest();
+            var dirs = new List<string>();
+            var assets = new List<AssetRef>();
+            var bundles = assetBundleManifest.GetAllAssetBundles(); //拿到所有的bundle
+            var bundle2Ids = new Dictionary<string, int>();
+            for (var index = 0; index < bundles.Length; index++)
+            {
+                var bundle = bundles[index];
+                bundle2Ids[bundle] = index;
+            }
 
-			var bundleRefs = new List<BundleRef> ();
-			for (var index = 0; index < bundles.Length; index++) {
-				var bundle = bundles [index];
-				var deps = assetBundleManifest.GetAllDependencies (bundle);
-				var path = string.Format ("{0}/{1}", outputPath, bundle);
-				if (File.Exists (path)) {
-					using (var stream = File.OpenRead (path)) {
-						bundleRefs.Add (new BundleRef {
-							name = bundle,
-							id = index,
-							deps = Array.ConvertAll (deps, input => bundle2Ids [input]),
-							len = stream.Length,
-							hash = assetBundleManifest.GetAssetBundleHash (bundle).ToString (),
-						});
-					}
-				} else {
-					Debug.LogError (path + " file not exsit.");
-				}
-			}
+            var bundleRefs = new List<BundleRef>();
+            for (var index = 0; index < bundles.Length; index++)
+            {
+                var bundle = bundles[index];
+                var deps = assetBundleManifest.GetAllDependencies(bundle);
+                var path = string.Format("{0}/{1}", outputPath, bundle);
+                if (File.Exists(path))
+                {
+                    using (var stream = File.OpenRead(path))
+                    {
+                        bundleRefs.Add(new BundleRef
+                        {
+                            name = bundle,
+                            id = index,
+                            deps = Array.ConvertAll(deps, input => bundle2Ids[input]),
+                            len = stream.Length,
+                            hash = assetBundleManifest.GetAssetBundleHash(bundle).ToString(),
+                        });
+                    }
+                }
+                else
+                {
+                    Debug.LogError(path + " file not exsit.");
+                }
+            }
 
-			for (var i = 0; i < rules.ruleAssets.Length; i++) {
-				var item = rules.ruleAssets [i];
-				var path = item.path;
-				var dir = Path.GetDirectoryName (path).Replace("\\", "/");
-				var index = dirs.FindIndex (o => o.Equals (dir));
-				if (index == -1) {
-					index = dirs.Count;
-					dirs.Add (dir);
-				}
+            for (var i = 0; i < rules.ruleAssets.Length; i++)
+            {
+                var item = rules.ruleAssets[i];
+                var path = item.path; //文件全路径
+                var dir = Path.GetDirectoryName(path).Replace("\\", "/");
+                var index = dirs.FindIndex(o => o.Equals(dir));
+                if (index == -1)
+                {
+                    index = dirs.Count;
+                    dirs.Add(dir);
+                }
 
-				var asset = new AssetRef { bundle = bundle2Ids [item.bundle], dir = index, name = Path.GetFileName (path) };
-				assets.Add (asset);
-			}
+                var asset = new AssetRef { bundle = bundle2Ids[item.bundle], dir = index, name = Path.GetFileName(path) };
+                assets.Add(asset);
+            }
 
-			manifest.dirs = dirs.ToArray ();
-			manifest.assets = assets.ToArray ();
-			manifest.bundles = bundleRefs.ToArray ();
+            manifest.dirs = dirs.ToArray();
+            manifest.assets = assets.ToArray();
+            manifest.bundles = bundleRefs.ToArray();
 
-			EditorUtility.SetDirty (manifest);
-			AssetDatabase.SaveAssets ();
-			AssetDatabase.Refresh ();
+            EditorUtility.SetDirty(manifest);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
 
-			var manifestBundleName = "manifest.unity3d";
-			builds = new[] {
-				new AssetBundleBuild {
-					assetNames = new[] { AssetDatabase.GetAssetPath (manifest), },
-					assetBundleName = manifestBundleName
-				}
-			};
+            var manifestBundleName = "manifest.unity3d";
+            builds = new[] {
+                new AssetBundleBuild {
+                    assetNames = new[] { AssetDatabase.GetAssetPath (manifest), },
+                    assetBundleName = manifestBundleName
+                }
+            };
 
-			BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform);
-			ArrayUtility.Add (ref bundles, manifestBundleName);  
+            //打manifest的ab包
+            BuildPipeline.BuildAssetBundles(outputPath, builds, options, targetPlatform);
+            ArrayUtility.Add(ref bundles, manifestBundleName);
 
-			Versions.BuildVersions (outputPath, bundles, GetBuildRules ().AddVersion ());
-		}
+            //写入版本信息
+            int version = GetBuildRules().AddVersion();
+            Versions.BuildVersions(outputPath, bundles, version);
+        }
 
 		private static string GetBuildTargetName (BuildTarget target)
 		{

@@ -152,6 +152,7 @@ namespace libx
         {
             var watch = new Stopwatch();
             watch.Start();
+            //首先执行一遍apply rule
 			BuildScript.ApplyBuildRules ();
             BuildScript.BuildAssetBundles();
             watch.Stop();

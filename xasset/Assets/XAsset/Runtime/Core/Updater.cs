@@ -485,7 +485,7 @@ namespace libx
             }
         }
 
-        private static string GetStreamingAssetsPath()
+        public static string GetStreamingAssetsPath()
         {
             if (Application.platform == RuntimePlatform.Android)
             {

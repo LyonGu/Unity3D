@@ -13,9 +13,9 @@ namespace libx
 
         public static string GetMD5Hash(string input)
         {
-            var data = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-            return ToHash(data);
-        }
+            var data = md5.ComputeHash(Encoding.UTF8.GetBytes(input)); //使用 MD5 算法计算 hash 返回一个字符数组
+            return ToHash(data);  //自定义在末尾添加数据字符串"x2"
+        } 
 
         public static string GetMD5Hash(Stream input)
         {
