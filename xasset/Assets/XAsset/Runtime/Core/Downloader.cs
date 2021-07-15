@@ -68,9 +68,9 @@ namespace libx
             }
 
             //感觉挺绕的
-            //len 表示服务器记录的文件大小
+            //len 表示服务器记录的所有文件大小
             //downloadSize 表示已经下载过的文件大小+再次下载的大小 ==》 总下载大小
-            //size 需要下载的大小
+            //size 本地所有文件大小
             return downloadSize - (len - size);
         }
 
@@ -158,6 +158,8 @@ namespace libx
                 //临时文件不存在，需要下载的大小直接就是中大小
                 size += len; 
             }
+
+            //size 本地所有文件下载总和
         }
 
         private void OnFinished(Download download)

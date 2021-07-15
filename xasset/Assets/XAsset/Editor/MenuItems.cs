@@ -76,6 +76,27 @@ namespace libx
             AddRulesForSelection(rules, rules.searchPatternController);
         }
 
+        [MenuItem("Assets/Apply Rule/AnimationClip", false, 1)]
+        private static void ApplyRuleAnimationClip()
+        {
+            var rules = BuildScript.GetBuildRules();
+            AddRulesForSelection(rules, rules.searchPatternAnimationClip);
+        }
+
+        [MenuItem("Assets/Apply Rule/TimeLine", false, 1)]
+        private static void ApplyRuleTimeLine()
+        {
+            var rules = BuildScript.GetBuildRules();
+            AddRulesForSelection(rules, rules.searchPatternTimeLine);
+        }
+
+        [MenuItem("Assets/Apply Rule/Shader", false, 1)]
+        private static void ApplyRuleShader()
+        {
+            var rules = BuildScript.GetBuildRules();
+            AddRulesForSelection(rules, rules.searchPatternShader);
+        }
+
         [MenuItem("Assets/Apply Rule/Asset", false, 1)]
         private static void ApplyRuleAsset()
         {
@@ -109,7 +130,7 @@ namespace libx
                     searchPattern = searchPattern,
                     nameBy = isDir ? NameBy.Directory : NameBy.Path
                 };
-                ArrayUtility.Add(ref rules.rules, rule);
+                ArrayUtility.Add(ref rules.rules, rule); //加到rules数组里
             }
 
             EditorUtility.SetDirty(rules);

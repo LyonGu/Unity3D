@@ -108,7 +108,10 @@ namespace libx
 		public string searchPatternPng = "*.png";
 		public string searchPatternPrefab = "*.prefab";
 		public string searchPatternScene = "*.unity";
-		public string searchPatternText = "*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt";
+        public string searchPatternAnimationClip = "*.anim";
+        public string searchPatternTimeLine = "*.playable";
+        public string searchPatternShader = "*.shader";
+        public string searchPatternText = "*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt";
         public static bool nameByHash = true;
         
 		[Tooltip("构建的版本号")]
