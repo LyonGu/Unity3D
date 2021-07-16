@@ -37,11 +37,11 @@ namespace libx
 {
     public enum LoadState
     {
-        Init,
-        LoadAssetBundle,
-        LoadAsset,
-        Loaded,
-        Unload
+        Init, //初始化
+        LoadAssetBundle, //加载ab包
+        LoadAsset, //加载对应asset资源
+        Loaded, //加载完毕
+        Unload // 卸载
     }
 
     public class AssetRequest : Reference, IEnumerator
@@ -162,15 +162,15 @@ namespace libx
             return false;
         }
 
-        internal virtual void LoadImmediate()
-        {
-        }
-
         #region IEnumerator implementation
 
         public bool MoveNext()
         {
-            return !isDone;
+            return !isDone; //isDone 为true时，MoveNext返回false，退出协程
+        }
+
+        internal virtual void LoadImmediate()
+        {
         }
 
         public void Reset()
@@ -179,12 +179,13 @@ namespace libx
 
         public object Current
         {
-            get { return null; }
+            get { return null; } //每一帧都等待
         }
 
         #endregion
     }
 
+    //主要用于加载Manifest
     public class ManifestRequest : AssetRequest
     {
         private string assetName;
@@ -212,6 +213,7 @@ namespace libx
             if (Assets.runtimeMode)
             {
                 var assetBundleName = assetName.Replace(".asset", ".unity3d").ToLower();
+                //加载对应bundle  这个其实是一个BundleRequestAsync
                 request = Assets.LoadBundleAsync(assetBundleName);
                 loadState = LoadState.LoadAssetBundle;
             }
@@ -242,13 +244,14 @@ namespace libx
                 }
                 else
                 {
+                    //ab包加载完毕，加载对应Manifest
                     var manifest = request.assetBundle.LoadAsset<Manifest>(assetName);
                     if (manifest == null)
                         error = "manifest == null";
                     else
-                        Assets.OnLoadManifest(manifest);
+                        Assets.OnLoadManifest(manifest); //记录bundle的依赖关系以及asset和bundle的对应关系
                 }
-
+                //设置加载状态为 LoadState.Loaded
                 loadState = LoadState.Loaded;
                 return false;
             }
@@ -776,8 +779,10 @@ namespace libx
             if (loadState == LoadState.LoadAsset)
                 if (_request.isDone)
                 {
+                    //异步加载完成，assetBundle赋值
                     assetBundle = _request.assetBundle;
                     if (assetBundle == null) error = string.Format("unable to load assetBundle:{0}", name);
+                    //状态标记为LoadState.Loaded
                     loadState = LoadState.Loaded;
                     return false;
                 }
@@ -789,13 +794,14 @@ namespace libx
         {
             if (_request == null)
             {
-                _request = AssetBundle.LoadFromFileAsync(name);
+                _request = AssetBundle.LoadFromFileAsync(name); //异步加载对应的bundle
                 if (_request == null)
                 {
                     error = name + " LoadFromFile failed.";
                     return;
                 }
-
+                
+                //标记状态为LoadState.LoadAsset，Update里次状态会检测_request是否加载完成
                 loadState = LoadState.LoadAsset;
             }
         }

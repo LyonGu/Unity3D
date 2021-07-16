@@ -82,7 +82,7 @@ namespace libx
 
 		public static string GetPlatformName ()
 		{
-            //¸ù¾İ±à¼­Æ÷ÉèÖÃÆ½Ì¨Êä³ö²»Í¬µÄÎÄ¼ş¼ĞÃû×Ö
+            //æ ¹æ®ç¼–è¾‘å™¨è®¾ç½®å¹³å°è¾“å‡ºä¸åŒçš„æ–‡ä»¶å¤¹åå­—
 			return GetPlatformForAssetBundles (EditorUserBuildSettings.activeBuildTarget);
 		}
 
@@ -183,15 +183,15 @@ namespace libx
 			// Choose the output path according to the build target.
 			var outputPath = CreateAssetBundleDirectory ();
 
-            //Ê¹ÓÃLZ4Ñ¹Ëõ¸ñÊ½
+            //ä½¿ç”¨LZ4å‹ç¼©æ ¼å¼
             /*
-             LZMA ==¡·¶ÔÕû¸öab°üµÄ×Ö½ÚÊı×é½øĞĞÑ¹Ëõ
-`````````````LZ4 ==¡·¶Ôµ¥¶ÀµÄAssetsµÄ×Ö½Ú½øĞĞÑ¹Ëõ
+             LZMA ==ã€‹å¯¹æ•´ä¸ªabåŒ…çš„å­—èŠ‚æ•°ç»„è¿›è¡Œå‹ç¼©
+`````````````LZ4 ==ã€‹å¯¹å•ç‹¬çš„Assetsçš„å­—èŠ‚è¿›è¡Œå‹ç¼©
 
 
-            AssetBundle.LoadFromFile==>¼ÓÔØLZ4µÄab°ü£¬API½«Ö»¼ÓÔØAssetBundleµÄÍ·²¿£¬²¢½«Ê£ÓàµÄÊı¾İÁôÔÚ´ÅÅÌÉÏ¡£
+            AssetBundle.LoadFromFile==>åŠ è½½LZ4çš„abåŒ…ï¼ŒAPIå°†åªåŠ è½½AssetBundleçš„å¤´éƒ¨ï¼Œå¹¶å°†å‰©ä½™çš„æ•°æ®ç•™åœ¨ç£ç›˜ä¸Šã€‚
 
-            AssetBundleµÄObjects »á°´Ğè¼ÓÔØ£¬±ÈÈç¼ÓÔØ·½·¨(ÀıÈçAssetBundle.Load)±»µ÷ÓÃ»òÆäInstanceID±»¼ä½ÓÒıÓÃµÄÊ±ºò¡£ÔÚÕâÖÖÇé¿öÏÂ£¬²»»áÏûºÄ¹ı¶àµÄÄÚ´æ¡£
+            AssetBundleçš„Objects ä¼šæŒ‰éœ€åŠ è½½ï¼Œæ¯”å¦‚åŠ è½½æ–¹æ³•(ä¾‹å¦‚AssetBundle.Load)è¢«è°ƒç”¨æˆ–å…¶InstanceIDè¢«é—´æ¥å¼•ç”¨çš„æ—¶å€™ã€‚åœ¨è¿™ç§æƒ…å†µä¸‹ï¼Œä¸ä¼šæ¶ˆè€—è¿‡å¤šçš„å†…å­˜ã€‚
              */
             const BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
 
@@ -199,17 +199,17 @@ namespace libx
 			var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
 			var rules = GetBuildRules ();
 			var builds = rules.GetBuilds ();
-            //´ò²»Í¬µÄab°ü
-			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform); //ÏÈ¹¹½¨Manifest
+            //æ‰“ä¸åŒçš„abåŒ…
+			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform); //å…ˆæ„å»ºManifest
 			if (assetBundleManifest == null) {
 				return;
 			}
 
-            //Ë¢ĞÂManifest.assetsÎÄ¼ş
+            //åˆ·æ–°Manifest.assetsæ–‡ä»¶
             var manifest = GetManifest();
             var dirs = new List<string>();
             var assets = new List<AssetRef>();
-            var bundles = assetBundleManifest.GetAllAssetBundles(); //ÄÃµ½ËùÓĞµÄbundle
+            var bundles = assetBundleManifest.GetAllAssetBundles(); //æ‹¿åˆ°æ‰€æœ‰çš„bundle
             var bundle2Ids = new Dictionary<string, int>();
             for (var index = 0; index < bundles.Length; index++)
             {
@@ -221,7 +221,7 @@ namespace libx
             for (var index = 0; index < bundles.Length; index++)
             {
                 var bundle = bundles[index];
-                var deps = assetBundleManifest.GetAllDependencies(bundle);
+                var deps = assetBundleManifest.GetAllDependencies(bundle); //è¿å¾ªç¯ä¾èµ–ä¹Ÿä¼šæ‹¿åˆ°
                 var path = string.Format("{0}/{1}", outputPath, bundle);
                 if (File.Exists(path))
                 {
@@ -231,7 +231,7 @@ namespace libx
                         {
                             name = bundle,
                             id = index,
-                            deps = Array.ConvertAll(deps, input => bundle2Ids[input]),
+                            deps = Array.ConvertAll(deps, input => bundle2Ids[input]), //ä¾èµ–é¡¹
                             len = stream.Length,
                             hash = assetBundleManifest.GetAssetBundleHash(bundle).ToString(),
                         });
@@ -242,11 +242,12 @@ namespace libx
                     Debug.LogError(path + " file not exsit.");
                 }
             }
-
+			
+            //rules.ruleAssets æ–‡ä»¶å…¨è·¯å¾„+bundleName ==ã€‹ æ¯ä¸ªassetçš„ä¿¡æ¯
             for (var i = 0; i < rules.ruleAssets.Length; i++)
             {
                 var item = rules.ruleAssets[i];
-                var path = item.path; //ÎÄ¼şÈ«Â·¾¶
+                var path = item.path; //æ–‡ä»¶å…¨è·¯å¾„
                 var dir = Path.GetDirectoryName(path).Replace("\\", "/");
                 var index = dirs.FindIndex(o => o.Equals(dir));
                 if (index == -1)
@@ -254,14 +255,15 @@ namespace libx
                     index = dirs.Count;
                     dirs.Add(dir);
                 }
-
+				
+                //bundleä¸‹æ ‡ï¼Œå¯¹åº”æ–‡ä»¶å¤¹ä¸‹æ ‡ï¼Œæ–‡ä»¶åå­—
                 var asset = new AssetRef { bundle = bundle2Ids[item.bundle], dir = index, name = Path.GetFileName(path) };
                 assets.Add(asset);
             }
 
-            manifest.dirs = dirs.ToArray();
-            manifest.assets = assets.ToArray();
-            manifest.bundles = bundleRefs.ToArray();
+            manifest.dirs = dirs.ToArray();  //æ–‡ä»¶å¯¹åº”æ–‡ä»¶å¤¹ä¿¡æ¯
+            manifest.assets = assets.ToArray();  // //bundleä¸‹æ ‡ï¼Œå¯¹åº”æ–‡ä»¶å¤¹ä¸‹æ ‡ï¼Œæ–‡ä»¶åå­—
+            manifest.bundles = bundleRefs.ToArray(); //bundleçš„ä¿¡æ¯ï¼ˆåå­—ï¼Œå¤§å°ï¼Œhashå€¼ï¼Œä¾èµ–é¡¹ï¼Œæ–‡ä»¶å¤¹ä¸‹æ ‡ï¼‰
 
             EditorUtility.SetDirty(manifest);
             AssetDatabase.SaveAssets();
@@ -275,11 +277,11 @@ namespace libx
                 }
             };
 
-            //´òmanifestµÄab°ü
+            //æ‰“manifestçš„abåŒ…
             BuildPipeline.BuildAssetBundles(outputPath, builds, options, targetPlatform);
             ArrayUtility.Add(ref bundles, manifestBundleName);
 
-            //Ğ´Èë°æ±¾ĞÅÏ¢
+            //å†™å…¥ç‰ˆæœ¬ä¿¡æ¯
             int version = GetBuildRules().AddVersion();
             Versions.BuildVersions(outputPath, bundles, version);
         }

@@ -611,8 +611,19 @@ namespace libx
         private IEnumerator LoadGameScene()
         {
             OnMessage("正在初始化");
-            //初始化AB系统，加载Manifest文件
-            var init = Assets.Initialize();
+            //初始化AB系统，加载Manifest文件 ==> 初始化信息 
+            /*
+             *
+             *     //存储bundle的依赖信息   Assets._bundleToDependencies
+                        //key：当前bundle
+                        //value: 当前bundle依赖的bundle
+                        
+                //asset与bundle的对应关系 Assets._assetToBundles
+                //Key: asset的全路径
+                //value：对应的bundleName
+             */
+            
+            var init = Assets.Initialize(); //
             yield return init;
             if (string.IsNullOrEmpty(init.error))
             {

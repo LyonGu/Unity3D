@@ -80,7 +80,8 @@ namespace libx
                 instance = new GameObject("Assets").AddComponent<Assets>();
                 DontDestroyOnLoad(instance.gameObject);
             } 
-
+            
+            //初始化路径信息
             if (string.IsNullOrEmpty(basePath))
             {
                 basePath = Application.streamingAssetsPath + Path.DirectorySeparatorChar;
@@ -96,7 +97,8 @@ namespace libx
             Log(string.Format(
                 "Initialize with: runtimeMode={0}\nbasePath：{1}\nupdatePath={2}",
                 runtimeMode, basePath, updatePath));
-
+            
+            //ManifestRequest 利用ManifestRequest去加载一个对应的bundle
             var request = new ManifestRequest {name = ManifestAsset};
             AddAssetRequest(request);
             return request;
@@ -170,13 +172,24 @@ namespace libx
         {
             _activeVariants.AddRange(manifest.activeVariants); 
             
+            /*
+                manifest.dirs = dirs.ToArray();  //文件对应文件夹信息
+                manifest.assets = assets.ToArray();  // //bundle下标，对应文件夹下标，文件名字
+                manifest.bundles = bundleRefs.ToArray(); //bundle的信息（名字，大小，hash值，依赖项，文件夹下标）
+             */
             var assets = manifest.assets;
             var dirs = manifest.dirs;
             var bundles = manifest.bundles;
-
+            
+            //存储bundle的依赖信息
+            //key：当前bundle
+            //value: 当前bundle依赖的bundle
             foreach (var item in bundles)
                 _bundleToDependencies[item.name] = Array.ConvertAll(item.deps, id => bundles[id].name);
-
+            
+            //asset与bundle的对应关系
+            //Key: asset的全路径
+            //value：对应的bundleName
             foreach (var item in assets)
             {
                 var path = string.Format("{0}/{1}", dirs[item.dir], item.name);
@@ -190,10 +203,11 @@ namespace libx
                 }
             }
         }
-
+        
+        //所有AssetRequest的dictionary
         private static Dictionary<string, AssetRequest> _assets = new Dictionary<string, AssetRequest>();
 
-        private static List<AssetRequest> _loadingAssets = new List<AssetRequest>();
+        private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assets
 
         private static List<SceneAssetRequest> _scenes = new List<SceneAssetRequest>();
 
@@ -210,7 +224,7 @@ namespace libx
             for (var i = 0; i < _loadingAssets.Count; ++i)
             {
                 var request = _loadingAssets[i];
-                if (request.Update())
+                if (request.Update()) //每一帧检测request的状态，返回true继续执行循环
                     continue;
                 _loadingAssets.RemoveAt(i);
                 --i;
@@ -362,18 +376,19 @@ namespace libx
 
         private static readonly int MAX_BUNDLES_PERFRAME = 0;
 
-        private static Dictionary<string, BundleRequest> _bundles = new Dictionary<string, BundleRequest>();
+        private static Dictionary<string, BundleRequest> _bundles = new Dictionary<string, BundleRequest>(); //加载过的bundle
 
-        private static List<BundleRequest> _loadingBundles = new List<BundleRequest>();
+        private static List<BundleRequest> _loadingBundles = new List<BundleRequest>(); //正在加载的bundles
 
-        private static List<BundleRequest> _unusedBundles = new List<BundleRequest>();
+        private static List<BundleRequest> _unusedBundles = new List<BundleRequest>(); //卸载的bundels
 
         private static List<BundleRequest> _toloadBundles = new List<BundleRequest>();
 
         private static List<string> _activeVariants = new List<string>();
 
         private static Dictionary<string, string> _assetToBundles = new Dictionary<string, string>();
-
+    
+        //记录每个bundle对应的依赖bundle信息
         private static Dictionary<string, string[]> _bundleToDependencies = new Dictionary<string, string[]>();
 
         internal static bool GetAssetBundleName(string path, out string assetBundleName)
@@ -414,14 +429,16 @@ namespace libx
             }
 
             assetBundleName = RemapVariantName(assetBundleName);
+            
+            //得到加载路径，persitantpath
             var url = GetDataPath(assetBundleName) + assetBundleName;
 
             BundleRequest bundle;
-
+            //判断对应的bundle是否加载过
             if (_bundles.TryGetValue(url, out bundle))
             {
                 bundle.Retain();
-                _loadingBundles.Add(bundle);
+                _loadingBundles.Add(bundle); //为什么加载过的还要放进loading列表里？？
                 return bundle;
             }
 
@@ -443,7 +460,7 @@ namespace libx
             else
             {
                 bundle.Load();
-                _loadingBundles.Add(bundle);
+                _loadingBundles.Add(bundle); //加入需要加载的bundle列表
                 Log("LoadBundle: " + url);
             } 
 
@@ -481,9 +498,9 @@ namespace libx
             for (var i = 0; i < _loadingBundles.Count; i++)
             {
                 var item = _loadingBundles[i];
-                if (item.Update())
+                if (item.Update()) //刷新每个BundleRequest的状态，item加载完成后会返回false
                     continue;
-                _loadingBundles.RemoveAt(i);
+                _loadingBundles.RemoveAt(i); //加载完成从列表里移除
                 --i;
             }
 

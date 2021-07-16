@@ -107,7 +107,7 @@ namespace libx
         private readonly Dictionary<string, string> _asset2Bundles = new Dictionary<string, string>(); //Key：文件路径名，Value:BundleName
         private readonly Dictionary<string, string[]> _conflicted = new Dictionary<string, string[]>();
         private readonly List<string> _duplicated = new List<string>(); //重复列表
-        private readonly Dictionary<string, HashSet<string>> _tracker = new Dictionary<string, HashSet<string>>();
+        private readonly Dictionary<string, HashSet<string>> _tracker = new Dictionary<string, HashSet<string>>(); //记录依赖项
 		[Header("Patterns")]
 		public string searchPatternAsset = "*.asset";
 		public string searchPatternController = "*.controller";
