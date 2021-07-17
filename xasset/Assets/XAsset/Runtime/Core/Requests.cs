@@ -443,7 +443,7 @@ namespace libx
         protected readonly string sceneName;
         public string assetBundleName;
         protected BundleRequest BundleRequest;
-        protected List<BundleRequest> children = new List<BundleRequest>();
+        protected List<BundleRequest> children = new List<BundleRequest>(); //依赖的bundle
 
         public SceneAssetRequest(string path, bool addictive)
         {
@@ -562,18 +562,19 @@ namespace libx
                     loadState = LoadState.Loaded;
                     return false;
                 }
-
+                
+                //场景对应的bundle是否加载完成
                 if (!BundleRequest.isDone) return true;
 
                 if (OnError(BundleRequest)) return false;
-
+                //场景bundle所依赖的bundle是否加载完成
                 for (var i = 0; i < children.Count; i++)
                 {
                     var item = children[i];
                     if (!item.isDone) return true;
                     if (OnError(item)) return false;
                 }
-
+                //所有bundle都加载完成才开始加载场景
                 LoadScene();
 
                 return true;
@@ -592,6 +593,7 @@ namespace libx
         {
             try
             {
+                //异步加载场景
                 _request = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
                 loadState = LoadState.LoadAsset;
             }

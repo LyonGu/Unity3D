@@ -123,6 +123,7 @@ namespace libx
             }
 
             path = GetExistPath(path);
+            //SceneAssetRequestAsync 
             var asset = new SceneAssetRequestAsync(path, additive);
             if (! additive)
             {
@@ -209,7 +210,7 @@ namespace libx
 
         private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assets
 
-        private static List<SceneAssetRequest> _scenes = new List<SceneAssetRequest>();
+        private static List<SceneAssetRequest> _scenes = new List<SceneAssetRequest>(); //需要加载的SceneAssetRequest
 
         private static List<AssetRequest> _unusedAssets = new List<AssetRequest>();
 
@@ -249,11 +250,12 @@ namespace libx
                 } 
                 _unusedAssets.Clear();
             }
-
+            
+            //遍历加载scene的请求
             for (var i = 0; i < _scenes.Count; ++i)
             {
                 var request = _scenes[i];
-                if (request.Update() || !request.IsUnused())
+                if (request.Update() || !request.IsUnused())//request 其实就是SceneAssetRequestAsync
                     continue;
                 _scenes.RemoveAt(i);
                 Log(string.Format("UnloadScene:{0}", request.name));

@@ -610,7 +610,7 @@ namespace libx
 
         private IEnumerator LoadGameScene()
         {
-            OnMessage("正在初始化");
+            // OnMessage("正在初始化");
             //初始化AB系统，加载Manifest文件 ==> 初始化信息 
             /*
              *
@@ -627,6 +627,7 @@ namespace libx
             yield return init;
             if (string.IsNullOrEmpty(init.error))
             {
+                //添加搜索路径
                 Assets.AddSearchPath("Assets/XAsset/Demo/Scenes");
                 init.Release();
                 OnProgress(0);
