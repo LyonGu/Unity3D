@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using libx;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
@@ -19,6 +21,8 @@ public class Game : MonoBehaviour
 
     public RawImage urlRawImage;
     public RawImage localRawImage;
+
+    public Text localTxt;
 
 	public void OnLoad ()
 	{
@@ -290,6 +294,8 @@ public class Game : MonoBehaviour
                 var tex = request.asset as Texture2D;
                 urlRawImage.texture = tex;
             };
+            
+            
 
 
             //本地资源 ==>TODO 后面写一个跨平台的接口获取本地路径
@@ -305,21 +311,53 @@ public class Game : MonoBehaviour
       
             var textrequest = Assets.LoadAssetAsync(path, typeof(TextAsset));
             textrequest.completed += (AssetRequest request) =>
-            {
+            { 
                 string str = request.text;
+                localTxt.text = str;
                 Debug.Log($"Title.txt 内容是=={str}");
             };
 
 
-            //UnityWebRequest request = UnityWebRequest.Get(@"http://localhost/fish.lua.txt");
-            //yield return request.SendWebRequest();
-            //string str = request.downloadHandler.text;
-            //File.WriteAllText(@"D:\PlayerGamePackage\fish.lua.txt", str);
+
+            StartCoroutine(TestLoadLua());
 
 
         }
     }
 
+      //向服务器请求版本信息
+        private IEnumerator TestLoadLua()
+        {
+            
+
+            //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
+            string remoteVerPath = "http://192.168.0.108:280/DLC/Lua/Test.lua";
+            string _savePathDir = string.Format("{0}/DLC/Lua/", Application.persistentDataPath);
+            if (!Directory.Exists(_savePathDir))
+	            Directory.CreateDirectory(_savePathDir);
+           
+            string savaPath = _savePathDir + "Test.lua";
+            if(File.Exists(savaPath))
+	            File.Delete(savaPath);
+            var luarequest = UnityWebRequest.Get(remoteVerPath);//加载资源服务器版本文件
+            luarequest.downloadHandler = new DownloadHandlerFile(savaPath); //设置本地版本文件存储路径
+            yield return luarequest.SendWebRequest();
+            var error = luarequest.error;
+            if(!string.IsNullOrEmpty(error))
+	            Debug.LogError($"下载lua文件失败 error=== {error}");
+            var textrequest = Assets.LoadAssetAsync("file://" + savaPath, typeof(TextAsset));
+            textrequest.completed += (AssetRequest request) =>
+            {
+	            string str = request.text;
+	            Debug.Log($"Test.lua 内容是=={str}");
+	            //textrequest.Release();
+            };
+
+            luarequest.Dispose();
+
+
+        }
+        
     private void Update()
     {
         if (!_isLoadAllAsync) return;
