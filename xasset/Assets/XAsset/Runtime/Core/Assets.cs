@@ -388,6 +388,7 @@ namespace libx
 
         private static List<string> _activeVariants = new List<string>();
 
+        //记录每个filePath对应的bundle信息
         private static Dictionary<string, string> _assetToBundles = new Dictionary<string, string>();
     
         //记录每个bundle对应的依赖bundle信息
