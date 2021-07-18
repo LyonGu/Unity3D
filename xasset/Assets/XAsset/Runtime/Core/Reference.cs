@@ -36,6 +36,7 @@ namespace libx
 		{
 			if (_requires != null)
 			{
+				//如果有其他bundle依赖自己，其他bundle不存在_requires中的时候引用计数也要减一
 				for (var i = 0; i < _requires.Count; i++)
 				{
 					var item = _requires[i];

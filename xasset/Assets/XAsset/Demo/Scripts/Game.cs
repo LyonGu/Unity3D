@@ -298,7 +298,7 @@ public class Game : MonoBehaviour
             
 
 
-            //本地资源 ==>TODO 后面写一个跨平台的接口获取本地路径
+            //本地资源 
             string path = Updater.GetStreamingAssetsPath() + "/hotUpdateTemp.jpg";
             var filerequest = Assets.LoadAssetAsync(path, typeof(Texture2D));
             filerequest.completed += (AssetRequest request) =>

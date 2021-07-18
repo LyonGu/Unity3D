@@ -67,7 +67,7 @@ namespace libx
                 _loadState = value;
                 if (value == LoadState.Loaded)
                 {
-                    Complete();
+                    Complete(); //如果外部传入回调，会调用回调
                 }
             }
         }
@@ -151,6 +151,7 @@ namespace libx
                 return false;
             try
             {
+                //如果有外部回调，下一帧才会从列表里移除
                 completed.Invoke(this);
             }
             catch (Exception ex)
@@ -270,11 +271,14 @@ namespace libx
             loadState = LoadState.Unload;
         }
     }
-
+    
+    //加载bundle中的Assets，会包含一个BundleRequest对象，先加载对应bundle让后加载asset
     public class BundleAssetRequest : AssetRequest
     {
         protected readonly string assetBundleName;
         protected BundleRequest BundleRequest;
+        
+        //对应bundle的依赖项
         protected List<BundleRequest> children = new List<BundleRequest>();
 
         public BundleAssetRequest(string bundle)
@@ -298,11 +302,12 @@ namespace libx
             if (ab != null) 
                 asset = ab.LoadAsset(assetName, assetType);
             if (asset == null) error = "asset == null";
-            loadState = LoadState.Loaded;
+            loadState = LoadState.Loaded; //标记为个状态，IsDone就为true了
         }
 
         internal override void Unload()
         {
+            //自身bundle引用计数减一
             if (BundleRequest != null)
             {
                 BundleRequest.Release();
@@ -311,6 +316,7 @@ namespace libx
 
             if (children.Count > 0)
             {
+                //bundle依赖项引用计数减一
                 foreach (var item in children) item.Release();
                 children.Clear();
             }
@@ -319,6 +325,7 @@ namespace libx
         }
     }
 
+    //异步加载bundle中的Assets，会包含一个BundleRequest对象，先加载对应bundle让后加载asset
     public class BundleAssetRequestAsync : BundleAssetRequest
     {
         private AssetBundleRequest _request;
@@ -375,9 +382,11 @@ namespace libx
 
             if (_request == null)
             {
+                //判断对应的bundle是否加载完成
                 if (!BundleRequest.isDone) return true;
                 if (OnError(BundleRequest)) return false;
-
+                
+                //判断对应bundle的依赖项是否加载完成
                 for (var i = 0; i < children.Count; i++)
                 {
                     var item = children[i];
@@ -386,21 +395,25 @@ namespace libx
                 }
 
                 var assetName = Path.GetFileName(name);
+                //从bundle中异步加载asset
                 _request = BundleRequest.assetBundle.LoadAssetAsync(assetName, assetType);
                 if (_request == null)
                 {
                     error = "request == null";
+                    
+                    //状态标记为Loaded, 并且自动调用Complete()方法
                     loadState = LoadState.Loaded;
                     return false;
                 }
 
                 return true;
             }
-
+            
+            //判断asset是否加载完成
             if (_request.isDone)
             {
                 asset = _request.asset;
-                loadState = LoadState.Loaded;
+                loadState = LoadState.Loaded; //标记状态并且调用complete方法
                 if (asset == null) error = "asset == null";
                 return false;
             }
@@ -410,7 +423,10 @@ namespace libx
 
         internal override void Load()
         {
+            //异步加载对应的bundle
             BundleRequest = Assets.LoadBundleAsync(assetBundleName);
+            
+            //异步加载对应的bundle的依赖bundle
             var bundles = Assets.GetAllDependencies(assetBundleName);
             foreach (var item in bundles) children.Add(Assets.LoadBundleAsync(item));
             loadState = LoadState.LoadAssetBundle;
@@ -420,7 +436,7 @@ namespace libx
         {
             _request = null;
             loadState = LoadState.Unload;
-            base.Unload();
+            base.Unload(); //调用父类的Unload,其实就是 BundleAssetRequest
         }
 
         internal override void LoadImmediate()
@@ -438,6 +454,7 @@ namespace libx
         }
     }
 
+    //场景加载
     public class SceneAssetRequest : AssetRequest
     {
         protected readonly string sceneName;
@@ -499,7 +516,8 @@ namespace libx
             loadState = LoadState.Unload;
         }
     }
-
+    
+    //异步场景加载
     public class SceneAssetRequestAsync : SceneAssetRequest
     {
         private AsyncOperation _request;
@@ -627,6 +645,7 @@ namespace libx
         }
     }
 
+    //网络资源或者本地资源加载
     public class WebAssetRequest : AssetRequest
     {
         private UnityWebRequest _www;
@@ -731,6 +750,7 @@ namespace libx
         }
     }
 
+    //加载bundle的Request
     public class BundleRequest : AssetRequest
     {
         public string assetBundleName { get; set; }
@@ -743,7 +763,7 @@ namespace libx
 
         internal override void Load()
         {
-            asset = AssetBundle.LoadFromFile(name);
+            asset = AssetBundle.LoadFromFile(name); //同步加载bundle
             if (assetBundle == null)
                 error = name + " LoadFromFile failed.";
             loadState = LoadState.Loaded;
@@ -759,6 +779,7 @@ namespace libx
         }
     }
 
+    //异步加载bundle的Request
     public class BundleRequestAsync : BundleRequest
     {
         private AssetBundleCreateRequest _request;
@@ -824,6 +845,7 @@ namespace libx
         }
     }
 
+    //网络bundle加载
     public class WebBundleRequest : BundleRequest
     {
         private UnityWebRequest _request;

@@ -208,11 +208,11 @@ namespace libx
         //所有AssetRequest的dictionary
         private static Dictionary<string, AssetRequest> _assets = new Dictionary<string, AssetRequest>();
 
-        private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assets
+        private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assetsRequest
 
         private static List<SceneAssetRequest> _scenes = new List<SceneAssetRequest>(); //需要加载的SceneAssetRequest
 
-        private static List<AssetRequest> _unusedAssets = new List<AssetRequest>();
+        private static List<AssetRequest> _unusedAssets = new List<AssetRequest>(); //需要释放的assetsRequest
 
         private void Update()
         {
@@ -225,7 +225,7 @@ namespace libx
             for (var i = 0; i < _loadingAssets.Count; ++i)
             {
                 var request = _loadingAssets[i];
-                if (request.Update()) //每一帧检测request的状态，返回true继续执行循环
+                if (request.Update()) //每一帧检测BundleAssetRequest的状态，返回true继续执行循环
                     continue;
                 _loadingAssets.RemoveAt(i);
                 --i;
@@ -233,9 +233,11 @@ namespace libx
             //移除无用资产
             foreach (var item in _assets)
             {
+                //IsUnused 是Reference的方法 会去判断引用计数 
+                //loadState为Loaded时 isDone就为true
                 if (item.Value.isDone && item.Value.IsUnused())
                 {
-                    _unusedAssets.Add(item.Value);
+                    _unusedAssets.Add(item.Value); //大部分加入的是BundleAssetRequest类型
                 }
             }
 
@@ -246,7 +248,7 @@ namespace libx
                     var request = _unusedAssets[i]; 
                     Log(string.Format("UnloadAsset:{0}", request.name));
                     _assets.Remove(request.name);
-                    request.Unload(); 
+                    request.Unload();  //自身bundle引用计数减一，依赖的bundle引用计数减一
                 } 
                 _unusedAssets.Clear();
             }
@@ -266,6 +268,7 @@ namespace libx
 
         private static void AddAssetRequest(AssetRequest request)
         {
+            //放入列表里，Update不断遍历状态，并且调用不同request的load方法
             _assets.Add(request.name, request);
             _loadingAssets.Add(request);
             request.Load();
@@ -285,8 +288,8 @@ namespace libx
             AssetRequest request;
             if (_assets.TryGetValue(path, out request))
             {
-                request.Retain();
-                _loadingAssets.Add(request);
+                request.Retain(); //引用计数+1
+                _loadingAssets.Add(request); //Update方法里会遍历这个list
                 return request;
             }
 
@@ -295,18 +298,9 @@ namespace libx
             //如果此AB已存在于本地记录（从Manifest文件读取的），就直接取得AB名，准备加载AB
             if (GetAssetBundleName(path, out assetBundleName))
             {
-
-                if (async)
-                {
-                    request = new BundleAssetRequestAsync(assetBundleName);
-                }
-                else
-                {
-                    request = new BundleAssetRequest(assetBundleName);
-                }
-                //request = async
-                //    ? new BundleAssetRequestAsync(assetBundleName)
-                //    : new BundleAssetRequest(assetBundleName);
+                request = async
+                    ? new BundleAssetRequestAsync(assetBundleName)
+                    : new BundleAssetRequest(assetBundleName);
             }
             else
             {
@@ -441,7 +435,7 @@ namespace libx
             if (_bundles.TryGetValue(url, out bundle))
             {
                 bundle.Retain();
-                _loadingBundles.Add(bundle); //为什么加载过的还要放进loading列表里？？
+                _loadingBundles.Add(bundle); //为什么加载过的还要放进loading列表里？？防止同一帧加载多个，然后update里用状态判断
                 return bundle;
             }
 
@@ -449,7 +443,7 @@ namespace libx
                 url.StartsWith("https://", StringComparison.Ordinal) ||
                 url.StartsWith("file://", StringComparison.Ordinal) ||
                 url.StartsWith("ftp://", StringComparison.Ordinal))
-                bundle = new WebBundleRequest();
+                bundle = new WebBundleRequest(); //加载网络Bundle
             else
                 bundle = asyncMode ? new BundleRequestAsync() : new BundleRequest();
 
@@ -523,8 +517,8 @@ namespace libx
                     var item = _unusedBundles[i];
                     if (item.isDone)
                     {
-                        item.Unload();
-                        _bundles.Remove(item.name);
+                        item.Unload(); //对应的bundleRequest进行卸载
+                        _bundles.Remove(item.name); //从已经加载过的列表中移除
                         Log("UnloadBundle: " + item.name); 
                     }  
                 }
