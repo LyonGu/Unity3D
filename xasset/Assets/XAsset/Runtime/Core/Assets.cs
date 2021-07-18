@@ -66,7 +66,7 @@ namespace libx
         public static string basePath { get; set; }
 
         public static string updatePath { get; set; } 
-
+        public static string baseURL { get; set; }
         public static void AddSearchPath(string path)
         { 
             _searchPaths.Add(path);

@@ -116,6 +116,7 @@ namespace libx
 
             _step = Step.Wait;
 
+            Assets.baseURL = baseURL;
             Assets.updatePath = _savePath;
         }
 
