@@ -433,6 +433,7 @@ namespace libx
                 yield break;
             }
 
+            
             //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
             string remoteVerPath = GetDownloadURL(Versions.Filename); //服务器版本文件路径
             string localVerPath = _savePath + Versions.Filename; //本地版本文件存储路径
