@@ -82,7 +82,7 @@ namespace libx
 
 		public static string GetPlatformName ()
 		{
-            //根据编辑器设置平台输出不同的文件夹名字
+            //根据编辑器设置平台输出不同的文件夹名字，切换成android就是android
 			return GetPlatformForAssetBundles (EditorUserBuildSettings.activeBuildTarget);
 		}
 
@@ -134,6 +134,7 @@ namespace libx
 
 		public static void BuildStandalonePlayer ()
 		{
+			//不同平台不同输出路径
 			var outputPath =
 				Path.Combine (Environment.CurrentDirectory,
 					"Build/" + GetPlatformName ()
@@ -148,7 +149,8 @@ namespace libx
 				Debug.Log ("Nothing to build.");
 				return;
 			}
-
+			
+			//构建输出目标名称：包含资源版本号，打包时间
 			var targetName = GetBuildTargetName (EditorUserBuildSettings.activeBuildTarget);
 			if (targetName == null)
 				return;
@@ -166,6 +168,7 @@ namespace libx
 			BuildPipeline.BuildPlayer (buildPlayerOptions);
 
             Debug.Log($"BuildPlayer Done, OutPut Path is {buildPlayerOptions.locationPathName.Replace("\\", "/")}");
+            EditorUtility.OpenWithDefaultApp(outputPath);
 #endif
 		}
 
@@ -277,7 +280,7 @@ namespace libx
                 }
             };
 
-            //打manifest的ab包
+            //打manifest的ab包 构建AssetBundleBuild数组
             BuildPipeline.BuildAssetBundles(outputPath, builds, options, targetPlatform);
             ArrayUtility.Add(ref bundles, manifestBundleName);
 

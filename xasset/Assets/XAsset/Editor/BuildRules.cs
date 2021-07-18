@@ -254,7 +254,7 @@ namespace libx
         private void Save()
         {
             var getBundles = GetBundles(); //返回的是一个Dictionary<BundleName, List<FilePath>>
-            ruleBundles = new RuleBundle[getBundles.Count];
+            ruleBundles = new RuleBundle[getBundles.Count]; //bundleName+文件列表信息 ==》每个Bundle的信息
             var i = 0;
             foreach (var item in getBundles)
             {
@@ -271,6 +271,7 @@ namespace libx
             AssetDatabase.SaveAssets();
         }
 
+        //优化Asset，处理重复资源
         private void OptimizeAssets()
         {
             //如果有冲突资源处理
@@ -295,6 +296,7 @@ namespace libx
             }
         }
 
+        //分析Assets，记录ab之间的依赖项
         private void AnalysisAssets()
         {
             var getBundles = GetBundles(); //返回的是一个Dictionary<BundleName, List<FilePath>>
@@ -340,7 +342,7 @@ namespace libx
                     bundle = item.Value
                 });
             list.Sort((a, b) => string.Compare(a.path, b.path, StringComparison.Ordinal));
-            ruleAssets = list.ToArray();
+            ruleAssets = list.ToArray(); // 文件全路径+bundleName ==》 每个asset的信息
         }
 
         private void OptimizeAsset(string asset)
@@ -353,7 +355,7 @@ namespace libx
 
         private void ApplyRule(BuildRule rule)
         {
-            var assets = rule.GetAssets();
+            var assets = rule.GetAssets();  //返回的是对应规则所有文件的路径集合
             switch (rule.nameBy)
             {
                 case NameBy.Explicit:
