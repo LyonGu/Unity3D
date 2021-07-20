@@ -23,7 +23,7 @@ MonoBehaviour:
   searchPatternTimeLine: '*.playable'
   searchPatternShader: '*.shader'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 77
+  version: 83
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -60,7 +60,13 @@ MonoBehaviour:
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
+  - searchPath: Assets/Games/Lua
+    searchPattern: '*.txt'
+    nameBy: 2
+    assetBundleName: 
   ruleAssets:
+  - bundle: 92cf5c5884cca83f3ec52c21bed5e137.unity3d
+    path: Assets/Games/Lua/TestBuildBundle.lua.txt
   - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
     path: Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate.anim
   - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
@@ -2256,3 +2262,6 @@ MonoBehaviour:
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/AO.png
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/MatallicSmoothness.png
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/Normal.png
+  - name: 92cf5c5884cca83f3ec52c21bed5e137.unity3d
+    assets:
+    - Assets/Games/Lua/TestBuildBundle.lua.txt

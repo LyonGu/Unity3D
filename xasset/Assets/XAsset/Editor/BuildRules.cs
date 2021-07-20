@@ -343,6 +343,8 @@ namespace libx
                 });
             list.Sort((a, b) => string.Compare(a.path, b.path, StringComparison.Ordinal));
             ruleAssets = list.ToArray(); // 文件全路径+bundleName ==》 每个asset的信息
+
+            int a11 = 10;
         }
 
         private void OptimizeAsset(string asset)
