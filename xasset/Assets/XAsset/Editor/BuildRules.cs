@@ -194,11 +194,24 @@ namespace libx
 
         private static string RuledAssetBundleName(string name)
         {
+            string tName = name.Replace("\\", "/");
+            bool isLuaAb = tName.IndexOf("Assets/Games/Lua") != -1;
             if (nameByHash)
             {
-                return Utility.GetMD5Hash(name) + Assets.Extension; 
-            } 
-            return name.Replace("\\", "/").ToLower() + Assets.Extension;
+                if (!isLuaAb)
+                {
+                    return Utility.GetMD5Hash(name) + Assets.Extension; 
+                }
+
+                return Utility.GetMD5Hash(name) + Assets.ExtensionLua;
+            }
+
+            if (!isLuaAb)
+            {
+                return tName.ToLower() + Assets.Extension;
+            }
+            return tName.ToLower() + Assets.ExtensionLua;
+            
         }
 
         //asset 是全路径
@@ -344,7 +357,6 @@ namespace libx
             list.Sort((a, b) => string.Compare(a.path, b.path, StringComparison.Ordinal));
             ruleAssets = list.ToArray(); // 文件全路径+bundleName ==》 每个asset的信息
 
-            int a11 = 10;
         }
 
         private void OptimizeAsset(string asset)

@@ -302,7 +302,7 @@ namespace libx
             for (var i = 1; i < _versions.Count; i++)
             {
                 var item = _versions[i];
-                //与本地的文件进行对比
+                //与本地的文件进行对比  item.name就是ab包名
                 if (Versions.IsNew(string.Format("{0}{1}", _savePath, item.name), item.len, item.hash))
                 {
                     //加入下载列表,Downloader管理需要所有下载的Download信息
