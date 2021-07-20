@@ -334,12 +334,12 @@ public class Game : MonoBehaviour
             
 
             //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
-            string remoteVerPath = Assets.baseURL + "/Lua/Test.lua";
+            string remoteVerPath = Assets.baseURL + "/Lua/Main.lua";
             string _savePathDir = string.Format("{0}/DLC/Lua/", Application.persistentDataPath);
             if (!Directory.Exists(_savePathDir))
 	            Directory.CreateDirectory(_savePathDir);
            
-            string savaPath = _savePathDir + "Test.lua";
+            string savaPath = _savePathDir + "Main.lua";
             if(File.Exists(savaPath))
 	            File.Delete(savaPath);
             var luarequest = UnityWebRequest.Get(remoteVerPath);//加载资源服务器文件
@@ -352,7 +352,7 @@ public class Game : MonoBehaviour
             textrequest.completed += (AssetRequest request) =>
             {
 	            string str = request.text;
-	            Debug.Log($"Test.lua 内容是=={str}");
+	            Debug.Log($"Main.lua 内容是=={str}");
 	            textrequest.Release();
 	            
 	            //测试lua 文件
