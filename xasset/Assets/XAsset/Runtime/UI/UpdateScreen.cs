@@ -41,6 +41,8 @@ namespace libx
             version.text = "APP: 4.0\nRES：1";
 			var updater = FindObjectOfType<Updater> ();
 			updater.listener = this; 
+            
+            
         }
 
         #region IUpdateManager implementation

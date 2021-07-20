@@ -210,6 +210,9 @@ public class Game : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		     
+		//启动lua
+		LuaManager.GetInstance();
 		dropdown.ClearOptions ();
 		_assets = Assets.GetAllAssetPaths ();
 		foreach (var item in _assets) {
@@ -351,6 +354,10 @@ public class Game : MonoBehaviour
 	            string str = request.text;
 	            Debug.Log($"Test.lua 内容是=={str}");
 	            textrequest.Release();
+	            
+	            //测试lua 文件
+	            LuaManager.StartLua();
+
             };
 
             luarequest.Dispose();

@@ -41,7 +41,7 @@ namespace libx
                 {
                     if (listener != null)
                     {
-                        //¼àÌıÍøÂç×´Ì¬·¢Éú±ä»¯
+                        //ç›‘å¬ç½‘ç»œçŠ¶æ€å‘ç”Ÿå˜åŒ–
                         listener.OnReachablityChanged(state);
                     }
                     _reachability = state;
