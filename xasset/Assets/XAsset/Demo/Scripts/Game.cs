@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using libx;
 using UnityEngine;
@@ -45,6 +47,7 @@ public class Game : MonoBehaviour
 
     AssetRequest LoadGameObjectAsync(string path)
 	{
+		path = Assets.GetAssetPath(path);
 		var request = Assets.LoadAssetAsync(path, typeof(GameObject));
 		_requests.Add(request);
 		return request;
@@ -53,13 +56,14 @@ public class Game : MonoBehaviour
 
     AssetRequest LoadSceneAsync(string path)
     {
-        var request = Assets.LoadSceneAsync(path, false);
+	    var request = Assets.LoadSceneAsync(path, false);
         _requests.Add(request);
         return request;
     }
 
     AssetRequest LoadGameObject(string path)
-	{
+    {
+	    path = Assets.GetAssetPath(path);
 		var request = Assets.LoadAsset(path, typeof(GameObject));
 		_requests.Add(request);
 		return request;
@@ -205,24 +209,20 @@ public class Game : MonoBehaviour
 		yield return null; 
 	}
 
-    private string hotUpatePrefabPath;
-    private string hotUpdateScenePath;
+	private void Awake()
+	{
+		//启动lua
+		LuaManager.GetInstance().Init();
+		LuaManager.StartLua();
+	}
+	
 	// Use this for initialization
 	void Start ()
 	{
-		     
-		//启动lua
-		LuaManager.GetInstance();
 		dropdown.ClearOptions ();
 		_assets = Assets.GetAllAssetPaths ();
 		foreach (var item in _assets) {
-
-            Debug.Log($"#### {item}");
 			var ext = Path.GetExtension(item);
-			if (ext.Equals(".prefab", StringComparison.OrdinalIgnoreCase))
-			{
-				hotUpatePrefabPath = item;
-			}
 			dropdown.options.Add (new Dropdown.OptionData (item));
 		}
 
@@ -236,134 +236,136 @@ public class Game : MonoBehaviour
 
     private void Test()
     {
-        if (!string.IsNullOrEmpty(hotUpatePrefabPath))
+		//同步加载
+        var abRequest = LoadGameObject("FootmanHP");
+        _requests.Add(abRequest);
+        var goSync = Instantiate(abRequest.asset) as GameObject;
+        goSync.SetActive(true);
+        goSync.name = "HotTestSync";
+
+
+        //异步加载
+        var abRequestAsync = LoadGameObjectAsync("FootmanHP");
+        _requests.Add(abRequestAsync);
+        abRequestAsync.completed += (AssetRequest request) =>
         {
-            Debug.Log($"hotUpatePrefabPath == {hotUpatePrefabPath}");
-            //同步加载
-            var abRequest = LoadGameObject(hotUpatePrefabPath);
-            _requests.Add(abRequest);
-            var goSync = Instantiate(abRequest.asset) as GameObject;
-            goSync.SetActive(true);
-            goSync.name = "HotTestSync";
-
-
-            //异步加载
-            var abRequestAsync = LoadGameObjectAsync(hotUpatePrefabPath);
-            _requests.Add(abRequestAsync);
-            abRequestAsync.completed += (AssetRequest request) =>
+            if (!string.IsNullOrEmpty(request.error))
             {
-                if (!string.IsNullOrEmpty(request.error))
-                {
-                    request.Release();
-                    return;
-                }
-                var go = Instantiate(request.asset) as GameObject;
-                go.SetActive(true);
-                go.name = "HotTestAsync";
-                go.transform.position = new Vector3(2, 0, 0);
+                request.Release();
+                return;
+            }
+            var go = Instantiate(request.asset) as GameObject;
+            go.SetActive(true);
+            go.name = "HotTestAsync";
+            go.transform.position = new Vector3(2, 0, 0);
 
-            };
+        };
 
-            //加载进度
-            /*
-                从Bundle中加载始终返回的是BundleAssetRequest或者BundleAssetRequestAsync
-                1 同步加载  AssetRequest上progress始终为1 （BundleAssetRequest）
-                2 异步加载  AssetRequest上progress ==》 BundleAssetRequestAsync
-            */
+        //加载进度
+        /*
+            从Bundle中加载始终返回的是BundleAssetRequest或者BundleAssetRequestAsync
+            1 同步加载  AssetRequest上progress始终为1 （BundleAssetRequest）
+            2 异步加载  AssetRequest上progress ==》 BundleAssetRequestAsync
+        */
 
-            // animationClip 嵌入到gameObject上 OK
-            // altas 测下 ==》OK  图集不打AB，对应的散图打成一个AB
+        // animationClip 嵌入到gameObject上 OK
+        // altas 测下 ==》OK  图集不打AB，对应的散图打成一个AB
 
-            //打了一个资源模型 含有fbx texture material mesh 都通过了
+        //打了一个资源模型 含有fbx texture material mesh 都通过了
 
 
-            //场景加载 OK
-            //var scene = Assets.LoadSceneAsync(gameScene, false);
+        //场景加载 OK
+        //var scene = Assets.LoadSceneAsync(gameScene, false);
 
-            //网络加载 内部使用的是UnityWebRequest封装的
-            /*
-               if (path.StartsWith("http://", StringComparison.Ordinal) ||
-                    path.StartsWith("https://", StringComparison.Ordinal) ||
-                    path.StartsWith("file://", StringComparison.Ordinal) ||
-                    path.StartsWith("ftp://", StringComparison.Ordinal) ||
-                    path.StartsWith("jar:file://", StringComparison.Ordinal))
-             */
+        //网络加载 内部使用的是UnityWebRequest封装的
+        /*
+           if (path.StartsWith("http://", StringComparison.Ordinal) ||
+                path.StartsWith("https://", StringComparison.Ordinal) ||
+                path.StartsWith("file://", StringComparison.Ordinal) ||
+                path.StartsWith("ftp://", StringComparison.Ordinal) ||
+                path.StartsWith("jar:file://", StringComparison.Ordinal))
+         */
 
-            //网络资源  测试OK
-            string url = "https://ss0.baidu.com/94o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/8326cffc1e178a82b13fb3d1f703738da977e844.jpg";
-            var trequest = Assets.LoadAssetAsync(url, typeof(Texture2D));
-            trequest.completed += (AssetRequest request) =>
-            {
-                var tex = request.asset as Texture2D;
-                urlRawImage.texture = tex;
-            };
-            
-            
-
-
-            //本地资源 
-            string path = Updater.GetStreamingAssetsPath() + "/hotUpdateTemp.jpg";
-            var filerequest = Assets.LoadAssetAsync(path, typeof(Texture2D));
-            filerequest.completed += (AssetRequest request) =>
-            {
-                var tex = request.asset as Texture2D;
-                localRawImage.texture = tex;
-            };
-
-            path = Updater.GetStreamingAssetsPath() + "/Title.txt";
-      
-            var textrequest = Assets.LoadAssetAsync(path, typeof(TextAsset));
-            textrequest.completed += (AssetRequest request) =>
-            { 
-                string str = request.text;
-                localTxt.text = str;
-                Debug.Log($"Title.txt 内容是=={str}");
-            };
+        //网络资源  测试OK
+        string url = "https://ss0.baidu.com/94o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/8326cffc1e178a82b13fb3d1f703738da977e844.jpg";
+        var trequest = Assets.LoadAssetAsync(url, typeof(Texture2D));
+        trequest.completed += (AssetRequest request) =>
+        {
+            var tex = request.asset as Texture2D;
+            urlRawImage.texture = tex;
+        };
+        
+        
 
 
+        //本地资源 
+        string path = Updater.GetStreamingAssetsPath() + "/hotUpdateTemp.jpg";
+        var filerequest = Assets.LoadAssetAsync(path, typeof(Texture2D));
+        filerequest.completed += (AssetRequest request) =>
+        {
+            var tex = request.asset as Texture2D;
+            localRawImage.texture = tex;
+        };
 
-            StartCoroutine(TestLoadLua());
+        path = Updater.GetStreamingAssetsPath() + "/Title.txt";
+  
+        var textrequest = Assets.LoadAssetAsync(path, typeof(TextAsset));
+        textrequest.completed += (AssetRequest request) =>
+        { 
+            string str = request.text;
+            localTxt.text = str;
+            Debug.Log($"Title.txt 内容是=={str}");
+        };
 
 
-        }
+        //读取lua.txt
+        //var luarequest = Assets.LoadAsset("Assets/Games/Lua/TestBuildBundle.lua.txt", typeof(TextAsset));
+        //TextAsset asset = luarequest.asset as TextAsset;
+        //byte[] luaBytes = asset.bytes;
+        //string luastr1 = System.Text.Encoding.UTF8.GetString(luaBytes);
+        //string luastr = asset.text;
+        //Debug.Log($"TestBuildBundle.lua.txt 内容是=={luastr1}");
+        //
+
+//            StartCoroutine(TestLoadLua());
     }
 
       //向服务器请求版本信息
-        private IEnumerator TestLoadLua()
-        {
-            
-
-            //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
-            string remoteVerPath = Assets.baseURL + "/Lua/Main.lua";
-            string _savePathDir = string.Format("{0}/DLC/Lua/", Application.persistentDataPath);
-            if (!Directory.Exists(_savePathDir))
-	            Directory.CreateDirectory(_savePathDir);
-           
-            string savaPath = _savePathDir + "Main.lua";
-            if(File.Exists(savaPath))
-	            File.Delete(savaPath);
-            var luarequest = UnityWebRequest.Get(remoteVerPath);//加载资源服务器文件
-            luarequest.downloadHandler = new DownloadHandlerFile(savaPath); //设置本地文件存储路径
-            yield return luarequest.SendWebRequest();
-            var error = luarequest.error;
-            if(!string.IsNullOrEmpty(error))
-	            Debug.LogError($"下载lua文件失败 error=== {error}");
-            var textrequest = Assets.LoadAssetAsync("file://" + savaPath, typeof(TextAsset));
-            textrequest.completed += (AssetRequest request) =>
-            {
-	            string str = request.text;
-	            Debug.Log($"Main.lua 内容是=={str}");
-	            textrequest.Release();
-	            
-	            //测试lua 文件
-	            LuaManager.StartLua();
-
-            };
-
-            luarequest.Dispose();
-
-
-        }
+//        private IEnumerator TestLoadLua()
+//        {
+//            
+//
+//            //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
+//            string remoteVerPath = Assets.baseURL + "/Lua/Main.lua";
+//            string _savePathDir = string.Format("{0}/DLC/Lua/", Application.persistentDataPath);
+//            if (!Directory.Exists(_savePathDir))
+//	            Directory.CreateDirectory(_savePathDir);
+//           
+//            string savaPath = _savePathDir + "Main.lua";
+//            if(File.Exists(savaPath))
+//	            File.Delete(savaPath);
+//            var luarequest = UnityWebRequest.Get(remoteVerPath);//加载资源服务器文件
+//            luarequest.downloadHandler = new DownloadHandlerFile(savaPath); //设置本地文件存储路径
+//            yield return luarequest.SendWebRequest();
+//            var error = luarequest.error;
+//            if(!string.IsNullOrEmpty(error))
+//	            Debug.LogError($"下载lua文件失败 error=== {error}");
+//            var textrequest = Assets.LoadAssetAsync("file://" + savaPath, typeof(TextAsset));
+//            textrequest.completed += (AssetRequest request) =>
+//            {
+//	            string str = request.text;
+//	            Debug.Log($"Main.lua 内容是=={str}");
+//	            textrequest.Release();
+//	            
+//	            //测试lua 文件
+//	           LuaManager.StartLua();
+//
+//            };
+//
+//            luarequest.Dispose();
+//
+//
+//        }
         
     private void Update()
     {

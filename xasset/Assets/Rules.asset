@@ -23,7 +23,7 @@ MonoBehaviour:
   searchPatternTimeLine: '*.playable'
   searchPatternShader: '*.shader'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 83
+  version: 98
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -60,13 +60,11 @@ MonoBehaviour:
     searchPattern: '*'
     nameBy: 2
     assetBundleName: 
-  - searchPath: Assets/Games/Lua
+  - searchPath: Assets/XAsset/Demo/LuaRes
     searchPattern: '*.txt'
     nameBy: 2
     assetBundleName: 
   ruleAssets:
-  - bundle: 92cf5c5884cca83f3ec52c21bed5e137.unity3d
-    path: Assets/Games/Lua/TestBuildBundle.lua.txt
   - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
     path: Assets/XAsset/Demo/AnimClips/Hotupdate/AnimClip_HotUpdate.anim
   - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
@@ -99,6 +97,10 @@ MonoBehaviour:
     path: Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Walk.fbx
   - bundle: 403b9da6caf4bc69ac02a0c5c5319823.unity3d
     path: Assets/XAsset/Demo/Fbxs/MiniLegion/Stage.fbx
+  - bundle: a0fb9af80b289285ddf0f442a945d30b.unity3d
+    path: Assets/XAsset/Demo/LuaRes/Login/Login.lua.txt
+  - bundle: 05b30dde4d83128291368ca9e763e59b.unity3d
+    path: Assets/XAsset/Demo/LuaRes/Main.lua.txt
   - bundle: 743a49d60961e58a2333052182097f0b.unity3d
     path: Assets/XAsset/Demo/Materials/Mat_HotTest.mat
   - bundle: 6ef0fe01ee818c840096a5f34fdc57fc.unity3d
@@ -2262,6 +2264,9 @@ MonoBehaviour:
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/AO.png
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/MatallicSmoothness.png
     - Assets/XAsset/Demo/Textures/MiniLegion/PBR/Normal.png
-  - name: 92cf5c5884cca83f3ec52c21bed5e137.unity3d
+  - name: 05b30dde4d83128291368ca9e763e59b.unity3d
     assets:
-    - Assets/Games/Lua/TestBuildBundle.lua.txt
+    - Assets/XAsset/Demo/LuaRes/Main.lua.txt
+  - name: a0fb9af80b289285ddf0f442a945d30b.unity3d
+    assets:
+    - Assets/XAsset/Demo/LuaRes/Login/Login.lua.txt

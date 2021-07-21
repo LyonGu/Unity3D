@@ -39,7 +39,6 @@ namespace libx
     {
         public static readonly string ManifestAsset = "Assets/Manifest.asset";
         public static readonly string Extension = ".unity3d";
-        public static readonly string ExtensionLua = ".lua.unity3d";
 
         public static bool runtimeMode = true;
         public static Func<string, Type, Object> loadDelegate = null;
@@ -170,6 +169,13 @@ namespace libx
 
         #region Private
 
+        public static string GetAssetPath(string name)
+        {
+            if (_assetNameToPath.TryGetValue(name, out string path))
+                return path;
+            return string.Empty;
+        }
+
         internal static void OnLoadManifest(Manifest manifest)
         {
             _activeVariants.AddRange(manifest.activeVariants); 
@@ -197,7 +203,16 @@ namespace libx
                 var path = string.Format("{0}/{1}", dirs[item.dir], item.name);
                 if (item.bundle >= 0 && item.bundle < bundles.Length)
                 {
+//                    Debug.Log($"_assetToBundles path==={path}  name = {bundles[item.bundle].name}");
                     _assetToBundles[path] = bundles[item.bundle].name;
+                    
+                    string flieName = string.Intern(item.name);
+                    int index = flieName.IndexOf('.');
+                    flieName = flieName.Substring(0, index);
+                    if (!_assetNameToPath.ContainsKey(flieName))
+                    {
+                        _assetNameToPath.Add(flieName,path);
+                    }
                 }
                 else
                 {
@@ -388,6 +403,9 @@ namespace libx
     
         //记录每个bundle对应的依赖bundle信息
         private static Dictionary<string, string[]> _bundleToDependencies = new Dictionary<string, string[]>();
+        
+        //记录每个asset名字和路径的对应关系
+        private static Dictionary<string, string> _assetNameToPath = new Dictionary<string, string>(200);
 
         internal static bool GetAssetBundleName(string path, out string assetBundleName)
         {

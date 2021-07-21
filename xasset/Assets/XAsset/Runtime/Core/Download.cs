@@ -232,20 +232,6 @@ namespace libx
                 if (string.IsNullOrEmpty(error))
                 {
                     //成功下载后把临时文件拷贝到最终文件里
-                    /*if (savePath.IndexOf(Assets.ExtensionLua) != -1)
-                    {
-                        string tpath = Path.GetDirectoryName(savePath);
-                        string tfileName = Path.GetFileName(savePath);
-                        tpath = tpath + "/Lua/";
-                        if (!Directory.Exists(tpath))
-                            Directory.CreateDirectory(tpath);
-                        
-                        File.Copy(tempPath, tpath + tfileName, true);
-                    }
-                    else
-                    {
-                        File.Copy(tempPath, savePath, true);
-                    }*/
                     File.Copy(tempPath, savePath, true);
                     //删除临时文件
                     File.Delete(tempPath); 

@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -142,11 +143,44 @@ namespace libx
             return version;
         }
 
+        public void LuaAsstes2txt()
+        {
+            string rootLuaPath = string.Format("{0}/Games/Lua", Application.dataPath);
+            string targetRootLuaPath = string.Format("{0}/XAsset/Demo/LuaRes", Application.dataPath);
+            if (!Directory.Exists(targetRootLuaPath))
+                Directory.CreateDirectory(targetRootLuaPath);
+            //递归所有的文件夹
+            var files = Directory.GetFiles(rootLuaPath, "*.lua", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                if (Directory.Exists(file)) continue;
+                var asset = file.Replace("\\", "/");
+//                Debug.Log($"LuaAsstes2txt ==== {file}");
+                string fileName = Path.GetFileName(asset);
+                string dir = Path.GetDirectoryName(asset);
+                dir = dir.Replace("\\", "/");
+                dir = dir.Replace(rootLuaPath, "");
+
+                string newDir = targetRootLuaPath + dir;
+                string newPath = newDir + "/" + fileName+ ".txt";
+                if (!Directory.Exists(newDir))
+                    Directory.CreateDirectory(newDir);
+//                Debug.Log($"LuaAsstes2txt newPath ==== {newDir}   {newPath}");
+
+                File.Copy(asset, newPath, true);
+            }
+            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+        }
+
         public void Apply()
         {
             //先清一遍数据
             Clear();
-
+            
+            //lua文件转成txt
+            LuaAsstes2txt();
+            
             //收集Assets
             CollectAssets();
 
@@ -194,23 +228,12 @@ namespace libx
 
         private static string RuledAssetBundleName(string name)
         {
-            string tName = name.Replace("\\", "/");
-            bool isLuaAb = tName.IndexOf("Assets/Games/Lua") != -1;
             if (nameByHash)
             {
-                if (!isLuaAb)
-                {
-                    return Utility.GetMD5Hash(name) + Assets.Extension; 
-                }
-
-                return Utility.GetMD5Hash(name) + Assets.ExtensionLua;
+                return Utility.GetMD5Hash(name) + Assets.Extension; 
             }
 
-            if (!isLuaAb)
-            {
-                return tName.ToLower() + Assets.Extension;
-            }
-            return tName.ToLower() + Assets.ExtensionLua;
+            return name.Replace("\\", "/").ToLower() + Assets.Extension;
             
         }
 

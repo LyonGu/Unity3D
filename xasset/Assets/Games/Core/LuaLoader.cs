@@ -10,7 +10,7 @@ namespace libx
     {
     
         private readonly static string rootLuaPath = string.Format("{0}/DLC/Lua/", Application.persistentDataPath);
-        
+        private readonly static string developPath = Application.dataPath;
 
         public static string GetStreamingAssetsPath()
         {
@@ -31,12 +31,18 @@ namespace libx
     
         public static byte[] Load(ref string filePath)
         {
-            filePath = filePath.Replace(".", "/") + ".lua";
-            byte[] byArrayReturn = null; //返回数据
-            string luaFilePath = rootLuaPath + filePath;
-            string strLuaContent = File.ReadAllText(luaFilePath);
-            byArrayReturn = System.Text.Encoding.UTF8.GetBytes(strLuaContent);
+#if UNITY_EDITOR
+            //Editor下
+            filePath = LuaManager.GetInstance().GetFilePath(filePath);
+            string strLuaContent = File.ReadAllText(filePath);
+            byte[] byArrayReturn = System.Text.Encoding.UTF8.GetBytes(strLuaContent);
             return byArrayReturn;
+#endif
+           
+            filePath = Assets.GetAssetPath(filePath);
+            var luarequest = Assets.LoadAsset(filePath, typeof(TextAsset));
+            TextAsset asset = luarequest.asset as TextAsset;
+            return asset.bytes;
 
         }
 
