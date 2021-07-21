@@ -41,7 +41,7 @@ namespace libx
                 if (Directory.Exists(file)) continue;
                 var asset = file.Replace("\\", "/");
                 string flieName = Path.GetFileNameWithoutExtension(asset);
-                Debug.Log($"LuA initPathData flieName = {flieName} asset = {asset}");
+                //Debug.Log($"LuA initPathData flieName = {flieName} asset = {asset}");
                 if(!luaName2Path.ContainsKey(flieName))
                     luaName2Path.Add(flieName, asset);
             }
