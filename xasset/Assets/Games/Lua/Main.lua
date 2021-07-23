@@ -13,4 +13,8 @@ local t = rapidjson.decode('{"a":123}')
 print(t.a)
 t.a = 456
 local s = rapidjson.encode(t)
-print('json ====', s)
+print('rapidjson  ====', s)
+
+local cjson = require "cjson"
+local ct = cjson.decode('{"a":456}')
+print('cjson  ====', ct.a)

@@ -67,6 +67,16 @@ namespace XLua.LuaDLL
             return luaopen_rapidjson(L);
         }
 
+        //add cjson
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaopen_cjson(System.IntPtr L);
+
+        [MonoPInvokeCallback(typeof(LuaDLL.lua_CSFunction))]
+        public static int LoadcJson(System.IntPtr L)
+        {
+            return luaopen_cjson(L);
+        }
+
         public static bool lua_isfunction(IntPtr L, int stackPos)
 		{
 			return lua_type(L, stackPos) == LuaTypes.LUA_TFUNCTION;
