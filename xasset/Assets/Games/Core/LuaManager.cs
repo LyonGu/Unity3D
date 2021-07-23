@@ -58,7 +58,8 @@ namespace libx
         {
             _env = new LuaEnv();
             _env.AddLoader(LuaLoader.Load);
-            
+
+            _env.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
         }
 
         public static void StartLua()

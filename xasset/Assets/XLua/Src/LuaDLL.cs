@@ -57,7 +57,17 @@ namespace XLua.LuaDLL
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int lua_pushthread(IntPtr L);
 
-		public static bool lua_isfunction(IntPtr L, int stackPos)
+        //add rapidJson
+        [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int luaopen_rapidjson(System.IntPtr L);
+
+        [MonoPInvokeCallback(typeof(LuaDLL.lua_CSFunction))]
+        public static int LoadRapidJson(System.IntPtr L)
+        {
+            return luaopen_rapidjson(L);
+        }
+
+        public static bool lua_isfunction(IntPtr L, int stackPos)
 		{
 			return lua_type(L, stackPos) == LuaTypes.LUA_TFUNCTION;
 		}

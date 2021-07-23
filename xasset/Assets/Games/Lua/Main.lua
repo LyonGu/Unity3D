@@ -7,3 +7,10 @@ local MainLuaGameObject = GameObject("MainLua")
 local LuaTxt = GameObject.Find("LuaTxt")
 local textCom = LuaTxt:GetComponent(typeof(TextT))
 textCom.text = "被Lua修改了"
+
+local rapidjson = require('rapidjson')
+local t = rapidjson.decode('{"a":123}')
+print(t.a)
+t.a = 456
+local s = rapidjson.encode(t)
+print('json ====', s)
