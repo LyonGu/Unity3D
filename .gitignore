@@ -224,3 +224,7 @@ xasset/.idea/
 xasset/Assets/XAsset/Demo/LuaRes/
 xasset/Assets/XAsset/Demo/LuaRes.meta
 UnRix/Library/
+UnRix/.idea/
+UnRix/.vs/
+UnRix/obj/
+UnRix/Temp/
