@@ -273,6 +273,8 @@ public class UnRixLearn : MonoBehaviour
 
         //每一个类的实例都提供了一个ObserveEveryValueChanged的方法。这个方法可以每一帧检测某个值发生的变化
         // 这里检测的是transfrom的position
+        //ObserveEveryValueChanged中的参数x就是this.transform
+        //Subscribe的onNext的参数为 this.transform.position
         this.transform.ObserveEveryValueChanged(x => x.position).Subscribe(x => Debug.Log(x));
     }
 
@@ -347,7 +349,7 @@ public class UnRixLearn : MonoBehaviour
         Utoggle.OnValueChangedAsObservable().SubscribeToInteractable(UButtnon);
 
         UInputField.OnValueChangedAsObservable()
-            .Where(x => x != null)
+            .Where(x => x != null)  //参数x就是value值
             .Delay(TimeSpan.FromSeconds(1))
             .SubscribeToText(UText);
 
