@@ -187,7 +187,7 @@ public class Example4 : MonoBehaviour
 //        Observable.Interval(TimeSpan.FromSeconds(5))
 //            .Subscribe(_ =>
 //            {
-//                Debug.Log($"Observable.Interval 延迟5秒");
+//                Debug.Log($"Observable.Interval 间隔5秒");
 //            }).AddTo(gameObject);
 //        
 //        Debug.Log($"Observable 当前帧数 ====={Time.frameCount}");
