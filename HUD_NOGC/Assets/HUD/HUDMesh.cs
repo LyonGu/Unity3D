@@ -58,9 +58,9 @@ class HUDGif
 
 class HUDVertex
 {
-    HUDVertex m_pNext;
+    HUDVertex m_pNext;  //下一个节点
     int m_nID;
-    static HUDVertex s_InvalidList;
+    static HUDVertex s_InvalidList; //这个类的全局缓冲对象
     static int s_nInvalidCount = 0;
     static int s_nVertexID = 0;
 
@@ -618,6 +618,7 @@ class HUDMesh
 
         if (m_Mesh != null)
         {
+            //自己构建的mesh需要的数据，真正的绘制
             m_Mesh.vertices = mVerts.buffer;
             m_Mesh.uv = mUvs.buffer;
             m_Mesh.uv2 = mOffset.buffer;

@@ -762,7 +762,9 @@ class HUDTitleInfo : HUDTitleBase
                     if (v.hudMesh == null)
                     {
                         if (v.AtlasID != 0)
+                        {
                             v.hudMesh = m_MeshRender.QueryMesh(v.AtlasID);
+                        }
                         else
                         {
                             v.hudMesh = m_MeshRender.FontMesh();
