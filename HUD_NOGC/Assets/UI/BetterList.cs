@@ -198,7 +198,7 @@ public class BetterList<T>
 	}
 
 	/// <summary>
-	/// Clear the array by resetting its size to zero. Note that the memory is not actually released.
+	/// Clear the array by resetting its size to zero. Note that the memory is not actually released. 数据并没有被释放
 	/// </summary>
 
 	public void Clear () { size = 0; }
@@ -234,7 +234,7 @@ public class BetterList<T>
     }
 
     /// <summary>
-    /// Clear the array and release the used memory.
+    /// Clear the array and release the used memory. 数据被释放
     /// </summary>
 
     public void Release() { size = 0; buffer = null; }
@@ -312,7 +312,7 @@ public class BetterList<T>
 		{
 			--size;
 			buffer[index] = default(T);
-			for (int b = index; b < size; ++b) buffer[b] = buffer[b + 1];
+			for (int b = index; b < size; ++b) buffer[b] = buffer[b + 1]; //用后一个值覆盖前一个值,保证了顺序
             buffer[size] = default(T);
         }
 	}
