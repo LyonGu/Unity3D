@@ -230,3 +230,6 @@ UnRix/obj/
 UnRix/Temp/
 HUD_NOGC/Library/
 HUD_NOGC/Temp/
+HUD_NOGC/.idea/
+HUD_NOGC/.vs/
+HUD_NOGC/obj/
