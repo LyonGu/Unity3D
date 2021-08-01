@@ -619,11 +619,11 @@ class HUDMesh
         if (m_Mesh != null)
         {
             //自己构建的mesh需要的数据，真正的绘制
-            m_Mesh.vertices = mVerts.buffer;
-            m_Mesh.uv = mUvs.buffer;
-            m_Mesh.uv2 = mOffset.buffer;
-            m_Mesh.colors32 = mCols.buffer;
-            m_Mesh.triangles = mIndices.buffer;
+            m_Mesh.vertices = mVerts.buffer; //网格顶点数组
+            m_Mesh.uv = mUvs.buffer;  //网格的基础纹理坐标
+            m_Mesh.uv2 = mOffset.buffer;//网格设定的第二个纹理坐标
+            m_Mesh.colors32 = mCols.buffer; //网格的顶点颜色数组
+            m_Mesh.triangles = mIndices.buffer; //包含所有三角形的顶点索引数组
         }
     }
 
