@@ -396,6 +396,7 @@ class HUDRender
             HUDMesh mesh = m_ValidList[i];
             if(mesh.SpriteNumb > 0 && mesh.AtlasID != 0 )
             {
+                //使用CommandBuffer 绘制
                 cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat);
             }
         }
