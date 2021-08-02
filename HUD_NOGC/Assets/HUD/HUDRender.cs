@@ -186,7 +186,7 @@ class HUDTitleBase
 
     protected HUDVertex PushSprite(int nSpriteID, int nWidth, int nHeight, float fx, float fy)
     {
-        HUDVertex node = HUDVertex.QueryVertex();
+        HUDVertex node = HUDVertex.QueryVertex();//HUDVertex
         node.WorldPos = m_vPos;
         node.ScreenPos = m_vScreenPos;
         node.SpriteID = nSpriteID;

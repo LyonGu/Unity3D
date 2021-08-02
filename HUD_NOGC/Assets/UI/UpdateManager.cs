@@ -39,11 +39,12 @@ public class UpdateManager : MonoBehaviour
 		return 0;
 	}
 
+	//一波update循环里调用的回调处理
 	static UpdateManager mInst;
-	List<UpdateEntry> mOnUpdate = new List<UpdateEntry>();
-	List<UpdateEntry> mOnLate = new List<UpdateEntry>();
-	List<UpdateEntry> mOnCoro = new List<UpdateEntry>();
-    BetterList<DestroyEntry> mDest = new BetterList<DestroyEntry>();
+	List<UpdateEntry> mOnUpdate = new List<UpdateEntry>();  //Update里调用
+	List<UpdateEntry> mOnLate = new List<UpdateEntry>();    //LateUpdate里调用
+	List<UpdateEntry> mOnCoro = new List<UpdateEntry>();    //协程update
+    BetterList<DestroyEntry> mDest = new BetterList<DestroyEntry>(); //协程销毁
     int mNullWidgetCount = 0;
     int mNullPanelCount = 0;
     int nDirtyVer = 0;

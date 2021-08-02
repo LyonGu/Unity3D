@@ -692,7 +692,7 @@ class HUDTitleInfo : HUDTitleBase
     // 头顶批处理
     public class HUDTitleBatcher
     {
-        public BetterList<HUDTitleInfo> m_ValidTitles = new BetterList<HUDTitleInfo>();
+        public BetterList<HUDTitleInfo> m_ValidTitles = new BetterList<HUDTitleInfo>();  //头顶信息容器
         public HUDRender m_MeshRender = new HUDRender();
         public bool m_bNeedSort = false; // 是不是需要排序
         public bool m_bTitleMove = false;
@@ -1082,7 +1082,7 @@ class HUDTitleInfo : HUDTitleBase
             else
                 title.m_pBatcher = m_DynamicBatcher; //动态批次
             title.m_fLastMoveTime = Time.time;
-            title.m_pBatcher.PushTitle(title); //把头顶信息放入bather里
+            title.m_pBatcher.PushTitle(title); //把头顶信息放入bather里，UpdateLogic会调用到
 
             if (!m_bAddUpdate)
             {
@@ -1218,7 +1218,6 @@ class HUDTitleInfo : HUDTitleBase
             ++m_nUpdateVer;
             if(m_nUpdateVer != m_nBaseUpdateVer)
             {
-                Debug.Log("UpdateLogic============");
                 BaseUpdateLogic(delta);
                 m_nUpdateVer = m_nBaseUpdateVer;
             }
@@ -1249,17 +1248,20 @@ class HUDTitleInfo : HUDTitleBase
             HUDTalk.HUDTalkRender talkRender = HUDTalk.HUDTalkRender.Instance;
             Vector3 vCameraPos = caMain.transform.position;
             Vector3 vOffset = vCameraPos - m_vLastCameraPos;
+            
+            //判断相机是否移动
             bool bCameraDirty = vOffset.x * vOffset.x + vOffset.y * vOffset.y + vOffset.z * vOffset.z > 0.000001f;
             if(!bCameraDirty)
             {
                 vOffset = caMain.transform.localEulerAngles - m_vLastEulerAngles;
                 if (vOffset.x * vOffset.x + vOffset.y * vOffset.y + vOffset.z * vOffset.z > 0.000001f)
-                    bCameraDirty = true;
+                    bCameraDirty = true; //设一个脏标记，需要刷新
             }
             bool bMeshDirty = m_bMeshDirty;
             if (caMain != m_oldCamera)
             {
                 m_oldCamera = caMain;
+                //设脏标记，需要刷新
                 bCameraDirty = true;
                 bMeshDirty = true;
             }
@@ -1355,6 +1357,7 @@ class HUDTitleInfo : HUDTitleBase
                 if(m_renderCameara != null)
                     m_renderCameara.RemoveCommandBuffer(CameraEvent.AfterImageEffects, m_cmdBuffer);
             }
+            //清除cmdBuffer
             m_cmdBuffer.Clear();
             m_renderCameara = null;
             if (m_bOpenUI || m_bStartDark)

@@ -208,7 +208,7 @@ class HUDVertex
         float fT = 0.0f;
         float fR = width;
         float fB = height;
-
+        //设置顶点 最后会赋给mesh
         vecRU.Set(fR, fT);  // 右上角
         vecRD.Set(fR, fB);  // 右下角
         vecLD.Set(fL, fB);  // 左下角
@@ -218,12 +218,12 @@ class HUDVertex
         float uvL = mOuterUV.xMin;
         float uvB = mOuterUV.yMin;
         float uvT = mOuterUV.yMax;
-
+        //设置UV 最后会赋给mesh
         uvRU.Set(uvR, uvB);
         uvRD.Set(uvR, uvT);
         uvLD.Set(uvL, uvT);
         uvLU.Set(uvL, uvB);
-
+        //设置顶点颜色 最后会赋给mesh
         clrLD = clrLU = clrRD = clrRU = Color.white;
     }
     public void SlicedFill(int nWidth, int nHeight, float fOffsetX, float fOffsetY, float uvL, float uvT, float uvR, float uvB)
