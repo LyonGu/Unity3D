@@ -763,6 +763,7 @@ class HUDTitleInfo : HUDTitleBase
                     {
                         if (v.AtlasID != 0)
                         {
+                            //构建矩形mesh
                             v.hudMesh = m_MeshRender.QueryMesh(v.AtlasID);
                         }
                         else
@@ -1052,43 +1053,47 @@ class HUDTitleInfo : HUDTitleBase
 
         public int RegisterTitle(Transform tf, float fOffsetY, bool bIsMain)
         {
+            //获取主相机
             Camera caMain = HUDMesh.GetHUDMainCamera();
 
             if (bIsMain)
                 m_tfMain = tf;
 
             Vector3 vPos = tf.position;
-            HUDTitleInfo title = new HUDTitleInfo();
+            HUDTitleInfo title = new HUDTitleInfo(); //构建一份头顶信息
             title.m_tf = tf;
             title.m_bIsMain = bIsMain;
-            title.m_vPos = vPos;
+            title.m_vPos = vPos;  //当前对象的世界坐标
             title.m_fOffsetY = fOffsetY;
             if (caMain != null)
             {
                 vPos.y += fOffsetY + HudSetting.Instance.m_fTitleOffsetY;
+                //世界坐标转屏幕坐标
                 title.m_vScreenPos = caMain.WorldToScreenPoint(vPos);
+                //根据相机的位置调整缩放
                 title.CaleCameraScale(caMain.transform.position);
             }
-            int nID = ++m_nHudID;
+            int nID = ++m_nHudID;  //标记一个唯一ID
             title.m_nTitleID = nID;
-            m_HudTitles[nID] = title;
+            m_HudTitles[nID] = title; //存储到容器里
 
             if (bIsMain)
-                title.m_pBatcher = m_StaticBatcher;
+                title.m_pBatcher = m_StaticBatcher; //静态批次
             else
-                title.m_pBatcher = m_DynamicBatcher;
+                title.m_pBatcher = m_DynamicBatcher; //动态批次
             title.m_fLastMoveTime = Time.time;
-            title.m_pBatcher.PushTitle(title);
+            title.m_pBatcher.PushTitle(title); //把头顶信息放入bather里
 
             if (!m_bAddUpdate)
             {
                 m_bAddUpdate = true;
+                //Add a new late update function with the specified update order.
                 UpdateManager.AddLateUpdate(null, 0, UpdateLogic);
             }
             if(!m_bInitFontCallback)
             {
                 m_bInitFontCallback = true;
-
+                //字体信息
                 UIFont uiFont = HUDTitleInfo.GetHUDTitleFont();
                 Font.textureRebuilt += OnAllFontChanged;
             }
@@ -1213,6 +1218,7 @@ class HUDTitleInfo : HUDTitleBase
             ++m_nUpdateVer;
             if(m_nUpdateVer != m_nBaseUpdateVer)
             {
+                Debug.Log("UpdateLogic============");
                 BaseUpdateLogic(delta);
                 m_nUpdateVer = m_nBaseUpdateVer;
             }
