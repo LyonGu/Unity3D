@@ -152,7 +152,7 @@ class HudSetting
     {
         NumberAttibute = new HudAnimAttibute[(int)HUDNumberRenderType.HUD_SHOW_NUMBER];
         TitleSets = new HudTitleLabelSet[(int)HUDTilteType.Tilte_Number];
-
+        //读取配置，
         GameObject obj = UIPrefabLoader.Load("HUDSetting") as GameObject;
         if (obj != null)
         {
@@ -165,6 +165,7 @@ class HudSetting
     }
     public void InitSetting(HudAniSetting hudSetting)
     {
+        //读取配置数据
         NumberAttibute[(int)HUDNumberRenderType.HUD_SHOW_EXP_ADD] = hudSetting.ExpAnimAttibute;
         NumberAttibute[(int)HUDNumberRenderType.HUD_SHOW_LIFE_EXP] = hudSetting.LifeExpAnimAttibute;
         NumberAttibute[(int)HUDNumberRenderType.HUD_SHOW_MONEY_ADD] = hudSetting.MoneyAnimAttibute;
@@ -200,14 +201,20 @@ class HudSetting
         TitleSets[(int)HUDTilteType.HeadIcon] = new HudTitleLabelSet(hudSetting.HeadIcon);
 
         m_fTitleOffsetY = hudSetting.m_fTitleOffsetY;
+        
+        //颜色配置
         m_nBloodBk = CAtlasMng.instance.SpriteNameToID(hudSetting.m_szBloodBk);
         m_nBloodRed = CAtlasMng.instance.SpriteNameToID(hudSetting.m_szBloodRed);
         m_nBloodGreen = CAtlasMng.instance.SpriteNameToID(hudSetting.m_szBloodGreen);
         m_nBloodBlue = CAtlasMng.instance.SpriteNameToID(hudSetting.m_szBloodBlue);
+        
+        //血条背景长宽配置
         m_nBloodBkWidth = hudSetting.m_nBloodBkWidth;
         m_nBloodBkHeight = hudSetting.m_nBloodBkHeight;
+        //血条长宽配置
         m_nBloodWidth = hudSetting.m_nBloodWidth;
         m_nBloodHeight = hudSetting.m_nBloodHeight;
+        
         m_fTestBloodPos = hudSetting.m_fTestBloodPos;
         m_nTeamFlagPic = CAtlasMng.instance.SpriteNameToID(hudSetting.TeamFlagSprite);
         m_nPKFlagPic = CAtlasMng.instance.SpriteNameToID(hudSetting.PKFlagSprite);
