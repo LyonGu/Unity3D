@@ -39,7 +39,7 @@ namespace libx
             return byArrayReturn;
 #endif
            
-            filePath = Assets.GetAssetPath(filePath);
+            filePath = Assets.GetAssetPathByName(filePath);
             var luarequest = Assets.LoadAsset(filePath, typeof(TextAsset));
             TextAsset asset = luarequest.asset as TextAsset;
             return asset.bytes;

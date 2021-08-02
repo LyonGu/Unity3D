@@ -59,6 +59,16 @@ namespace libx
         public static string[] GetAllAssetPaths()
         {
             var assets = new List<string>();
+            if (!runtimeMode)
+            {
+                //开发模式
+                foreach (var item in _assetNameToPath)
+                {
+                    assets.Add(item.Value);
+                }
+                return assets.ToArray();
+            }
+            
             assets.AddRange(_assetToBundles.Keys);
             return assets.ToArray();
         }
@@ -169,11 +179,19 @@ namespace libx
 
         #region Private
 
-        public static string GetAssetPath(string name)
+        public static string GetAssetPathByName(string name)
         {
             if (_assetNameToPath.TryGetValue(name, out string path))
                 return path;
             return string.Empty;
+        }
+
+        public static void AddAssetPath2Name(string flieName, string path)
+        {
+            if (!_assetNameToPath.ContainsKey(flieName))
+            {
+                _assetNameToPath.Add(flieName,path);
+            }
         }
 
         internal static void OnLoadManifest(Manifest manifest)
@@ -354,17 +372,17 @@ namespace libx
 #if UNITY_EDITOR
             if (!runtimeMode)
             {
-                if (File.Exists(path))
-                    return path;
-
-                foreach (var item in _searchPaths)
-                {
-                    var existPath = string.Format("{0}/{1}", item, path);
-                    if (File.Exists(existPath))
-                        return existPath;
-                }
-
-                Debug.LogError("找不到资源路径" + path);
+//                if (File.Exists(path))
+//                    return path;
+//
+//                foreach (var item in _searchPaths)
+//                {
+//                    var existPath = string.Format("{0}/{1}", item, path);
+//                    if (File.Exists(existPath))
+//                        return existPath;
+//                }
+//
+//                Debug.LogError("找不到资源路径" + path);
                 return path;
             }
 #endif

@@ -123,7 +123,7 @@ namespace libx
         internal virtual void Load()
         {
             if (!Assets.runtimeMode && Assets.loadDelegate != null)
-                asset = Assets.loadDelegate(name, assetType);
+                asset = Assets.loadDelegate(name, assetType);//开发模式为相对路径
             if (asset == null) error = "error! file not exist:" + name;
             loadState = LoadState.Loaded;
         }

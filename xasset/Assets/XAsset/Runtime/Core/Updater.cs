@@ -261,6 +261,27 @@ namespace libx
             if (development)
             {
                 Assets.runtimeMode = false;
+
+                //构建一份名字和路径的对应关系
+                string rootLuaPath = string.Format("{0}/XAsset/Demo", Application.dataPath);
+                string rootRelativePath = Application.dataPath + "/";
+                //递归所有的文件夹
+                var files = Directory.GetFiles(rootLuaPath, "*", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    if (Directory.Exists(file)) continue;
+                    var asset = file.Replace("\\", "/");
+                    string ex = Path.GetExtension(asset);
+                    if (ex != ".meta")
+                    {
+                        string flieName = Path.GetFileNameWithoutExtension(asset);
+                        //开发模式使用的AssetDatabase.LoadAssetAtPath 需要相对路径
+                        string temp = asset.Replace(rootRelativePath, "Assets/");
+//                        Debug.Log($"Res initPathData flieName = {flieName} asset = {temp}");
+                        Assets.AddAssetPath2Name(flieName, temp);
+                    }
+                }
+                
                 StartCoroutine(LoadGameScene());
                 return;
             }

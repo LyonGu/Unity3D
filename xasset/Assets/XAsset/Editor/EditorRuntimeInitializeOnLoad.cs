@@ -36,6 +36,7 @@ namespace libx
         [RuntimeInitializeOnLoadMethod]
         private static void OnInitialize()
         {
+            //Editor下自动构建scene
 			Assets.basePath = BuildScript.outputPath + Path.DirectorySeparatorChar;
             Assets.loadDelegate = AssetDatabase.LoadAssetAtPath; 
             var assets = new List<string>();

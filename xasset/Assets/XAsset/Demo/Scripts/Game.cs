@@ -47,7 +47,7 @@ public class Game : MonoBehaviour
 
     AssetRequest LoadGameObjectAsync(string path)
 	{
-		path = Assets.GetAssetPath(path);
+		path = Assets.GetAssetPathByName(path);
 		var request = Assets.LoadAssetAsync(path, typeof(GameObject));
 		_requests.Add(request);
 		return request;
@@ -63,7 +63,7 @@ public class Game : MonoBehaviour
 
     AssetRequest LoadGameObject(string path)
     {
-	    path = Assets.GetAssetPath(path);
+	    path = Assets.GetAssetPathByName(path);
 		var request = Assets.LoadAsset(path, typeof(GameObject));
 		_requests.Add(request);
 		return request;
