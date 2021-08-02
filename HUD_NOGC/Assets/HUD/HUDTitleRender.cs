@@ -594,6 +594,8 @@ class HUDTitleInfo : HUDTitleBase
         // 添加背景
         int  nBkWidth = HudSetting.Instance.m_nBloodBkWidth;
         int nBkHeight = HudSetting.Instance.m_nBloodBkHeight;
+        
+        //血条宽高
         int nBloodWidth = HudSetting.Instance.m_nBloodWidth;
         int nHeight = HudSetting.Instance.m_nBloodHeight;
         m_nBloodSpriteID = 0;
@@ -604,6 +606,7 @@ class HUDTitleInfo : HUDTitleBase
         else if(nType == HUDBloodType.Blood_Blue)
             m_nBloodSpriteID = HudSetting.Instance.m_nBloodBlue;
 
+        //血条背景sprite
         PushSprite(HudSetting.Instance.m_nBloodBk, nBkWidth, nBkHeight, (nBloodWidth - nBkWidth) * 0.5f, 0);// (nBkHeight - nHeight) * 0.5f);
         PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
         

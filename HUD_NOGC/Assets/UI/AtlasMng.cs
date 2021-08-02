@@ -385,7 +385,7 @@ public class CAtlasMng
                         if (Application.isPlaying)
                             DontDestroyOnLoad(go);    // 通知不释放
                     }
-                    go.hideFlags = HideFlags.HideAndDontSave;
+//                    go.hideFlags = HideFlags.HideAndDontSave;
                     s_pIns = go.GetComponent<CAtlasLoader>();
                     if (s_pIns == null)
                         s_pIns = go.AddComponent<CAtlasLoader>();
@@ -745,7 +745,7 @@ public class CAtlasMng
                         if (Application.isPlaying)
                             MonoBehaviour.DontDestroyOnLoad(go);
                     }
-                    go.hideFlags = HideFlags.HideAndDontSave;
+//                    go.hideFlags = HideFlags.HideAndDontSave;// 不会显示在Hierarchy面板中
                     pStart = go.GetComponent<CAtlasMngStart>();
                     if (pStart == null)
                         pStart = go.AddComponent<CAtlasMngStart>();
@@ -1034,14 +1034,14 @@ public class CAtlasMng
     {
         if (key == null) key = string.Empty;
         if (value == null) value = new UISpriteInfo();
-        ar.ReadWriteValue("Sprite", ref key);
+        ar.ReadWriteValue("Sprite", ref key);  //key为sprite的字典信息
         value.SerializeToTxt(ref ar);
     }
     void SerializeIterator(SerializeText ar, ref string key, ref UITexAtlas value)
     {
         if (key == null) key = string.Empty;
         if (value == null) value = new UITexAtlas();
-        ar.ReadWriteValue("Atlas", ref key);
+        ar.ReadWriteValue("Atlas", ref key);  //key为Atlas的字典信息
         value.SerializeToTxt(ref ar);
     }
     protected void Serialize(CSerialize ar)
@@ -1061,8 +1061,11 @@ public class CAtlasMng
         if (yVersion > 2)
             ar.ReadWriteValue("SaveCount",ref m_nFileVersion);
         ar.SetVersion(yVersion);
+        
+        //根据不同类型调用不同的重载方法进行序列化配置
         ar.SerializeDictionary<string, UISpriteInfo>("AllSprite", ref m_AllSprite, SerializeIterator);
         ar.SerializeDictionary<string, UITexAtlas>("AllAtlas", ref m_TexAtlas, SerializeIterator);
+        int a = 10;
     }   
 
     public void AutoInit()
@@ -1758,7 +1761,7 @@ public class CAtlasMng
         UISpriteInfo sprite = null;
         if (m_AllSprite.TryGetValue(szSpriteName, out sprite))
         {
-            return sprite.m_nNameID;
+            return sprite.m_nNameID;//nameID字段
         }
         return 0;
     }

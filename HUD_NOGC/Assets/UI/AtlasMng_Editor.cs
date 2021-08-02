@@ -261,8 +261,10 @@ public class AtlasMng_Editor : CAtlasMng
     public LPImportPackTextureFunc m_lpImportPackTextureFunc;
     protected bool m_bInitEditMode = false;
     protected bool m_bInEditMode = true;
-    int   m_nPlayMode = 0; // 0,没有初始化; 1,运行中; 2,编辑器状态
-    DateTime m_tLastWriteTime; // assets_all.txt 的最后修改时间
+    int   m_nPlayMode = 0; // 0,没有初始化; 1,运行中; 2,编辑器状态
+
+    DateTime m_tLastWriteTime; // assets_all.txt 的最后修改时间
+
 
     Texture2D m_pLastPixelTex;
     int m_nLastAtlasID = -1;
@@ -443,7 +445,8 @@ public class AtlasMng_Editor : CAtlasMng
     }
 
     // 功能：重新加载assets_all.txt
-    // 这个功能似乎有BUG，先暂时不要调用了
+    // 这个功能似乎有BUG，先暂时不要调用了
+
     void Reload()
     {
         string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
@@ -465,7 +468,8 @@ public class AtlasMng_Editor : CAtlasMng
             SerializeToTxt(ar);
             MakeSpriteAtlasID();
 
-            // 纠正吧
+            // 纠正吧
+
             for (int i = 0; i < oldAtlasPtr.size(); ++i)
             {
                 UITexAtlas  oldAtlas = oldAtlasPtr[i];
@@ -510,7 +514,8 @@ public class AtlasMng_Editor : CAtlasMng
         return true;
     }
     
-    // 功能：下载完成后的事件
+    // 功能：下载完成后的事件
+
     public override void OnAfterDown()
     {
         if (!IsEditorMode())
@@ -649,10 +654,12 @@ public class AtlasMng_Editor : CAtlasMng
             base.InitAltasCfg();
             return;
         }
+        //总配置文件
         string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
         if (File.Exists(szCfgPathName))
         {
             SerializeText ar = new SerializeText(SerializeType.read, szCfgPathName);
+            //序列化配置信息
             SerializeToTxt(ar);
             ar.Close();
             m_tLastWriteTime = File.GetLastWriteTime(szCfgPathName);
@@ -1322,7 +1329,8 @@ public class AtlasMng_Editor : CAtlasMng
         }
         atlasTex.SetPixels32(atlasPixels);
         atlasTex.Apply();
-        // 先去只读吧
+        // 先去只读吧
+
         string szDataPath = Application.dataPath;
         // Assets
         szDataPath = szDataPath.Substring(0, szDataPath.Length - 6);
@@ -1497,7 +1505,8 @@ public class AtlasMng_Editor : CAtlasMng
         }
     }
 
-    // 功能：更新材质
+    // 功能：更新材质
+
     bool UpdateAltasBySelect(List<SelecctTexInfo> aSelectTex, List<Texture2D> aTex, UITexAtlas atlas, Texture2D atlasTex, string szAtlasPathName)
     {
         int nPadding = 1;
@@ -1518,7 +1527,8 @@ public class AtlasMng_Editor : CAtlasMng
         Rect[] aSpriteRect = atlasTex.PackTextures(aTex.ToArray(), nPadding, nMaxSize);
         if (aSpriteRect.Length != aSelectTex.Count)
         {
-            // 失败了
+            // 失败了
+
             return false;
         }
 
@@ -1925,7 +1935,8 @@ public class AtlasMng_Editor : CAtlasMng
 		return true;
 	}
 
-    // 功能：得到指定材质，指定UV的像素颜色
+    // 功能：得到指定材质，指定UV的像素颜色
+
     // 说明：仅限编辑器模式生效
     public override Color GetAtlasPixelBilinear(int nAtlasID, float fu, float fv) 
     {

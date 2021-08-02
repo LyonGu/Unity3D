@@ -202,27 +202,30 @@ class HUDVertex
         UITexAtlas texAtlas = CAtlasMng.instance.GetAtlasByID(sp.m_nAtlasID);
         if (texAtlas != null && texAtlas.coordinates == UITexAtlas.Coordinates.Pixels)
         {
+            //换算出在图集中的UV坐标
             mOuterUV = HUDVertex.ConvertToTexCoords(mOuterUV, texAtlas.texWidth, texAtlas.texHeight);
         }
         float fL = 0.0f;
-        float fT = 0.0f;
         float fR = width;
-        float fB = height;
+        float fB = 0.0f;
+        float fT = height;
+        
         //设置顶点 最后会赋给mesh
         vecRU.Set(fR, fT);  // 右上角
         vecRD.Set(fR, fB);  // 右下角
         vecLD.Set(fL, fB);  // 左下角
         vecLU.Set(fL, fT);  // 左上角
 
+        
         float uvR = mOuterUV.xMax;
         float uvL = mOuterUV.xMin;
         float uvB = mOuterUV.yMin;
         float uvT = mOuterUV.yMax;
         //设置UV 最后会赋给mesh
-        uvRU.Set(uvR, uvB);
-        uvRD.Set(uvR, uvT);
-        uvLD.Set(uvL, uvT);
-        uvLU.Set(uvL, uvB);
+        uvRU.Set(uvR, uvT);
+        uvRD.Set(uvR, uvB);
+        uvLD.Set(uvL, uvB);
+        uvLU.Set(uvL, uvT);
         //设置顶点颜色 最后会赋给mesh
         clrLD = clrLU = clrRD = clrRU = Color.white;
     }
@@ -236,10 +239,10 @@ class HUDVertex
         float fR = fOffsetX + nWidth;
         float fT = fOffsetY + nHeight;
 
-        vecRU.Set(fR, fB);  // 右上角
-        vecRD.Set(fR, fT);  // 右下角
-        vecLD.Set(fL, fT);  // 左下角
-        vecLU.Set(fL, fB);  // 左上角
+        vecRU.Set(fR, fT);  // 右上角
+        vecRD.Set(fR, fB);  // 右下角
+        vecLD.Set(fL, fB);  // 左下角
+        vecLU.Set(fL, fT);  // 左上角
         
         uvRU.Set(uvR, uvT);
         uvRD.Set(uvR, uvB);
@@ -552,11 +555,14 @@ class HUDMesh
             //vOffset += v.ScreenPos + v.Move;
             vOffset += v.Move;
             mOffset.Add(vOffset);
-
+            
+            //UV信息
             mUvs.Add(v.uvRU);
             mUvs.Add(v.uvRD);
             mUvs.Add(v.uvLD);
             mUvs.Add(v.uvLU);
+            
+            //顶点颜色
             mCols.Add(v.clrRD);
             mCols.Add(v.clrRU);
             mCols.Add(v.clrLU);
@@ -575,6 +581,8 @@ class HUDMesh
     void UpdateMesh()
     {
         int nOldVertexCount = mVerts.size;
+        
+        //拿HUDVertex里的数据构建mesh需要的数据
         FillVertex();
 
         int nLast = mVerts.size - 1;
