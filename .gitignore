@@ -232,3 +232,6 @@ HUD_NOGC/Temp/
 HUD_NOGC/.idea/
 HUD_NOGC/.vs/
 HUD_NOGC/obj/
+ECSLearn/Library/
+ECSLearn/Temp/
+ECSLearn/Logs/
