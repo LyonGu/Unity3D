@@ -236,3 +236,6 @@ ECSLearn/Library/
 ECSLearn/Temp/
 ECSLearn/Logs/
 SpriteRender/Library/
+SpriteRender/.vs/
+SpriteRender/obj/
+SpriteRender/Temp/
