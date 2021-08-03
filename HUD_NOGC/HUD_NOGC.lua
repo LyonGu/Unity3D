@@ -56,7 +56,19 @@ HUDTitleInfo：PushSprite
 问题
 {
 	assets_all.txt 这个文件是怎样生成的 --》TODO
+
+	{
+		1 HUD/新材质编辑器
+		2 把需要打进图集的图片放入到非Altas文件夹中，选中要打进图集的texture，
+		3 工具窗口会出现"添加或者更新按钮", 操作即可
+		4 最后点击修改
+
+		//代码里的使用的配置都在HUDSetting里
+
+	}
 }
+
+
 
 
 ]==]
