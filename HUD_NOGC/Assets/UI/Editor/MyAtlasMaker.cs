@@ -498,6 +498,9 @@ public class MyAtlasMaker : EditorWindow
             {
                 atlas.pixelSize = NGUISettings.atlasPadding;
                 AtlasMng_Editor.instance.SaveAltasCfg();
+                
+                AssetDatabase.Refresh();
+                AssetDatabase.SaveAssets();
             }
         }
         if (bRepareAtlas)
