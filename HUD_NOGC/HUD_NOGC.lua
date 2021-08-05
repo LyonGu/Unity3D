@@ -53,6 +53,9 @@ HUDTitleInfo：PushSprite
 }
 
 
+
+UISpriteInfo.SerializeToTxt ==> 读取对应的字段
+
 问题
 {
 	assets_all.txt 这个文件是怎样生成的 --》TODO
@@ -69,6 +72,11 @@ HUDTitleInfo：PushSprite
 }
 
 
+怎样渲染
+{
+	HUDTitleRender.UpdateLogic==》BaseUpdateLogic-> FillMeshRender -->  m_StaticBatcher.m_MeshRender.RenderTo(m_cmdBuffer);->cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat);
+	材质使用的是 m_mat = new Material(Shader.Find("Unlit/HUDSprite"));
+}
 
 
 ]==]

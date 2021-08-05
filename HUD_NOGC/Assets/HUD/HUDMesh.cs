@@ -179,7 +179,7 @@ class HUDVertex
         {
             final.xMin = rect.xMin / width;
             final.xMax = rect.xMax / width;
-            final.yMin = 1f - rect.yMax / height;
+            final.yMin = 1f - rect.yMax / height;  //这里没看懂为什么要1-
             final.yMax = 1f - rect.yMin / height;
         }
         return final;
@@ -189,17 +189,17 @@ class HUDVertex
     {
         ch = '\0';
         AtlasID = -1;
-        UISpriteInfo sp = CAtlasMng.instance.GetSafeSpriteByID(SpriteID);
+        UISpriteInfo sp = CAtlasMng.instance.GetSafeSpriteByID(SpriteID);// 拿到sprite信息
         if (sp == null)
             return;
 
-        AtlasID = sp.m_nAtlasID;
+        AtlasID = sp.m_nAtlasID; //图集ID
         width = nWidth <= 0 ? (short)(sp.outer.width + 0.5f) : (short)nWidth;
         height = nHeight <= 0 ? (short)(sp.outer.height + 0.5f) : (short)nHeight;
         Scale = 1.0f;
 
-        Rect mOuterUV = sp.outer;
-        UITexAtlas texAtlas = CAtlasMng.instance.GetAtlasByID(sp.m_nAtlasID);
+        Rect mOuterUV = sp.outer; //从配置里读取的
+        UITexAtlas texAtlas = CAtlasMng.instance.GetAtlasByID(sp.m_nAtlasID);// 拿到图集信息
         if (texAtlas != null && texAtlas.coordinates == UITexAtlas.Coordinates.Pixels)
         {
             //换算出在图集中的UV坐标

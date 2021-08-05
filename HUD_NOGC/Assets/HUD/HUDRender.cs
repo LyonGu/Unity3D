@@ -190,12 +190,12 @@ class HUDTitleBase
         node.WorldPos = m_vPos;
         node.ScreenPos = m_vScreenPos;
         node.SpriteID = nSpriteID;
-        node.Offset.Set(fx, fy);
+        node.Offset.Set(fx, fy);  //这个没看懂？？TODO
         node.Move.Set(0f, 0f);
-        node.InitSprite(nWidth, nHeight);
+        node.InitSprite(nWidth, nHeight); //初始化Sprite信息
         node.Scale = m_fScale;
 
-        m_aSprite.Add(node);
+        m_aSprite.Add(node); //存储
         return node;
     }
     protected HUDVertex PushChar(ref CharacterInfo tempCharInfo, char ch, float fx, float fy, Color32 clrLeftUp, Color32 clrLeftDown, Color32 clrRightUp, Color32 clrRightDown)

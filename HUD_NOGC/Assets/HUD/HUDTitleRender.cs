@@ -608,7 +608,7 @@ class HUDTitleInfo : HUDTitleBase
 
         //血条背景sprite
         PushSprite(HudSetting.Instance.m_nBloodBk, nBkWidth, nBkHeight, (nBloodWidth - nBkWidth) * 0.5f, 0);// (nBkHeight - nHeight) * 0.5f);
-        PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
+        //PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
         
         if (m_TitleLine[m_nTitleNumb] == null)
             m_TitleLine[m_nTitleNumb] = new HUDTilteLine();
@@ -864,7 +864,7 @@ class HUDTitleInfo : HUDTitleBase
 
         public void PushTitle(HUDTitleInfo title)
         {
-            title.m_nBatcherIndex = m_ValidTitles.size;
+            title.m_nBatcherIndex = m_ValidTitles.size; //相当于用下标作为索引
             m_ValidTitles.Add(title);
             m_bNeedSort = true;
         }

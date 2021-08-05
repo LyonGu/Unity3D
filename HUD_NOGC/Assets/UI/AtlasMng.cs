@@ -268,6 +268,8 @@ public class UISpriteInfo  // 兼容NGUI的Sprite对象，将Sprite成员放到�
             ar.ReadWriteValue(ref m_nAtlasID);
         }
     }
+
+    //读取对应的字段
     public void SerializeToTxt(ref SerializeText ar)
     {
         ar.ReadWriteValue("name", ref name);
