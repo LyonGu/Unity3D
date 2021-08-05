@@ -18,3 +18,9 @@ print('rapidjson  ====', s)
 local cjson = require "cjson"
 local ct = cjson.decode('{"a":456}')
 print('cjson  ====', ct.a)
+
+
+
+print("---------加载扩展函数------------");
+local mylibEx = require("mylib")
+print("mylibEx.mylib_number=====" .. mylibEx.mylib_number(999));
