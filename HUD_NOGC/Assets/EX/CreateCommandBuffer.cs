@@ -81,5 +81,7 @@ public class CreateCommandBuffer : MonoBehaviour
             _CommandBuffer = new CommandBuffer();
         _CommandBuffer.Clear();
         _CommandBuffer.DrawMesh(_mesh,this.transform.localToWorldMatrix, material);
+        
+//        _CommandBuffer.DrawMeshInstanced();
     }
 }
