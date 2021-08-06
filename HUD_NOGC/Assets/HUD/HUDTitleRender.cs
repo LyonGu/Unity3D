@@ -609,6 +609,7 @@ class HUDTitleInfo : HUDTitleBase
         //血条背景sprite
         PushSprite(HudSetting.Instance.m_nBloodBk, nBkWidth, nBkHeight, (nBloodWidth - nBkWidth) * 0.5f, 0);// (nBkHeight - nHeight) * 0.5f);
         //PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
+        PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
         
         if (m_TitleLine[m_nTitleNumb] == null)
             m_TitleLine[m_nTitleNumb] = new HUDTilteLine();
@@ -1354,6 +1355,7 @@ class HUDTitleInfo : HUDTitleBase
             if (m_cmdBuffer == null)
             {
                 m_cmdBuffer = new CommandBuffer();
+                m_cmdBuffer.name = "HUDCommandBuffer";
             }
             else
             {
