@@ -766,7 +766,7 @@ class HUDTitleInfo : HUDTitleBase
                     {
                         if (v.AtlasID != 0)
                         {
-                            //构建矩形mesh
+                            //构建矩形mesh 为HUDMesh类型
                             v.hudMesh = m_MeshRender.QueryMesh(v.AtlasID);
                         }
                         else

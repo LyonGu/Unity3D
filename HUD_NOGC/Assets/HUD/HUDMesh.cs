@@ -556,8 +556,8 @@ class HUDMesh
             vOffset += v.Move;
             mOffset.Add(vOffset);
             
-            //UV信息
-            mUvs.Add(v.uvRU);
+            //UV信息 右上0 右下1 左下2 左上3
+            mUvs.Add(v.uvRU); 
             mUvs.Add(v.uvRD);
             mUvs.Add(v.uvLD);
             mUvs.Add(v.uvLU);
@@ -584,7 +584,8 @@ class HUDMesh
         
         //拿HUDVertex里的数据构建mesh需要的数据
         FillVertex();
-
+        
+        // 没看懂？？？？ 用最后一个覆盖前面的？？？
         int nLast = mVerts.size - 1;
         int nExSize = mVerts.buffer.Length;
         int nVertexCount = mVerts.size;
@@ -601,7 +602,7 @@ class HUDMesh
                 offs[i]    = offs[nLast];
                 cols[i]    = cols[nLast];
             }
-        }        
+        }
         mVerts.size = nExSize;
         mUvs.size = nExSize;
         mCols.size = nExSize;
@@ -645,7 +646,7 @@ class HUDMesh
         int[] Indices = mIndices.buffer;
 
         int index = 0;
-        int i = 0;
+        int i = 0; //[{0,1,2} {2,3,0}] 顺时针， 右上0 右下1 左下2 左上3
         for (; i < nVertexCount; i += 4)
         {
             Indices[index++] = i;

@@ -294,7 +294,7 @@ class HUDRender
             }
         }
         HUDMesh pHudMesh = new HUDMesh();
-        pHudMesh.SetAtlasID(nAtlasID);
+        pHudMesh.SetAtlasID(nAtlasID); //创建对应的材质，
         m_MeshList.Add(pHudMesh);
         m_ValidList.Add(pHudMesh);
         m_bMeshDirty = true;
@@ -396,7 +396,7 @@ class HUDRender
             HUDMesh mesh = m_ValidList[i];
             if(mesh.SpriteNumb > 0 && mesh.AtlasID != 0 )
             {
-                //使用CommandBuffer 绘制
+                //使用CommandBuffer 绘制图集
                 cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat);
             }
         }
@@ -405,6 +405,7 @@ class HUDRender
             HUDMesh mesh = m_ValidList[i];
             if (mesh.SpriteNumb > 0 && mesh.AtlasID == 0)
             {
+                //使用CommandBuffer 绘制散图
                 cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat);
             }
         }

@@ -74,8 +74,41 @@ UISpriteInfo.SerializeToTxt ==> 读取对应的字段
 
 怎样渲染
 {
-	HUDTitleRender.UpdateLogic==》BaseUpdateLogic-> FillMeshRender -->  m_StaticBatcher.m_MeshRender.RenderTo(m_cmdBuffer);->cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat);
+	HUDTitleRender.UpdateLogic==》BaseUpdateLogic-> 
+	{
+		1 m_StaticBatcher.UpdateLogic(bCameraDirty, vCameraPos); ==>
+		{
+			a HUDTitleInfo.ApplyMove
+			b HUDTitleBatcher.InitTitleHUDMesh(title)
+			{
+				 // 遍历m_aSprite 拿到每一个HUDTitle信息，并且构建对应hudMesh 以及材质 （HUDMesh。SetAtlasID） 
+				 // HUDRender.m_MeshList.Add(pHudMesh);
+        		 // HUDRender.m_ValidList.Add(pHudMesh);
+			}
+			c HUDRender.FillMesh
+			{
+				mesh.UpdateLogic()-> mesh.UpdateMesh
+				{
+					FillVertex() ////拿HUDVertex里的数据构建mesh需要的数据 （顶点位置，偏移，UV, 顶点颜色）
+					AdjustIndexs // 构建三角形索引数组
+				}
+			}
+
+		};
+
+		2 m_StaticBatcher.FillMeshRender -->  m_StaticBatcher.m_MeshRender.RenderTo(m_cmdBuffer);
+		{
+			遍历m_ValidList ，里面存的都是hudMesh
+			{
+				cmdBuffer.DrawMesh(mesh.m_Mesh, matWorld, mesh.m_mat); //使用commandbuffer绘制
+			}
+		}
+
+	}
 	材质使用的是 m_mat = new Material(Shader.Find("Unlit/HUDSprite"));
+
+
+	m_StaticBatcher.
 }
 
 
