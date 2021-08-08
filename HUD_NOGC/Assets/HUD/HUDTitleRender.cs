@@ -608,7 +608,6 @@ class HUDTitleInfo : HUDTitleBase
 
         //血条背景sprite
         PushSprite(HudSetting.Instance.m_nBloodBk, nBkWidth, nBkHeight, (nBloodWidth - nBkWidth) * 0.5f, 0);// (nBkHeight - nHeight) * 0.5f);
-        //PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
         PushSliceTitle(m_nBloodSpriteID, nBloodWidth, nHeight, 0.0f, 0.0f, fBloodPos);
         
         if (m_TitleLine[m_nTitleNumb] == null)
@@ -676,9 +675,10 @@ class HUDTitleInfo : HUDTitleBase
             return;
         int nAtlasID = sp.m_nAtlasID;
         int nStart = m_aSprite.size;
+        //使用九宫格？？
         for (int i = 0; i < 9; ++i)
         {
-            HUDVertex node = HUDVertex.QueryVertex();
+            HUDVertex node = HUDVertex.QueryVertex(); //复用对象
             node.WorldPos = m_vPos;
             node.ScreenPos = m_vScreenPos;
             node.SpriteID = nSpriteID;
@@ -690,7 +690,7 @@ class HUDTitleInfo : HUDTitleBase
             node.height = (short)nHeight;
             m_aSprite.Add(node);
         }
-        SlicedFill(nSpriteID, nWidth, nHeight, nStart, fBloodPos);
+        SlicedFill(nSpriteID, nWidth, nHeight, nStart, 0.5f);
     }   
 
     // 头顶批处理

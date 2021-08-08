@@ -239,3 +239,6 @@ SpriteRender/Library/
 SpriteRender/.vs/
 SpriteRender/obj/
 SpriteRender/Temp/
+HUD_NOGC/.vsconfig
+UnRix/.vsconfig
+xasset/.vsconfig

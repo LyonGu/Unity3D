@@ -88,7 +88,7 @@ class HUDTitleBase
             fBloodPos = 0.0f;
         if (fBloodPos > 1.0f)
             fBloodPos = 1.0f;
-        int nBloodWidth = (int)(nWidth * fBloodPos + 0.5f);
+       int nBloodWidth = (int)(nWidth * fBloodPos + 0.5f); //为什么要加0.5？几乎没什么影响
 
         int nAtlasID = sp.m_nAtlasID;
         Rect mOuterUV = sp.outer;

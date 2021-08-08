@@ -81,7 +81,7 @@ UISpriteInfo.SerializeToTxt ==> 读取对应的字段
 			a HUDTitleInfo.ApplyMove
 			b HUDTitleBatcher.InitTitleHUDMesh(title)
 			{
-				 // 遍历m_aSprite 拿到每一个HUDTitle信息，并且构建对应hudMesh 以及材质 （HUDMesh。SetAtlasID） 
+				 // 遍历title.m_aSprite 拿到每一个HUDTitle信息，并且构建对应hudMesh 以及材质 （HUDMesh。SetAtlasID） 
 				 // HUDRender.m_MeshList.Add(pHudMesh);
         		 // HUDRender.m_ValidList.Add(pHudMesh);
 			}
