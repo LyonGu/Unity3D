@@ -242,3 +242,6 @@ SpriteRender/Temp/
 HUD_NOGC/.vsconfig
 UnRix/.vsconfig
 xasset/.vsconfig
+ECSLearn/.idea/
+ECSLearn/.vs/
+ECSLearn/obj/
