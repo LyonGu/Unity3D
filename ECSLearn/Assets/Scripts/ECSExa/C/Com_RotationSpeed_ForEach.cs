@@ -9,3 +9,9 @@ public struct Com_RotationSpeed_ForEach : IComponentData
 {
     public float RadiansPerSecond;
 }
+
+
+public struct RotationSpeed_IJobChunk : IComponentData
+{
+    public float RadiansPerSecond;
+}

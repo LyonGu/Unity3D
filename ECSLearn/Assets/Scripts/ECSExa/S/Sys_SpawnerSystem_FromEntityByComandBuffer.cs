@@ -20,11 +20,10 @@ public class SpawnerSystem_FromEntityByComandBuffer : SystemBase
 
         Entities.ForEach((Entity entity, int entityInQueryIndex, in SpawnerFromEntity spawnerFromEntity) =>
         {
+
             /* 在Buffer中创建实体 */
             var instance = commandBuffer.Instantiate(entityInQueryIndex, spawnerFromEntity.prefab);
             commandBuffer.AddComponent(entityInQueryIndex, instance, new SpawnerFromCommandBuffer());
-            
-            
             //将筛选出来的实体删除了 下一帧就不会调用OnUpdate了  
             Debug.Log($"Spawner_FromEntity Convert1 ====  {entity.Index}  {spawnerFromEntity.prefab.Index}");
             commandBuffer.DestroyEntity(entityInQueryIndex, spawnerFromEntity.prefab);
@@ -34,6 +33,7 @@ public class SpawnerSystem_FromEntityByComandBuffer : SystemBase
         
         /* 把Job添加到EntityCommandBufferSystem */ 
         //EntityCommandBufferSystem每次执行队列的任务后，都会清空，所以不用担心
+        //最后Entity的产生还是在主线程
         _beginInitializationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
     }
 }
