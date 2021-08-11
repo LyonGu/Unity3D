@@ -15,11 +15,11 @@ public class Sys_RotationSpeed_ForEach : SystemBase
         var deltaTime = Time.DeltaTime;
         //Rotation是系统自带的组件，我们的Cube在转换为实体时，也会自动附加Rotation组件
         //jobHandle 可以作为其他job的依赖项
-        Entities.ForEach((ref Rotation rotation, in Com_RotationSpeed_ForEach rotationSpeed) =>
+        this.Dependency = Entities.ForEach((ref Rotation rotation, in Com_RotationSpeed_ForEach rotationSpeed) =>
         {
             rotation.Value = math.mul(math.normalize(rotation.Value),
                 quaternion.AxisAngle(math.up(), rotationSpeed.RadiansPerSecond * deltaTime));
-        }).Schedule(); //多线程
+        }).Schedule(this.Dependency); //多线程
         
         
         
