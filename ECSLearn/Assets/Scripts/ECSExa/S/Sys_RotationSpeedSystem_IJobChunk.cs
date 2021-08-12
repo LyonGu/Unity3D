@@ -18,13 +18,13 @@ public class Sys_RotationSpeedSystem_IJobChunk : SystemBase
         _query = GetEntityQuery(typeof(Rotation), ComponentType.ReadOnly<RotationSpeed_IJobChunk>());
     }
     [BurstCompile]
-    struct RotationSpeedJob : IJobChunk
+    struct RotationSpeedJob : IJobEntityBatch
     {
         public ComponentTypeHandle<Rotation> RotationTypeHandle;
         [ReadOnly] public ComponentTypeHandle<RotationSpeed_IJobChunk> RotationSpeedTypeHandle;
         public float DeltaTime;
 //        public uint LastSystemVersion;
-        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        public void Execute(ArchetypeChunk chunk, int batchIndex)
         {
 //            var RotationTypeHandleChanged = chunk.DidChange(RotationTypeHandle, LastSystemVersion);
 //            var RotationSpeedTypeChanged = chunk.DidChange(RotationSpeedTypeHandle, LastSystemVersion);
@@ -57,6 +57,6 @@ public class Sys_RotationSpeedSystem_IJobChunk : SystemBase
         job.DeltaTime = Time.DeltaTime;
 //        job.LastSystemVersion = this.LastSystemVersion;
 
-        this.Dependency = job.ScheduleParallel(_query,this.Dependency);
+        Dependency = job.ScheduleParallel(_query, 1, Dependency);
     }
 }

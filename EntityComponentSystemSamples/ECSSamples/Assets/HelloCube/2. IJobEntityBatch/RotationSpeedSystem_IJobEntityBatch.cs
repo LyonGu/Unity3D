@@ -18,6 +18,7 @@ public partial class RotationSpeedSystem_IJobChunk : SystemBase
         m_Query = GetEntityQuery(typeof(Rotation), ComponentType.ReadOnly<RotationSpeed_IJobEntityBatch>());
     }
 
+    //IJobEntityBatch 效率特别高效
     // Use the [BurstCompile] attribute to compile a job with Burst. You may see significant speed ups, so try it!
     [BurstCompile]
     struct RotationSpeedJob : IJobEntityBatch
