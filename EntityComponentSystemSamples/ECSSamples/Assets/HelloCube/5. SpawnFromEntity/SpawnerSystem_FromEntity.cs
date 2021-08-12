@@ -48,7 +48,7 @@ public partial class SpawnerSystem_FromEntity : SystemBase
                     {
                         var instance = commandBuffer.Instantiate(entityInQueryIndex, spawnerFromEntity.Prefab);
 
-                        // Place the instantiated in a grid with some noise
+                        // Place the instantiated in a grid with some noise  世界坐标
                         var position = math.transform(location.Value,
                             new float3(x * 1.3F, noise.cnoise(new float2(x, y) * 0.21F) * 2, y * 1.3F));
                         commandBuffer.SetComponent(entityInQueryIndex, instance, new Translation {Value = position});

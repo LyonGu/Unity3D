@@ -62,7 +62,9 @@ public partial class SpawnerSystem_SpawnAndRemove : SystemBase
                         commandBuffer.SetComponent(entityInQueryIndex, instance, new RotationSpeed_SpawnAndRemove { RadiansPerSecond = math.radians(random.NextFloat(25.0F, 90.0F)) });
                     }
                 }
-
+                //原始的entity
+                //commandBuffer.DestroyEntity(entityInQueryIndex, spawner.Prefab); 
+                
                 commandBuffer.DestroyEntity(entityInQueryIndex, entity);
             }).ScheduleParallel();
 
