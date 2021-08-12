@@ -1,0 +1,10 @@
+{
+    "Dependencies": [],
+    "Components": [
+        {
+            "$type": "RotationSpeedSetting, SubsceneWithBuildConfigurations",
+            "RotationSpeed": 50,
+            "Offset": 2
+        }
+    ]
+}
