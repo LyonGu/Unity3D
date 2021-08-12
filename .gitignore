@@ -247,3 +247,7 @@ ECSLearn/.vs/
 ECSLearn/obj/
 ECSLearn/.vsconfig
 EntityComponentSystemSamples/ECSSamples/Library/
+EntityComponentSystemSamples/ECSSamples/.idea/
+EntityComponentSystemSamples/ECSSamples/obj/
+EntityComponentSystemSamples/ECSSamples/Temp/
+EntityComponentSystemSamples/ECSSamples/Logs/

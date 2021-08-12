@@ -15,7 +15,7 @@ public partial class RotationSpeedSystem_ForEach : SystemBase
 
         // Schedule job to rotate around up vector
         Entities
-            .WithName("RotationSpeedSystem_ForEach")
+            .WithName("RotationSpeedSystem_ForEach") //job的名字，方便调试
             .ForEach((ref Rotation rotation, in RotationSpeed_ForEach rotationSpeed) =>
             {
                 rotation.Value = math.mul(
