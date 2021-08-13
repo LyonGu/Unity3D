@@ -19,6 +19,8 @@ public partial class LookForPlayerSystem : SystemBase
     protected override void OnCreate()
     {
         m_EndSimECBSystem = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>();
+        
+        //创建搜索player的筛选器
         m_PlayerQuery = GetEntityQuery(ComponentType.ReadOnly<PlayerTag>(), ComponentType.ReadOnly<Translation>());
     }
 
@@ -36,6 +38,7 @@ public partial class LookForPlayerSystem : SystemBase
         // Update the target position (must pass isReadOnly=false)
         var targetPositionFromEntity = GetComponentDataFromEntity<TargetPosition>(false);
 
+        //WithDisposeOnCompletion ==> job执行完毕后会自动释放对应 NativeContainer
         var lookHandle = Entities
             .WithName("LookForPlayer") // ForEach name is helpful for debugging
             .WithReadOnly(playerPosition) // Marked read only (We don't mutate the player position)
@@ -49,7 +52,8 @@ public partial class LookForPlayerSystem : SystemBase
                 in Translation guardPosition, // "in" keyword makes the parameter ReadOnly
                 in Rotation guardRotation,
                 in VisionCone guardVisionCone
-                ) =>
+               
+            ) =>
                 {
                     // If there are no players, we can safely skip this work
                     if (playerPosition.Length <= 0)
@@ -63,7 +67,8 @@ public partial class LookForPlayerSystem : SystemBase
                     var unitVecToPlayer = math.normalize(vectorToPlayer);
 
                     // Use the dot product to determine if the player is within our vision cone
-                    var dot = math.dot(forwardVector, unitVecToPlayer);
+                    // 计算当前朝向和目标朝向之间的夹角的余弦值
+                    var dot = math.dot(forwardVector, unitVecToPlayer); 
                     var canSeePlayer = dot > 0.0f && // player is in front of us
                         math.abs(math.acos(dot)) < guardVisionCone.AngleRadians &&            // player is within the cone angle bounds
                         math.lengthsq(vectorToPlayer) < guardVisionCone.ViewDistanceSq;            // player is within vision distance (we use Squared Distance to avoid sqrt calculation)
@@ -82,6 +87,7 @@ public partial class LookForPlayerSystem : SystemBase
                         }
                         else
                         {
+                            //非追逐下转换成追逐状态
                             GuardAIUtility.TransitionToChasing(ecb, guardEntity, entityInQueryIndex, playerPosition[0].Value);
                         }
 
@@ -89,6 +95,7 @@ public partial class LookForPlayerSystem : SystemBase
                         // Therefore, we remove the timer from the guard
                         if (HasComponent<IdleTimer>(guardEntity))
                         {
+                            //删除Idle组件
                             GuardAIUtility.TransitionFromIdle(ecb, guardEntity, entityInQueryIndex);
                         }
                     }

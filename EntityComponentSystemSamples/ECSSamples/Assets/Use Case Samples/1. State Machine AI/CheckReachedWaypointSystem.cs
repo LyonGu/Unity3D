@@ -20,7 +20,7 @@ public partial class CheckedReachedWaypointSystem : SystemBase
 
         var waypointHandle = Entities
             .WithName("CheckReachedWaypoint") // ForEach name is helpful for debugging
-            .WithNone<IsChasingTag>() // WithNone means "Exclude all entities with IsChasingTag from this ForEach"
+            .WithNone<IsChasingTag, IdleTimer>() // WithNone means "Exclude all entities with IsChasingTag from this ForEach"
                                       // This avoids running the waypoint checking code on guards that are chasing the player
             .ForEach((
                 Entity e, // Refers to the current guard entity. Used by the ECB when changing states

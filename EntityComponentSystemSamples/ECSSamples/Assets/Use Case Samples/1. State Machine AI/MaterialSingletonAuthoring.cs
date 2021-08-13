@@ -5,9 +5,9 @@ using UnityEngine;
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
 class StateTransitionMaterials : IComponentData
 {
-    public Material m_IdleMaterial;
-    public Material m_PatrollingMaterial;
-    public Material m_ChasingMaterial;
+    public Material m_IdleMaterial;   //Idle使用材质
+    public Material m_PatrollingMaterial; //Patrolling使用材质
+    public Material m_ChasingMaterial; //Chasing使用材质
 }
 #endif
 

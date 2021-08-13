@@ -5,7 +5,7 @@ using UnityEngine;
 
 // An IBufferElementData becomes a DynamicBuffer<T>
 // This will reserve 8 WaypointPositions of memory per-entity in the chunk
-[InternalBufferCapacity(8)]
+[InternalBufferCapacity(8)] //设置容器大小
 public struct WaypointPosition : IBufferElementData
 {
     public float3 Value;
@@ -42,8 +42,8 @@ public struct IdleTimer : IComponentData
 // Defines a 2D cone in front of the guard, used to detect players
 public struct VisionCone : IComponentData
 {
-    public float AngleRadians;
-    public float ViewDistanceSq;
+    public float AngleRadians;  //视角
+    public float ViewDistanceSq; //视野距离
 }
 
 // A tag that helps us tell the difference between "Patrolling" and "Chasing"
@@ -81,15 +81,15 @@ public class GuardAuthoring : MonoBehaviour, IConvertGameObjectToEntity
         dstManager.AddComponents(entity, new ComponentTypes(
             new ComponentType[]
             {
-                typeof(CooldownTime),
-                typeof(NextWaypointIndex),
-                typeof(TargetPosition),
-                typeof(WaypointPosition),
-                typeof(VisionCone),
-                typeof(MovementSpeed),
-                typeof(IsInTransitionTag)
+                typeof(CooldownTime), // 空闲时间
+                typeof(NextWaypointIndex), //下一个路点
+                typeof(TargetPosition), //移动目标
+                typeof(WaypointPosition),//路点的位置  BufferElementData类型，因为可以有多个
+                typeof(VisionCone), //视野组件
+                typeof(MovementSpeed), //移动速度
+                typeof(IsInTransitionTag) //移动时的状态区分，追逐或巡逻？？
             }));
-
+        
         // Since we've already added the WaypointPosition IBufferElementData to the entity, we need to Get the buffer to fill it
         var buffer = dstManager.GetBuffer<WaypointPosition>(entity);
         foreach (var waypointTransform in Waypoints)

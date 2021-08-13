@@ -23,9 +23,9 @@ public class PlayerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         // Here we add all of the components needed by the player
         dstManager.AddComponents(entity, new ComponentTypes(
-            typeof(PlayerTag),
-            typeof(UserInputData),
-            typeof(MovementSpeed)));
+            typeof(PlayerTag),  //玩家标识
+            typeof(UserInputData), //输入数据
+            typeof(MovementSpeed))); //移动速度
 
         // Set the movement speed value from the authoring component
         dstManager.SetComponentData(entity, new MovementSpeed {MetersPerSecond = MovementSpeedMetersPerSecond});

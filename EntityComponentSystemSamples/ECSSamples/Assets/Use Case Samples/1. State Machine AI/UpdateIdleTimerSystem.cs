@@ -1,6 +1,9 @@
 using Unity.Entities;
 using Unity.Jobs;
 
+/*
+ * 检测guard是否可以从Idle到Patrolling
+ */
 public partial class UpdateIdleTimerSystem : SystemBase
 {
     // Cache a reference to this system in OnCreate() to prevent World.GetExistingSystem being called every frame
@@ -14,6 +17,7 @@ public partial class UpdateIdleTimerSystem : SystemBase
     protected override void OnUpdate()
     {
         // ECB which will run at the end of the simulation group. If the player is seen, will change the Guard's state to chasing
+        //需要再job中删除component，只能用ebs
         var ecb = m_EndSimECBSystem.CreateCommandBuffer().AsParallelWriter();
 
         // Grab our DeltaTime out of the system so it is usable by the ForEach lambda
@@ -31,15 +35,17 @@ public partial class UpdateIdleTimerSystem : SystemBase
                 in CooldownTime cooldownTime) =>  // "in" keyword makes this parameter ReadOnly
                 {
                     // Increment the timer by delta time
-                    idleTimer.Value += deltaTime;
+                    idleTimer.Value += deltaTime;  //停留时间计时，一旦超过冷却时间就开始巡逻
 
                     // If we have reached our maximum idle time
                     if (idleTimer.Value >= cooldownTime.Value)
                     {
-                        // Remove the timer to leave the idle state
+                        // Remove the timer to leave the idle state  移除IdleTimer组件，下次就不会筛选到了
                         GuardAIUtility.TransitionFromIdle(ecb, e, entityInQueryIndex);
-
+    
                         // Move to patrolling, using the next waypoint as our new TargetPosition
+                        // 有idleTimer组件说明一定是处于Idle状态 
+                        // 更新下一路点的下标，并计算下一个目标位置
                         index.Value = (index.Value + 1) % waypoints.Length;
                         GuardAIUtility.TransitionToPatrolling(ecb, e, entityInQueryIndex, waypoints[index.Value].Value);
                     }

@@ -10,7 +10,7 @@ using static Unity.Mathematics.math;
 
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
 [UpdateInGroup(typeof(PresentationSystemGroup))]
-[UpdateBefore(typeof(RenderMeshSystemV2))]
+[UpdateBefore(typeof(RenderMeshSystemV2))]  //RenderMeshSystemV2 是HyBrid里的system
 public partial class StateTransitionVisualizationSystem : SystemBase
 {
     private EntityQuery m_StateTransitionMaterialSingletonQuery;
@@ -33,15 +33,15 @@ public partial class StateTransitionVisualizationSystem : SystemBase
                 var meshRenderer = EntityManager.GetSharedComponentData<RenderMesh>(e);
 
                 if (HasComponent<IdleTimer>(e))
-                    meshRenderer.material = materials.m_IdleMaterial;
+                    meshRenderer.material = materials.m_IdleMaterial; //Idle状态
                 else if (HasComponent<IsChasingTag>(e))
-                    meshRenderer.material = materials.m_ChasingMaterial;
+                    meshRenderer.material = materials.m_ChasingMaterial; //追逐状态
                 else
                     meshRenderer.material = materials.m_PatrollingMaterial;
 
                 EntityManager.SetSharedComponentData(e, meshRenderer);
                 EntityManager.RemoveComponent<IsInTransitionTag>(e);
-            }).Run();
+            }).Run();  //Run 是在主线程执行
     }
 }
 #endif

@@ -55,7 +55,7 @@ public class GuardAIUtility
     {
         ecb.AddComponent(index, e, new IdleTimer {Value = 0.0f});
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
-        ecb.AddComponent<IsInTransitionTag>(index, e);
+        ecb.AddComponent<IsInTransitionTag>(index, e); //Idle 时加上IsInTransitionTag
 #endif
     }
 
@@ -68,10 +68,10 @@ public class GuardAIUtility
     /// <param name="playerPosition">The position of the player we are setting as our new TargetPosition</param>
     public static void TransitionToChasing(EntityCommandBuffer.ParallelWriter ecb, Entity e, int index, float3 playerPosition)
     {
-        ecb.AddComponent<IsChasingTag>(index, e);
+        ecb.AddComponent<IsChasingTag>(index, e); //追逐的特有标记
         ecb.AddComponent(index, e, new TargetPosition {Value = playerPosition});
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
-        ecb.AddComponent<IsInTransitionTag>(index, e);
+        ecb.AddComponent<IsInTransitionTag>(index, e); //Chasing 也加上？
 #endif
     }
 
@@ -86,7 +86,7 @@ public class GuardAIUtility
     {
         ecb.AddComponent(index, e, new TargetPosition {Value = waypointPosition});
 #if !UNITY_DISABLE_MANAGED_COMPONENTS
-        ecb.AddComponent<IsInTransitionTag>(index, e);
+        ecb.AddComponent<IsInTransitionTag>(index, e); //Patrolling 都加上
 #endif
     }
 }

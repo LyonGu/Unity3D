@@ -28,6 +28,7 @@ public partial class MoveTowardTargetSystem : SystemBase
                 {
                     // Determine if we are within the StopDistance of our target.
                     var vectorToTarget = targetPosition.Value - guardPosition.Value;
+                    //如果超过了最短停止距离
                     if (math.lengthsq(vectorToTarget) > GuardAIUtility.kStopDistanceSq)
                     {
                         // Normalize the vector to our target - this will be our movement direction
