@@ -10,6 +10,8 @@ public class SliderHandler : MonoBehaviour
     public void OnSliderChange()
     {
         float fixedFps = GetComponent<Slider>().value;
+        
+        //设定fixedgroup的帧率
         var fixedSimulationGroup = World.DefaultGameObjectInjectionWorld?.GetExistingSystem<FixedStepSimulationSystemGroup>();
         if (fixedSimulationGroup != null)
         {

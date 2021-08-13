@@ -14,7 +14,7 @@ namespace Samples.FixedTimestepSystem.Authoring
         {
             var spawnerData = new VariableRateSpawner
             {
-                Prefab = conversionSystem.GetPrimaryEntity(projectilePrefab),
+                Prefab = conversionSystem.GetPrimaryEntity(projectilePrefab), //把prefab转成一个entity
                 SpawnPos = transform.position,
             };
             dstManager.AddComponentData(entity, spawnerData);

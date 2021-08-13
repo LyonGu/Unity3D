@@ -29,6 +29,7 @@ namespace Samples.FixedTimestepSystem
                     float aliveTime = (timeSinceLoad - projectile.SpawnTime);
                     if (aliveTime > 5.0f)
                     {
+                        //销毁会回到主线程
                         ecb.DestroyEntity(entityInQueryIndex, projectileEntity);
                     }
                     translation.Value.x = projectile.SpawnPos.x + aliveTime * projectileSpeed;

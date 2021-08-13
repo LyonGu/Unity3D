@@ -18,6 +18,7 @@ namespace Samples.FixedTimestepSystem
         private EndFixedStepSimulationEntityCommandBufferSystem ecbSystem;
         protected override void OnCreate()
         {
+            //EndFixedStepSimulationEntityCommandBufferSystem 是属于FixedStepSimulationSystemGroup里的
             ecbSystem = World.GetExistingSystem<EndFixedStepSimulationEntityCommandBufferSystem>();
         }
 

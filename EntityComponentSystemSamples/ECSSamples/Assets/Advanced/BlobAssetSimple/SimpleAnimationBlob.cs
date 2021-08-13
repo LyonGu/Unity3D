@@ -7,6 +7,13 @@ using UnityEngine;
 /// Very simple animation curve blob data that uses linear interpolation at fixed intervals.
 /// Blob data is constructed from a UnityEngine.AnimationCurve
 /// </summary>
+///
+/*
+ *
+ * Blob assets –从技术上讲，它不是“component”，但您可以使用Blob assets来存储数据。
+ * Blob assets可以由一个或多个component使用BlobAssetReference进行引用，并且他是不可变的。
+ * 您可以使用Blob assets在资产之间共享数据并访问C＃ jobs中的数据。
+ */
 public struct SimpleAnimationBlob
 {
     BlobArray<float> Keys;

@@ -20,12 +20,14 @@ namespace Samples.FixedTimestepSystem
 
         protected override void OnUpdate()
         {
-            float spawnTime = (float)Time.ElapsedTime;
+            //只要对应的entity在，每一帧都会执行
+            float spawnTime = (float)Time.ElapsedTime; //Time.ElapsedTime 从world创建开始到现在的时间
             var ecb = ecbSystem.CreateCommandBuffer();
             Entities
                 .WithName("VariableRateSpawner")
                 .ForEach((in VariableRateSpawner spawner) =>
                 {
+                    //代码逻辑在子线程执行，但是最后的创建entity会回到主线程
                     var projectileEntity = ecb.Instantiate(spawner.Prefab);
                     var spawnPos = spawner.SpawnPos;
                     spawnPos.y += 0.3f * math.sin(5.0f * spawnTime);
