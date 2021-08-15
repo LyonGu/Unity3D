@@ -45,8 +45,8 @@ public class PlayerMovementAndLook : MonoBehaviour
 		Vector3 desiredDirection = cameraForward * inputDirection.z + cameraRight * inputDirection.x;
 		
 		//Why not just pass the vector instead of breaking it up only to remake it on the other side?
-		MoveThePlayer(desiredDirection);
-		TurnThePlayer();
+		MoveThePlayer(desiredDirection); //玩家移动
+		TurnThePlayer(); //玩家旋转
 		AnimateThePlayer(desiredDirection);
 		
 	}
@@ -93,7 +93,7 @@ public class PlayerMovementAndLook : MonoBehaviour
 	{
 		if (!theCollider.CompareTag("Enemy"))
 			return;
-
+		
 		playerHealth--;
 
 		if(playerHealth <= 0)

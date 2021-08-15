@@ -39,15 +39,15 @@ public class PlayerShooting : MonoBehaviour
 
 		if (Input.GetButton("Fire1") && timer >= fireRate)
 		{
-			Vector3 rotation = gunBarrel.rotation.eulerAngles;
+			Vector3 rotation = gunBarrel.rotation.eulerAngles;//枪挂点的欧拉角
 			rotation.x = 0f;
 
 			if (useECS)
 			{
 				if (spreadShot)
-					SpawnBulletSpreadECS(rotation);
+					SpawnBulletSpreadECS(rotation); //扇形子弹
 				else
-					SpawnBulletECS(rotation);
+					SpawnBulletECS(rotation); //直线子弹
 			}
 			else
 			{

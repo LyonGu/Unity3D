@@ -5,6 +5,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
+//移动system，向前方移动
 namespace Unity.Transforms
 {
 	public class MoveForwardSystem : JobComponentSystem
@@ -17,6 +18,7 @@ namespace Unity.Transforms
 
 			public void Execute(ref Translation pos, [ReadOnly] ref Rotation rot, [ReadOnly] ref MoveSpeed speed)
 			{
+				//math.forward(rot.Value) 往物体Z轴方向移动
 				pos.Value = pos.Value + (dt * speed.Value * math.forward(rot.Value));
 			}
 		}
