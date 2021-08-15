@@ -15,11 +15,13 @@ public class CollisionSystem : JobComponentSystem
 
 	protected override void OnCreate()
 	{
+		//创建三个筛选器 Query
 		playerGroup = GetEntityQuery(typeof(Health), ComponentType.ReadOnly<Translation>(), ComponentType.ReadOnly<PlayerTag>());
 		enemyGroup = GetEntityQuery(typeof(Health), ComponentType.ReadOnly<Translation>(), ComponentType.ReadOnly<EnemyTag>());
 		bulletGroup = GetEntityQuery(typeof(TimeToLive), ComponentType.ReadOnly<Translation>());
 	}
 
+	//直接修改chunk数据
 	[BurstCompile]
 	struct CollisionJob : IJobChunk
 	{
@@ -28,7 +30,7 @@ public class CollisionSystem : JobComponentSystem
 		public ArchetypeChunkComponentType<Health> healthType;
 		[ReadOnly] public ArchetypeChunkComponentType<Translation> translationType;
 
-		[DeallocateOnJobCompletion]
+		[DeallocateOnJobCompletion] //NativeArray  job执行完自动释放
 		[ReadOnly] public NativeArray<Translation> transToTestAgainst;
 
 
@@ -42,13 +44,15 @@ public class CollisionSystem : JobComponentSystem
 				float damage = 0f;
 				Health health = chunkHealths[i];
 				Translation pos = chunkTranslations[i];
-
+				
+				//与所有位置进行检测
 				for (int j = 0; j < transToTestAgainst.Length; j++)
 				{
 					Translation pos2 = transToTestAgainst[j];
 
 					if (CheckCollision(pos.Value, pos2.Value, radius))
 					{
+						//累计伤害
 						damage += 1;
 					}
 				}
@@ -56,7 +60,7 @@ public class CollisionSystem : JobComponentSystem
 				if (damage > 0)
 				{
 					health.Value -= damage;
-					chunkHealths[i] = health;
+					chunkHealths[i] = health; //struct重新赋值
 				}
 			}
 		}
@@ -75,9 +79,9 @@ public class CollisionSystem : JobComponentSystem
 			radius = enemyRadius * enemyRadius,
 			healthType = healthType,
 			translationType = translationType,
-			transToTestAgainst = bulletGroup.ToComponentDataArray<Translation>(Allocator.TempJob)
+			transToTestAgainst = bulletGroup.ToComponentDataArray<Translation>(Allocator.TempJob) //Translation的NativeContainer
 		};
-
+		//使用一个Job，执行敌人与子弹的碰撞检测
 		JobHandle jobHandle = jobEvB.Schedule(enemyGroup, inputDependencies);
 
 		if (Settings.IsPlayerDead())
@@ -90,12 +94,14 @@ public class CollisionSystem : JobComponentSystem
 			translationType = translationType,
 			transToTestAgainst = enemyGroup.ToComponentDataArray<Translation>(Allocator.TempJob)
 		};
-
+		//使用一个Job，执行玩家和敌人的碰撞检测，依赖于敌人的jobHandle
+		//总结: 先检测敌人与子弹 后检测玩家与敌人
 		return jobPvE.Schedule(playerGroup, jobHandle);
 	}
 
 	static bool CheckCollision(float3 posA, float3 posB, float radiusSqr)
 	{
+		//简单的一个距离检测
 		float3 delta = posA - posB;
 		float distanceSquare = delta.x * delta.x + delta.z * delta.z;
 

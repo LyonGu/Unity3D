@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 [UpdateAfter(typeof(MoveForwardSystem))]
 public class TimedDestroySystem : JobComponentSystem
 {
+	//拿到已经存在的EBS
 	EndSimulationEntityCommandBufferSystem buffer;
 
 	protected override void OnCreateManager()
@@ -14,6 +16,8 @@ public class TimedDestroySystem : JobComponentSystem
 		buffer = World.Active.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 	}
 
+	//只关心有TimeToLive组件的entity
+	[BurstCompile]
 	struct CullingJob : IJobForEachWithEntity<TimeToLive>
 	{
 		public EntityCommandBuffer.Concurrent commands;
@@ -21,9 +25,10 @@ public class TimedDestroySystem : JobComponentSystem
 
 		public void Execute(Entity entity, int jobIndex, ref TimeToLive timeToLive)
 		{
+			//代码逻辑在子线程里
 			timeToLive.Value -= dt;
 			if (timeToLive.Value <= 0f)
-				commands.DestroyEntity(jobIndex, entity);
+				commands.DestroyEntity(jobIndex, entity); //销毁Entity的最终命令会在主线程里执行
 		}
 	}
 
@@ -31,7 +36,7 @@ public class TimedDestroySystem : JobComponentSystem
 	{
 		var job = new CullingJob
 		{
-			commands = buffer.CreateCommandBuffer().ToConcurrent(),
+			commands = buffer.CreateCommandBuffer().ToConcurrent(), //创建一个ECB
 			dt = Time.deltaTime
 		};
 

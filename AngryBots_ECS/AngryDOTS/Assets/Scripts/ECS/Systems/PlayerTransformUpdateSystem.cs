@@ -8,7 +8,7 @@ public class PlayerTransformUpdateSystem : ComponentSystem
 	{
 		if (Settings.IsPlayerDead())
 			return;
-
+		//玩家移动
 		Entities.WithAll<PlayerTag>().ForEach((ref Translation pos) =>
 		{
 			pos = new Translation { Value = Settings.PlayerPosition };

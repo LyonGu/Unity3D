@@ -48,6 +48,9 @@ public class EnemyBehaviour : MonoBehaviour, IConvertGameObjectToEntity
 
 	public void Convert(Entity entity, EntityManager manager, GameObjectConversionSystem conversionSystem)
 	{
+		//给Enimy添加component
+		//TurnTowardsPlayerSystem 会转向玩家
+		//MoveForwardSystem 超前运动
 		manager.AddComponent(entity, typeof(EnemyTag));
 		manager.AddComponent(entity, typeof(MoveForward));
 

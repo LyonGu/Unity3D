@@ -10,7 +10,7 @@ using UnityEngine;
 public class TurnTowardsPlayerSystem : JobComponentSystem
 {
 	[BurstCompile]
-	[RequireComponentTag(typeof(EnemyTag))]
+	[RequireComponentTag(typeof(EnemyTag))] //只有敌人
 	struct TurnJob : IJobForEach<Translation, Rotation>
 	{
 		public float3 playerPosition; 
