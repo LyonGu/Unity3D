@@ -17,7 +17,7 @@ public class GCTest : MonoBehaviour
     public Transform objs;
     public Text txt;
     private Process proc;
-    PerformanceCounter pf1;
+    //PerformanceCounter pf1;
 
     public Button btnAdd;
     public Button btnDel;
@@ -32,7 +32,7 @@ public class GCTest : MonoBehaviour
         btnAdd.onClick.AddListener(OnClckAdd);
         btnDel.onClick.AddListener(OnClckDel);
         proc = Process.GetCurrentProcess();
-        pf1 = new PerformanceCounter("Process", "Working Set - Private", proc.ProcessName);   //第二个参数就是得到只有工作集
+        //pf1 = new PerformanceCounter("Process", "Working Set - Private", proc.ProcessName);   //第二个参数就是得到只有工作集
 
 
         //验证
@@ -106,8 +106,8 @@ public class GCTest : MonoBehaviour
             //UnityEngine.Debug.Log("xxx=="+ pf1.NextValue());
             
            
-            float value = pf1.NextValue() / 1024;
-            txt.text = ((int)(value)).ToString();
+            //float value = pf1.NextValue() / 1024;
+            //txt.text = ((int)(value)).ToString();
         }
         timer += Time.deltaTime;
 

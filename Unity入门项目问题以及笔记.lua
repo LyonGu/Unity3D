@@ -21,7 +21,7 @@
 		方法1：四元素插值, 推荐这个
 		{
 			Quaternion dir = Quaternion.LookRotation(player.position - transform.position);
-        	transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.deltaTime);
+        	transform.rotation = Quaternion.Lerp(transform.                                                                           , dir, Time.deltaTime);
 		}
 
 		方法2：lookat
