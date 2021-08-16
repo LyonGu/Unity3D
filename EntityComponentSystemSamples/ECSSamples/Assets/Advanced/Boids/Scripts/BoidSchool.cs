@@ -61,11 +61,13 @@ namespace Samples.Boids
                     Center = boidSchoolLocalToWorld.Position,
                     Radius = boidSchool.InitialRadius
                 };
+                
+                //这个参数不是很明白
                 Dependency = setBoidLocalToWorldJob.Schedule(boidSchool.Count, 64, Dependency);
                 Dependency = boidEntities.Dispose(Dependency);
 
                 EntityManager.DestroyEntity(entity);
-            }).Run();
+            }).Run(); //主线程执行 不會效率低吗
         }
     }
 }

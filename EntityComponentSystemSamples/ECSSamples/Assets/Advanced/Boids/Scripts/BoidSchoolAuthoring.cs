@@ -22,6 +22,7 @@ namespace Samples.Boids
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
+            //给鱼群的Entity加上BoidSchool组件
             dstManager.AddComponentData(entity, new BoidSchool
             {
                 Prefab = conversionSystem.GetPrimaryEntity(Prefab),

@@ -8,6 +8,7 @@ using Unity.Transforms;
 // This system updates all entities in the scene with both a RotationSpeed_IJobChunk and Rotation component.
 
 // ReSharper disable once InconsistentNaming
+//[DisableAutoCreation] 禁止自动创建
 public partial class RotationSpeedSystem_IJobChunk : SystemBase
 {
     EntityQuery m_Query;
@@ -42,7 +43,14 @@ public partial class RotationSpeedSystem_IJobChunk : SystemBase
                     Value = math.mul(math.normalize(rotation.Value),
                         quaternion.AxisAngle(math.up(), rotationSpeed.RadiansPerSecond * DeltaTime))
                 };
+
             }
+            
+            //其他写法
+//            var chunkRotations1
+//                = batchInChunk.GetChunkComponentData(RotationTypeHandle);
+//            batchInChunk.SetChunkComponentData(RotationTypeHandle,
+//                new Rotation() { Value = new quaternion(0,0,0,0) });
         }
     }
 
@@ -61,7 +69,8 @@ public partial class RotationSpeedSystem_IJobChunk : SystemBase
             RotationSpeedTypeHandle = rotationSpeedType,
             DeltaTime = Time.DeltaTime
         };
-
+        
+        //这种调度变体将每个匹配块作为单个批处理。每个块都可以并行执行, 效率很高
         Dependency = job.ScheduleParallel(m_Query, 1, Dependency);
     }
 }
