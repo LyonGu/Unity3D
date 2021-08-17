@@ -207,12 +207,14 @@ namespace Doc.CodeSamples.SyBase.Tests
                     /*...*/
                 })
                 .ScheduleParallel(this.Dependency);
-
+            
+            // intermediateDependencies要依赖one Two
             JobHandle intermediateDependencies =
                 JobHandle.CombineDependencies(One, Two);
 
             NativeArray<int> result = new NativeArray<int>(1, Allocator.TempJob);
-
+            
+            //finalDependency会在one two 执行完后才执行
             JobHandle finalDependency = Job
                 .WithName("Job_Three")
                 .WithDisposeOnCompletion(result)

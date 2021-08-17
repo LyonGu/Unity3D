@@ -26,10 +26,12 @@ namespace Doc.CodeSamples.Tests
 
             // Create some test entities
             // This runs on the main thread, but it is still faster to use a command buffer
+            //ecb创建Entity会快？
             EntityCommandBuffer creationBuffer = new EntityCommandBuffer(Allocator.Temp);
             EntityArchetype archetype = EntityManager.CreateArchetype(typeof(GeneralPurposeComponentA));
             for (int i = 0; i < 10000; i++)
             {
+                //根据Archetype创建Entity
                 Entity newEntity = creationBuffer.CreateEntity(archetype);
                 creationBuffer.SetComponent<GeneralPurposeComponentA>
                 (

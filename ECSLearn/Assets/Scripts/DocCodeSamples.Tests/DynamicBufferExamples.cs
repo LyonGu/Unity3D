@@ -71,7 +71,7 @@ namespace Doc.CodeSamples.Tests
     // InternalBufferCapacity specifies how many elements a buffer can have before
     // the buffer storage is moved outside the chunk.
     [InternalBufferCapacity(8)]
-    public struct MyBufferElement : IBufferElementData
+    public struct MyBufferElement : IBufferElementData //数据是存储在chunk之外的
     {
         // Actual value each buffer element will store.
         public int Value;
@@ -103,7 +103,7 @@ namespace Doc.CodeSamples.Tests
             var entity = EntityManager.CreateEntity();
 
             #region add-with-manager
-
+            //AddBuffer 添加一个BufferElementData
             EntityManager.AddBuffer<MyBufferElement>(entity);
 
             #endregion
@@ -115,21 +115,22 @@ namespace Doc.CodeSamples.Tests
             #endregion
 
             #region reinterpret-snippet
-
+            
+            //获取buffer对象  需要实现int
             DynamicBuffer<int> intBuffer
                 = EntityManager.GetBuffer<MyBufferElement>(entity).Reinterpret<int>();
 
             #endregion
 
             #region access-manager
-
+            //通过EntityManager获取buffer对象
             DynamicBuffer<MyBufferElement> dynamicBuffer
                 = EntityManager.GetBuffer<MyBufferElement>(entity);
 
             #endregion
 
             #region lookup-snippet
-
+            //读取数据 并操作，GetBufferFromEntity 返回的是一个数组
             BufferFromEntity<MyBufferElement> lookup = GetBufferFromEntity<MyBufferElement>();
             var buffer = lookup[entity];
             buffer.Add(17);
@@ -138,7 +139,7 @@ namespace Doc.CodeSamples.Tests
             #endregion
 
             #region invalidation
-
+            //重复添加BufferData会报错，无效的
             var entity1 = EntityManager.CreateEntity();
             var entity2 = EntityManager.CreateEntity();
 
@@ -191,6 +192,7 @@ namespace Doc.CodeSamples.Tests
         //Sums the intermediate results into the final total
         public struct SumResult : IJob
         {
+            //DeallocateOnJobCompletion 执行完后自动Dispose
             [DeallocateOnJobCompletion] public NativeArray<int> sums;
 
             public void Execute()
@@ -238,7 +240,8 @@ namespace Doc.CodeSamples.Tests
                         sum[0] += intermediateSums[i];
                     }
                     //if we do not specify dependencies, the job depends on the Dependency property
-                }).Schedule();
+                }).Schedule(); //未指明依赖的话，自动依赖上一个Job
+            //如果不返回JobHandle，系统会将作业添加到它的Dependency属性中
             // Likewise, if we don't return a JobHandle, the system adds the job to its Dependency property
 
             //sum[0] will contain the result after all the jobs have finished
@@ -265,7 +268,7 @@ namespace Doc.CodeSamples.Tests
             queryDescription.All = new[] {ComponentType.ReadOnly<MyBufferElement>()};
             query = GetEntityQuery(queryDescription);
         }
-
+        //要访问IJobChunkjob中的单个缓冲区，请将缓冲区数据类型传递给job，然后使用该数据类型获取BufferAccessor
         public struct BuffersInChunks : IJobEntityBatch
         {
             //The data type and safety object
@@ -309,6 +312,7 @@ namespace Doc.CodeSamples.Tests
         protected override void OnUpdate()
         {
             //Create a native array to hold the intermediate sums
+            //CalculateChunkCount 可以计算chunk的数量
             int chunksInQuery = query.CalculateChunkCount();
             NativeArray<int> intermediateSums
                 = new NativeArray<int>(chunksInQuery, Allocator.TempJob);
