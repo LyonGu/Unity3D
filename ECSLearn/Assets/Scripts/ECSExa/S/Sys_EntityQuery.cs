@@ -58,4 +58,57 @@ public class Sys_EntityQuery : JobComponentSystem
     }
 }
 
+//namespace UseTest
+//{
+//    public struct C1 : IComponentData { }
+//
+//    [WriteGroup(typeof(C1))]
+//    public struct C2 : IComponentData { }
+//
+//    [WriteGroup(typeof(C1))]
+//    public struct C3 : IComponentData { }
+//
+//    public class ECSSystem : SystemBase
+//    {
+//        private EntityQuery query;
+//        EntityManager entityManager;
+//        protected override void OnCreate()
+//        {
+//            var queryDescription = new EntityQueryDesc
+//            {
+//                All = new ComponentType[] {
+//                    ComponentType.ReadWrite<C3>() },
+//                Options = EntityQueryOptions.FilterWriteGroup
+//            };
+//            query = GetEntityQuery(queryDescription);
+//
+//            //添加Entity测试
+//            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+//            entityManager.CreateEntity(ComponentType.ReadWrite<C1>(), ComponentType.ReadWrite<C3>());
+//            entityManager.CreateEntity(ComponentType.ReadWrite<C3>());
+//        }
+//        
+//        struct EntityQueryJob1111 : IJobForEachWithEntity<C3>
+//        {
+//            public int frameCount;
+//
+//
+//            public void Execute(Entity entity, int index, ref C3 c0)
+//            {
+//                Debug.Log($"EntityQueryJob1111===={frameCount} {index}");
+//            }
+//        }
+//
+//        protected override void OnUpdate()
+//        {
+//            var job = new EntityQueryJob1111();
+//            job.frameCount = UnityEngine.Time.frameCount;
+//            this.Dependency = job.Schedule(query, this.Dependency);
+//
+//        }
+//    }
+//
+//}
+
+
 

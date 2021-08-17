@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Doc.CodeSamples.Tests
 {
@@ -68,7 +69,8 @@ namespace Doc.CodeSamples.Tests
             var query = GetEntityQuery(description);
             Entity entity = Entity.Null;
             #region entity-query-mask
-
+            
+            //查询某个Entity是否跟Query匹配
             var mask = EntityManager.GetEntityQueryMask(query);
             bool doesMatch = mask.Matches(entity);
 
@@ -97,7 +99,9 @@ namespace Doc.CodeSamples.Tests
         {
             {
             #region define-query
-
+            
+            //表示该system不写入RotationSpeed。尽可能始终指定只读，
+            //因为对数据的读取访问限制较少，这可以帮助job scheduler程序更有效地执行作job
             EntityQuery query
                 = GetEntityQuery(typeof(RotationQuaternion),
                                  ComponentType.ReadOnly<RotationSpeed>());
@@ -105,7 +109,7 @@ namespace Doc.CodeSamples.Tests
             }
             {
                 #region query-desc
-
+                //使用EntityQueryDesc对象创建EntityQuery
                 var queryDescription = new EntityQueryDesc
                 {
                     None = new ComponentType[] { typeof(Static) },
@@ -158,6 +162,7 @@ namespace Doc.CodeSamples.Tests
 
     public class ECSSystem : SystemBase
     {
+        private EntityQuery query;
         protected override void OnCreate()
         {
             var queryDescription = new EntityQueryDesc
@@ -166,12 +171,31 @@ namespace Doc.CodeSamples.Tests
                                             ComponentType.ReadOnly<C3>() },
                 Options = EntityQueryOptions.FilterWriteGroup
             };
-            var query = GetEntityQuery(queryDescription);
+            query = GetEntityQuery(queryDescription);
+
+            //添加Entity测试
+//            EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+//            entityManager.CreateEntity(ComponentType.ReadWrite<C1>(), ComponentType.ReadWrite<C3>());
+//            entityManager.CreateEntity(ComponentType.ReadWrite<C3>());
+            
         }
+        
+//        struct EntityQueryJob1111 : IJobForEachWithEntity<C3>
+//        {
+//            public int frameCount;
+//
+//
+//            public void Execute(Entity entity, int index, ref C3 c0)
+//            {
+//                Debug.Log($"EntityQueryJob1111===={frameCount}");
+//            }
+//        }
 
         protected override void OnUpdate()
         {
-            throw new NotImplementedException();
+//            var job = new EntityQueryJob1111();
+//            job.frameCount = UnityEngine.Time.frameCount;
+//            job.Schedule(query, this.Dependency);
         }
     }
     #endregion
@@ -185,7 +209,7 @@ namespace Doc.CodeSamples.Tests
         protected override void OnUpdate()
         {
             float deltaTime = Time.DeltaTime;
-
+            //WithStoreEntityQueryInField 此方法存储为此实体生成的EntityQuery
             Entities
                 .WithStoreEntityQueryInField(ref query)
                 .ForEach(
@@ -242,10 +266,11 @@ namespace Doc.CodeSamples.Tests
         {
             // Only iterate over entities that have the SharedGrouping data set to 1
             query.SetSharedComponentFilter(new SharedGrouping { Group = 1 });
-
+            
+            //query.ToComponentDataArray  ==> 通过query直接拿到筛序到chunk数据
             var positions = query.ToComponentDataArray<Position>(Allocator.Temp);
             var displacements = query.ToComponentDataArray<Displacement>(Allocator.Temp);
-
+            //这些NativeContainer 为什么不用Dispose
             for (int i = 0; i < positions.Length; i++)
                 positions[i] =
                     new Position
@@ -273,7 +298,13 @@ namespace Doc.CodeSamples.Tests
 
         protected override void OnUpdate()
         {
-            throw new NotImplementedException();
+            //通过query筛选出所有满足的entity
+            //这个会阻塞主线程
+            //This version of the function blocks until the Job used to fill the array is complete
+            query.ToEntityArray(Allocator.Temp);
+            
+            //通过query筛选出所有满足的entity对应的Compoent数据
+            query.ToComponentDataArray<Translation>(Allocator.Temp);
         }
     }
 }
