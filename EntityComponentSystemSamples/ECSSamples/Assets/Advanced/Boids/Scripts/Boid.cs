@@ -6,7 +6,7 @@ using Unity.Transforms;
 namespace Samples.Boids
 {
     [Serializable]
-    [WriteGroup(typeof(LocalToWorld))]
+    [WriteGroup(typeof(LocalToWorld))] //如果有个system关心了Boid组件，并且标记了writeGroupFilterOption，就会剔除LocalToWorld的Entity
     public struct Boid : ISharedComponentData
     {
         public float CellRadius;

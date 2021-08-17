@@ -27,6 +27,7 @@ public class TransformRecorderAuthoring : MonoBehaviour,  IConvertGameObjectToEn
         var lengthSeconds = animationClip.length;
         var sampleRate = 1.0f / SamplesPerSecond;
         var frameCount = (int)(lengthSeconds / sampleRate);
+//        Debug.Log($"TransformRecorderAuthoring   {lengthSeconds} {frameCount}");
         if (frameCount < 2) // Minimum two frames of animation to capture.
         {
             return;
@@ -38,14 +39,16 @@ public class TransformRecorderAuthoring : MonoBehaviour,  IConvertGameObjectToEn
         ref var transformSamplesBlob = ref blobBuilder.ConstructRoot<TransformSamples>();
         var translationSamples = blobBuilder.Allocate(ref transformSamplesBlob.TranslationSamples, frameCount);
         var rotationSamples = blobBuilder.Allocate(ref transformSamplesBlob.RotationSamples, frameCount);
-
+        
+        //把动作每一帧的信息保存起来，位置和旋转
         for (int i = 0; i < frameCount; i++)
         {
             animationClip.SampleAnimation(gameObject, s);
 
             translationSamples[i] = gameObject.transform.position;
             rotationSamples[i] = gameObject.transform.rotation;
-
+            
+            //Debug.Log($"TransformRecorderAuthoring {i}  {entity.Index}=={gameObject.transform.position}  {gameObject.transform.rotation}");
             s += sampleRate;
         }
 

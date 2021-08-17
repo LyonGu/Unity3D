@@ -11,7 +11,8 @@ namespace Samples.Boids
         protected override void OnUpdate()
         {
             var deltaTime = math.min(0.05f, Time.DeltaTime);
-
+            
+            //位置和旋转
             Entities.ForEach((ref Translation translation, ref Rotation rotation, in SampledAnimationClip sampledAnimationClip) =>
             {
                 var frameIndex = sampledAnimationClip.FrameIndex;
@@ -26,7 +27,8 @@ namespace Samples.Boids
                 translation.Value = math.lerp(prevTranslation, nextTranslation, timeOffset);
                 rotation.Value = math.slerp(prevRotation, nextRotation, timeOffset);
             }).ScheduleParallel();
-
+            
+            //动画切换
             Entities.ForEach((ref SampledAnimationClip sampledAnimationClip) =>
             {
                 var currentTime = sampledAnimationClip.CurrentTime + deltaTime;

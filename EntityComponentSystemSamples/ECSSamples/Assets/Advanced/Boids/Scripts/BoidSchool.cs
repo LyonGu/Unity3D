@@ -19,7 +19,7 @@ namespace Samples.Boids
     public partial class BoidSchoolSpawnSystem : SystemBase
     {
         [BurstCompile]
-        struct SetBoidLocalToWorld : IJobParallelFor
+        struct SetBoidLocalToWorld : IJobParallelFor //并行的job
         {
             [NativeDisableContainerSafetyRestriction]
             [NativeDisableParallelForRestriction]
@@ -45,24 +45,35 @@ namespace Samples.Boids
 
         protected override void OnUpdate()
         {
+            
+            /*
+             *
+             * 当您调用Entities.ForEach.Run（）时，作业调度程序会在开始ForEach迭代之前完成system所依赖的所有调度job。==> 先完成依赖项
+             * 如果您还使用WithStructuralChanges（）作为构造的一部分，则job调度程序将完成所有正在运行和待调度的jobs。结构更改还会使对component数据的任何直接引用无效
+             */
             Entities.WithStructuralChanges().ForEach((Entity entity, int entityInQueryIndex, in BoidSchool boidSchool, in LocalToWorld boidSchoolLocalToWorld) =>
             {
+                //分配一个NavtiveContainer,如果NavtiveContainer直接用来写的话，可以用NativeArrayOptions.UninitializedMemory，会提升效率
                 var boidEntities = new NativeArray<Entity>(boidSchool.Count, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
 
                 Profiler.BeginSample("Instantiate");
                 EntityManager.Instantiate(boidSchool.Prefab, boidEntities);
                 Profiler.EndSample();
 
+               
+                
+                //All component data of type T.==> 返回的是所有Entity的LocalToWorld组件，取到对应Entity上Component需要 localToWorldFromEntity[Entity]
                 var localToWorldFromEntity = GetComponentDataFromEntity<LocalToWorld>();
+                //开始创建Job，然后调度
                 var setBoidLocalToWorldJob = new SetBoidLocalToWorld
                 {
                     LocalToWorldFromEntity = localToWorldFromEntity,
-                    Entities = boidEntities,
-                    Center = boidSchoolLocalToWorld.Position,
-                    Radius = boidSchool.InitialRadius
+                    Entities = boidEntities,  //NativeContainer
+                    Center = boidSchoolLocalToWorld.Position, //中心位置
+                    Radius = boidSchool.InitialRadius 
                 };
                 
-                //这个参数不是很明白
+                //这个参数不是很明白 64 是使用64个核
                 Dependency = setBoidLocalToWorldJob.Schedule(boidSchool.Count, 64, Dependency);
                 Dependency = boidEntities.Dispose(Dependency);
 

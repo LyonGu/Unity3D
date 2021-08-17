@@ -103,9 +103,11 @@ namespace Samples.Boids
 
         protected override void OnUpdate()
         {
+            //得到Entity的count
             var obstacleCount = m_ObstacleQuery.CalculateEntityCount();
             var targetCount = m_TargetQuery.CalculateEntityCount();
-
+            
+            //获取所有shareComponentdata的数据 这里是Boid组件
             EntityManager.GetAllUniqueSharedComponentData(m_UniqueTypes);
 
             // Each variant of the Boid represents a different value of the SharedComponentData and is self-contained,
