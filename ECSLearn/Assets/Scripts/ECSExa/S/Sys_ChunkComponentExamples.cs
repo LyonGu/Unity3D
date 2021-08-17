@@ -1,44 +1,50 @@
-﻿using Unity.Burst;
-using Unity.Collections;
-using Unity.Entities;
-using Unity.Jobs;
-using Unity.Mathematics;
-using Unity.Transforms;
-using static Unity.Mathematics.math;
-
-//chunk component包含适用于特定chunk中所有entities的数据
-/*
-尽管chunk component可以单个块具有唯一的值，但它们仍然是该chunk中entity archetype的一部分。
-因此，如果您从实体中删除了一个chunk component，ECS会将该entity移动到另一个chunk（可能是一个新的chunk）。
-同样，如果将chunk component添加到entity，则ECS会将该entity移至其他chunk，因为其archetype会更改；
-chunk component的添加不会影响原始chunk中的其余entities。
- */
-//ECS为每个chunk创建chunk component，并存储具有该archetype的实体
-/*
- 使用chunk component和通用component之间的主要区别在于，您使用不同的功能来添加，设置和删除它们
-
-目的	功能
-介绍	IComponentData
-
-ArchetypeChunk方法	
-    读	GetChunkComponentData （ArchetypeChunkComponentType ）
-    检查	[HasChunkComponent （ArchetypeChunkComponentType ）]
-    写	SetChunkComponentData （ArchetypeChunkComponentType ，T）
-
-EntityManager方法	
-    创建	AddChunkComponentData （Entity）
-    创建	AddChunkComponentData （EntityQuery，T）
-    创建	AddComponents（Entity，ComponentTypes）
-    获取类型信息	[GetComponentTypeHandle]
-    读	[GetChunkComponentData （ArchetypeChunk）]
-    读	GetChunkComponentData （Entity）
-    检查	HasChunkComponent （Entity）
-    删除	RemoveChunkComponent （Entity）
-    删除	RemoveChunkComponentData （EntityQuery）
-    写	EntityManager.SetChunkComponentData （ArchetypeChunk，T）
- */
-namespace Doc.CodeSamples.Tests
+﻿
+namespace EntityExample
 {
+    using Unity.Burst;
+    using Unity.Collections;
+    using Unity.Entities;
+    using Unity.Jobs;
+    using Unity.Mathematics;
+    using Unity.Transforms;
+    using static Unity.Mathematics.math;
+
+    //chunk component包含适用于特定chunk中所有entities的数据
+    /*
+    尽管chunk component可以单个块具有唯一的值，但它们仍然是该chunk中entity archetype的一部分。
+    因此，如果您从实体中删除了一个chunk component，ECS会将该entity移动到另一个chunk（可能是一个新的chunk）。
+    同样，如果将chunk component添加到entity，则ECS会将该entity移至其他chunk，因为其archetype会更改；
+    chunk component的添加不会影响原始chunk中的其余entities。
+     */
+    //ECS为每个chunk创建chunk component，并存储具有该archetype的实体
+    /*
+     使用chunk component和通用component之间的主要区别在于，您使用不同的功能来添加，设置和删除它们
+
+    目的	功能
+    介绍	IComponentData
+
+    ArchetypeChunk方法	
+        读	GetChunkComponentData （ArchetypeChunkComponentType ）
+        检查	[HasChunkComponent （ArchetypeChunkComponentType ）]
+        写	SetChunkComponentData （ArchetypeChunkComponentType ，T）
+
+    EntityManager方法	
+        创建	AddChunkComponentData （Entity）
+        创建	AddChunkComponentData （EntityQuery，T）
+        创建	AddComponents（Entity，ComponentTypes）
+        获取类型信息	[GetComponentTypeHandle]
+        读	[GetChunkComponentData （ArchetypeChunk）]
+        读	GetChunkComponentData （Entity）
+        检查	HasChunkComponent （Entity）
+        删除	RemoveChunkComponent （Entity）
+        删除	RemoveChunkComponentData （EntityQuery）
+        写	EntityManager.SetChunkComponentData （ArchetypeChunk，T）
+     */
+
+    public struct GeneralPurposeComponentA : IComponentData
+    {
+        public int Lifetime;
+    }
     #region declare-chunk-component
 
     //ChunkComponent 也是继承IComponentData
@@ -112,14 +118,14 @@ namespace Doc.CodeSamples.Tests
         {
             queryWithoutChunkComponent
                 = GetEntityQuery(new EntityQueryDesc()
-            {
-                All = new ComponentType[] {
+                {
+                    All = new ComponentType[] {
                     ComponentType.ReadOnly<LocalToWorld>()
                 },
-                None = new ComponentType[]{
+                    None = new ComponentType[]{
                     ComponentType.ChunkComponent<ChunkAABB>()
                 }
-            });
+                });
         }
 
         protected override void OnUpdate()
@@ -140,15 +146,16 @@ namespace Doc.CodeSamples.Tests
         {
             queryWithChunkComponent
                 = GetEntityQuery(new EntityQueryDesc()
-            {
-                All = new ComponentType[]
+                {
+                    All = new ComponentType[]
                       {
                           ComponentType.ReadOnly<LocalToWorld>(),
                           ComponentType.ChunkComponent<ChunkAABB>()
                       }
-            });
+                });
         }
 
+        //需要加BurstCompile 标签才会执行burst，否则只是多线程执行效率会降低
         [BurstCompile]
         struct AABBJob : IJobEntityBatch
         {
@@ -165,6 +172,7 @@ namespace Doc.CodeSamples.Tests
                 if (!chunkHasChanges)
                     return; // early out if the chunk transforms haven't changed
 
+                //ArchetypeChunk.GetNativeArray =>chunk里对应的组件的array
                 NativeArray<LocalToWorld> transforms
                     = batchInChunk.GetNativeArray<LocalToWorld>(LocalToWorldTypeHandleInfo);
                 UnityEngine.Bounds bounds = new UnityEngine.Bounds();
@@ -200,7 +208,7 @@ namespace Doc.CodeSamples.Tests
     {
         protected override void OnUpdate()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         private void snippets()
@@ -223,11 +231,11 @@ namespace Doc.CodeSamples.Tests
 
             EntityQueryDesc ChunksWithoutComponentADesc
                 = new EntityQueryDesc()
-            {
-                None = new ComponentType[]{
+                {
+                    None = new ComponentType[]{
                     ComponentType.ChunkComponent<ChunkComponentA>()
                 }
-            };
+                };
             EntityQuery ChunksWithoutChunkComponentA
                 = GetEntityQuery(ChunksWithoutComponentADesc);
 
@@ -241,11 +249,11 @@ namespace Doc.CodeSamples.Tests
 
             EntityQueryDesc ChunksWithChunkComponentADesc
                 = new EntityQueryDesc()
-            {
-                All = new ComponentType[] {
+                {
+                    All = new ComponentType[] {
                     ComponentType.ChunkComponent<ChunkComponentA>()
                 }
-            };
+                };
             #endregion
 
             #region archetype-chunk-component
@@ -303,4 +311,5 @@ namespace Doc.CodeSamples.Tests
             #endregion
         }
     }
+
 }

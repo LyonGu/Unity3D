@@ -116,7 +116,7 @@ namespace Doc.CodeSamples.Tests
 
             #region reinterpret-snippet
             
-            //获取buffer对象  需要实现int
+            //获取buffer对象  需要实现int 重新解释缓冲区
             DynamicBuffer<int> intBuffer
                 = EntityManager.GetBuffer<MyBufferElement>(entity).Reinterpret<int>();
 
@@ -133,7 +133,8 @@ namespace Doc.CodeSamples.Tests
             //读取数据 并操作，GetBufferFromEntity 返回的是一个数组
             BufferFromEntity<MyBufferElement> lookup = GetBufferFromEntity<MyBufferElement>();
             var buffer = lookup[entity];
-            buffer.Add(17);
+            buffer.Add(17); //就是一个Int值
+            buffer.Add(new MyBufferElement() { Value = 17 });  //完整的应该是这样写
             buffer.RemoveAt(0);
 
             #endregion
