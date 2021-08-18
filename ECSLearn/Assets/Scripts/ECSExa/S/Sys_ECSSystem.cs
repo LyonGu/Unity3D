@@ -45,6 +45,13 @@ namespace EntitysExample
                     }
                 )
                 .ScheduleParallel();
+            
+            /*
+             *   job.Run() ==> 主线程执行
+				 job.Schedule() ==> 使用一个子线程执行
+				 job.ScheduleParallel() ==> 使用多个子线程并行执行
+
+             */
         }
     }
 

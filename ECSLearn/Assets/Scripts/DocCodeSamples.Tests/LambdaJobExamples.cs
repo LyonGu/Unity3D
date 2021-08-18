@@ -7,6 +7,12 @@ namespace Doc.CodeSamples.Tests
     using UnityEngine;
     using Unity.Mathematics;
     using Random = Unity.Mathematics.Random;
+    
+    /*xxx 代表components
+     *1 Entities.ForEach( Entity e, int entityInQueryIndex, xxxx)
+     *2 Entities.ForEach(int entityInQueryIndex, xxxx)
+     *3 Entities.ForEach(xxxx)
+     */
 
     #region entities-foreach-example
 
@@ -14,6 +20,8 @@ namespace Doc.CodeSamples.Tests
     {
         protected override void OnUpdate()
         {
+            //要访问与entity关联的component，您必须将该component类型的参数传递给lambda函数。
+            //编译器会自动将传递给函数的所有components作为必需components添加到entity query中
             Entities
                 .ForEach((ref Translation translation,
                 in Velocity velocity) =>
@@ -35,17 +43,21 @@ namespace Doc.CodeSamples.Tests
             Random randomGen = new Random(seed++);
             NativeArray<float> randomNumbers
                 = new NativeArray<float>(500, Allocator.TempJob);
-
+            //Job.WithCode构造是一种将函数作为单个后台job运行的简便方法。
+            //您甚至可以在主线程上运行Job.WithCode，并且仍然可以利用Burst编译来加快执行速度。
             Job.WithCode(() =>
             {
                 for (int i = 0; i < randomNumbers.Length; i++)
                 {
                     randomNumbers[i] = randomGen.NextFloat();
                 }
-            }).Schedule();
-
+            }).Schedule(); //只能使用Schedule
+            
+            
             // To get data out of a job, you must use a NativeArray
             // even if there is only one value
+            ///想要在job外获取data，你必须使用一个本地化数组
+            // 即使他只有一个值
             NativeArray<float> result
                 = new NativeArray<float>(1, Allocator.TempJob);
 
@@ -56,6 +68,11 @@ namespace Doc.CodeSamples.Tests
                     result[0] += randomNumbers[i];
                 }
             }).Schedule();
+
+//            Job
+//                .WithDisposeOnCompletion(result)
+//                .WithDisposeOnCompletion(randomNumbers)
+//                .WithCode(() => { });
 
             // This completes the scheduled jobs to get the result immediately, but for
             // better efficiency you should schedule jobs early in the frame with one
@@ -112,6 +129,7 @@ namespace Doc.CodeSamples.Tests
         {
             //The query variable can be accessed here because we are
             //using WithStoreEntityQueryInField(query) in the entities.ForEach below
+            //创建一个本地化数组，该数组具有足够的空间来为query选择的每个entity存储一个值
             int entitiesInQuery = query.CalculateEntityCount();
 
             //Create a native array to hold the intermediate sums
@@ -132,7 +150,7 @@ namespace Doc.CodeSamples.Tests
                 .WithName("IntermediateSums")
                 .ScheduleParallel(); // Execute in parallel for each chunk of entities
 
-            //Schedule the second job, which depends on the first
+            //Schedule the second job, which depends on the first  自动依赖第一个job
             Job
                 .WithCode(() =>
             {
@@ -190,11 +208,12 @@ namespace Doc.CodeSamples.Tests
         private EntityQuery query;
         protected override void OnUpdate()
         {
+            //CalculateEntityCount 使用此计数来创建一个本地化数组，该数组具有足够的空间来为query选择的每个entity存储一个值
             int dataCount = query.CalculateEntityCount();
             NativeArray<float> dataSquared
                 = new NativeArray<float>(dataCount, Allocator.Temp);
             Entities
-                .WithStoreEntityQueryInField(ref query)
+                .WithStoreEntityQueryInField(ref query) //[WithStoreEntityQueryInField（ref query）]和ref参数修饰符。此函数将query的引用分配给您提供的字段
                 .ForEach((int entityInQueryIndex, in Data data) =>
                 {
                     dataSquared[entityInQueryIndex] = data.Value * data.Value;
@@ -221,7 +240,7 @@ namespace Doc.CodeSamples.Tests
             #region with-change-filter
 
             Entities
-                .WithChangeFilter<Source>()
+                .WithChangeFilter<Source>() //当具有Source组件的另一个entity发生更改时,才处理该当前entity component
                 .ForEach((ref Destination outputData,
                     in Source inputData) =>
                     {
@@ -253,6 +272,7 @@ namespace Doc.CodeSamples.Tests
         protected override void OnUpdate()
         {
             List<Cohort> cohorts = new List<Cohort>();
+            //具有shared component的entity与其他具有相同shared component值的entities分组在一起
             EntityManager.GetAllUniqueSharedComponentData<Cohort>(cohorts);
             foreach (Cohort cohort in cohorts)
             {
@@ -315,7 +335,7 @@ namespace Doc.CodeSamples.Tests
         protected override void OnUpdate()
         {
             #region lambda-params
-
+            //可以获取当前Entity作为参数
             Entities.ForEach(
                 (Entity entity,
                     int entityInQueryIndex,
