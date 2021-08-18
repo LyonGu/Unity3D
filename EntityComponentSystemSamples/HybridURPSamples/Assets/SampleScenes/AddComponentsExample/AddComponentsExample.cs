@@ -73,7 +73,7 @@ public class AddComponentsExample : MonoBehaviour
         };
 
         var spawnHandle = spawnJob.Schedule(EntityCount, 128);
-        spawnHandle.Complete();
+        spawnHandle.Complete(); //等待这个job完成
 
         ecb.Playback(entityManager);
         ecb.Dispose();
