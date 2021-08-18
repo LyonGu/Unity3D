@@ -40,7 +40,7 @@ namespace Doc.CodeSamples.Tests
 
         protected override void OnUpdate()
         {
-            Random randomGen = new Random(seed++);
+            Random randomGen = new Random(seed++); //随机种子
             NativeArray<float> randomNumbers
                 = new NativeArray<float>(500, Allocator.TempJob);
             //Job.WithCode构造是一种将函数作为单个后台job运行的简便方法。
@@ -49,7 +49,7 @@ namespace Doc.CodeSamples.Tests
             {
                 for (int i = 0; i < randomNumbers.Length; i++)
                 {
-                    randomNumbers[i] = randomGen.NextFloat();
+                    randomNumbers[i] = randomGen.NextFloat(); //返回一个0~1的随机数
                 }
             }).Schedule(); //只能使用Schedule
             
@@ -130,6 +130,7 @@ namespace Doc.CodeSamples.Tests
             //The query variable can be accessed here because we are
             //using WithStoreEntityQueryInField(query) in the entities.ForEach below
             //创建一个本地化数组，该数组具有足够的空间来为query选择的每个entity存储一个值
+            //使用WithStoreEntityQueryInField来存储query，下一帧调用OnUpdate的时候就能准确计算出个数了
             int entitiesInQuery = query.CalculateEntityCount();
 
             //Create a native array to hold the intermediate sums
@@ -187,7 +188,7 @@ namespace Doc.CodeSamples.Tests
 
             Entities.WithAll<LocalToWorld>()
                 .WithAny<Rotation, Translation, Scale>()
-                .WithNone<LocalToParent>()
+                .WithNone<LocalToParent>() //LocalToParent 表示从本地空间到父级本地空间的转换  
                 .ForEach((ref Destination outputData, in Source inputData) =>
                 {
                     /* do some work */
@@ -450,7 +451,7 @@ namespace Doc.CodeSamples.Tests
             Random rnd = new Random((uint)(dt * 100000));
             //rnd.InitState((uint)(dt * 100000));
 
-
+            //依赖于上一帧job执行完 MoveJobHandle, cullJobHandle
             JobHandle spawnJobHandle = Entities
                 .ForEach((int entityInQueryIndex,
                     in SpawnParticles spawn,
@@ -467,7 +468,7 @@ namespace Doc.CodeSamples.Tests
                         Translation spawnedOffset = new Translation()
                         {
                             Value = center.Position +
-                                rnd.NextFloat3(-spawn.Offset, spawn.Offset)
+                                rnd.NextFloat3(-spawn.Offset, spawn.Offset)  //返回一个随机的float3
                         };
                         Velocity spawnedVelocity = new Velocity()
                         {

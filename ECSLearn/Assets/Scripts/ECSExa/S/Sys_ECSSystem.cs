@@ -25,7 +25,7 @@ namespace EntitysExample
 
     
             EntityArchetype entityArchetype = EntityManager.CreateArchetype(typeof(Velocity), typeof(Position));
-            EntityManager.CreateEntity(entityArchetype, 1000);
+//            EntityManager.CreateEntity(entityArchetype, 1000);
         }
 
         protected override void OnUpdate()

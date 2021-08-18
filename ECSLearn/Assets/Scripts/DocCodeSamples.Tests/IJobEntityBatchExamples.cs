@@ -77,6 +77,17 @@ namespace Doc.CodeSamples.Tests
             job.deltaTime = this.Time.DeltaTime;
 
             int batchesPerChunk = 4; // Partition each chunk into this many batches. Each batch will be processed concurrently.
+            
+           
+            /*
+             *  //https://zhuanlan.zhihu.com/p/361627288
+             * batchesPerChunk默认情况下是1，此时和IJobChunk的效果是一样的，
+             * 根据Chunk个数去生成对应数量的Job，但是这样不够灵活，如果某个Job计算量特别大，但是里面用到的实体又都在一个Chunk里，就无法再给它”减负“了。
+             * 此时可以借助batchesPerChunk将这个Job进行进一步的分割，batchesPerChunk的值就是你想把这个Chunk中的实体分成几批对应的也就会生成几个Job了
+                
+                会反应出一个Job调度后最终实际生成了几个Job
+             */
+            //执行ScheduleParallel后，会产生4个job，每个job处理（总筛选出的Entity数目/4）
             this.Dependency = job.ScheduleParallel(query, batchesPerChunk, this.Dependency);
         }
     }

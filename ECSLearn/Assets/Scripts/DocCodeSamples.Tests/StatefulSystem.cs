@@ -81,6 +81,7 @@ namespace Doc.CodeSamples.Tests
                     // If out of time, destroy the entity
                     if (gpA.Lifetime <= 0)
                         {
+                            //SystemStateComponentData不会删除，其他的component数据会被删
                             parallelWriterECB.DestroyEntity(entityInQueryIndex, entity);
                         }
                     })

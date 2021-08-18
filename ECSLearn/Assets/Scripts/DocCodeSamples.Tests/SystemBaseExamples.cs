@@ -83,6 +83,7 @@ namespace Doc.CodeSamples.SyBase.Tests
 
         protected override void OnUpdate()
         {
+            //持久化NativeContainer Persistent
             NativeArray<int> sequence = EndlessSequence; // Can only capture local variables
             if (!sequence.IsCreated)
             {
@@ -106,6 +107,7 @@ namespace Doc.CodeSamples.SyBase.Tests
 
         protected override void OnDestroy()
         {
+            //执行NativeContainer的Dispose
             if (EndlessSequence.IsCreated)
                 EndlessSequence.Dispose();
         }
@@ -180,7 +182,7 @@ namespace Doc.CodeSamples.SyBase.Tests
                     /*...*/
                     result[0] = 1;
                 })
-                .Schedule();
+                .Schedule(); //自动依赖前2个JobHandle
         }
 
         #endregion

@@ -32,7 +32,7 @@ namespace Doc.CodeSamples.Tests
                         = GetComponent<LocalToWorld>(target.entity);
                     float3 targetPosition = targetTransform.Position;
 
-                    // Calculate the rotation
+                    // Calculate the rotation 另一种旋转方式，超向目标
                     float3 displacement = targetPosition - transform.Position;
                     float3 upReference = new float3(0, 1, 0);
                     quaternion lookRotation =
@@ -95,7 +95,9 @@ namespace Doc.CodeSamples.Tests
         {
             // Read-write data in the current chunk
             public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
-
+            
+            public ComponentTypeHandle<Unity.Transforms.Rotation> RotationTypeHandleAccessor;
+            
             // Read-only data in the current chunk
             [ReadOnly]
             public ComponentTypeHandle<Target> TargetTypeHandleAccessor;
@@ -103,6 +105,7 @@ namespace Doc.CodeSamples.Tests
             // Read-only data stored (potentially) in other chunks
             [ReadOnly]
             public ComponentDataFromEntity<LocalToWorld> EntityPositions;
+            
 
             // Non-entity data
             public float deltaTime;
@@ -114,6 +117,9 @@ namespace Doc.CodeSamples.Tests
                     = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
                 NativeArray<Target> targets
                     = batchInChunk.GetNativeArray<Target>(TargetTypeHandleAccessor);
+                
+                NativeArray<Unity.Transforms.Rotation> rotations
+                    = batchInChunk.GetNativeArray<Unity.Transforms.Rotation>(RotationTypeHandleAccessor);
 
                 for (int i = 0; i < positions.Length; i++)
                 {
@@ -125,14 +131,26 @@ namespace Doc.CodeSamples.Tests
                         continue;
 
                     // Update translation to move the chasing enitity toward the target
-                    float3 targetPosition = EntityPositions[targetEntity].Position;
+                    float3 targetPosition = EntityPositions[targetEntity].Position; //获取目标target的位置
                     float3 chaserPosition = positions[i].Value;
+                    quaternion curRotation = rotations[i].Value;
 
+                    //朝目标移动
                     float3 displacement = targetPosition - chaserPosition;
                     positions[i] = new Translation
                     {
                         Value = chaserPosition + displacement * deltaTime
                     };
+                    
+                    //转向目标
+                    float3 upReference = new float3(0, 1, 0);
+                    quaternion lookRotation =
+                        quaternion.LookRotationSafe(displacement, upReference);
+                    rotations[i] = new Unity.Transforms.Rotation()
+                    {
+                        Value = math.slerp(curRotation, lookRotation, deltaTime)
+                    };
+                   
                 }
             }
         }
@@ -143,6 +161,7 @@ namespace Doc.CodeSamples.Tests
             query = this.GetEntityQuery
                 (
                     typeof(Translation),
+                    typeof(Unity.Transforms.Rotation),
                     ComponentType.ReadOnly<Target>()
                 );
         }
@@ -157,8 +176,11 @@ namespace Doc.CodeSamples.Tests
                 this.GetComponentTypeHandle<Translation>(false);
             job.TargetTypeHandleAccessor =
                 this.GetComponentTypeHandle<Target>(true);
+            
+            job.RotationTypeHandleAccessor = this.GetComponentTypeHandle<Unity.Transforms.Rotation>(false);
 
             // Set the component data lookup field
+            //这个是为了拿到所有localWorld的数据
             job.EntityPositions = this.GetComponentDataFromEntity<LocalToWorld>(true);
 
             // Set non-ECS data fields
@@ -235,6 +257,7 @@ namespace Doc.CodeSamples.Tests
             #region lookup-ijobchunk-set
 
             var job = new ChaserSystemJob();
+            //拿到所有Entity的LocalToWorld组件数据，使用Entity作为下标获取
             job.EntityPositions = this.GetComponentDataFromEntity<LocalToWorld>(true);
             #endregion
             // Set the chunk data accessors
