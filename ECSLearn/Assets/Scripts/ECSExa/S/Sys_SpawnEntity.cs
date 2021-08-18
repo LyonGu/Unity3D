@@ -11,7 +11,6 @@ public class Sys_SpawnEntity : SystemBase
         base.OnCreate();
         
         //通过archetype 创建Entity
-        var EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         EntityArchetype archetype = EntityManager.CreateArchetype(typeof(ComponentA), typeof(ComponentB));
         EntityManager.CreateEntity(archetype,1);
         
