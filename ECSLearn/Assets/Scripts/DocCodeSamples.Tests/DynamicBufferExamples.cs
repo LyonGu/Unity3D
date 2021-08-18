@@ -327,10 +327,10 @@ namespace Doc.CodeSamples.Tests
             //Schedule the second job, which depends on the first
             SumResult finalSumJob = new SumResult();
             finalSumJob.sums = intermediateSums;
-            NativeArray<int> finalSum = new NativeArray<int>(1, Allocator.Temp);
+            NativeArray<int> finalSum = new NativeArray<int>(1, Allocator.TempJob);
             finalSumJob.result = finalSum;
             this.Dependency = finalSumJob.Schedule(this.Dependency);
-
+            //如果不返回JobHandle，系统会将作业添加到它的Dependency属性中
             this.CompleteDependency();
             Debug.Log("Sum of all buffers: " + finalSum[0]);
             finalSum.Dispose();

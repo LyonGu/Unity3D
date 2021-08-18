@@ -265,12 +265,13 @@ namespace Doc.CodeSamples.Tests
         protected override void OnUpdate()
         {
             // Only iterate over entities that have the SharedGrouping data set to 1
+            // 根据shareComponent的值来筛选
             query.SetSharedComponentFilter(new SharedGrouping { Group = 1 });
             
             //query.ToComponentDataArray  ==> 通过query直接拿到筛序到chunk数据
             var positions = query.ToComponentDataArray<Position>(Allocator.Temp);
             var displacements = query.ToComponentDataArray<Displacement>(Allocator.Temp);
-            //这些NativeContainer 为什么不用Dispose
+            //这些NativeContainer 为什么不用Dispose 是因为？？ Allocator.Temp
             for (int i = 0; i < positions.Length; i++)
                 positions[i] =
                     new Position
