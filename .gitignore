@@ -263,3 +263,6 @@ AngryBots_ECS/AngryDOTS/.vs/
 AngryBots_ECS/AngryDOTS/obj/
 EntityComponentSystemSamples/HybridURPSamples/Library/
 EntityComponentSystemSamples/HybridURPSamples/Logs/
+EntityComponentSystemSamples/HybridURPSamples/Assets/SceneDependencyCache/
+EntityComponentSystemSamples/HybridURPSamples/Builds/
+EntityComponentSystemSamples/HybridURPSamples/.vsconfig
