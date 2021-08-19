@@ -13,6 +13,7 @@ namespace Samples.FixedTimestepSystem
     public partial class VariableRateSpawnerSystem : SystemBase
     {
         private BeginSimulationEntityCommandBufferSystem ecbSystem;
+        
         protected override void OnCreate()
         {
             ecbSystem = World.GetExistingSystem<BeginSimulationEntityCommandBufferSystem>();
@@ -36,6 +37,7 @@ namespace Samples.FixedTimestepSystem
                     {
                         SpawnTime = spawnTime,
                         SpawnPos = spawnPos,
+                        entity = projectileEntity //额外加的，之前没有
                     });
                 }).Schedule();
             ecbSystem.AddJobHandleForProducer(Dependency);

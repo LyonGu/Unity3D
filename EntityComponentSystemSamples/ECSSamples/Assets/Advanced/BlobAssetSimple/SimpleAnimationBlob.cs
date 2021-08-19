@@ -46,18 +46,20 @@ public struct SimpleAnimationBlob
     {
         using (var blob = new BlobBuilder(Allocator.TempJob))
         {
+            // ConstructRoot 构造一个blob，并且分配内存，返回blob的指针
             ref var anim = ref blob.ConstructRoot<SimpleAnimationBlob>();
             int keyCount = 12;
 
-            float endTime = curve[curve.length - 1].time;
+            float endTime = curve[curve.length - 1].time; //AnimationCurve中每一帧的结束时间
             anim.InvLength = 1.0F / endTime;
             anim.KeyCount = keyCount;
-
+            
+            //blob 分配内存给 anim.Keys BlobArray
             var array = blob.Allocate(ref anim.Keys, keyCount + 1);
             for (int i = 0; i < keyCount; i++)
             {
                 float t = (float) i / (float)(keyCount - 1) * endTime;
-                array[i] = curve.Evaluate(t);
+                array[i] = curve.Evaluate(t); //返回t时刻，curve上对应的值
             }
             array[keyCount] = array[keyCount-1];
 

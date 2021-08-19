@@ -10,6 +10,7 @@ public class RotationSpeedFromBuildSettings_IJobChunk : MonoBehaviour, IConvertG
 {
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
+        //获取BuildConfiguration配置
         var rotationSpeedSetting = conversionSystem.GetBuildConfigurationComponent<RotationSpeedSetting>();
 
         // Change rotation speed
