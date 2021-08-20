@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7b6d56b637a8b48aec2e2b36b5910b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadiansPerSecond: 1
+  RadiansPerSecond: 3
 --- !u!1 &465801020
 GameObject:
   m_ObjectHideFlags: 0

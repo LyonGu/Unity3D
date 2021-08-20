@@ -27,6 +27,14 @@ public class Sys_SpawnEntity : SystemBase
         
         //EntityManager.Instantiate一个Entity
         EntityManager.Instantiate(e);
+        
+        //主动创建一个system
+        Hxp.DissableAutoCreate.Test.Sys_DissableAutoSystem s = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<Hxp.DissableAutoCreate.Test.Sys_DissableAutoSystem>();
+        //还可以主动添加到个group里
+//        SimulationSystemGroup simulationSystemGroup = World.GetOrCreateSystem<SimulationSystemGroup>();
+//        simulationSystemGroup.AddSystemToUpdateList(s);
+
+        
 
     }
 

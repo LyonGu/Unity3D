@@ -7,11 +7,11 @@ using Unity.Transforms;
 using UnityEngine;
 
 // 作用于命名空间下，Hxp.DissableAutoCreate.Test下所有system都不会自动运行了
-[assembly: DisableAutoCreation]
+//[assembly: DisableAutoCreation]
 namespace Hxp.DissableAutoCreate.Test
 {
    
-    //[DisableAutoCreation]  如果只想针对某个特定的system，就直接在classs上方添加属性
+    [DisableAutoCreation]  //如果只想针对某个特定的system，就直接在classs上方添加属性
     public class Sys_DissableAutoSystem : SystemBase
     {
         protected override void OnCreate()
@@ -47,6 +47,8 @@ namespace Hxp.DissableAutoCreate.Test
 //        }).Schedule();
         }
     }
+    
+    [DisableAutoCreation]
     public class Sys_DissableAutoSystem1 : SystemBase
     {
         protected override void OnCreate()

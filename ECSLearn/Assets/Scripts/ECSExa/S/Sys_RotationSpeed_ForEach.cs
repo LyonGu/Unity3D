@@ -17,7 +17,7 @@ public class Sys_RotationSpeed_ForEach : SystemBase
 
         //Rotation是系统自带的组件，我们的Cube在转换为实体时，也会自动附加Rotation组件
         //jobHandle 可以作为其他job的依赖项
-        this.Dependency = Entities.ForEach((ref Rotation rotation, in Com_RotationSpeed_ForEach1 rotationSpeed) =>
+        this.Dependency = Entities.ForEach((ref Rotation rotation, in Com_RotationSpeed_ForEach rotationSpeed) =>
         {
             rotation.Value = math.mul(math.normalize(rotation.Value),
                 quaternion.AxisAngle(math.up(), rotationSpeed.RadiansPerSecond * deltaTime));
