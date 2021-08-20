@@ -20,6 +20,7 @@ public struct MeshBBFactorySettings
     public float3 MaxBoundingBox;
 }
 
+//继承GameObjectConversionSystem
 public class MeshBBConversionSystem : GameObjectConversionSystem
 {
     protected override void OnCreate()
