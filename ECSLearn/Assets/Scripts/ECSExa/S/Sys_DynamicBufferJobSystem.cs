@@ -114,7 +114,7 @@ namespace EntitysExample
             this.Dependency = finalSumJob.Schedule(this.Dependency);
 
             this.CompleteDependency();
-            Debug.Log("Sum of all buffers: " + finalSum[0]);
+            //Debug.Log("Sum of all buffers: " + finalSum[0]);
             finalSum.Dispose();
         }
     }

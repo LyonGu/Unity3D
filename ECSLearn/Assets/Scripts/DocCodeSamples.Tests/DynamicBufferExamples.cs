@@ -332,7 +332,7 @@ namespace Doc.CodeSamples.Tests
             this.Dependency = finalSumJob.Schedule(this.Dependency);
             //如果不返回JobHandle，系统会将作业添加到它的Dependency属性中
             this.CompleteDependency();
-            Debug.Log("Sum of all buffers: " + finalSum[0]);
+            //Debug.Log("Sum of all buffers: " + finalSum[0]);
             finalSum.Dispose();
         }
     }
