@@ -6,6 +6,8 @@ using Random = Unity.Mathematics.Random;
 
 namespace DOTS_EntityPrefabs.Scripts
 {
+    
+    //继承ComponentSystem，Entities.ForEach直接在主线程执行，以后可能会被废弃，建议使用SystemBase
     public class EntitySpawnerSystem : ComponentSystem {
 
         private float spawnTimer;
@@ -32,9 +34,9 @@ namespace DOTS_EntityPrefabs.Scripts
 
                 Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) => {
                     //在主线程上执行
-                    System.Diagnostics.Stopwatch stopwatch1 = new System.Diagnostics.Stopwatch();
-                    stopwatch1.Start();
-                    for (int i = 0; i < 1000; i++)
+                    /*System.Diagnostics.Stopwatch stopwatch1 = new System.Diagnostics.Stopwatch();
+                    stopwatch1.Start();*/
+                    //for (int i = 0; i < 1000; i++)
                     {
                         Entity spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.prefabEntity);
 
@@ -42,9 +44,9 @@ namespace DOTS_EntityPrefabs.Scripts
                             new Translation { Value = new float3(random.NextFloat(-5f, 5f), random.NextFloat(-5f, 5f), 0) }
                         );
                     }
-                    stopwatch1.Stop();
-                    var totalT2 = stopwatch1.Elapsed.Milliseconds;
-                    Debug.Log($"EntityCommandBuffer create Entity===={totalT2} 毫秒");
+                    /*stopwatch1.Stop();
+                    var totalT2 = stopwatch1.Elapsed.Milliseconds;*/
+                    // Debug.Log($"EntityCommandBuffer create Entity===={totalT2} 毫秒");
 
                     
 
