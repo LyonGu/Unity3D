@@ -109,6 +109,9 @@ namespace ECS_DrawSprite
 
 }
 
+
+    
+[DisableAutoCreation]
 public class MoveSystem : ComponentSystem {
 
     protected override void OnUpdate()
@@ -121,7 +124,7 @@ public class MoveSystem : ComponentSystem {
     }
 
 }
-
+[DisableAutoCreation]
 public class RotatorSystem : ComponentSystem {
 
     protected override void OnUpdate() {
@@ -132,7 +135,7 @@ public class RotatorSystem : ComponentSystem {
     }
 
 }
-
+[DisableAutoCreation]
 public class ScalerSystem : ComponentSystem {
 
     protected override void OnUpdate() {
