@@ -22,10 +22,12 @@ public class PlayerAttackSystem : ComponentSystem {
                     Entity targetEntity = targetDynamicBuffer[i].targetEntity;
 
                     if (targetEntity != Entity.Null && EntityManager.Exists(targetEntity)) {
-                        // Has Target
+                        // Has Target 
+                        //GetComponentDataFromEntity 拿到所有Entity的Translation数据
                         ComponentDataFromEntity<Translation> translationComponentData = GetComponentDataFromEntity<Translation>(true);
                         float3 targetPosition = translationComponentData[targetEntity].Value;
-
+                        
+                        //创建一个子弹entity
                         Entity kunaiEntity = entityCommandBuffer.Instantiate(GameHandler.pfKunaiEntity);
                         float3 aimDirection = math.normalize(targetPosition - playerPosition);
 
@@ -35,7 +37,8 @@ public class PlayerAttackSystem : ComponentSystem {
                     }
                 }
             });
-
+            
+            //excute ecb
             entityCommandBuffer.Playback(EntityManager);
         }
     }
