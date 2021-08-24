@@ -18,12 +18,14 @@ public class ZombieSpawnSystem : ComponentSystem {
         zombieSpawnTimer -= Time.DeltaTime;
         if (zombieSpawnTimer <= 0f) {
             // Spawn Zombie
-            zombieSpawnTimer = .3f;
+            zombieSpawnTimer = .03f;
             SpawnZombie();
         }
     }
 
     private void SpawnZombie() {
+        if(GameHandler.pfZombieEntity == Entity.Null)
+            return;
         Entity zombieEntity = EntityManager.Instantiate(GameHandler.pfZombieEntity);
         EntityManager.SetComponentData(zombieEntity, new Translation { Value = GetRandomDir() * random.NextFloat(12f, 15f) });
     }

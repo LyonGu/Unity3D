@@ -10,8 +10,17 @@ public class CreateURP : MonoBehaviour
     private UniversalRenderPipelineAsset low;
 
     // Start is called before the first frame update
+
+    public Camera mainCamera;
+    public Camera uiCamera;
+    public Camera blurCamera;
+
+    public RenderTexture outputRt;
+    
     void Start()
     {
+
+
         //渲染配置文件的设置
 
         //获取不透明物体的深度贴图
@@ -70,8 +79,31 @@ public class CreateURP : MonoBehaviour
             GraphicsSettings.renderPipelineAsset = hight;
 
         //摄像机可以绑定多个渲染器（就是渲染配置文件 renderlist中的文件），代码里动态切换每个渲染器 设置index索引即可
-        Camera.main.GetComponent<UniversalAdditionalCameraData>().SetRenderer(0);
+        //UniversalAdditionalCameraData universalAdditionalCameraData = mainCamera.GetComponent<UniversalAdditionalCameraData>();
+        //universalAdditionalCameraData.SetRenderer(0);
 
+        //// 相机属性设置
+        //universalAdditionalCameraData.cameraStack.Clear();
+        //universalAdditionalCameraData.renderType = CameraRenderType.Overlay;
+        //相机输出设置
+        var rt = RenderTexture.GetTemporary(1334, 750, 24, RenderTextureFormat.ARGB32);
+        mainCamera.targetTexture = rt;
+
+        //StartCoroutine("ResetCameraSetting");
+
+
+    }
+
+    private IEnumerator ResetCameraSetting()
+    {
+        yield return new WaitForSeconds(3);
+        Debug.Log("恢复camera为Base");
+        UniversalAdditionalCameraData universalAdditionalCameraData = mainCamera.GetComponent<UniversalAdditionalCameraData>();
+        universalAdditionalCameraData.renderType = CameraRenderType.Base;
+        universalAdditionalCameraData.cameraStack.Add(uiCamera);
+        universalAdditionalCameraData.cameraStack.Add(blurCamera);
+
+        mainCamera.targetTexture = null;
     }
 
     // Update is called once per frame

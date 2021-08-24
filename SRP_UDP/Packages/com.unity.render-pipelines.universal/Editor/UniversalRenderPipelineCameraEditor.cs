@@ -528,6 +528,8 @@ namespace UnityEditor.Rendering.Universal
 
             if (m_StackSettingsFoldout.value)
             {
+                if (m_LayerList == null)
+                    return;
                 m_LayerList.DoLayoutList();
                 m_AdditionalCameraDataSO.ApplyModifiedProperties();
 
