@@ -15,7 +15,7 @@ public class PlayerTargetingSystem : ComponentSystem {
             NativeList<Entity> zombieEntityList = new NativeList<Entity>(Allocator.Temp);
 
             Entities.WithAll<Tag_Zombie>().ForEach((Entity zombieEntity, ref Translation zombieTranslation) => {
-                float targetRange = 12f;
+                float targetRange = 120f;
                 float zombieDistance = math.distance(playerPosition, zombieTranslation.Value);
 
                 if (zombieDistance < targetRange) {
@@ -26,7 +26,7 @@ public class PlayerTargetingSystem : ComponentSystem {
 
             foreach (Entity zombieEntity in zombieEntityList) {
                 Entity targetEntity = zombieEntity;
-                if (targetDynamicBuffer.Length < 5) {
+                if (targetDynamicBuffer.Length < 500) {
                     targetDynamicBuffer.Add(new PlayerTargetElement { targetEntity = targetEntity });
                 }
             }

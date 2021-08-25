@@ -5,5 +5,6 @@ using Unity.Mathematics;
 public struct Kunai : IComponentData {
 
     public float3 targetPosition;
+    public Entity e;
 
 }

@@ -184,6 +184,8 @@ namespace EntityExample
                 batchInChunk.SetChunkComponentData(
                     ChunkAabbTypeHandleInfo,
                     new ChunkAABB() { Value = bounds.ToAABB() });
+
+                transforms.Dispose();
             }
         }
 

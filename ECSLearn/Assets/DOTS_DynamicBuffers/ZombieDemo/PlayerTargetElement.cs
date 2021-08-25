@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-[InternalBufferCapacity(5)]
+[InternalBufferCapacity(500)]
 public struct PlayerTargetElement : IBufferElementData {
 
     public Entity targetEntity;

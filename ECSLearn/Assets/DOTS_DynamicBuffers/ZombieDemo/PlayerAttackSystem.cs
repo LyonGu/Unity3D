@@ -33,7 +33,7 @@ public class PlayerAttackSystem : ComponentSystem {
 
                         entityCommandBuffer.SetComponent(kunaiEntity, new Translation { Value = playerPosition });
                         entityCommandBuffer.SetComponent(kunaiEntity, new Rotation { Value = quaternion.EulerXYZ(0, 0, GetAngleFromVector(aimDirection) - math.PI / 2f) });
-                        entityCommandBuffer.SetComponent(kunaiEntity, new Kunai { targetPosition = targetPosition });
+                        entityCommandBuffer.SetComponent(kunaiEntity, new Kunai { targetPosition = targetPosition , e = kunaiEntity});
                     }
                 }
             });
