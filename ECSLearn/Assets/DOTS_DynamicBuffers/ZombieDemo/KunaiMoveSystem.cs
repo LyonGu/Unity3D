@@ -171,6 +171,7 @@ public class KunaiMoveSystem_JobEX : SystemBase
         NativeArray<KunaiData> kunaiDataArray = new NativeArray<KunaiData>(count, Allocator.TempJob);
         float deltaTime = Time.DeltaTime;
         JobHandle MoveJobHandle = Entities
+//            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)
             .ForEach((Entity entity, int entityInQueryIndex,ref Translation translation, in Kunai kunai) =>
             {
                 float3 moveDir = math.normalize(kunai.targetPosition - translation.Value);
@@ -191,6 +192,7 @@ public class KunaiMoveSystem_JobEX : SystemBase
             .Schedule(this.Dependency);
         
         this.Dependency = Entities
+//            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)  默认就这样
             .ForEach((Entity entity, int entityInQueryIndex, ref ZombieHealth zombieHealth, in Translation translation,in Tag_Zombie tag_Zombie) =>
             {
                 int count = kunaiDataArray.Length;
