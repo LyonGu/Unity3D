@@ -42,7 +42,7 @@ using Unity.Mathematics;
 //
 //}
 
-
+// 使用SystemBase
 //public class KunaiMoveSystem_EX : SystemBase
 //{
 //    private EntityQuery _entityQuery;
@@ -137,7 +137,7 @@ using Unity.Mathematics;
 //
 //}
 
-
+// 使用多线程优化 
 public class KunaiMoveSystem_JobEX : SystemBase
 {
     private EntityQuery Zquery; 
@@ -189,7 +189,7 @@ public class KunaiMoveSystem_JobEX : SystemBase
                 };
             })
             .WithName("MoveKunais")
-            .Schedule(this.Dependency);
+            .ScheduleParallel(this.Dependency); //开多个子线程
         
         this.Dependency = Entities
 //            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)  默认就这样
@@ -216,7 +216,8 @@ public class KunaiMoveSystem_JobEX : SystemBase
             })
             .WithName("CheckDisAndDestroyEntities")
             .WithDisposeOnCompletion(kunaiDataArray)
-            .Schedule(MoveJobHandle);
+            .WithReadOnly(kunaiDataArray)
+            .ScheduleParallel(MoveJobHandle);  //这个可以开启多个线程
 //        this.Dependency
 //            = JobHandle.CombineDependencies(MoveJobHandle, checkJobHandle);
         m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
@@ -225,6 +226,9 @@ public class KunaiMoveSystem_JobEX : SystemBase
 }
 
 
+
+//
+//// 使用多线程job 并行优化 
 //public class KunaiMoveSystem_JobEX1 : SystemBase
 //{
 //    private EntityQuery Zquery; 
@@ -248,25 +252,26 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //        public int entityInQueryIndex;
 //    }
 //
-//    struct MoveJob: IJobEntityBatch
+//    struct MoveJob : IJobChunk
 //    {
-//        [DeallocateOnJobCompletion]
+//        //[DeallocateOnJobCompletion] 
 //        public NativeArray<KuaiData> OutputArray;
 //        public float deltaTime;
 //
 //        public float frameCount;
-//        
+//
 //        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
-//        
-//        [Unity.Collections.ReadOnly]
-//        public ComponentTypeHandle<Kunai> KunaiTypeHandleAccessor;
-//        
-//        
-//        public void Execute(ArchetypeChunk batchInChunk, int batchIndex)
+//
+//        [Unity.Collections.ReadOnly] public ComponentTypeHandle<Kunai> KunaiTypeHandleAccessor;
+//
+//
+//
+//
+//        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
 //        {
 //            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
 //            NativeArray<Kunai> kunais = batchInChunk.GetNativeArray<Kunai>(KunaiTypeHandleAccessor);
-//            int Capacity = batchInChunk.Capacity;
+//
 //            for (int i = 0; i < positions.Length; i++)
 //            {
 //                var kunai = kunais[i];
@@ -278,22 +283,24 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //                {
 //                    Value = kunaiTranslation.Value
 //                };
-//                int index = batchIndex * Capacity + i; //batchIndex从0开始
-//                Debug.Log($"Kquery index=============={index}  {batchIndex}  {Capacity} {OutputArray.Length} frameCount = {frameCount}");
-////                OutputArray[index] = new KuaiData()
-////                {
-////                    entityInQueryIndex = index,
-////                    pos = kunaiTranslation,
-////                    e = kunai.e
-////                };
+//                int index = i + firstEntityIndex; //batchIndex从0开始
+////                Debug.Log(
+////                    $"Kquery index=============={index}  {chunkIndex}  {firstEntityIndex} {OutputArray.Length} frameCount = {frameCount}");
+//                OutputArray[index] = new KuaiData()
+//                {
+//                    entityInQueryIndex = index,
+//                    pos = kunaiTranslation,
+//                    e = kunai.e
+//                };
 //            }
 //        }
+//
 //    }
 //
-//
-//    struct CheckJob: IJobEntityBatch
+//    struct CheckJob: IJobChunk
 //    {
 //        [DeallocateOnJobCompletion]
+//        [Unity.Collections.ReadOnly]
 //        public NativeArray<KuaiData> KuaiDatas;
 //        
 //        public EntityCommandBuffer.ParallelWriter commandBufferCreate;
@@ -305,16 +312,15 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //        public ComponentTypeHandle<ZombieEntityCom> ZombieEntityComTypeHandleAccessor;
 //        
 //        public ComponentTypeHandle<ZombieHealth> ZombieHealthTypeHandleAccessor;
-//        
-//        
-//        public void Execute(ArchetypeChunk batchInChunk, int batchIndex)
+//
+//        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
 //        {
 //            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
 //            NativeArray<ZombieEntityCom> zombieEntityComs = batchInChunk.GetNativeArray<ZombieEntityCom>(ZombieEntityComTypeHandleAccessor);
 //            NativeArray<ZombieHealth> zombieHealths = batchInChunk.GetNativeArray<ZombieHealth>(ZombieHealthTypeHandleAccessor);
 //
 //            float attackDistance = 1f;
-//            int Capacity = batchInChunk.Capacity;
+//      
 //            int count = KuaiDatas.Length;
 //    
 //            for (int i = 0; i < count; i++)
@@ -338,14 +344,13 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //                        commandBufferCreate.DestroyEntity(kuaientityInQueryIndex, kuaiE);
 //                        if (zombieHealth.Value <= 0)
 //                        {
-//                            int zombieIndex = batchIndex * Capacity + j;
+//                            int zombieIndex = firstEntityIndex + j;
 //                            var zombieEntity = zombieEntityComs[j].e;
 //                            commandBufferCreate.DestroyEntity(zombieIndex, zombieEntity);
 //                        }
 //                    }
 //                }
 //            }
-//            
 //        }
 //    }
 //
@@ -354,7 +359,7 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //    {
 //        int count = Kquery.CalculateEntityCount();
 //        int frameCount = UnityEngine.Time.frameCount;
-//        Debug.Log($"Kquery.CalculateEntityCount =============={count}  frameCount = {frameCount}");
+////        Debug.Log($"Kquery.CalculateEntityCount =============={count}  frameCount = {frameCount}");
 //        NativeArray<KuaiData> KuaiDatas = new NativeArray<KuaiData>(count, Allocator.TempJob);
 //        //move job
 //        float deltaTime = Time.DeltaTime;
@@ -367,27 +372,25 @@ public class KunaiMoveSystem_JobEX : SystemBase
 //            frameCount = frameCount
 //
 //        };
-//        this.Dependency = movejob.ScheduleParallel(Kquery, 1, this.Dependency);
-////        
-////        
-////        EntityCommandBuffer.ParallelWriter commandBufferCreate
-////            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
-////        var checkJob = new CheckJob()
-////        {
-////            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
-////            ZombieEntityComTypeHandleAccessor = this.GetComponentTypeHandle<ZombieEntityCom>(true),
-////            ZombieHealthTypeHandleAccessor = this.GetComponentTypeHandle<ZombieHealth>(),
-////            commandBufferCreate = commandBufferCreate,
-////            KuaiDatas = KuaiDatas
-////        };
-////        //check Job
-////        this.Dependency = checkJob.ScheduleParallel(Kquery, 1, this.Dependency);
-////
-////        m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
-////  
-////        this.Dependency
-////            = JobHandle.CombineDependencies(MoveJobHandle, checkJobHandle);
+//        
+//        JobHandle moveJobHandle = movejob.ScheduleParallel(Kquery, this.Dependency);
 //        
 //        
+//        EntityCommandBuffer.ParallelWriter commandBufferCreate
+//            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
+//        var checkJob = new CheckJob()
+//        {
+//            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+//            ZombieEntityComTypeHandleAccessor = this.GetComponentTypeHandle<ZombieEntityCom>(true),
+//            ZombieHealthTypeHandleAccessor = this.GetComponentTypeHandle<ZombieHealth>(),
+//            commandBufferCreate = commandBufferCreate,
+//            KuaiDatas = KuaiDatas
+//        };
+//        //check Job
+//        JobHandle checkJobHandle = checkJob.ScheduleParallel(Zquery, moveJobHandle);
+//        this.Dependency = JobHandle.CombineDependencies(moveJobHandle, checkJobHandle);
+//        m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
+//
+//       
 //    }
 //}
