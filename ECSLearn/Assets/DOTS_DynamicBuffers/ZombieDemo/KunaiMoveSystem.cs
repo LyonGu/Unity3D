@@ -139,7 +139,98 @@ using Unity.Mathematics;
 //}
 
 // 使用多线程优化 
-public class KunaiMoveSystem_JobEX : SystemBase
+//public class KunaiMoveSystem_JobEX : SystemBase
+//{
+//    private EntityQuery Zquery;
+//    private EntityQuery Kquery;
+//
+//    private EndSimulationEntityCommandBufferSystem m_EndSimulationEcbSystem;
+//    protected override void OnCreate()
+//    {
+//        base.OnCreate();
+//        Zquery = GetEntityQuery(typeof(Translation), typeof(Tag_Zombie), typeof(ZombieHealth));
+//        Kquery = GetEntityQuery(typeof(Translation), typeof(Kunai));
+//
+//        m_EndSimulationEcbSystem = World
+//            .GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+//    }
+//
+//    struct KunaiData
+//    {
+//        public Entity e;
+//        public Translation pos;
+//        public int entityInQueryIndex;
+//    }
+//    protected override void OnUpdate()
+//    {
+//
+//
+//        EntityCommandBuffer.ParallelWriter commandBuffer
+//            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
+//
+//        int count = Kquery.CalculateEntityCount();
+//        NativeArray<KunaiData> kunaiDataArray = new NativeArray<KunaiData>(count, Allocator.TempJob);
+//        float deltaTime = Time.DeltaTime;
+//        JobHandle MoveJobHandle = Entities
+//            //            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)
+//            .ForEach((Entity entity, int entityInQueryIndex, ref Translation translation, in Kunai kunai) =>
+//            {
+//                float3 moveDir = math.normalize(kunai.targetPosition - translation.Value);
+//                float moveSpeed = 20f;
+//                translation.Value += moveDir * moveSpeed * deltaTime;
+//                translation = new Translation()
+//                {
+//                    Value = translation.Value
+//                };
+//                kunaiDataArray[entityInQueryIndex] = new KunaiData()
+//                {
+//                    e = entity,
+//                    pos = translation,
+//                    entityInQueryIndex = entityInQueryIndex
+//                };
+//            })
+//            .WithName("MoveKunais")
+//            .ScheduleParallel(this.Dependency); //开多个子线程
+//
+//        this.Dependency = Entities
+//            //            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)  默认就这样
+//            .ForEach((Entity entity, int entityInQueryIndex, ref ZombieHealth zombieHealth, in Translation translation, in Tag_Zombie tag_Zombie) =>
+//            {
+//                int count = kunaiDataArray.Length;
+//                float attackDistance = 1f;
+//                for (int i = 0; i < count; i++)
+//                {
+//                    var kunaiEntity = kunaiDataArray[i].e;
+//                    var kunaiPosition = kunaiDataArray[i].pos;
+//                    var kunaiEntityInQueryIndex = kunaiDataArray[i].entityInQueryIndex;
+//                    if (math.distancesq(kunaiPosition.Value, translation.Value) < attackDistance * attackDistance)
+//                    {
+//                        zombieHealth.Value--;
+//                        commandBuffer.DestroyEntity(kunaiEntityInQueryIndex, kunaiEntity);
+//                        if (zombieHealth.Value <= 0)
+//                        {
+//                            commandBuffer.DestroyEntity(entityInQueryIndex, entity);
+//                        }
+//                    }
+//
+//                }
+//            })
+//            .WithName("CheckDisAndDestroyEntities")
+//            .WithDisposeOnCompletion(kunaiDataArray)
+//            .WithReadOnly(kunaiDataArray)
+//            .ScheduleParallel(MoveJobHandle);  //这个可以开启多个线程
+//                                               //        this.Dependency
+//                                               //            = JobHandle.CombineDependencies(MoveJobHandle, checkJobHandle);
+//        m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
+//
+//    }
+//}
+
+
+
+
+// 使用多线程job 并行优化 开启burst
+public class KunaiMoveSystem_JobEX1 : SystemBase
 {
     private EntityQuery Zquery;
     private EntityQuery Kquery;
@@ -155,243 +246,154 @@ public class KunaiMoveSystem_JobEX : SystemBase
             .GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
     }
 
-    struct KunaiData
+    struct KuaiData
     {
         public Entity e;
         public Translation pos;
         public int entityInQueryIndex;
     }
-    protected override void OnUpdate()
+    
+    [BurstCompile]
+    struct MoveJob : IJobEntityBatchWithIndex
     {
+        //[DeallocateOnJobCompletion] 
+        public NativeArray<KuaiData> OutputArray;
+        public float deltaTime;
+
+        public float frameCount;
+
+        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
+
+        [Unity.Collections.ReadOnly] public ComponentTypeHandle<Kunai> KunaiTypeHandleAccessor;
 
 
-        EntityCommandBuffer.ParallelWriter commandBuffer
-            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
 
-        int count = Kquery.CalculateEntityCount();
-        NativeArray<KunaiData> kunaiDataArray = new NativeArray<KunaiData>(count, Allocator.TempJob);
-        float deltaTime = Time.DeltaTime;
-        JobHandle MoveJobHandle = Entities
-            //            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)
-            .ForEach((Entity entity, int entityInQueryIndex, ref Translation translation, in Kunai kunai) =>
+
+        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
+        {
+            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
+            NativeArray<Kunai> kunais = batchInChunk.GetNativeArray<Kunai>(KunaiTypeHandleAccessor);
+
+            for (int i = 0; i < positions.Length; i++)
             {
-                float3 moveDir = math.normalize(kunai.targetPosition - translation.Value);
+                var kunai = kunais[i];
+                var kunaiTranslation = positions[i];
+                float3 moveDir = math.normalize(kunai.targetPosition - kunaiTranslation.Value);
                 float moveSpeed = 20f;
-                translation.Value += moveDir * moveSpeed * deltaTime;
-                translation = new Translation()
+                kunaiTranslation.Value += moveDir * moveSpeed * deltaTime;
+                positions[i] = new Translation()
                 {
-                    Value = translation.Value
+                    Value = kunaiTranslation.Value
                 };
-                kunaiDataArray[entityInQueryIndex] = new KunaiData()
+                int index = i + firstEntityIndex; //batchIndex从0开始
+                                                  //                Debug.Log(
+                                                  //                    $"Kquery index=============={index}  {chunkIndex}  {firstEntityIndex} {OutputArray.Length} frameCount = {frameCount}");
+                OutputArray[index] = new KuaiData()
                 {
-                    e = entity,
-                    pos = translation,
-                    entityInQueryIndex = entityInQueryIndex
+                    entityInQueryIndex = index,
+                    pos = kunaiTranslation,
+                    e = kunai.e
                 };
-            })
-            .WithName("MoveKunais")
-            .ScheduleParallel(this.Dependency); //开多个子线程
+            }
+        }
 
-        this.Dependency = Entities
-            //            .WithBurst(FloatMode.Default, FloatPrecision.Standard, false)  默认就这样
-            .ForEach((Entity entity, int entityInQueryIndex, ref ZombieHealth zombieHealth, in Translation translation, in Tag_Zombie tag_Zombie) =>
+    }
+    
+    [BurstCompile]
+    struct CheckJob : IJobEntityBatchWithIndex
+    {
+        [DeallocateOnJobCompletion]
+        [Unity.Collections.ReadOnly]
+        public NativeArray<KuaiData> KuaiDatas;
+
+        public EntityCommandBuffer.ParallelWriter commandBufferCreate;
+
+        [Unity.Collections.ReadOnly]
+        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
+
+        [Unity.Collections.ReadOnly]
+        public ComponentTypeHandle<ZombieEntityCom> ZombieEntityComTypeHandleAccessor;
+
+        public ComponentTypeHandle<ZombieHealth> ZombieHealthTypeHandleAccessor;
+
+        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
+        {
+            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
+            NativeArray<ZombieEntityCom> zombieEntityComs = batchInChunk.GetNativeArray<ZombieEntityCom>(ZombieEntityComTypeHandleAccessor);
+            NativeArray<ZombieHealth> zombieHealths = batchInChunk.GetNativeArray<ZombieHealth>(ZombieHealthTypeHandleAccessor);
+
+            float attackDistance = 1f;
+
+            int count = KuaiDatas.Length;
+
+            for (int i = 0; i < count; i++)
             {
-                int count = kunaiDataArray.Length;
-                float attackDistance = 1f;
-                for (int i = 0; i < count; i++)
+                var kuaiE = KuaiDatas[i].e;
+                var kuaiPos = KuaiDatas[i].pos;
+                var kuaientityInQueryIndex = KuaiDatas[i].entityInQueryIndex;
+
+                int ZCount = positions.Length;
+                for (int j = 0; j < ZCount; j++)
                 {
-                    var kunaiEntity = kunaiDataArray[i].e;
-                    var kunaiPosition = kunaiDataArray[i].pos;
-                    var kunaiEntityInQueryIndex = kunaiDataArray[i].entityInQueryIndex;
-                    if (math.distancesq(kunaiPosition.Value, translation.Value) < attackDistance * attackDistance)
+                    var zombieTranslation = positions[j];
+                    var zombieHealth = zombieHealths[j];
+                    if (math.distancesq(kuaiPos.Value, zombieTranslation.Value) < attackDistance * attackDistance)
                     {
                         zombieHealth.Value--;
-                        commandBuffer.DestroyEntity(kunaiEntityInQueryIndex, kunaiEntity);
+                        zombieHealths[j] = new ZombieHealth()
+                        {
+                            Value = zombieHealth.Value
+                        };
+                        commandBufferCreate.DestroyEntity(kuaientityInQueryIndex, kuaiE);
                         if (zombieHealth.Value <= 0)
                         {
-                            commandBuffer.DestroyEntity(entityInQueryIndex, entity);
+                            int zombieIndex = firstEntityIndex + j;
+                            var zombieEntity = zombieEntityComs[j].e;
+                            commandBufferCreate.DestroyEntity(zombieIndex, zombieEntity);
                         }
                     }
-
                 }
-            })
-            .WithName("CheckDisAndDestroyEntities")
-            .WithDisposeOnCompletion(kunaiDataArray)
-            .WithReadOnly(kunaiDataArray)
-            .ScheduleParallel(MoveJobHandle);  //这个可以开启多个线程
-                                               //        this.Dependency
-                                               //            = JobHandle.CombineDependencies(MoveJobHandle, checkJobHandle);
+            }
+        }
+    }
+
+
+    protected override void OnUpdate()
+    {
+        int count = Kquery.CalculateEntityCount();
+        int frameCount = UnityEngine.Time.frameCount;
+        //        Debug.Log($"Kquery.CalculateEntityCount =============={count}  frameCount = {frameCount}");
+        NativeArray<KuaiData> KuaiDatas = new NativeArray<KuaiData>(count, Allocator.TempJob);
+        //move job
+        float deltaTime = Time.DeltaTime;
+        var movejob = new MoveJob()
+        {
+            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(false),
+            KunaiTypeHandleAccessor = this.GetComponentTypeHandle<Kunai>(true),
+            deltaTime = deltaTime,
+            OutputArray = KuaiDatas,
+            frameCount = frameCount
+
+        };
+
+        JobHandle moveJobHandle = movejob.ScheduleParallel(Kquery, 1, this.Dependency);
+
+
+        EntityCommandBuffer.ParallelWriter commandBufferCreate
+            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
+        var checkJob = new CheckJob()
+        {
+            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+            ZombieEntityComTypeHandleAccessor = this.GetComponentTypeHandle<ZombieEntityCom>(true),
+            ZombieHealthTypeHandleAccessor = this.GetComponentTypeHandle<ZombieHealth>(),
+            commandBufferCreate = commandBufferCreate,
+            KuaiDatas = KuaiDatas
+        };
+        //check Job
+        JobHandle checkJobHandle = checkJob.ScheduleParallel(Zquery,1, moveJobHandle);
+        this.Dependency = JobHandle.CombineDependencies(moveJobHandle, checkJobHandle);
         m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
+
 
     }
 }
-
-
-
-
-//// 使用多线程job 并行优化 
-//public class KunaiMoveSystem_JobEX1 : SystemBase
-//{
-//    private EntityQuery Zquery;
-//    private EntityQuery Kquery;
-
-//    private EndSimulationEntityCommandBufferSystem m_EndSimulationEcbSystem;
-//    protected override void OnCreate()
-//    {
-//        base.OnCreate();
-//        Zquery = GetEntityQuery(typeof(Translation), typeof(Tag_Zombie), typeof(ZombieHealth));
-//        Kquery = GetEntityQuery(typeof(Translation), typeof(Kunai));
-
-//        m_EndSimulationEcbSystem = World
-//            .GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-//    }
-
-//    struct KuaiData
-//    {
-//        public Entity e;
-//        public Translation pos;
-//        public int entityInQueryIndex;
-//    }
-
-//    struct MoveJob : IJobEntityBatchWithIndex
-//    {
-//        //[DeallocateOnJobCompletion] 
-//        public NativeArray<KuaiData> OutputArray;
-//        public float deltaTime;
-
-//        public float frameCount;
-
-//        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
-
-//        [Unity.Collections.ReadOnly] public ComponentTypeHandle<Kunai> KunaiTypeHandleAccessor;
-
-
-
-
-//        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
-//        {
-//            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
-//            NativeArray<Kunai> kunais = batchInChunk.GetNativeArray<Kunai>(KunaiTypeHandleAccessor);
-
-//            for (int i = 0; i < positions.Length; i++)
-//            {
-//                var kunai = kunais[i];
-//                var kunaiTranslation = positions[i];
-//                float3 moveDir = math.normalize(kunai.targetPosition - kunaiTranslation.Value);
-//                float moveSpeed = 20f;
-//                kunaiTranslation.Value += moveDir * moveSpeed * deltaTime;
-//                positions[i] = new Translation()
-//                {
-//                    Value = kunaiTranslation.Value
-//                };
-//                int index = i + firstEntityIndex; //batchIndex从0开始
-//                                                  //                Debug.Log(
-//                                                  //                    $"Kquery index=============={index}  {chunkIndex}  {firstEntityIndex} {OutputArray.Length} frameCount = {frameCount}");
-//                OutputArray[index] = new KuaiData()
-//                {
-//                    entityInQueryIndex = index,
-//                    pos = kunaiTranslation,
-//                    e = kunai.e
-//                };
-//            }
-//        }
-
-//    }
-
-//    struct CheckJob : IJobEntityBatchWithIndex
-//    {
-//        [DeallocateOnJobCompletion]
-//        [Unity.Collections.ReadOnly]
-//        public NativeArray<KuaiData> KuaiDatas;
-
-//        public EntityCommandBuffer.ParallelWriter commandBufferCreate;
-
-//        [Unity.Collections.ReadOnly]
-//        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
-
-//        [Unity.Collections.ReadOnly]
-//        public ComponentTypeHandle<ZombieEntityCom> ZombieEntityComTypeHandleAccessor;
-
-//        public ComponentTypeHandle<ZombieHealth> ZombieHealthTypeHandleAccessor;
-
-//        public void Execute(ArchetypeChunk batchInChunk, int chunkIndex, int firstEntityIndex)
-//        {
-//            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
-//            NativeArray<ZombieEntityCom> zombieEntityComs = batchInChunk.GetNativeArray<ZombieEntityCom>(ZombieEntityComTypeHandleAccessor);
-//            NativeArray<ZombieHealth> zombieHealths = batchInChunk.GetNativeArray<ZombieHealth>(ZombieHealthTypeHandleAccessor);
-
-//            float attackDistance = 1f;
-
-//            int count = KuaiDatas.Length;
-
-//            for (int i = 0; i < count; i++)
-//            {
-//                var kuaiE = KuaiDatas[i].e;
-//                var kuaiPos = KuaiDatas[i].pos;
-//                var kuaientityInQueryIndex = KuaiDatas[i].entityInQueryIndex;
-
-//                int ZCount = positions.Length;
-//                for (int j = 0; j < ZCount; j++)
-//                {
-//                    var zombieTranslation = positions[j];
-//                    var zombieHealth = zombieHealths[j];
-//                    if (math.distancesq(kuaiPos.Value, zombieTranslation.Value) < attackDistance * attackDistance)
-//                    {
-//                        zombieHealth.Value--;
-//                        zombieHealths[j] = new ZombieHealth()
-//                        {
-//                            Value = zombieHealth.Value
-//                        };
-//                        commandBufferCreate.DestroyEntity(kuaientityInQueryIndex, kuaiE);
-//                        if (zombieHealth.Value <= 0)
-//                        {
-//                            int zombieIndex = firstEntityIndex + j;
-//                            var zombieEntity = zombieEntityComs[j].e;
-//                            commandBufferCreate.DestroyEntity(zombieIndex, zombieEntity);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-//    protected override void OnUpdate()
-//    {
-//        int count = Kquery.CalculateEntityCount();
-//        int frameCount = UnityEngine.Time.frameCount;
-//        //        Debug.Log($"Kquery.CalculateEntityCount =============={count}  frameCount = {frameCount}");
-//        NativeArray<KuaiData> KuaiDatas = new NativeArray<KuaiData>(count, Allocator.TempJob);
-//        //move job
-//        float deltaTime = Time.DeltaTime;
-//        var movejob = new MoveJob()
-//        {
-//            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(false),
-//            KunaiTypeHandleAccessor = this.GetComponentTypeHandle<Kunai>(true),
-//            deltaTime = deltaTime,
-//            OutputArray = KuaiDatas,
-//            frameCount = frameCount
-
-//        };
-
-//        JobHandle moveJobHandle = movejob.ScheduleParallel(Kquery, 1, this.Dependency);
-
-
-//        EntityCommandBuffer.ParallelWriter commandBufferCreate
-//            = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
-//        var checkJob = new CheckJob()
-//        {
-//            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
-//            ZombieEntityComTypeHandleAccessor = this.GetComponentTypeHandle<ZombieEntityCom>(true),
-//            ZombieHealthTypeHandleAccessor = this.GetComponentTypeHandle<ZombieHealth>(),
-//            commandBufferCreate = commandBufferCreate,
-//            KuaiDatas = KuaiDatas
-//        };
-//        //check Job
-//        JobHandle checkJobHandle = checkJob.ScheduleParallel(Zquery,1, moveJobHandle);
-//        this.Dependency = JobHandle.CombineDependencies(moveJobHandle, checkJobHandle);
-//        m_EndSimulationEcbSystem.AddJobHandleForProducer(this.Dependency);
-
-
-//    }
-//}
