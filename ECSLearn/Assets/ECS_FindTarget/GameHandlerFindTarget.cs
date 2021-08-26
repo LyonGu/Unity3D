@@ -62,10 +62,12 @@ public class GameHandlerFindTarget : MonoBehaviour {
             typeof(RenderMesh),
             typeof(RenderBounds),
             typeof(Scale),
-            typeof(Unit)
+            typeof(Unit),
+            typeof(UnitSelf)
         );
         SetEntityComponentData(entity, position, quadMesh, unitMaterial);
         entityManager.SetComponentData(entity, new Scale { Value = 1.5f });
+        entityManager.SetComponentData(entity, new UnitSelf { self = entity });
     }
 
     private void SpawnTargetEntity() {
@@ -75,13 +77,16 @@ public class GameHandlerFindTarget : MonoBehaviour {
             typeof(RenderMesh),
             typeof(RenderBounds),
             typeof(Scale),
-            typeof(Target)
+            typeof(Target),
+            typeof(TargetSelf)
         );
         SetEntityComponentData(entity, new float3(UnityEngine.Random.Range(-8, +8f), UnityEngine.Random.Range(-5, +5f), 0), quadMesh, targetMaterial);
         entityManager.SetComponentData(entity, new Scale { Value = .5f });
+        entityManager.SetComponentData(entity, new TargetSelf { self = entity });
     }
 
     private void SetEntityComponentData(Entity entity, float3 spawnPosition, Mesh mesh, Material material) {
+        // RenderMesh 使用 shareComponet接口添加
         entityManager.SetSharedComponentData<RenderMesh>(entity,
             new RenderMesh {
                 material = material,
@@ -101,6 +106,16 @@ public class GameHandlerFindTarget : MonoBehaviour {
 public struct Unit : IComponentData { }
 public struct Target : IComponentData { }
 
+public struct TargetSelf : IComponentData
+{
+    public Entity self;
+}
+
+public struct UnitSelf : IComponentData
+{
+    public Entity self;
+    
+}
 public struct HasTarget : IComponentData {
     public Entity targetEntity;
 }
