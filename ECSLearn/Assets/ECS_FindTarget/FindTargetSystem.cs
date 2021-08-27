@@ -20,7 +20,7 @@ using Unity.Mathematics;
 using Unity.Jobs;
 using Unity.Burst;
 
-
+//原始code
 //public class FindTargetSystem : ComponentSystem {
 //
 //    protected override void OnUpdate() {
@@ -57,7 +57,7 @@ using Unity.Burst;
 //}
 
 
-//
+// 原始code
 //public class FindTargetJobSystem : JobComponentSystem {
 //
 //    private struct EntityWithPosition {

@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 
+//原始code
 //public class ZombieMoveSystem : ComponentSystem {
 //    
 //    protected override void OnUpdate() {

@@ -7,6 +7,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using Unity.Mathematics;
 
+//原始code
 //public class KunaiMoveSystem : ComponentSystem {
 //
 //    protected override void OnUpdate() {
@@ -286,8 +287,6 @@ public class KunaiMoveSystem_JobEX1 : SystemBase
                     Value = kunaiTranslation.Value
                 };
                 int index = i + firstEntityIndex; //batchIndex从0开始
-                                                  //                Debug.Log(
-                                                  //                    $"Kquery index=============={index}  {chunkIndex}  {firstEntityIndex} {OutputArray.Length} frameCount = {frameCount}");
                 OutputArray[index] = new KuaiData()
                 {
                     entityInQueryIndex = index,
