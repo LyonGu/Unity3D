@@ -12,6 +12,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 using Unity.Transforms;
 using Unity.Entities;
@@ -43,7 +44,7 @@ public class GameHandlerFindTarget : MonoBehaviour {
     private void Update() {
         spawnTargetTimer -= Time.deltaTime;
         if (spawnTargetTimer < 0) {
-            spawnTargetTimer = .1f;
+            spawnTargetTimer = 0.1f;
             
             for (int i = 0; i < 200; i++) {
                 SpawnTargetEntity();
@@ -106,6 +107,8 @@ public class GameHandlerFindTarget : MonoBehaviour {
 public struct Unit : IComponentData { }
 public struct Target : IComponentData { }
 
+public struct UnitOrigin : IComponentData { }
+public struct TargetOrigin : IComponentData { }
 public struct TargetSelf : IComponentData
 {
     public Entity self;

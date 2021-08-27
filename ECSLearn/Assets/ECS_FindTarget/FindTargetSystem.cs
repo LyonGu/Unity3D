@@ -20,42 +20,42 @@ using Unity.Mathematics;
 using Unity.Jobs;
 using Unity.Burst;
 
-/*
-public class FindTargetSystem : ComponentSystem {
 
-    protected override void OnUpdate() {
-        Entities.WithNone<HasTarget>().WithAll<Unit>().ForEach((Entity entity, ref Translation unitTranslation) => {
-            // Code running on all entities with "Unit" Tag
+//public class FindTargetSystem : ComponentSystem {
+//
+//    protected override void OnUpdate() {
+//        Entities.WithNone<HasTarget>().WithAll<Unit>().ForEach((Entity entity, ref Translation unitTranslation) => {
+//            // Code running on all entities with "Unit" Tag
+//
+//            float3 unitPosition = unitTranslation.Value;
+//            Entity closestTargetEntity = Entity.Null;
+//            float3 closestTargetPosition = float3.zero;
+//
+//            Entities.WithAll<Target>().ForEach((Entity targetEntity, ref Translation targetTranslation) => { 
+//                // Cycling through all entities with "Target" Tag
+//
+//                if (closestTargetEntity == Entity.Null) {
+//                    // No target
+//                    closestTargetEntity = targetEntity;
+//                    closestTargetPosition = targetTranslation.Value;
+//                } else {
+//                    if (math.distance(unitPosition, targetTranslation.Value) < math.distance(unitPosition, closestTargetPosition)) {
+//                        // This target is closer
+//                        closestTargetEntity = targetEntity;
+//                        closestTargetPosition = targetTranslation.Value;
+//                    }
+//                }
+//            });
+//
+//            // Closest Target
+//            if (closestTargetEntity != Entity.Null) {
+//                PostUpdateCommands.AddComponent(entity, new HasTarget { targetEntity = closestTargetEntity });
+//            }
+//        });
+//    }
+//
+//}
 
-            float3 unitPosition = unitTranslation.Value;
-            Entity closestTargetEntity = Entity.Null;
-            float3 closestTargetPosition = float3.zero;
-
-            Entities.WithAll<Target>().ForEach((Entity targetEntity, ref Translation targetTranslation) => { 
-                // Cycling through all entities with "Target" Tag
-
-                if (closestTargetEntity == Entity.Null) {
-                    // No target
-                    closestTargetEntity = targetEntity;
-                    closestTargetPosition = targetTranslation.Value;
-                } else {
-                    if (math.distance(unitPosition, targetTranslation.Value) < math.distance(unitPosition, closestTargetPosition)) {
-                        // This target is closer
-                        closestTargetEntity = targetEntity;
-                        closestTargetPosition = targetTranslation.Value;
-                    }
-                }
-            });
-
-            // Closest Target
-            if (closestTargetEntity != Entity.Null) {
-                //PostUpdateCommands.AddComponent(entity, new HasTarget { targetEntity = closestTargetEntity });
-            }
-        });
-    }
-
-}
-*/
 
 //
 //public class FindTargetJobSystem : JobComponentSystem {
@@ -219,7 +219,13 @@ public class FindTargetJobSystem_Ex : SystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
-        targetQuery = GetEntityQuery(typeof(Target), ComponentType.ReadOnly<Translation>(),ComponentType.ReadOnly<TargetSelf>());
+        targetQuery = GetEntityQuery(
+            typeof(Target), 
+            ComponentType.ReadOnly<Translation>(),
+            ComponentType.ReadOnly<TargetSelf>(),
+            ComponentType.Exclude<TargetOrigin>() 
+            );
+        
         ecbs = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         
         
@@ -227,7 +233,8 @@ public class FindTargetJobSystem_Ex : SystemBase
             typeof(Unit), 
             ComponentType.ReadOnly<Translation>(),
             ComponentType.ReadOnly<UnitSelf>(),
-            ComponentType.Exclude<HasTarget>()  //排除HasTarget 组件
+            ComponentType.Exclude<HasTarget>(),  //排除HasTarget 组件
+            ComponentType.Exclude<UnitOrigin>() 
             );
 
     }
@@ -281,7 +288,8 @@ public class FindTargetJobSystem_Ex : SystemBase
             NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
             NativeArray<UnitSelf> unitSelfs = batchInChunk.GetNativeArray<UnitSelf>(UnitSelfTypeHandleAccessor);
             int targetCount = TargetInfoArray.Length;
-            for (int i = 0; i < positions.Length; i++)
+            int length = positions.Length;
+            for (int i = 0; i < length; i++)
             {
                 var position = positions[i].Value; //Unit的位置
                 Entity closestTargetEntity = Entity.Null;
@@ -308,8 +316,9 @@ public class FindTargetJobSystem_Ex : SystemBase
                 if (closestTargetEntity != Entity.Null)
                 {
                     int index = indexOfFirstEntityInQuery + i;
-                    var unitEntity = unitSelfs[index].self;
+                    var unitEntity = unitSelfs[i].self;
                     ecb.AddComponent(index, unitEntity, new HasTarget { targetEntity = closestTargetEntity });
+  
                 }
             }
             
