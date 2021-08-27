@@ -203,7 +203,160 @@ using Unity.Burst;
 
 
 //进一步优化
-public class FindTargetJobSystem_Ex : SystemBase
+//public class FindTargetJobSystem_Ex : SystemBase
+//{
+//    private EntityQuery targetQuery;
+//    private EntityQuery unitQuery;
+//    private EntityCommandBufferSystem ecbs;
+//
+//    
+//    private struct TargetInfo
+//    {
+//        public Entity entity;
+//        public float3 position;
+//        public int entityInQueryIndex;
+//    }
+//    protected override void OnCreate()
+//    {
+//        base.OnCreate();
+//        targetQuery = GetEntityQuery(
+//            typeof(Target), 
+//            ComponentType.ReadOnly<Translation>(),
+//            ComponentType.ReadOnly<TargetSelf>(),
+//            ComponentType.Exclude<TargetOrigin>() 
+//            );
+//        
+//        ecbs = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+//        
+//        
+//        unitQuery = GetEntityQuery(
+//            typeof(Unit), 
+//            ComponentType.ReadOnly<Translation>(),
+//            ComponentType.ReadOnly<UnitSelf>(),
+//            ComponentType.Exclude<HasTarget>(),  //排除HasTarget 组件
+//            ComponentType.Exclude<UnitOrigin>() 
+//            );
+//
+//    }
+//    
+//    [BurstCompile]
+//    private struct SaveTargetInfoJob: IJobEntityBatchWithIndex
+//    {
+//        public NativeArray<TargetInfo> TargetInfoArray;
+//        
+//        [ReadOnly]
+//        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
+//        
+//        [ReadOnly]
+//        public ComponentTypeHandle<TargetSelf> TargetSelfTypeHandleAccessor;
+//        public void Execute(ArchetypeChunk batchInChunk, int batchIndex, int indexOfFirstEntityInQuery)
+//        {
+//            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
+//            NativeArray<TargetSelf> targetSelfs = batchInChunk.GetNativeArray<TargetSelf>(TargetSelfTypeHandleAccessor);
+//            for (int i = 0; i < positions.Length; i++)
+//            {
+//                int index = indexOfFirstEntityInQuery + i;
+//                var targetSelf = targetSelfs[i];
+//                var position = positions[i];
+//                TargetInfoArray[index] = new TargetInfo
+//                {
+//                    entity = targetSelf.self,
+//                    position = position.Value,
+//                    entityInQueryIndex = index
+//                };
+//            }
+//        }
+//    }
+//    
+//    [BurstCompile]
+//    private struct FindTargetJob : IJobEntityBatchWithIndex
+//    {
+//        [DeallocateOnJobCompletion]
+//        [ReadOnly]
+//        public NativeArray<TargetInfo> TargetInfoArray;
+//        
+//        [ReadOnly]
+//        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
+//        
+//        [ReadOnly]
+//        public ComponentTypeHandle<UnitSelf> UnitSelfTypeHandleAccessor;
+//
+//        public EntityCommandBuffer.ParallelWriter ecb;
+//        
+//        public void Execute(ArchetypeChunk batchInChunk, int batchIndex, int indexOfFirstEntityInQuery)
+//        {
+//            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
+//            NativeArray<UnitSelf> unitSelfs = batchInChunk.GetNativeArray<UnitSelf>(UnitSelfTypeHandleAccessor);
+//            int targetCount = TargetInfoArray.Length;
+//            int length = positions.Length;
+//            for (int i = 0; i < length; i++)
+//            {
+//                var position = positions[i].Value; //Unit的位置
+//                Entity closestTargetEntity = Entity.Null;
+//                float3 closestTargetPosition = float3.zero;
+//                for (int j = 0; j < targetCount; j++)
+//                {
+//                    var targetInfo = TargetInfoArray[j];
+//                    if (closestTargetEntity == Entity.Null)
+//                    {
+//                        closestTargetEntity = targetInfo.entity;
+//                        closestTargetPosition = targetInfo.position;
+//                    }
+//                    else
+//                    {
+//                        if (math.distancesq(position, targetInfo.position) < math.distancesq(position, closestTargetPosition))
+//                        {
+//                            closestTargetEntity = targetInfo.entity;
+//                            closestTargetPosition = targetInfo.position;
+//                        }
+//                    }
+//                }
+//                
+//                // Closest Target
+//                if (closestTargetEntity != Entity.Null)
+//                {
+//                    int index = indexOfFirstEntityInQuery + i;
+//                    var unitEntity = unitSelfs[i].self;
+//                    ecb.AddComponent(index, unitEntity, new HasTarget { targetEntity = closestTargetEntity });
+//  
+//                }
+//            }
+//            
+//           
+//        }
+//    }
+//    protected override void OnUpdate()
+//    {
+//        //信息存储
+//        int count = targetQuery.CalculateEntityCount();
+//        NativeArray<TargetInfo> TargetInfoArray = new NativeArray<TargetInfo>(count, Allocator.TempJob);
+//        var saveTargetInfoJob = new SaveTargetInfoJob
+//        {
+//            TargetInfoArray = TargetInfoArray,
+//            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+//            TargetSelfTypeHandleAccessor = this.GetComponentTypeHandle<TargetSelf>(true),
+//        };
+//        
+//        
+//        this.Dependency = saveTargetInfoJob.ScheduleParallel(targetQuery, 1, this.Dependency);
+//
+//        var FindTargetJob = new FindTargetJob
+//        {
+//            TargetInfoArray = TargetInfoArray,
+//            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+//            UnitSelfTypeHandleAccessor = this.GetComponentTypeHandle<UnitSelf>(true),
+//            ecb = ecbs.CreateCommandBuffer().AsParallelWriter()
+//        };
+//        this.Dependency = FindTargetJob.ScheduleParallel(unitQuery, 1, this.Dependency);
+////        this.Dependency = JobHandle.CombineDependencies(saveTargetInfoJobHandle, FindTargetJobHandle);
+//        ecbs.AddJobHandleForProducer(this.Dependency);
+//    }
+//}
+
+
+//进一步优化 使用象限系统
+[UpdateAfter(typeof(QuadrantSystem))]
+public class FindTargetJobSystem_Ex2 : SystemBase
 {
     private EntityQuery targetQuery;
     private EntityQuery unitQuery;
@@ -325,30 +478,129 @@ public class FindTargetJobSystem_Ex : SystemBase
            
         }
     }
+    
+    //使用象限寻找目标
+    [BurstCompile]
+    private struct FindTargetWithQuadrantJob : IJobEntityBatchWithIndex
+    {
+        
+        [ReadOnly]
+        public ComponentTypeHandle<Translation> PositionTypeHandleAccessor;
+        
+        [ReadOnly]
+        public ComponentTypeHandle<UnitSelf> UnitSelfTypeHandleAccessor;
+        
+        [ReadOnly]
+        public ComponentTypeHandle<QuadrantEntity> QuadrantEntityTypeHandleAccessor;
+
+        public EntityCommandBuffer.ParallelWriter ecb;
+        
+        [ReadOnly] public NativeMultiHashMap<int, QuadrantData> quadrantMultiHashMap;
+        
+        public void Execute(ArchetypeChunk batchInChunk, int batchIndex, int indexOfFirstEntityInQuery)
+        {
+            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(PositionTypeHandleAccessor);
+            NativeArray<UnitSelf> unitSelfs = batchInChunk.GetNativeArray<UnitSelf>(UnitSelfTypeHandleAccessor);
+            NativeArray<QuadrantEntity> quadrantEntitys = batchInChunk.GetNativeArray<QuadrantEntity>(QuadrantEntityTypeHandleAccessor);
+            int length = positions.Length;
+            for (int i = 0; i < length; i++)
+            {
+                var position = positions[i].Value; //Unit的位置
+                Entity closestTargetEntity = Entity.Null;
+
+                //得到每个Unit所处的象限
+                float closestTargetDistance = float.MaxValue;
+                int hashMapKey = QuadrantSystem.GetPositionHashMapKey(position);
+                
+                //只遍历相邻象限的目标
+                var unitPosition = position;
+                var quadrantEntity = quadrantEntitys[i];
+                FindTarget(hashMapKey, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey + 1, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey - 1, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey + QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey - QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey + 1 + QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey - 1 + QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey + 1 - QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                FindTarget(hashMapKey - 1 - QuadrantSystem.quadrantYMultiplier, unitPosition, quadrantEntity, ref closestTargetEntity, ref closestTargetDistance);
+                
+                // Closest Target
+                if (closestTargetEntity != Entity.Null)
+                {
+                    int index = indexOfFirstEntityInQuery + i;
+                    var unitEntity = unitSelfs[i].self;
+                    ecb.AddComponent(index, unitEntity, new HasTarget { targetEntity = closestTargetEntity });
+  
+                }
+            }
+            
+           
+        }
+        
+        private void FindTarget(int hashMapKey, float3 unitPosition, QuadrantEntity quadrantEntity, ref Entity closestTargetEntity, ref float closestTargetDistance) {
+            QuadrantData quadrantData;
+            NativeMultiHashMapIterator<int> nativeMultiHashMapIterator;
+            if (quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out quadrantData, out nativeMultiHashMapIterator)) {
+                do {
+                    if (quadrantEntity.typeEnum != quadrantData.quadrantEntity.typeEnum) {
+                        if (closestTargetEntity == Entity.Null) {
+                            // No target
+                            closestTargetEntity = quadrantData.entity;
+                            closestTargetDistance = math.distancesq(unitPosition, quadrantData.position);
+                        } else {
+                            if (math.distancesq(unitPosition, quadrantData.position) < closestTargetDistance) {
+                                // This target is closer
+                                closestTargetEntity = quadrantData.entity;
+                                closestTargetDistance = math.distancesq(unitPosition, quadrantData.position);
+                            }
+                        }
+                    }
+                } while (quadrantMultiHashMap.TryGetNextValue(out quadrantData, ref nativeMultiHashMapIterator));
+            }
+        }
+    }
+    
+    
     protected override void OnUpdate()
     {
-        //信息存储
-        int count = targetQuery.CalculateEntityCount();
-        NativeArray<TargetInfo> TargetInfoArray = new NativeArray<TargetInfo>(count, Allocator.TempJob);
-        var saveTargetInfoJob = new SaveTargetInfoJob
-        {
-            TargetInfoArray = TargetInfoArray,
-            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
-            TargetSelfTypeHandleAccessor = this.GetComponentTypeHandle<TargetSelf>(true),
-        };
-        
-        
-        this.Dependency = saveTargetInfoJob.ScheduleParallel(targetQuery, 1, this.Dependency);
 
-        var FindTargetJob = new FindTargetJob
+        if (GameHandleSpawnAuthoring.Instance.useQuadrantSystem)
         {
-            TargetInfoArray = TargetInfoArray,
-            PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
-            UnitSelfTypeHandleAccessor = this.GetComponentTypeHandle<UnitSelf>(true),
-            ecb = ecbs.CreateCommandBuffer().AsParallelWriter()
-        };
-        this.Dependency = FindTargetJob.ScheduleParallel(unitQuery, 1, this.Dependency);
-//        this.Dependency = JobHandle.CombineDependencies(saveTargetInfoJobHandle, FindTargetJobHandle);
+            var FindTargetWithQuadrantJob = new FindTargetWithQuadrantJob
+            {
+                quadrantMultiHashMap = QuadrantSystem.quadrantMultiHashMap,
+                PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+                UnitSelfTypeHandleAccessor = this.GetComponentTypeHandle<UnitSelf>(true),
+                QuadrantEntityTypeHandleAccessor = this.GetComponentTypeHandle<QuadrantEntity>(true),
+                ecb = ecbs.CreateCommandBuffer().AsParallelWriter()
+            };
+            this.Dependency = FindTargetWithQuadrantJob.ScheduleParallel(unitQuery, 1, this.Dependency);
+        }
+        else
+        {
+            //信息存储
+            int count = targetQuery.CalculateEntityCount();
+            NativeArray<TargetInfo> TargetInfoArray = new NativeArray<TargetInfo>(count, Allocator.TempJob);
+            var saveTargetInfoJob = new SaveTargetInfoJob
+            {
+                TargetInfoArray = TargetInfoArray,
+                PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+                TargetSelfTypeHandleAccessor = this.GetComponentTypeHandle<TargetSelf>(true),
+            };
+        
+        
+            this.Dependency = saveTargetInfoJob.ScheduleParallel(targetQuery, 1, this.Dependency);
+            var FindTargetJob = new FindTargetJob
+            {
+                TargetInfoArray = TargetInfoArray,
+                PositionTypeHandleAccessor = this.GetComponentTypeHandle<Translation>(true),
+                UnitSelfTypeHandleAccessor = this.GetComponentTypeHandle<UnitSelf>(true),
+                ecb = ecbs.CreateCommandBuffer().AsParallelWriter()
+            };
+            this.Dependency = FindTargetJob.ScheduleParallel(unitQuery, 1, this.Dependency);
+        }
+        
         ecbs.AddJobHandleForProducer(this.Dependency);
     }
 }

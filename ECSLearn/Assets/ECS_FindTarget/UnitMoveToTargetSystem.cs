@@ -115,7 +115,7 @@ public class UnitMoveToTargetSystem_Ex : SystemBase
                         ecb.DestroyEntity(i, hasTarget.targetEntity);
                         ecb.RemoveComponent(entityInQueryIndex, unitEntity, ComponentType.ReadOnly<HasTarget>());
                     }
-
+                    break;
                 }
             }
 

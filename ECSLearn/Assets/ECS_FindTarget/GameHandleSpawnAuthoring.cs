@@ -18,7 +18,7 @@ public class GameHandleSpawnAuthoring : MonoBehaviour, IConvertGameObjectToEntit
     public GameObject targetPrefab;
     public GameObject unitPrefab;
 
-    
+    public bool useQuadrantSystem;
 
     private void Awake() {
         Instance = this;
@@ -30,12 +30,15 @@ public class GameHandleSpawnAuthoring : MonoBehaviour, IConvertGameObjectToEntit
         dstManager.AddComponentData(pfTargetEntity, new Scale { Value = 0.5f });
         dstManager.AddComponentData(pfTargetEntity, new TargetSelf { self = pfTargetEntity });
         dstManager.AddComponentData(pfTargetEntity, new TargetOrigin());
+        dstManager.AddComponentData(pfTargetEntity, new QuadrantEntity {typeEnum = QuadrantEntity.TypeEnum.Target});
+      
         
         pfUnityEntity = conversionSystem.GetPrimaryEntity(unitPrefab);
         dstManager.AddComponentData(pfUnityEntity, new Unit());
         dstManager.AddComponentData(pfUnityEntity, new Scale { Value = 1.5f });
         dstManager.AddComponentData(pfUnityEntity, new UnitSelf { self = pfUnityEntity});
         dstManager.AddComponentData(pfUnityEntity, new UnitOrigin());
+        dstManager.AddComponentData(pfTargetEntity, new QuadrantEntity {typeEnum = QuadrantEntity.TypeEnum.Unit});
         
     }
 
