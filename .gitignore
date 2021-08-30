@@ -276,3 +276,6 @@ SkinMeshRender_DcBatch/Library/
 UIEffect/Library/
 UIEffect/Temp/
 UIEffect/Logs/
+Unity_BaseRender/Library/
+Unity_BaseRender/Logs/
+Unity_BaseRender/Temp/
