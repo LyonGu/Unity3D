@@ -273,3 +273,6 @@ SkinMeshRender_DcBatch/Temp/
 SkinMeshRender_DcBatch/Logs/
 SkinMeshRender_DcBatch/obj/
 SkinMeshRender_DcBatch/Library/
+UIEffect/Library/
+UIEffect/Temp/
+UIEffect/Logs/
