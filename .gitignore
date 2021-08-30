@@ -266,3 +266,10 @@ EntityComponentSystemSamples/HybridURPSamples/Logs/
 EntityComponentSystemSamples/HybridURPSamples/Assets/SceneDependencyCache/
 EntityComponentSystemSamples/HybridURPSamples/Builds/
 EntityComponentSystemSamples/HybridURPSamples/.vsconfig
+SkinMeshRender_DcBatch/.vs/
+SkinMeshRender_DcBatch/.vsconfig
+SkinMeshRender_DcBatch/Library/PackageCache/
+SkinMeshRender_DcBatch/Temp/
+SkinMeshRender_DcBatch/Logs/
+SkinMeshRender_DcBatch/obj/
+SkinMeshRender_DcBatch/Library/
