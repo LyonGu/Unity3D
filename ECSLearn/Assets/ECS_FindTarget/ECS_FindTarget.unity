@@ -268,7 +268,7 @@ MonoBehaviour:
     type: 3}
   unitPrefab: {fileID: 9004659169521342876, guid: 8203bbc8a419e234890da7ccfa4d9b4a,
     type: 3}
-  useQuadrantSystem: 0
+  useQuadrantSystem: 1
 --- !u!1 &944716568
 GameObject:
   m_ObjectHideFlags: 0

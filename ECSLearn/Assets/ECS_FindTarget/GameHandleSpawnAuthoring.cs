@@ -38,7 +38,7 @@ public class GameHandleSpawnAuthoring : MonoBehaviour, IConvertGameObjectToEntit
         dstManager.AddComponentData(pfUnityEntity, new Scale { Value = 1.5f });
         dstManager.AddComponentData(pfUnityEntity, new UnitSelf { self = pfUnityEntity});
         dstManager.AddComponentData(pfUnityEntity, new UnitOrigin());
-        dstManager.AddComponentData(pfTargetEntity, new QuadrantEntity {typeEnum = QuadrantEntity.TypeEnum.Unit});
+        dstManager.AddComponentData(pfUnityEntity, new QuadrantEntity {typeEnum = QuadrantEntity.TypeEnum.Unit});
         
     }
 

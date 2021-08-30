@@ -123,6 +123,7 @@ public struct HasTarget : IComponentData {
     public Entity targetEntity;
 }
 
+[DisableAutoCreation]
 public class HasTargetDebug : ComponentSystem {
 
     protected override void OnUpdate() {
