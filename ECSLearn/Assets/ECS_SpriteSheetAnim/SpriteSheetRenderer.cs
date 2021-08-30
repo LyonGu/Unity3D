@@ -19,30 +19,36 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Transforms;
 
-[UpdateAfter(typeof(SpriteSheetAnimation_Animate))]
-public class SpriteSheetRenderer : ComponentSystem {
+namespace ECS_SpriteSheetAnim
+{
+    
+    [UpdateAfter(typeof(SpriteSheetAnimation_Animate))]
+    [DisableAutoCreation]
+    public class SpriteSheetRenderer : ComponentSystem {
 
-    protected override void OnUpdate() {
-        MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
-        Vector4[] uv = new Vector4[1];
-        Camera camera = Camera.main;
-        Mesh quadMesh = GameHandlerSpriteSheet.GetInstance().quadMesh;
-        Material material = GameHandlerSpriteSheet.GetInstance().walkingSpriteSheetMaterial;
-        Entities.ForEach((ref Translation translation, ref SpriteSheetAnimation_Data spriteSheetAnimationData) => {
+        protected override void OnUpdate() {
+            MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+            Vector4[] uv = new Vector4[1];
+            Camera camera = Camera.main;
+            Mesh quadMesh = GameHandlerSpriteSheet.GetInstance().quadMesh;
+            Material material = GameHandlerSpriteSheet.GetInstance().walkingSpriteSheetMaterial;
+            Entities.ForEach((ref Translation translation, ref SpriteSheetAnimation_Data spriteSheetAnimationData) => {
 
-            uv[0] = spriteSheetAnimationData.uv;
-            materialPropertyBlock.SetVectorArray("_MainTex_UV", uv);
+                uv[0] = spriteSheetAnimationData.uv;
+                materialPropertyBlock.SetVectorArray("_MainTex_UV", uv);
 
-            Graphics.DrawMesh(
-                quadMesh, 
-                spriteSheetAnimationData.matrix,
-                material, 
-                0, // Layer
-                camera,
-                0, // Submesh index
-                materialPropertyBlock
-            );
-        });
+                Graphics.DrawMesh(
+                    quadMesh, 
+                    spriteSheetAnimationData.matrix,
+                    material, 
+                    0, // Layer
+                    camera,
+                    0, // Submesh index
+                    materialPropertyBlock
+                );
+            });
+        }
+
     }
 
 }
