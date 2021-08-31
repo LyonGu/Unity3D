@@ -19,6 +19,7 @@ namespace CodeMonkey.Utils {
      * */
     public class World_Bar {
         
+        private Outline outline;
         private GameObject gameObject;
         private Transform transform;
         private Transform background;
@@ -34,6 +35,7 @@ namespace CodeMonkey.Utils {
         }
 
         public World_Bar(Transform parent, Vector3 localPosition, Vector3 localScale, Color? backgroundColor, Color barColor, float sizeRatio, int sortingOrder, Outline outline = null) {
+            this.outline = outline;
             SetupParent(parent, localPosition);
             if (outline != null) SetupOutline(outline, localScale, sortingOrder - 1);
             if (backgroundColor != null) SetupBackground((Color)backgroundColor, localScale, sortingOrder);
@@ -65,6 +67,22 @@ namespace CodeMonkey.Utils {
         }
         public void SetSize(float sizeRatio) {
             bar.localScale = new Vector3(sizeRatio, 1, 1);
+        }
+        public void SetLocalScale(Vector3 localScale) {
+            // Outline
+            if (transform.Find("Outline") != null) {
+                // Has outline
+                transform.Find("Outline").localScale = localScale + new Vector3(outline.size, outline.size);
+            }
+
+            //Background
+            background.localScale = localScale;
+
+            // Set Bar Scale
+            bar.localPosition = new Vector3(-localScale.x / 2f, 0, 0);
+            Transform barIn = bar.Find("BarIn");
+            barIn.localScale = localScale;
+            barIn.localPosition = new Vector3(localScale.x / 2f, 0);
         }
         public void SetColor(Color color) {
             bar.Find("BarIn").GetComponent<SpriteRenderer>().color = color;

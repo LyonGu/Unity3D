@@ -136,6 +136,8 @@ namespace ECS_AnimationSystem {
 
         // Display Mesh
         protected override void OnUpdate() {
+            if(ECS_RTSControls.instance == null)
+                return;
             Material marineMaterial = ECS_RTSControls.instance.marineMaterial;
             Quaternion quaternionIdentity = Quaternion.identity;
 

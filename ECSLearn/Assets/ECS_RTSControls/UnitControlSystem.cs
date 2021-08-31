@@ -26,6 +26,8 @@ public class UnitControlSystem : ComponentSystem {
     private float3 startPosition;
 
     protected override void OnUpdate() {
+        if(ECS_RTSControls.instance== null)
+            return;
         if (Input.GetMouseButtonDown(0)) {
             // Mouse Pressed
             ECS_RTSControls.instance.selectionAreaTransform.gameObject.SetActive(true);

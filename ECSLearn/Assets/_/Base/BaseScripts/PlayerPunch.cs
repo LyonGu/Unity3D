@@ -24,8 +24,9 @@ public class PlayerPunch : MonoBehaviour {
     public static PlayerPunch instance;
 
     private const float SPEED = 50f;
-
-    private Player_Base playerBase;
+    
+    private PlayerMain playerMain;
+    private Character_Base characterBase;
     private State state;
     private Material material;
     private Color materialTintColor;
@@ -37,16 +38,20 @@ public class PlayerPunch : MonoBehaviour {
 
     private void Awake() {
         instance = this;
-        playerBase = gameObject.GetComponent<Player_Base>();
+        playerMain = GetComponent<PlayerMain>();
+        characterBase = gameObject.GetComponent<Character_Base>();
         material = transform.Find("Body").GetComponent<MeshRenderer>().material;
         materialTintColor = new Color(1, 0, 0, 0);
+    }
+
+    private void Start() {
         SetStateNormal();
     }
 
     private void Update() {
         switch (state) {
         case State.Normal:
-            HandleMovement();
+            //HandleMovement();
             HandleAttack();
             break;
         case State.Attacking:
@@ -63,12 +68,15 @@ public class PlayerPunch : MonoBehaviour {
     
     private void SetStateNormal() {
         state = State.Normal;
+        playerMain.PlayerMovementHandler.Enable();
     }
 
     private void SetStateAttacking() {
         state = State.Attacking;
+        playerMain.PlayerMovementHandler.Disable();
     }
 
+    /*
     private void HandleMovement() {
         float moveX = 0f;
         float moveY = 0f;
@@ -89,12 +97,13 @@ public class PlayerPunch : MonoBehaviour {
         Vector3 moveDir = new Vector3(moveX, moveY).normalized;
         bool isIdle = moveX == 0 && moveY == 0;
         if (isIdle) {
-            playerBase.PlayIdleAnim();
+            characterBase.PlayIdleAnim();
         } else {
-            playerBase.PlayMoveAnim(moveDir);
+            characterBase.PlayMoveAnim(moveDir);
             transform.position += moveDir * SPEED * Time.deltaTime;
         }
     }
+    */
 
     private void HandleAttack() {
         if (Input.GetMouseButtonDown(0)) {
@@ -118,21 +127,21 @@ public class PlayerPunch : MonoBehaviour {
             float attackAngle = UtilsClass.GetAngleFromVectorFloat(attackDir);
 
             // Play attack animation
-            if (playerBase.IsPlayingPunchAnimation()) {
+            if (characterBase.IsPlayingPunchAnimation()) {
                 // Play Kick animation since punch animation is currently active
-                playerBase.PlayKickAnimation(attackDir, (Vector3 impactPosition) => {
+                characterBase.PlayKickAnimation(attackDir, (Vector3 impactPosition) => {
                     if (hitEnemy) {
                         impactPosition += UtilsClass.GetVectorFromAngle((int)attackAngle) * 4f;
-                        Transform impactEffect = Instantiate(GameAssetsDefault.i.pfImpactEffect, impactPosition, Quaternion.identity);
+                        Transform impactEffect = Instantiate(GameAssets.i.pfImpactEffect, impactPosition, Quaternion.identity);
                         impactEffect.eulerAngles = new Vector3(0, 0, attackAngle - 90);
                     }
                 }, SetStateNormal);
             } else {
                 // Play Punch animation
-                playerBase.PlayPunchAnimation(attackDir, (Vector3 impactPosition) => {
+                characterBase.PlayPunchAnimation(attackDir, (Vector3 impactPosition) => {
                     if (hitEnemy) {
                         impactPosition += UtilsClass.GetVectorFromAngle((int)attackAngle) * 4f;
-                        Transform impactEffect = Instantiate(GameAssetsDefault.i.pfImpactEffect, impactPosition, Quaternion.identity);
+                        Transform impactEffect = Instantiate(GameAssets.i.pfImpactEffect, impactPosition, Quaternion.identity);
                         impactEffect.eulerAngles = new Vector3(0, 0, attackAngle - 90);
                     }
                 }, SetStateNormal);
@@ -149,6 +158,7 @@ public class PlayerPunch : MonoBehaviour {
         transform.position += knockbackDir * knockbackDistance;
         DamageFlash();
     }
+
     public Vector3 GetPosition() {
         return transform.position;
     }

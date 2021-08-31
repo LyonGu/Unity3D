@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
+using System;
 using UnityEngine;
 using V_AnimationSystem;
 using CodeMonkey.Utils;
@@ -31,8 +43,8 @@ public class CharacterSwordHandler : MonoBehaviour, EnemyHandler.IEnemyTargetabl
         unitSkeleton = new V_UnitSkeleton(1f, bodyTransform.TransformPoint, (Mesh mesh) => bodyTransform.GetComponent<MeshFilter>().mesh = mesh);
         unitAnimation = new V_UnitAnimation(unitSkeleton);
         
-        idleUnitAnim = GameAssetsDefault.UnitAnimTypeEnum.dSwordTwoHandedBack_Idle;
-        walkUnitAnim = GameAssetsDefault.UnitAnimTypeEnum.dSwordTwoHandedBack_Walk;
+        idleUnitAnim = GameAssets.UnitAnimTypeEnum.dSwordTwoHandedBack_Idle;
+        walkUnitAnim = GameAssets.UnitAnimTypeEnum.dSwordTwoHandedBack_Walk;
         hitUnitAnim = null;
         attackUnitAnim = null;
         

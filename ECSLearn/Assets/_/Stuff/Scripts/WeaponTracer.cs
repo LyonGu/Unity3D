@@ -11,7 +11,7 @@ public class WeaponTracer {
         float distance = Vector3.Distance(fromPosition, targetPosition);
         float shootAngle = UtilsClass.GetAngleFromVectorFloat(shootDir);
         Vector3 spawnTracerPosition = fromPosition + shootDir * distance * .5f;
-        Material tracerMaterial = new Material(GameAssetsDefault.i.m_WeaponTracer);
+        Material tracerMaterial = new Material(GameAssets.i.m_WeaponTracer);
         tracerMaterial.SetTextureScale("_MainTex", new Vector2(1f, distance / 256f));
         World_Mesh worldMesh = new World_Mesh(null, spawnTracerPosition, new Vector3(1, 1), shootAngle - 90, 6f, distance, tracerMaterial, null, 10000);
 

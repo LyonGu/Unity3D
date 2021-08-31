@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,23 +27,26 @@ public class CharacterAimHandler : MonoBehaviour, EnemyHandler.IEnemyTargetable 
     }
     public event EventHandler<OnShootEventArgs> OnShoot;
 
+    private bool isMoving;
+    private Vector3 moveDir;
+
 	// Use this for initialization
 	private void Start () {
-        V_Object vObject = CreateBasicUnit(transform, new Vector3(500, 680), 30f, GameAssetsDefault.i.m_MarineSpriteSheet);
+        V_Object vObject = CreateBasicUnit(transform, new Vector3(500, 680), 30f, GameAssets.i.m_MarineSpriteSheet);
         V_UnitAnimation unitAnimation = vObject.GetLogic<V_UnitAnimation>();
         V_UnitSkeleton unitSkeleton = vObject.GetLogic<V_UnitSkeleton>();
         V_IObjectTransform objectTransform = vObject.GetLogic<V_IObjectTransform>();
 
         bool canShoot = true;
 
-        V_UnitSkeleton_Composite_Weapon unitSkeletonCompositeWeapon = new V_UnitSkeleton_Composite_Weapon(vObject, unitSkeleton, GameAssetsDefault.UnitAnimEnum.dMarine_AimWeaponRight, GameAssetsDefault.UnitAnimEnum.dMarine_AimWeaponRightInvertV, GameAssetsDefault.UnitAnimEnum.dMarine_ShootWeaponRight, GameAssetsDefault.UnitAnimEnum.dMarine_ShootWeaponRightInvertV);
+        V_UnitSkeleton_Composite_WeaponInvert unitSkeletonCompositeWeapon = new V_UnitSkeleton_Composite_WeaponInvert(vObject, unitSkeleton, GameAssets.UnitAnimEnum.dMarine_AimWeaponRight, GameAssets.UnitAnimEnum.dMarine_AimWeaponRightInvertV, GameAssets.UnitAnimEnum.dMarine_ShootWeaponRight, GameAssets.UnitAnimEnum.dMarine_ShootWeaponRightInvertV);
         vObject.AddRelatedObject(unitSkeletonCompositeWeapon);
         unitSkeletonCompositeWeapon.SetActive();
             
-        V_UnitSkeleton_Composite_Walker unitSkeletonCompositeWalker_BodyHead = new V_UnitSkeleton_Composite_Walker(vObject, unitSkeleton, GameAssetsDefault.UnitAnimTypeEnum.dMarine_Walk, GameAssetsDefault.UnitAnimTypeEnum.dMarine_Idle, new[] { "Body", "Head" });
+        V_UnitSkeleton_Composite_Walker unitSkeletonCompositeWalker_BodyHead = new V_UnitSkeleton_Composite_Walker(vObject, unitSkeleton, GameAssets.UnitAnimTypeEnum.dMarine_Walk, GameAssets.UnitAnimTypeEnum.dMarine_Idle, new[] { "Body", "Head" });
         vObject.AddRelatedObject(unitSkeletonCompositeWalker_BodyHead);
             
-        V_UnitSkeleton_Composite_Walker unitSkeletonCompositeWalker_Feet = new V_UnitSkeleton_Composite_Walker(vObject, unitSkeleton, GameAssetsDefault.UnitAnimTypeEnum.dMarine_Walk, GameAssetsDefault.UnitAnimTypeEnum.dMarine_Idle, new[] { "FootL", "FootR" });
+        V_UnitSkeleton_Composite_Walker unitSkeletonCompositeWalker_Feet = new V_UnitSkeleton_Composite_Walker(vObject, unitSkeleton, GameAssets.UnitAnimTypeEnum.dMarine_Walk, GameAssets.UnitAnimTypeEnum.dMarine_Idle, new[] { "FootL", "FootR" });
         vObject.AddRelatedObject(unitSkeletonCompositeWalker_Feet);
 
         FunctionUpdater.Create(() => {
@@ -52,7 +67,7 @@ public class CharacterAimHandler : MonoBehaviour, EnemyHandler.IEnemyTargetable 
                 // Shoot
                 canShoot = false;
                 // Replace Body and Head with Attack
-                unitSkeleton.ReplaceBodyPartSkeletonAnim(GameAssetsDefault.UnitAnimTypeEnum.dMarine_Attack.GetUnitAnim(aimDir), "Body", "Head");
+                unitSkeleton.ReplaceBodyPartSkeletonAnim(GameAssets.UnitAnimTypeEnum.dMarine_Attack.GetUnitAnim(aimDir), "Body", "Head");
                 // Shoot Composite Skeleton
                 unitSkeletonCompositeWeapon.Shoot(targetPosition, () => {
                     canShoot = true;
@@ -68,8 +83,8 @@ public class CharacterAimHandler : MonoBehaviour, EnemyHandler.IEnemyTargetable 
 
 
             // Manual Movement
-            bool isMoving = false;
-            Vector3 moveDir = new Vector3(0, 0);
+            isMoving = false;
+            moveDir = new Vector3(0, 0);
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
                 moveDir.y = +1; isMoving = true;
             }
@@ -114,6 +129,13 @@ public class CharacterAimHandler : MonoBehaviour, EnemyHandler.IEnemyTargetable 
         return transform.position;
     }
 
+    public bool IsMoving() {
+        return isMoving;
+    }
+
+    public Vector3 GetMoveDir() {
+        return moveDir;
+    }
 
     public void Damage(EnemyHandler enemyHandler) {
         Damage(enemyHandler.GetPosition());

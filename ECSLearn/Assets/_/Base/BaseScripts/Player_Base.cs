@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
+using System;
 using UnityEngine;
 using V_AnimationSystem;
 using CodeMonkey.Utils;
@@ -13,7 +25,7 @@ public class Player_Base : MonoBehaviour {
     private V_UnitAnimation unitAnimation;
     private AnimatedWalker animatedWalker;
 
-    private void Start() {
+    private void Awake() {
         Transform bodyTransform = transform.Find("Body");
         unitSkeleton = new V_UnitSkeleton(1f, bodyTransform.TransformPoint, (Mesh mesh) => bodyTransform.GetComponent<MeshFilter>().mesh = mesh);
         unitAnimation = new V_UnitAnimation(unitSkeleton);
@@ -30,8 +42,17 @@ public class Player_Base : MonoBehaviour {
         unitSkeleton.Update(Time.deltaTime);
     }
 
+    public void RefreshBodySkeletonMesh() {
+        Transform bodyTransform = transform.Find("Body");
+        bodyTransform.GetComponent<MeshFilter>().mesh = unitSkeleton.GetMesh();
+    }
+
     public V_UnitAnimation GetUnitAnimation() {
         return unitAnimation;
+    }
+
+    public Vector3 GetPosition() {
+        return transform.position;
     }
     #endregion
 
@@ -42,6 +63,14 @@ public class Player_Base : MonoBehaviour {
 
     public void PlayIdleAnim() {
         animatedWalker.SetMoveVector(Vector3.zero);
+    }
+
+    public void PlayJumpAnim(Vector3 moveDir) {
+        if (moveDir.x >= 0) {
+            unitAnimation.PlayAnim(UnitAnim.GetUnitAnim("dBareHands_JumpRight"));
+        } else {
+            unitAnimation.PlayAnim(UnitAnim.GetUnitAnim("dBareHands_JumpLeft"));
+        }
     }
     
     public bool IsPlayingPunchAnimation() {
@@ -90,6 +119,10 @@ public class Player_Base : MonoBehaviour {
 
     public void PlaySlidingAnimation(Vector3 dir) {
         unitAnimation.PlayAnimForced(UnitAnimType.GetUnitAnimType("Spiderman_Sliding"), dir, 1f, null, null, null);
+    }
+
+    public void PlayWinAnimation() {
+        unitAnimation.PlayAnimForced(UnitAnim.GetUnitAnim("dBareHands_Victory"), 1f, null, null, null);
     }
 
     public Vector3 GetHandLPosition() {

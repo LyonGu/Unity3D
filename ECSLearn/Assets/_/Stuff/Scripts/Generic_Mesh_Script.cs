@@ -78,7 +78,7 @@ public class Generic_Mesh_Script : MonoBehaviour {
 		
 		//particles = Options.Particles;
 		//timerAmount = .033f; // 30FPS
-        updateRate = .033f;
+        //updateRate = .033f;
         //timerAmount = .016f; // 60FPS
 		//if (particles == "Medium") timerAmount = .066f;
 		//if (particles == "Low") timerAmount = .1f;

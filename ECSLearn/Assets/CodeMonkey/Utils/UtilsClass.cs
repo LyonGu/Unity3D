@@ -119,12 +119,13 @@ namespace CodeMonkey.Utils {
 
         // Create a Text Popup in the World, no parent
         public static void CreateWorldTextPopup(string text, Vector3 localPosition) {
-            CreateWorldTextPopup(null, text, localPosition, 40, Color.white, localPosition + new Vector3(0, 20), 1f);
+            CreateWorldTextPopup(null, text, localPosition, 18, Color.white, localPosition + new Vector3(0, 2), 1f);
         }
         
         // Create a Text Popup in the World
         public static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime) {
             TextMesh textMesh = CreateWorldText(parent, text, localPosition, fontSize, color, TextAnchor.LowerLeft, TextAlignment.Left, sortingOrderDefault);
+            textMesh.characterSize = .2f;
             Transform transform = textMesh.transform;
             Vector3 moveAmount = (finalPopupPosition - localPosition) / popupTime;
             FunctionUpdater.Create(delegate () {
@@ -340,6 +341,18 @@ namespace CodeMonkey.Utils {
         
 
         public static Vector3 GetVectorFromAngle(int angle) {
+            // angle = 0 -> 360
+            float angleRad = angle * (Mathf.PI/180f);
+            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+        }
+        
+        public static Vector3 GetVectorFromAngle(float angle) {
+            // angle = 0 -> 360
+            float angleRad = angle * (Mathf.PI/180f);
+            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+        }
+        
+        public static Vector3 GetVectorFromAngleInt(int angle) {
             // angle = 0 -> 360
             float angleRad = angle * (Mathf.PI/180f);
             return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));

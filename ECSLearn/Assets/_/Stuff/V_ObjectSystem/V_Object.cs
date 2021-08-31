@@ -44,6 +44,8 @@ namespace V_ObjectSystem {
 
         private float deltaTimeModifier;
 
+        private bool isDisabled;
+
         // Helper accessor
         public Func<Vector3> GetPosition;
         public Func<Transform> GetTransform;
@@ -56,6 +58,7 @@ namespace V_ObjectSystem {
             this.updateType = updateType;
 
             isDestroyed = false;
+            isDisabled = false;
 
             activeLogicArr = new V_IObjectActiveLogic[0];
             activeLogicArrCopy = new V_IObjectActiveLogic[0];
@@ -71,6 +74,9 @@ namespace V_ObjectSystem {
             GetTransform = delegate () { return null; };
 
             deltaTimeModifier = V_TimeScaleManager.GetTimeScale();
+        }
+        public void SetIsDisabled(bool isDisabled) {
+            this.isDisabled = isDisabled;
         }
         public float GetDeltaTimeModifier() {
             return deltaTimeModifier;
@@ -147,6 +153,7 @@ namespace V_ObjectSystem {
         }
         private void Update(float deltaTime) {
             if (isDestroyed) return;
+            if (isDisabled) return;
 
             deltaTime = deltaTime * deltaTimeModifier;
 

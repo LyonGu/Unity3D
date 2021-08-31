@@ -22,6 +22,8 @@ namespace CodeMonkey.MonoBehaviours {
      * */
     public class CameraFollow : MonoBehaviour {
 
+        public static CameraFollow Instance { get; private set; }
+
         private Camera myCamera;
         private Func<Vector3> GetCameraFollowPositionFunc;
         private Func<float> GetCameraZoomFunc;
@@ -37,20 +39,14 @@ namespace CodeMonkey.MonoBehaviours {
             }
 
             if (instantZoom) {
-                if(myCamera == null)
-                    myCamera = transform.GetComponent<Camera>();
                 myCamera.orthographicSize = GetCameraZoomFunc();
             }
         }
 
-        private void Awake()
-        {
+        private void Awake() {
+            Instance = this;
             myCamera = transform.GetComponent<Camera>();
         }
-
-//        private void Start() {
-//            myCamera = transform.GetComponent<Camera>();
-//        }
 
         public void SetCameraFollowPosition(Vector3 cameraFollowPosition) {
             SetGetCameraFollowPositionFunc(() => cameraFollowPosition);
@@ -102,7 +98,7 @@ namespace CodeMonkey.MonoBehaviours {
             float cameraZoom = GetCameraZoomFunc();
 
             float cameraZoomDifference = cameraZoom - myCamera.orthographicSize;
-            float cameraZoomSpeed = 3f;
+            float cameraZoomSpeed = 1f;
 
             myCamera.orthographicSize += cameraZoomDifference * cameraZoomSpeed * Time.deltaTime;
 

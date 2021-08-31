@@ -49,6 +49,7 @@ namespace V_AnimationSystem {
             this.frameRateMod = frameRateMod;
             this.ConvertLocalPositionToWorldPosition = ConvertLocalPositionToWorldPosition;
             mesh = new Mesh();
+            mesh.MarkDynamic();
             List<Vector3> vertices = new List<Vector3>();
             List<Vector2> uvs = new List<Vector2>();
             List<int> triangles = new List<int>();
@@ -64,6 +65,9 @@ namespace V_AnimationSystem {
         }
         public void DestroySelf() {
             UnityEngine.Object.Destroy(mesh);
+        }
+        public Mesh GetMesh() {
+            return mesh;
         }
         public V_Skeleton_Anim[] GetAnims() {
             return skeletonUpdater.GetAnims();

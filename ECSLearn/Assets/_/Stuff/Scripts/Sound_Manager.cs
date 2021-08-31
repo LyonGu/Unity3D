@@ -140,7 +140,7 @@ public static class Sound_Manager {
 	public static void Load(Sound sound, string folder = "") {
         if (folder == "") folder = "Sounds/"; //Default sound folder
 		dictionary[sound] = (AudioClip) Resources.Load(folder+sound);
-		//if (dictionary[sound] == null) Debug.Log("Couldnt load "+folder+sound);
+		if (dictionary[sound] == null) Debug.Log("Couldnt load "+folder+sound);
 		timers[sound] = 0f;
 	}
 	public static float GetSoundLength(Sound sound) {
@@ -291,7 +291,7 @@ public static class Sound_Manager {
                 timers[sound] = Time.realtimeSinceStartup - .03f;
             timers[sound] += .01f;
             */
-            timers[sound] = Time.realtimeSinceStartup + Random.Range(.02f, .05f);
+            timers[sound] = Time.realtimeSinceStartup + Random.Range(.05f, .1f);
             sounds = new[] { Sound.Rifle_Fire_1, Sound.Rifle_Fire_2, Sound.Rifle_Fire_3, Sound.Rifle_Fire_4 };
             return PlayClipAtPoint(dictionary[sounds[Random.Range(0, sounds.Length)]], pos);
 
@@ -311,6 +311,7 @@ public static class Sound_Manager {
 	}
 	private static AudioSource PlayClip(AudioClip clip) {
 		AudioSource src = PlayClipAtPoint(clip, Vector3.zero);
+        if (src == null) return null;
 		src.spatialBlend = 0f;
 		return src;
 	}

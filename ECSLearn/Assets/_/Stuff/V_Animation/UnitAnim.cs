@@ -116,6 +116,10 @@ namespace V_AnimationSystem {
             return null;
         }
 
+        public static UnitAnim Create(string name, V_Skeleton_Anim[] anims) {
+            return new UnitAnim(name, anims);
+        }
+
 
 
 
@@ -136,9 +140,11 @@ namespace V_AnimationSystem {
             return !disableOverwrite;
 #endif
         }
+
         public string GetName() {
             return name;
         }
+
         public V_Skeleton_Anim GetSkeletonAnim_BodyPartPreset(int bodyPartPreset) {
             foreach (V_Skeleton_Anim skeletonAnim in anims) {
                 if (skeletonAnim.bodyPart.preset == bodyPartPreset) {
@@ -147,6 +153,7 @@ namespace V_AnimationSystem {
             }
             return null;
         }
+
         public V_Skeleton_Anim GetSkeletonAnim_BodyPartCustom(string bodyPartCustom) {
             foreach (V_Skeleton_Anim skeletonAnim in anims) {
                 if (skeletonAnim.bodyPart.customName == bodyPartCustom) {
@@ -155,6 +162,7 @@ namespace V_AnimationSystem {
             }
             return null;
         }
+
         public V_Skeleton_Anim GetSkeletonAnim(BodyPart bodyPart) {
             foreach (V_Skeleton_Anim skeletonAnim in anims) {
                 if (skeletonAnim.bodyPart == bodyPart) {
@@ -163,12 +171,19 @@ namespace V_AnimationSystem {
             }
             return null;
         }
+
         public V_Skeleton_Anim[] GetAnims() {
             return anims;
         }
+
         public UnitAnimType GetUnitAnimType() {
             return null; // UnitAnimType.MinionAttack;
         }
+
+        public float GetFrameRateOriginal() {
+            return anims[0].GetFrameRateOriginal();
+        }
+
         public int GetTotalFrameCount() {
             int ret = 0;
             foreach (V_Skeleton_Anim skeletonAnim in anims) {
@@ -176,6 +191,7 @@ namespace V_AnimationSystem {
             }
             return ret;
         }
+
         public List<string> GetTriggerList() {
             List<string> ret = new List<string>();
             foreach (V_Skeleton_Anim skeletonAnim in anims) {
@@ -188,12 +204,16 @@ namespace V_AnimationSystem {
             // Anim default dir is pointing RIGHT = Vector3(1, 0);
             float aimAngle = GetAngleFromVectorFloat(dir);
 
-            foreach (V_Skeleton_Anim skeletonAnim in anims) {
+            //foreach (V_Skeleton_Anim skeletonAnim in anims) {
+            for (int i=0; i<anims.Length; i++) {
+                V_Skeleton_Anim skeletonAnim = anims[i];
 
                 // Make sure the skeleton updater that will use this anim knows the sorting order might change
                 //skeletonAnim.defaultHasVariableSortingOrder = true;
 
-                foreach (V_Skeleton_Frame skeletonFrame in skeletonAnim.GetFrames()) {
+                V_Skeleton_Frame[] skeletonFrameArr = skeletonAnim.GetFrames();
+                for (int j=0; j<skeletonFrameArr.Length; j++) {
+                    V_Skeleton_Frame skeletonFrame = skeletonFrameArr[j];
                     // Rotate based on base position
                     Vector3 framePosition = skeletonFrame.GetBasePosition();
                     Vector3 newFramePosition = ApplyRotationToVector(framePosition, dir);
@@ -232,7 +252,23 @@ namespace V_AnimationSystem {
 
 
         public UnitAnim Clone() {
-            return Load(Save());
+            V_Skeleton_Anim[] skeletonAnimArray = new V_Skeleton_Anim[anims.Length];
+            for (int i = 0; i < anims.Length; i++) {
+                skeletonAnimArray[i] = anims[i].Clone();
+                // Not Clone Deep!
+            }
+            UnitAnim clone = new UnitAnim(name, skeletonAnimArray);
+            return clone;
+            //return Load(Save());
+        }
+        
+        public UnitAnim CloneDeep() {
+            V_Skeleton_Anim[] skeletonAnimArray = new V_Skeleton_Anim[anims.Length];
+            for (int i = 0; i < anims.Length; i++) {
+                skeletonAnimArray[i] = anims[i].CloneDeep();
+            }
+            UnitAnim clone = new UnitAnim(name, skeletonAnimArray);
+            return clone;
         }
         
 
@@ -330,7 +366,7 @@ namespace V_AnimationSystem {
             DefaultAnimation = UnitAnim.GetUnitAnim("DefaultAnimation");
 
             //LoadOldVersionSaves();
-
+            
 #if !SILENT
             Debug.Log("Loaded Animations: "+unitAnimList.Count);
 #endif
@@ -401,7 +437,95 @@ namespace V_AnimationSystem {
             Debug.Log("Loaded animations " + ((Time.realtimeSinceStartup - startTime) * 1000f) + "ms");
         }
 
+        public static void CompileResourcesAnimationFile() {
+            Debug.Log("########## CompileResourcesAnimationFile");
+        }
+
+        public static void CopyAnimationsIntoResourcesAndRename() {
+            Debug.Log("########## CopyAnimationsIntoResourcesAndRename");
+
+            string animationResourcesPath = Application.dataPath + @"/Data/Animations/";
+            DirectoryInfo animationDataDir = new DirectoryInfo(animationResourcesPath);
+            List<FileInfo> fileInfoList = new List<FileInfo>();
+            fileInfoList.AddRange(animationDataDir.GetFiles("*." + V_Animation.fileExtention_Animation));
+            foreach (FileInfo fileInfo in fileInfoList) {
+                string newFileName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 3) + "bytes";
+                newFileName = Application.dataPath + @"/V_Animation/Resources/AnimationData/Animations/" + newFileName;
+                if (!File.Exists(newFileName) || 
+                    fileInfo.LastWriteTime > new FileInfo(newFileName).LastWriteTime) {
+                    // File doesnt exist
+                    Debug.Log("Copying Anim: " + fileInfo.Name + "\n" + fileInfo.FullName + " -> " + newFileName);
+                    try {
+                        File.Copy(fileInfo.FullName, newFileName, true);
+                    } catch (System.Exception e) {
+                        Debug.LogError("Error: " + e);
+                    }
+                }
+            }
+            
+            animationResourcesPath = Application.dataPath + @"/Data/AnimationTypes/";
+            animationDataDir = new DirectoryInfo(animationResourcesPath);
+            fileInfoList = new List<FileInfo>();
+            fileInfoList.AddRange(animationDataDir.GetFiles("*." + V_Animation.fileExtention_AnimationType));
+            foreach (FileInfo fileInfo in fileInfoList) {
+                string newFileName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 3) + "bytes";
+                newFileName = Application.dataPath + @"/V_Animation/Resources/AnimationData/AnimationTypes/" + newFileName;
+                if (!File.Exists(newFileName) || 
+                    fileInfo.LastWriteTime > new FileInfo(newFileName).LastWriteTime) {
+                    // File doesnt exist
+                    Debug.Log("Copying AnimType: " + fileInfo.Name + "\n" + fileInfo.FullName +" -> "+ newFileName);
+                    try {
+                        File.Copy(fileInfo.FullName, newFileName, true);
+                    } catch (System.Exception e) {
+                        Debug.LogError("Error: " + e);
+                    }
+                }
+            }
+
+
+
+
+            /*
+            animationResourcesPath = Application.dataPath + @"/V_Animation/Resources/AnimationData/Animations/";
+            animationDataDir = new DirectoryInfo(animationResourcesPath);
+            fileInfoList = new List<FileInfo>();
+            fileInfoList.AddRange(animationDataDir.GetFiles("*.bytes"));
+            foreach (FileInfo fileInfo in fileInfoList) {
+                string newFileName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 5) + V_Animation.fileExtention_Animation;
+                newFileName = Application.dataPath + @"/Data/Animations/" + newFileName;
+                if (!File.Exists(newFileName)) {
+                    // File doesnt exist
+                    Debug.Log("Copying Anim: " + fileInfo.Name + "\n" + fileInfo.FullName +" -> "+ newFileName);
+                    try {
+                        File.Copy(fileInfo.FullName, newFileName);
+                    } catch (System.Exception e) {
+                        Debug.LogError("Error: " + e);
+                    }
+                }
+            }
+            
+            animationResourcesPath = Application.dataPath + @"/V_Animation/Resources/AnimationData/AnimationTypes/";
+            animationDataDir = new DirectoryInfo(animationResourcesPath);
+            fileInfoList = new List<FileInfo>();
+            fileInfoList.AddRange(animationDataDir.GetFiles("*.bytes"));
+            foreach (FileInfo fileInfo in fileInfoList) {
+                string newFileName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 5) + V_Animation.fileExtention_AnimationType;
+                newFileName = Application.dataPath + @"/Data/AnimationTypes/" + newFileName;
+                if (!File.Exists(newFileName)) {
+                    // File doesnt exist
+                    Debug.Log("Copying AnimType: " + fileInfo.Name + "\n" + fileInfo.FullName +" -> "+ newFileName);
+                    try {
+                        File.Copy(fileInfo.FullName, newFileName);
+                    } catch (System.Exception e) {
+                        Debug.LogError("Error: " + e);
+                    }
+                }
+            }
+            */
+        }
+        
         public static void RenameAnimationsInResources() {
+            Debug.Log("########## RenameAnimationsInResources");
             // Rename all animation files in Resources/AnimationData/ to .bytes
             string animationResourcesPath = Application.dataPath + @"/V_Animation/Resources/AnimationData/";
             DirectoryInfo animationDataDir = new DirectoryInfo(animationResourcesPath);
@@ -412,7 +536,7 @@ namespace V_AnimationSystem {
                 fileInfoList.AddRange(dir.GetFiles("*." + V_Animation.fileExtention_AnimationType));
                 foreach (FileInfo fileInfo in fileInfoList) {
                     string newFileName = fileInfo.FullName.Substring(0, fileInfo.FullName.Length - 3) + "bytes";
-                    //Debug.Log(fileInfo.FullName +" -> "+ newFileName);
+                    Debug.Log(fileInfo.FullName +" -> "+ newFileName);
                     File.Move(fileInfo.FullName, newFileName);
                 }
             }

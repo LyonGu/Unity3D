@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using V_AnimationSystem;
@@ -35,7 +47,7 @@ public class Enemy : MonoBehaviour {
 
 
     public static Enemy Create(Vector3 position) {
-        Transform enemyTransform = Instantiate(GameAssetsDefault.i.pfEnemy, position, Quaternion.identity);
+        Transform enemyTransform = Instantiate(GameAssets.i.pfEnemy, position, Quaternion.identity);
 
         Enemy enemyHandler = enemyTransform.GetComponent<Enemy>();
 
@@ -46,7 +58,7 @@ public class Enemy : MonoBehaviour {
     private const float SPEED = 30f;
 
     private HealthSystem healthSystem;
-    private Enemy_Base enemyBase;
+    private Character_Base characterBase;
     private State state;
     private Vector3 lastMoveDir;
     private int currentPathIndex;
@@ -67,7 +79,7 @@ public class Enemy : MonoBehaviour {
 
     private void Awake() {
         enemyList.Add(this);
-        enemyBase = gameObject.GetComponent<Enemy_Base>();
+        characterBase = gameObject.GetComponent<Character_Base>();
         healthSystem = new HealthSystem(100);
         SetStateNormal();
     }
@@ -108,7 +120,7 @@ public class Enemy : MonoBehaviour {
                 StopMoving();
                 state = State.Attacking;
                 Vector3 attackDir = (getEnemyTarget().GetPosition() - GetPosition()).normalized;
-                enemyBase.PlayAttackAnimation(attackDir, () => {
+                characterBase.PlayPunchSlowAnimation(attackDir, (Vector3 hitPosition) => {
                     if (getEnemyTarget() != null) {
                         getEnemyTarget().Damage(this);
                     }
@@ -142,14 +154,14 @@ public class Enemy : MonoBehaviour {
 
         healthSystem.Damage(30);
         if (IsDead()) {
-            FlyingBody.Create(GameAssetsDefault.i.pfEnemyFlyingBody, GetPosition(), bloodDir);
+            FlyingBody.Create(GameAssets.i.pfEnemyFlyingBody, GetPosition(), bloodDir);
             Destroy(gameObject);
         } else {
             // Knockback
             transform.position += bloodDir * 5f;
             if (hitUnitAnim != null) {
                 state = State.Busy;
-                enemyBase.PlayHitAnimation(bloodDir * (Vector2.one * -1f), SetStateNormal);
+                characterBase.PlayHitAnimation(bloodDir * (Vector2.one * -1f), SetStateNormal);
             }
         }
     }
@@ -161,17 +173,17 @@ public class Enemy : MonoBehaviour {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
 
                 float distanceBefore = Vector3.Distance(transform.position, targetPosition);
-                enemyBase.PlayMoveAnim(moveDir);
+                characterBase.PlayMoveAnim(moveDir);
                 transform.position = transform.position + moveDir * SPEED * Time.deltaTime;
             } else {
                 currentPathIndex++;
                 if (currentPathIndex >= pathVectorList.Count) {
                     StopMoving();
-                    enemyBase.PlayIdleAnim();
+                    characterBase.PlayIdleAnim();
                 }
             }
         } else {
-            enemyBase.PlayIdleAnim();
+            characterBase.PlayIdleAnim();
         }
     }
 

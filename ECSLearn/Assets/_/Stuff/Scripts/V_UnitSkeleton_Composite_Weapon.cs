@@ -15,42 +15,55 @@ public class V_UnitSkeleton_Composite_Weapon : V_IActiveInactive {
 
     private V_UnitSkeleton unitSkeleton;
     private UnitAnim animAimWeaponRight;
-    private UnitAnim animAimWeaponRightInvertV;
+    private UnitAnim animAimWeaponLeft;
     private UnitAnim animShootWeaponRight;
-    private UnitAnim animShootWeaponRightInvertV;
-    private UnitAnim activeAnimAimWeaponRight;
-    private UnitAnim activeAnimShootWeaponRight;
+    private UnitAnim animShootWeaponLeft;
+    private UnitAnim activeAnimAimWeapon;
+    private UnitAnim activeAnimShootWeapon;
     private Vector3 aimTargetPosition;
-    private bool usingSkeletonNormal; // Currently using Normal or inverted V anim
+    private bool usingSkeletonRight; // Currently using Normal or inverted V anim
     private bool isShooting;
+    private Vector3 positionOffset;
 
-    public V_UnitSkeleton_Composite_Weapon(V_Object parentObject, V_UnitSkeleton unitSkeleton, UnitAnim animAimWeaponRight, UnitAnim animAimWeaponRightInvertV, UnitAnim animShootWeaponRight, UnitAnim animShootWeaponRightInvertV) {
+    //private string debugText = "";
+
+    public V_UnitSkeleton_Composite_Weapon(V_Object parentObject, V_UnitSkeleton unitSkeleton, UnitAnim animAimWeaponRight, UnitAnim animAimWeaponLeft, UnitAnim animShootWeaponRight, UnitAnim animShootWeaponLeft) {
         this.parentObject = parentObject;
         this.unitSkeleton = unitSkeleton;
-        this.animAimWeaponRight = animAimWeaponRight.Clone();
-        this.animAimWeaponRightInvertV = animAimWeaponRightInvertV.Clone();
-        this.animShootWeaponRight = animShootWeaponRight.Clone();
-        this.animShootWeaponRightInvertV = animShootWeaponRightInvertV.Clone();
+        this.animAimWeaponRight = animAimWeaponRight.CloneDeep();
+        this.animAimWeaponLeft = animAimWeaponLeft.CloneDeep();
+        this.animShootWeaponRight = animShootWeaponRight.CloneDeep();
+        this.animShootWeaponLeft = animShootWeaponLeft.CloneDeep();
 
+        SetPositionOffset(new Vector3(0, -2));
         SetInactive();
+
+        //CodeMonkey.CMDebug.TextUpdater(() => debugText, Vector3.zero, parentObject.GetLogic<V_IObjectTransform>().GetTransform());
     }
 
     public void SetActive() {
-        activeAnimAimWeaponRight = animAimWeaponRight;
-        activeAnimShootWeaponRight = animShootWeaponRight;
-        unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeaponRight);
-        usingSkeletonNormal = true;
+        activeAnimAimWeapon = animAimWeaponRight;
+        activeAnimShootWeapon = animShootWeaponRight;
+        unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeapon);
+        usingSkeletonRight = true;
         unitSkeleton.GetSkeletonUpdater().SetHasVariableSortingOrder(true);
+        isShooting = false;
     }
 
     public void SetInactive() { }
+    
+    public void SetPositionOffset(Vector3 positionOffset) {
+        this.positionOffset = positionOffset;
+    }
 
     public void SetAimTarget(Vector3 aimTargetPosition) {
         this.aimTargetPosition = aimTargetPosition;
-        
+
         Vector3 aimDir = (aimTargetPosition - parentObject.GetPosition()).normalized;
 
-        // Decide if should use Inverted Vertical Body Part
+        //debugText = ""+usingSkeletonRight + " " + aimDir;
+
+        // Decide if should use Right or Left Body Part
         if (!isShooting) {
             switch (UnitAnim.GetAnimDirFromVector(aimDir)) {
             default:
@@ -59,23 +72,24 @@ public class V_UnitSkeleton_Composite_Weapon : V_IActiveInactive {
             case UnitAnim.AnimDir.Right:
             case UnitAnim.AnimDir.UpRight:
             case UnitAnim.AnimDir.Up:
-                if (!usingSkeletonNormal) {
+                if (!usingSkeletonRight) {
                     // Switch sides
-                    usingSkeletonNormal = true;
-                    activeAnimAimWeaponRight = animAimWeaponRight;
-                    activeAnimShootWeaponRight = animShootWeaponRight;
-                    unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeaponRight);
+                    usingSkeletonRight = true;
+                    activeAnimAimWeapon = animAimWeaponRight;
+                    activeAnimShootWeapon = animShootWeaponRight;
+                    unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeapon);
                 }
                 break;
             case UnitAnim.AnimDir.UpLeft:
             case UnitAnim.AnimDir.Left:
             case UnitAnim.AnimDir.DownLeft:
-                if (usingSkeletonNormal) {
+                if (usingSkeletonRight) {
                     // Switch sides
-                    usingSkeletonNormal = false;
-                    activeAnimAimWeaponRight = animAimWeaponRightInvertV;
-                    activeAnimShootWeaponRight = animShootWeaponRightInvertV;
-                    unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeaponRight);
+                    //CodeMonkey.CMDebug.TextPopup("ChangeLeft", parentObject.GetPosition());
+                    usingSkeletonRight = false;
+                    activeAnimAimWeapon = animAimWeaponLeft;
+                    activeAnimShootWeapon = animShootWeaponLeft;
+                    unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeapon);
                 }
                 break;
             }
@@ -83,23 +97,39 @@ public class V_UnitSkeleton_Composite_Weapon : V_IActiveInactive {
 
         // Show on top of Body for all except Up
         bool weaponOnTopOfBody = UnitAnim.GetAnimDirFromVectorLimit4Directions(aimDir) != UnitAnim.AnimDir.Up;
-                
-        activeAnimAimWeaponRight.ApplyAimDir(aimDir, new Vector3(0, -2), weaponOnTopOfBody ? +1000 : -1000);
-        activeAnimShootWeaponRight.ApplyAimDir(aimDir, new Vector3(0, -2), weaponOnTopOfBody ? +1000 : -1000);
+
+        int bonusOffset = 2000;
+
+        if (usingSkeletonRight) {
+            activeAnimAimWeapon.ApplyAimDir(aimDir, positionOffset, weaponOnTopOfBody ? +bonusOffset : -bonusOffset);
+            activeAnimShootWeapon.ApplyAimDir(aimDir, positionOffset, weaponOnTopOfBody ? +bonusOffset : -bonusOffset);
+        } else {
+            activeAnimAimWeapon.ApplyAimDir(CodeMonkey.Utils.UtilsClass.ApplyRotationToVector(aimDir, 180), positionOffset, weaponOnTopOfBody ? +bonusOffset : -bonusOffset);
+            activeAnimShootWeapon.ApplyAimDir(CodeMonkey.Utils.UtilsClass.ApplyRotationToVector(aimDir, 180), positionOffset, weaponOnTopOfBody ? +bonusOffset : -bonusOffset);
+        }
     }
 
     public void Shoot(Vector3 shootTargetPosition, Action onShootCompleted) {
         SetAimTarget(shootTargetPosition);
         
         Action<V_Skeleton_Anim> shootCompleted = (V_Skeleton_Anim skeletonAnim) => {
+            activeAnimShootWeapon.GetAnims()[0].onAnimComplete = null;
             isShooting = false;
-            unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeaponRight);
+            unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimAimWeapon);
             onShootCompleted();
         };
-        activeAnimShootWeaponRight.ResetAnims();
-        activeAnimShootWeaponRight.GetAnims()[0].onAnimComplete = shootCompleted;
-        unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimShootWeaponRight);
+        activeAnimShootWeapon.ResetAnims();
+        activeAnimShootWeapon.GetAnims()[0].onAnimComplete = shootCompleted;
+        unitSkeleton.ReplaceAllBodyPartsInAnimation(activeAnimShootWeapon);
         isShooting = true;
+    }
+    
+    public void SetAnims(UnitAnim animAimWeaponRight, UnitAnim animAimWeaponLeft, UnitAnim animShootWeaponRight, UnitAnim animShootWeaponLeft) {
+        this.animAimWeaponRight = animAimWeaponRight.CloneDeep();
+        this.animAimWeaponLeft = animAimWeaponLeft.CloneDeep();
+        this.animShootWeaponRight = animShootWeaponRight.CloneDeep();
+        this.animShootWeaponLeft = animShootWeaponLeft.CloneDeep();
+        SetActive();
     }
 
 }

@@ -47,7 +47,7 @@ public class EnemyHandler : MonoBehaviour {
 
 
     public static EnemyHandler Create(Vector3 position) {
-        Transform enemyTransform = Instantiate(GameAssetsDefault.i.pfEnemy, position, Quaternion.identity);
+        Transform enemyTransform = Instantiate(GameAssets.i.pfEnemy, position, Quaternion.identity);
 
         EnemyHandler enemyHandler = enemyTransform.GetComponent<EnemyHandler>();
 
@@ -101,7 +101,7 @@ public class EnemyHandler : MonoBehaviour {
         //animatedWalker = new AnimatedWalker(unitAnimation, UnitAnimType.GetUnitAnimType("dMinion_Idle"), UnitAnimType.GetUnitAnimType("dMinion_Walk"), 1f, 1f);
         animatedWalker = new AnimatedWalker(unitAnimation, idleUnitAnim, walkUnitAnim, 1f, 1f);
 
-        bodyTransform.GetComponent<MeshRenderer>().material = GameAssetsDefault.i.m_MarineSpriteSheet;
+        bodyTransform.GetComponent<MeshRenderer>().material = GameAssets.i.m_MarineSpriteSheet;
         //unitAnimation.PlayAnimForced(UnitAnimType.GetUnitAnimType("dBareHands_AttackPose"), 1f, null, null, null);
         //state = State.Busy;
     }
@@ -162,7 +162,7 @@ public class EnemyHandler : MonoBehaviour {
         //Blood_Handler.SpawnBlood(GetPosition(), bloodDir);
         health--;
         if (IsDead()) {
-            FlyingBody.Create(GameAssetsDefault.i.pfEnemyFlyingBody, GetPosition(), bloodDir);
+            FlyingBody.Create(GameAssets.i.pfEnemyFlyingBody, GetPosition(), bloodDir);
             Destroy(gameObject);
         } else {
             // Knockback

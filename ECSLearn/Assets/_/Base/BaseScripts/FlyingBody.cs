@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FlyingBody : MonoBehaviour {
-
-    public static List<FlyingBody> flyingBodyList;
-
-    public static void TryCreate(Transform prefab, Vector3 spawnPosition, Vector3 flyDirection) {
-        if (flyingBodyList == null || flyingBodyList.Count < 20) {
-            Create(prefab, spawnPosition, flyDirection);
-        }
-    }
 
     public static void Create(Transform prefab, Vector3 spawnPosition, Vector3 flyDirection) {
         Transform flyingBodyTransform = Instantiate(prefab, spawnPosition, Quaternion.identity);
@@ -23,8 +27,6 @@ public class FlyingBody : MonoBehaviour {
     private float eulerZ;
 
     private void Setup(Vector3 flyDirection) {
-        if (flyingBodyList == null) flyingBodyList = new List<FlyingBody>();
-        flyingBodyList.Add(this);
         this.flyDirection = flyDirection;
         transform.localScale = Vector3.one * 2f;
         eulerZ = 0f;
@@ -41,11 +43,10 @@ public class FlyingBody : MonoBehaviour {
         eulerZ += eulerSpeed * Time.deltaTime;
         transform.localEulerAngles = new Vector3(0, 0, eulerZ);
 
-        Blood_Handler.SpawnBlood(2, transform.position, flyDirection * -1f);
+        Blood_Handler.SpawnBlood(5, transform.position, flyDirection * -1f);
 
         timer += Time.deltaTime;
         if (timer >= 1f) {
-            flyingBodyList.Remove(this);
             Destroy(gameObject);
         }
     }
