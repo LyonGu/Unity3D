@@ -53,7 +53,8 @@ public class ECS_RTSControls : MonoBehaviour {
         cameraFollowZoom = 80f;
         cameraFollow.Setup(() => cameraFollowPosition, () => cameraFollowZoom, true, true);
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
+        
+        //动作数据初始化
         ECS_Animation.Init();
 
         shadowMesh = ECS_Animation.CreateMesh(9f, 6f);
@@ -129,36 +130,108 @@ public struct MoveTo : IComponentData {
 
 
 // Unit go to Move Position
-public class UnitMoveSystem : JobComponentSystem {
+//public class UnitMoveSystem : JobComponentSystem {
+//
+//    private struct Job : IJobForEachWithEntity<MoveTo, Translation, Skeleton_PlayAnim> {
+//
+//        public float deltaTime;
+//
+//        public void Execute(Entity entity, int index, ref MoveTo moveTo, ref Translation translation, ref Skeleton_PlayAnim skeletonPlayAnim) {
+//            if (moveTo.move) {
+//                float reachedPositionDistance = 1f;
+//                if (math.distancesq(translation.Value, moveTo.position) > reachedPositionDistance * reachedPositionDistance) {
+//                    // Far from target position, Move to position
+//                    float3 moveDir = math.normalize(moveTo.position - translation.Value);
+//                    moveTo.lastMoveDir = moveDir;
+//                    translation.Value += moveDir * moveTo.moveSpeed * deltaTime;
+//                    skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Walk, moveDir, default);
+//                } else {
+//                    // Already there
+//                    skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Idle, moveTo.lastMoveDir, default);
+//                    moveTo.move = false;
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    protected override JobHandle OnUpdate(JobHandle inputDeps) {
+//        Job job = new Job {
+//            deltaTime = Time.DeltaTime,
+//        };
+//        return job.Schedule(this, inputDeps);
+//    }
+//
+//}
 
-    private struct Job : IJobForEachWithEntity<MoveTo, Translation, Skeleton_PlayAnim> {
+public class UnitMoveSystemEx : SystemBase
+{
+    private EntityQuery _entityQuery;
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _entityQuery = GetEntityQuery(
+            typeof(Marine),
+            typeof(Translation),
+            typeof(MoveTo),
+            typeof(Skeleton_PlayAnim)
+        );
+    }
 
+    struct MoveJob : IJobEntityBatch
+    {
+        
+        //ref MoveTo moveTo, ref Translation translation, ref Skeleton_PlayAnim skeletonPlayAnim
         public float deltaTime;
+        public ComponentTypeHandle<Translation> TranslationTypeHandle;
+        public ComponentTypeHandle<MoveTo> MoveToTypeHandle;
+        public ComponentTypeHandle<Skeleton_PlayAnim> Skeleton_PlayAnimTypeHandle;
+        
+        public void Execute(ArchetypeChunk batchInChunk, int batchIndex)
+        {
+            NativeArray<Translation> positions = batchInChunk.GetNativeArray<Translation>(TranslationTypeHandle);
+            NativeArray<MoveTo> moveTos = batchInChunk.GetNativeArray<MoveTo>(MoveToTypeHandle);
+            NativeArray<Skeleton_PlayAnim> skeleton_PlayAnims = batchInChunk.GetNativeArray<Skeleton_PlayAnim>(Skeleton_PlayAnimTypeHandle);
 
-        public void Execute(Entity entity, int index, ref MoveTo moveTo, ref Translation translation, ref Skeleton_PlayAnim skeletonPlayAnim) {
-            if (moveTo.move) {
-                float reachedPositionDistance = 1f;
-                if (math.distance(translation.Value, moveTo.position) > reachedPositionDistance) {
-                    // Far from target position, Move to position
-                    float3 moveDir = math.normalize(moveTo.position - translation.Value);
-                    moveTo.lastMoveDir = moveDir;
-                    translation.Value += moveDir * moveTo.moveSpeed * deltaTime;
-                    skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Walk, moveDir, default);
-                } else {
-                    // Already there
-                    skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Idle, moveTo.lastMoveDir, default);
-                    moveTo.move = false;
+            for (int i = 0; i < positions.Length; i++)
+            {
+                var moveTo = moveTos[i];
+                var translation = positions[i];
+                var skeletonPlayAnim = skeleton_PlayAnims[i];
+                if (moveTo.move) {
+                    float reachedPositionDistance = 1f;
+                    if (math.distancesq(translation.Value, moveTo.position) > reachedPositionDistance * reachedPositionDistance) {
+                        // Far from target position, Move to position
+                        float3 moveDir = math.normalize(moveTo.position - translation.Value);
+                        moveTo.lastMoveDir = moveDir;
+                        moveTos[i] = moveTo;
+                        
+                        translation.Value += moveDir * moveTo.moveSpeed * deltaTime;
+                        positions[i] = translation;
+                        
+                        skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Walk, moveDir, default);
+                        skeleton_PlayAnims[i] = skeletonPlayAnim;
+                    } else {
+                        // Already there
+                        skeletonPlayAnim.PlayAnim(ECS_UnitAnimType.TypeEnum.dMarine_Idle, moveTo.lastMoveDir, default);
+                        skeleton_PlayAnims[i] = skeletonPlayAnim;
+                        moveTo.move = false;
+                        moveTos[i] = moveTo;
+                    }
                 }
-            }
+}
+            
         }
-
     }
-
-    protected override JobHandle OnUpdate(JobHandle inputDeps) {
-        Job job = new Job {
+    protected override void OnUpdate()
+    {
+        var job = new MoveJob
+        {
             deltaTime = Time.DeltaTime,
+            TranslationTypeHandle = this.GetComponentTypeHandle<Translation>(),
+            MoveToTypeHandle = this.GetComponentTypeHandle<MoveTo>(),
+            Skeleton_PlayAnimTypeHandle = this.GetComponentTypeHandle<Skeleton_PlayAnim>()
         };
-        return job.Schedule(this, inputDeps);
+        this.Dependency = job.ScheduleParallel(_entityQuery, 1, this.Dependency);
     }
-
 }

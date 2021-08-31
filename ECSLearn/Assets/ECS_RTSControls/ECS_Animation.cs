@@ -180,10 +180,10 @@ namespace ECS_AnimationSystem {
             float meshWidthHalf  = meshWidth  / 2f;
             float meshHeightHalf = meshHeight / 2f;
 
-            vertices[0] = new Vector3(-meshWidthHalf,  meshHeightHalf);
-            vertices[1] = new Vector3( meshWidthHalf,  meshHeightHalf);
-            vertices[2] = new Vector3(-meshWidthHalf, -meshHeightHalf);
-            vertices[3] = new Vector3( meshWidthHalf, -meshHeightHalf);
+            vertices[0] = new Vector3(-meshWidthHalf,  meshHeightHalf); //左上
+            vertices[1] = new Vector3( meshWidthHalf,  meshHeightHalf); //右上
+            vertices[2] = new Vector3(-meshWidthHalf, -meshHeightHalf); //左下
+            vertices[3] = new Vector3( meshWidthHalf, -meshHeightHalf); //右下
 
             uv[0] = new Vector2(0, 1);
             uv[1] = new Vector2(1, 1);

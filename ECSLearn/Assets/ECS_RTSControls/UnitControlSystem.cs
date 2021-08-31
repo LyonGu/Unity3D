@@ -18,9 +18,11 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using CodeMonkey.Utils;
 
+
 public struct UnitSelected : IComponentData {
 }
 
+//控制system
 public class UnitControlSystem : ComponentSystem {
 
     private float3 startPosition;
@@ -48,8 +50,10 @@ public class UnitControlSystem : ComponentSystem {
 
             float3 lowerLeftPosition = new float3(math.min(startPosition.x, endPosition.x), math.min(startPosition.y, endPosition.y), 0);
             float3 upperRightPosition = new float3(math.max(startPosition.x, endPosition.x), math.max(startPosition.y, endPosition.y), 0);
-
+            
             bool selectOnlyOneEntity = false;
+            
+            //避免选中区域过小，实现点击选中
             float selectionAreaMinSize = 10f;
             float selectionAreaSize = math.distance(lowerLeftPosition, upperRightPosition);
             if (selectionAreaSize < selectionAreaMinSize) {
@@ -59,14 +63,15 @@ public class UnitControlSystem : ComponentSystem {
                 selectOnlyOneEntity = true;
             }
 
-            // Deselect all selected Entities
+            // Deselect all selected Entities 先释放之前选中的
             Entities.WithAll<UnitSelected>().ForEach((Entity entity) => {
                 PostUpdateCommands.RemoveComponent<UnitSelected>(entity);
             });
 
             // Select Entities inside selection area
             int selectedEntityCount = 0;
-            Entities.ForEach((Entity entity, ref Translation translation) => {
+            Entities.ForEach((Entity entity, ref Translation translation, ref Marine marine) => {
+                
                 if (selectOnlyOneEntity == false || selectedEntityCount < 1) {
                     float3 entityPosition = translation.Value;
                     if (entityPosition.x >= lowerLeftPosition.x &&
@@ -85,8 +90,10 @@ public class UnitControlSystem : ComponentSystem {
             // Right mouse button down
             float3 targetPosition = UtilsClass.GetMouseWorldPosition();
             List<float3> movePositionList = GetPositionListAround(targetPosition, new float[] { 10f, 20f, 30f }, new int[] { 5, 10, 20 });
+            Debug.Log($"movePositionList count = {movePositionList.Count}");
             int positionIndex = 0;
             Entities.WithAll<UnitSelected>().ForEach((Entity entity, ref MoveTo moveTo) => {
+                //移动到目标位置  UnitMoveSystem会生效
                 moveTo.position = movePositionList[positionIndex];
                 positionIndex = (positionIndex + 1) % movePositionList.Count;
                 moveTo.move = true;
