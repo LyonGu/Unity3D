@@ -66,7 +66,8 @@ public class SpriteSheetRenderer_Old : ComponentSystem {
             }
 
             materialPropertyBlock.SetVectorArray(shaderPropertyId, uvList);
-
+            
+            //1023 限制
             Graphics.DrawMeshInstanced(
                 quadMesh,
                 0,

@@ -22,10 +22,10 @@ using Unity.Mathematics;
 
 
 public struct SpriteSheetAnimation_Data : IComponentData {
-    public int currentFrame;
-    public int frameCount;
-    public float frameTimer;
-    public float frameTimerMax;
+    public int currentFrame;  //当前处于第几帧
+    public int frameCount;    //总帧数
+    public float frameTimer;  //当前时间
+    public float frameTimerMax; //帧间隔，数值越大，动画越慢
 
     public Vector4 uv;
     public Matrix4x4 matrix;
@@ -50,7 +50,8 @@ public class SpriteSheetAnimation_Animate : JobComponentSystem {
                 float uvOffsetX = uvWidth * spriteSheetAnimationData.currentFrame;
                 float uvOffsetY = 0f;
                 spriteSheetAnimationData.uv = new Vector4(uvWidth, uvHeight, uvOffsetX, uvOffsetY);
-
+                
+                //调整Z值，越高的z值越大，会被前面的遮挡
                 float3 position = translation.Value;
                 position.z = position.y * .01f;
                 spriteSheetAnimationData.matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
