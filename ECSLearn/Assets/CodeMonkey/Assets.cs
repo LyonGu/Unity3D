@@ -27,16 +27,19 @@ namespace CodeMonkey {
 
         // Instance reference
         public static Assets i {
-            get { 
-                if (_i == null) _i = (Instantiate(Resources.Load("CodeMonkeyAssets")) as GameObject).GetComponent<Assets>(); 
+            get {
+                if (_i == null) _i = Instantiate(Resources.Load<Assets>("CodeMonkeyAssets")); 
                 return _i; 
             }
         }
 
 
         // All references
-
+        
         public Sprite s_White;
+        public Sprite s_Circle;
+
+        public Material m_White;
 
     }
 

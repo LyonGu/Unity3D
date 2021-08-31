@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CodeMonkey {
+namespace CodeMonkey.Utils {
 
     /*
      * Executes a Function periodically
@@ -94,9 +94,11 @@ namespace CodeMonkey {
 
 
         public static void RemoveTimer(FunctionPeriodic funcTimer) {
+            InitIfNeeded();
             funcList.Remove(funcTimer);
         }
         public static void StopTimer(string _name) {
+            InitIfNeeded();
             for (int i = 0; i < funcList.Count; i++) {
                 if (funcList[i].functionName == _name) {
                     funcList[i].DestroySelf();
@@ -105,6 +107,7 @@ namespace CodeMonkey {
             }
         }
         public static void StopAllFunc(string _name) {
+            InitIfNeeded();
             for (int i = 0; i < funcList.Count; i++) {
                 if (funcList[i].functionName == _name) {
                     funcList[i].DestroySelf();
@@ -113,6 +116,7 @@ namespace CodeMonkey {
             }
         }
         public static bool IsFuncActive(string name) {
+            InitIfNeeded();
             for (int i = 0; i < funcList.Count; i++) {
                 if (funcList[i].functionName == name) {
                     return true;

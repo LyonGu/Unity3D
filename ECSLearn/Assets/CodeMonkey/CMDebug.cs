@@ -30,10 +30,15 @@ namespace CodeMonkey {
         public static UI_Sprite ButtonUI(Vector2 anchoredPosition, string text, Action ClickFunc) {
             return UI_Sprite.CreateDebugButton(anchoredPosition, text, ClickFunc);
         }
+
+        // Creates a World Text object at the world position
+        public static void Text(string text, Vector3 localPosition = default(Vector3), Transform parent = null, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = UtilsClass.sortingOrderDefault) {
+            UtilsClass.CreateWorldText(text, parent, localPosition, fontSize, color, textAnchor, textAlignment, sortingOrder);
+        }
         
         // World text pop up at mouse position
         public static void TextPopupMouse(string text) {
-            UtilsClass.CreateWorldTextPopup(text, UtilsClass.GetMouseWorldPositionZeroZ());
+            UtilsClass.CreateWorldTextPopup(text, UtilsClass.GetMouseWorldPosition());
         }
 
         // Creates a Text pop up at the world position
@@ -52,14 +57,38 @@ namespace CodeMonkey {
         }
 
         // Text Updater always following mouse
-        public static void MouseTextUpdater(Func<string> GetTextFunc, Vector3 positionOffset) {
+        public static void MouseTextUpdater(Func<string> GetTextFunc, Vector3 positionOffset = default(Vector3)) {
             GameObject gameObject = new GameObject();
             FunctionUpdater.Create(() => {
-                gameObject.transform.position = UtilsClass.GetMouseWorldPositionZeroZ() + positionOffset;
+                gameObject.transform.position = UtilsClass.GetMouseWorldPosition() + positionOffset;
                 return false;
             });
             TextUpdater(GetTextFunc, Vector3.zero, gameObject.transform);
         }
+
+        // Trigger Action on Key
+        public static FunctionUpdater KeyCodeAction(KeyCode keyCode, Action onKeyDown) {
+            return UtilsClass.CreateKeyCodeAction(keyCode, onKeyDown);
+        }
+        
+
+
+        // Debug DrawLine to draw a projectile, turn Gizmos On
+        public static void DebugProjectile(Vector3 from, Vector3 to, float speed, float projectileSize) {
+            Vector3 dir = (to - from).normalized;
+            Vector3 pos = from;
+            FunctionUpdater.Create(() => {
+                Debug.DrawLine(pos, pos + dir * projectileSize);
+                float distanceBefore = Vector3.Distance(pos, to);
+                pos += dir * speed * Time.deltaTime;
+                float distanceAfter = Vector3.Distance(pos, to);
+                if (distanceBefore < distanceAfter) {
+                    return true;
+                }
+                return false;
+            });
+        }
+
 
     }
 

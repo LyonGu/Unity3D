@@ -233,6 +233,8 @@ public class SpriteSheetRenderer : ComponentSystem {
 
     protected override void OnUpdate() {
 
+        var instance = GameHandlerSpriteSheetInstance.GetInstance();
+        if (instance == null) return; // Already initialized
         for (int i = 0; i < POSITION_SLICES; i++) {
             ClearQueueJob clearQueueJob = new ClearQueueJob {
                 nativeQueue = nativeQueueArray[i]

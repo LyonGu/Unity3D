@@ -25,6 +25,7 @@ namespace CodeMonkey.Utils {
         public Transform transform;
         private SpriteRenderer spriteRenderer;
 
+
         public static World_Sprite CreateDebugButton(Vector3 position, System.Action ClickFunc) {
             World_Sprite worldSprite = new World_Sprite(null, position, new Vector3(10, 10), Assets.i.s_White, Color.green, sortingOrderDefault);
             worldSprite.AddButton(ClickFunc, null, null);
@@ -55,6 +56,9 @@ namespace CodeMonkey.Utils {
         public static World_Sprite Create(Transform parent, Vector3 localPosition, Vector3 localScale, Sprite sprite, Color color, int sortingOrderOffset) {
             return new World_Sprite(parent, localPosition, localScale, sprite, color, sortingOrderOffset);
         }
+        public static World_Sprite Create(Vector3 worldPosition, Sprite sprite) {
+            return new World_Sprite(null, worldPosition, new Vector3(1, 1, 1), sprite, Color.white, 0);
+        }
         public static World_Sprite Create(Vector3 worldPosition, Vector3 localScale, Sprite sprite, Color color, int sortingOrderOffset) {
             return new World_Sprite(null, worldPosition, localScale, sprite, color, sortingOrderOffset);
         }
@@ -74,6 +78,10 @@ namespace CodeMonkey.Utils {
         public static int GetSortingOrder(Vector3 position, int offset, int baseSortingOrder = sortingOrderDefault) {
             return (int)(baseSortingOrder - position.y) + offset;
         }
+
+
+
+
         public World_Sprite(Transform parent, Vector3 localPosition, Vector3 localScale, Sprite sprite, Color color, int sortingOrderOffset) {
             int sortingOrder = GetSortingOrder(localPosition, sortingOrderOffset);
             gameObject = UtilsClass.CreateWorldSprite(parent, "Sprite", sprite, localPosition, localScale, sortingOrder, color);
