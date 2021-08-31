@@ -279,3 +279,8 @@ UIEffect/Logs/
 Unity_BaseRender/Library/
 Unity_BaseRender/Logs/
 Unity_BaseRender/Temp/
+GridSystem/Library/
+GridSystem/Temp/
+GridSystem/obj/
+GridSystem/Logs/
+GridSystem/.vs/
