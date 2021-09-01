@@ -22,7 +22,7 @@ public class Testing : MonoBehaviour {
     private float mouseMoveTimerMax = .01f;
 
     private void Start() {
-        grid = new Grid(100, 100, 10f, new Vector3(0, 0));
+        grid = new Grid(100, 100, 10f, new Vector3(-Screen.width * 0.5f, -Screen.height * 0.5f + 5f));
 
         HeatMapVisual heatMapVisual = new HeatMapVisual(grid, GetComponent<MeshFilter>());
     }

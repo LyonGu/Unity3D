@@ -70,10 +70,12 @@ public class Grid {
         return cellSize;
     }
 
+    //根据格子坐标返回世界坐标
     public Vector3 GetWorldPosition(int x, int y) {
         return new Vector3(x, y) * cellSize + originPosition;
     }
-
+    
+    //根据世界坐标返回格子坐标
     private void GetXY(Vector3 worldPosition, out int x, out int y) {
         x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
         y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);

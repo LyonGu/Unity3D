@@ -130,10 +130,10 @@ public static class MeshUtils {
 
         bool skewed = baseSize.x != baseSize.y;
         if (skewed) {
-			vertices[vIndex0] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x,  baseSize.y);
-			vertices[vIndex1] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x, -baseSize.y);
-			vertices[vIndex2] = pos+GetQuaternionEuler(rot)*new Vector3( baseSize.x, -baseSize.y);
-			vertices[vIndex3] = pos+GetQuaternionEuler(rot)*baseSize;
+			vertices[vIndex0] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x,  baseSize.y); //左上
+			vertices[vIndex1] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x, -baseSize.y); //左下
+			vertices[vIndex2] = pos+GetQuaternionEuler(rot)*new Vector3( baseSize.x, -baseSize.y); //右下
+			vertices[vIndex3] = pos+GetQuaternionEuler(rot)*baseSize; //右上
 		} else {
 			vertices[vIndex0] = pos+GetQuaternionEuler(rot-270)*baseSize;
 			vertices[vIndex1] = pos+GetQuaternionEuler(rot-180)*baseSize;
@@ -142,7 +142,7 @@ public static class MeshUtils {
 		}
 		
 		//Relocate UVs
-		uvs[vIndex0] = new Vector2(uv00.x, uv11.y);
+		uvs[vIndex0] = new Vector2(uv00.x, uv11.y); 
 		uvs[vIndex1] = new Vector2(uv00.x, uv00.y);
 		uvs[vIndex2] = new Vector2(uv11.x, uv00.y);
 		uvs[vIndex3] = new Vector2(uv11.x, uv11.y);
