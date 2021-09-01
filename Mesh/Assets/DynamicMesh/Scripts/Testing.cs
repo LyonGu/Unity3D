@@ -19,9 +19,9 @@ public class Testing : MonoBehaviour {
     private void Start() {
         Debug.Log("Test");
 
-        //CreateBasicQuadMesh();
+        CreateBasicQuadMesh();
         //CreateTileMesh();
-        CreateAnimationMesh();
+        //CreateAnimationMesh();
     }
 
     private void CreateBasicQuadMesh() {
