@@ -46,6 +46,7 @@ public class UI_StatsRadarChart : MonoBehaviour {
         float angleIncrement = 360f / 5;
         float radarChartSize = 145f;
 
+        //绕Z轴旋转
         Vector3 attackVertex = Quaternion.Euler(0, 0, -angleIncrement * 0) * Vector3.up * radarChartSize * stats.GetStatAmountNormalized(Stats.Type.Attack);
         int attackVertexIndex = 1;
         Vector3 defenceVertex = Quaternion.Euler(0, 0, -angleIncrement * 1) * Vector3.up * radarChartSize * stats.GetStatAmountNormalized(Stats.Type.Defence);
