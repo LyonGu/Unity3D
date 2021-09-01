@@ -44,6 +44,7 @@ public class PathfindingVisual : MonoBehaviour {
     }
 
     private void UpdateVisual() {
+        if (mesh == null) return;
         MeshUtils.CreateEmptyMeshArrays(grid.GetWidth() * grid.GetHeight(), out Vector3[] vertices, out Vector2[] uv, out int[] triangles);
 
         for (int x = 0; x < grid.GetWidth(); x++) {

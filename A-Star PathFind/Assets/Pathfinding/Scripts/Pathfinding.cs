@@ -21,7 +21,7 @@ public class Pathfinding {
 
     public static Pathfinding Instance { get; private set; }
 
-    private Grid<PathNode> grid;
+    private Grid<PathNode> grid;  //格子系统
     private List<PathNode> openList;
     private List<PathNode> closedList;
 
@@ -35,9 +35,12 @@ public class Pathfinding {
     }
 
     public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition) {
+
+        //得到起始点和终点的格子坐标
         grid.GetXY(startWorldPosition, out int startX, out int startY);
         grid.GetXY(endWorldPosition, out int endX, out int endY);
 
+        //找寻路线
         List<PathNode> path = FindPath(startX, startY, endX, endY);
         if (path == null) {
             return null;
@@ -59,26 +62,29 @@ public class Pathfinding {
             return null;
         }
 
-        openList = new List<PathNode> { startNode };
+        openList = new List<PathNode> { startNode };//起始点放入open列表
         closedList = new List<PathNode>();
 
+        //每次寻路前初始化一遍信息
         for (int x = 0; x < grid.GetWidth(); x++) {
             for (int y = 0; y < grid.GetHeight(); y++) {
                 PathNode pathNode = grid.GetGridObject(x, y);
                 pathNode.gCost = 99999999;
-                pathNode.CalculateFCost();
+                pathNode.CalculateFCost();  // F = G+H
                 pathNode.cameFromNode = null;
             }
         }
 
         startNode.gCost = 0;
-        startNode.hCost = CalculateDistanceCost(startNode, endNode);
+        startNode.hCost = CalculateDistanceCost(startNode, endNode); //计算H
         startNode.CalculateFCost();
         
+        //步骤可视化
         PathfindingDebugStepVisual.Instance.ClearSnapshots();
         PathfindingDebugStepVisual.Instance.TakeSnapshot(grid, startNode, openList, closedList);
 
         while (openList.Count > 0) {
+            //从openList中找出F值最小的节点
             PathNode currentNode = GetLowestFCostNode(openList);
             if (currentNode == endNode) {
                 // Reached final node
@@ -87,11 +93,15 @@ public class Pathfinding {
                 return CalculatePath(endNode);
             }
 
+            //从OpenList里移出，放入CloseList里
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
+            //遍历邻居节点
             foreach (PathNode neighbourNode in GetNeighbourList(currentNode)) {
                 if (closedList.Contains(neighbourNode)) continue;
+
+                //判断是否是障碍物
                 if (!neighbourNode.isWalkable) {
                     closedList.Add(neighbourNode);
                     continue;
@@ -99,12 +109,14 @@ public class Pathfinding {
 
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
                 if (tentativeGCost < neighbourNode.gCost) {
+                    //如果从当前节点到邻居节点的G值更小，更新邻居节点G和H值，并把来自节点标记为当前节点
                     neighbourNode.cameFromNode = currentNode;
                     neighbourNode.gCost = tentativeGCost;
                     neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
                     neighbourNode.CalculateFCost();
 
                     if (!openList.Contains(neighbourNode)) {
+                        //如果不在openlist里，放入openlist
                         openList.Add(neighbourNode);
                     }
                 }
@@ -116,6 +128,7 @@ public class Pathfinding {
         return null;
     }
 
+    //返回邻居节点 上 下 左 右 左上 左下 右上 右下
     private List<PathNode> GetNeighbourList(PathNode currentNode) {
         List<PathNode> neighbourList = new List<PathNode>();
 
@@ -159,6 +172,8 @@ public class Pathfinding {
         return path;
     }
 
+
+    //计算H的值，斜边* mathf.min(offsetx, offsety)+ 直线边*(math.abs(offsetx - offsety))
     private int CalculateDistanceCost(PathNode a, PathNode b) {
         int xDistance = Mathf.Abs(a.x - b.x);
         int yDistance = Mathf.Abs(a.y - b.y);
@@ -166,6 +181,7 @@ public class Pathfinding {
         return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
     }
 
+    //暴力遍历，可优化, TODO 使用二叉树有个堆排序
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList) {
         PathNode lowestFCostNode = pathNodeList[0];
         for (int i = 1; i < pathNodeList.Count; i++) {

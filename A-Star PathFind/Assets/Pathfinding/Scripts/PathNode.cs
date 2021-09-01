@@ -14,6 +14,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//寻路最小单元
 public class PathNode {
 
     private Grid<PathNode> grid;

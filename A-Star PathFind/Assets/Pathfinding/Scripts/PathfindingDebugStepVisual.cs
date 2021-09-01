@@ -35,6 +35,7 @@ public class PathfindingDebugStepVisual : MonoBehaviour {
     }
 
     public void Setup(Grid<PathNode> grid) {
+        if (visualNodeList == null) return;
         visualNodeArray = new Transform[grid.GetWidth(), grid.GetHeight()];
 
         for (int x = 0; x < grid.GetWidth(); x++) {
