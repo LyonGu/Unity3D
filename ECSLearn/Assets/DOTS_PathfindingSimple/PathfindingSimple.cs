@@ -19,7 +19,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using CodeMonkey.Utils;
 
-public class Pathfinding : MonoBehaviour {
+public class PathfindingSimple : MonoBehaviour {
 
     private const int MOVE_STRAIGHT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
