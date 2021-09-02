@@ -65,6 +65,7 @@ public class PathfindingSimple : MonoBehaviour {
                     pathNode.index = CalculateIndex(x, y, gridSize.x);
 
                     pathNode.gCost = int.MaxValue;
+                    //提前计算好每个格子到目标格子的H值
                     pathNode.hCost = CalculateDistanceCost(new int2(x, y), endPosition);
                     pathNode.CalculateFCost();
 
@@ -136,7 +137,8 @@ public class PathfindingSimple : MonoBehaviour {
                 for (int i = 0; i < neighbourOffsetArray.Length; i++) {
                     int2 neighbourOffset = neighbourOffsetArray[i];
                     int2 neighbourPosition = new int2(currentNode.x + neighbourOffset.x, currentNode.y + neighbourOffset.y);
-
+                    
+                    //验证是否是地图里的点 
                     if (!IsPositionInsideGrid(neighbourPosition, gridSize)) {
                         // Neighbour not valid position
                         continue;
@@ -214,6 +216,10 @@ public class PathfindingSimple : MonoBehaviour {
         }
 
         private bool IsPositionInsideGrid(int2 gridPosition, int2 gridSize) {
+            /*
+             *gridPosition.x,gridPosition.y 为几行几列
+             * gridSize.x，gridSize.y 为地图总行数和列数
+             */
             return
                 gridPosition.x >= 0 && 
                 gridPosition.y >= 0 &&
