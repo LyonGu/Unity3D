@@ -25,10 +25,19 @@ public class Pathfinding : ComponentSystem {
 
     private const int MOVE_STRAIGHT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
+    private PathfindingGridSetup _pathfindingGridSetup;
+
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _pathfindingGridSetup = PathfindingGridSetup.Instance;
+    }
 
     protected override void OnUpdate() {
-        int gridWidth = PathfindingGridSetup.Instance.pathfindingGrid.GetWidth();
-        int gridHeight = PathfindingGridSetup.Instance.pathfindingGrid.GetHeight();
+        if(_pathfindingGridSetup == null)
+            return;;
+        int gridWidth = _pathfindingGridSetup.pathfindingGrid.GetWidth();
+        int gridHeight = _pathfindingGridSetup.pathfindingGrid.GetHeight();
         int2 gridSize = new int2(gridWidth, gridHeight);
 
         List<FindPathJob> findPathJobList = new List<FindPathJob>();

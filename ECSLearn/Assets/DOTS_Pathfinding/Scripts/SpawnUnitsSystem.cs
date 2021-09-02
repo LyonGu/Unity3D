@@ -10,14 +10,24 @@ public class SpawnUnitsSystem : ComponentSystem {
     private int gridHeight;
 
     private bool firstUpdate = true;
+    
+    private PathfindingGridSetup _pathfindingGridSetup;
 
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _pathfindingGridSetup = PathfindingGridSetup.Instance;
+    }
     protected override void OnUpdate() {
+        if(_pathfindingGridSetup == null)
+            return;
+        
         if (firstUpdate) {
             firstUpdate = false;
             
             random = new Unity.Mathematics.Random(56);
 
-            Grid<GridNode> pathfindingGrid = PathfindingGridSetup.Instance.pathfindingGrid;
+            Grid<GridNode> pathfindingGrid = _pathfindingGridSetup.pathfindingGrid;
             gridWidth = pathfindingGrid.GetWidth();
             gridHeight = pathfindingGrid.GetHeight();
 
