@@ -50,7 +50,7 @@ public class Pathfinding : ComponentSystem {
         Entities.ForEach((Entity entity, ref PathfindingParams pathfindingParams) => {
             
             //copy一个NativeArray
-            //这里这么做的目的是为了让不同job不同时操作同一个nativeContainer，如果同时操作会很不安全
+            //这里这么做的目的是为了让多个job都使用原始数据去寻路
             NativeArray<PathNode> tmpPathNodeArray = new NativeArray<PathNode>(pathNodeArray, Allocator.TempJob);
             
             
@@ -157,6 +157,11 @@ public class Pathfinding : ComponentSystem {
 
         public Entity entity;
         
+        //禁止安全性检查，一般是因为多个Job同时操作一个容器，最好别这么用，很容易崩溃
+//        [NativeDisableContainerSafetyRestriction]
+//        public ComponentDataFromEntity<PathFollow> pathFollowComponentDataFromEntity;
+        
+        //[NativeDisableContainerSafetyRestriction]
         //public BufferFromEntity<PathPosition> pathPositionBuffer;
 
         public void Execute() {
@@ -254,7 +259,8 @@ public class Pathfinding : ComponentSystem {
                 }
             }
             
-            //这里为什么要拆开？？
+            //这里为什么要拆开？？ 多个Job同时写一个数据不安全，brust也会报错，
+            //打上NativeDisableContainerSafetyRestriction标签能解决，但一般不推荐，可以拆开job
             //pathPositionBuffer.Clear();
 
             /*
