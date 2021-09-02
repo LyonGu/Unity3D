@@ -17,6 +17,8 @@ public class PathFollowSystem : JobComponentSystem {
 
         return Entities.ForEach((Entity entity, DynamicBuffer<PathPosition> pathPositionBuffer, ref Translation translation, ref PathFollow pathFollow) => {
             if (pathFollow.pathIndex >= 0) {
+                //pathPositionBuffery已经有路点了  pathFollow.pathIndex记录的是点的下标
+                
                 // Has path to follow
                 PathPosition pathPosition = pathPositionBuffer[pathFollow.pathIndex];
 
@@ -26,7 +28,7 @@ public class PathFollowSystem : JobComponentSystem {
 
                 translation.Value += moveDir * moveSpeed * deltaTime;
                 
-                if (math.distance(translation.Value, targetPosition) < .1f) {
+                if (math.distancesq(translation.Value, targetPosition) < .01f) {
                     // Next waypoint
                     pathFollow.pathIndex--;
                 }

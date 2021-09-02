@@ -81,10 +81,10 @@ public static class MeshUtils {
 
         bool skewed = baseSize.x != baseSize.y;
         if (skewed) {
-			vertices[vIndex0] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x,  baseSize.y);
-			vertices[vIndex1] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x, -baseSize.y);
-			vertices[vIndex2] = pos+GetQuaternionEuler(rot)*new Vector3( baseSize.x, -baseSize.y);
-			vertices[vIndex3] = pos+GetQuaternionEuler(rot)*baseSize;
+			vertices[vIndex0] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x,  baseSize.y); //左上
+			vertices[vIndex1] = pos+GetQuaternionEuler(rot)*new Vector3(-baseSize.x, -baseSize.y); //左下
+			vertices[vIndex2] = pos+GetQuaternionEuler(rot)*new Vector3( baseSize.x, -baseSize.y); //右下
+			vertices[vIndex3] = pos+GetQuaternionEuler(rot)*baseSize; //右上
 		} else {
 			vertices[vIndex0] = pos+GetQuaternionEuler(rot-270)*baseSize;
 			vertices[vIndex1] = pos+GetQuaternionEuler(rot-180)*baseSize;

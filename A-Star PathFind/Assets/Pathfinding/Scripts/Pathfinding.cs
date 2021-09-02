@@ -107,6 +107,8 @@ public class Pathfinding {
                     continue;
                 }
 
+                //因为从邻居点到目标点的H值固定的
+                    //只比较从当前点到邻居点的G值，跟邻居点上已有G值的大小，如果前者较小则更新邻居点信息
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
                 if (tentativeGCost < neighbourNode.gCost) {
                     //如果从当前节点到邻居节点的G值更小，更新邻居节点G和H值，并把来自节点标记为当前节点

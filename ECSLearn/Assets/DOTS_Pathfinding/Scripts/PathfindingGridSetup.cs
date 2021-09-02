@@ -39,6 +39,7 @@ public class PathfindingGridSetup : MonoBehaviour {
     private void Update() {
         if (Input.GetMouseButtonDown(1)) {
             Vector3 mousePosition = UtilsClass.GetMouseWorldPosition() + (new Vector3(+1, +1) * pathfindingGrid.GetCellSize() * .5f);
+            //Vector3 mousePosition = UtilsClass.GetMouseWorldPosition(); //直接传入坐标不行？？？
             GridNode gridNode = pathfindingGrid.GetGridObject(mousePosition);
             if (gridNode != null) {
                 gridNode.SetIsWalkable(!gridNode.IsWalkable());

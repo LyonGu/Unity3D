@@ -67,6 +67,8 @@ public class Pathfinding_Simple : MonoBehaviour {
             int2 gridSize = new int2(20, 20);
         
             NativeArray<PathNode> pathNodeArray = new NativeArray<PathNode>(gridSize.x * gridSize.y, Allocator.Temp);
+            
+            //存储邻居节点
             NativeMultiHashMap<int, int2> pathNodeNeighboursMultiHashMap = new NativeMultiHashMap<int, int2>(gridSize.x * gridSize.y, Allocator.Temp);
 
             for (int x = 0; x < gridSize.x; x++) {
@@ -96,7 +98,7 @@ public class Pathfinding_Simple : MonoBehaviour {
             startNode.gCost = 0;
             startNode.hCost = CalculateDistanceCost(startNode, endNode);
             startNode.CalculateFCost();
-            pathNodeArray[startIndex] = startNode;
+            pathNodeArray[startIndex] = startNode; //struct 需要重新赋值下
 
             // Reset grid state
             NativeList<int> openList = new NativeList<int>(Allocator.Temp);
@@ -137,7 +139,8 @@ public class Pathfinding_Simple : MonoBehaviour {
                 //*/
             
                 closedList.Add(currentNodeIndex);
-
+                
+                //有点浪费，还不如直接计算完存到NativeList里
                 NativeList<int2> neighbourList = new NativeList<int2>(Allocator.Temp);
                 if (pathNodeNeighboursMultiHashMap.TryGetFirstValue(currentNodeIndex, out int2 neighbourPosition, out NativeMultiHashMapIterator<int> iterator)) {
                     neighbourList.Add(neighbourPosition);
@@ -156,6 +159,8 @@ public class Pathfinding_Simple : MonoBehaviour {
                         neighbourNode.gCost = tentativeGCost;
                         neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
                         neighbourNode.CalculateFCost();
+                        
+                        //struct 需要重新赋值下
                         pathNodeArray[CalculateIndex(neighbourList[i], gridSize.x)] = neighbourNode;
 
                         //Debug.Log("Updated neighbour: " + neighbourNode);

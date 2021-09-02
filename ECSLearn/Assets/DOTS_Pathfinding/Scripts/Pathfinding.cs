@@ -43,12 +43,17 @@ public class Pathfinding : ComponentSystem {
         List<FindPathJob> findPathJobList = new List<FindPathJob>();
         NativeList<JobHandle> jobHandleList = new NativeList<JobHandle>(Allocator.Temp);
         
+        //返回初始化的节点，G值都设为最大
         NativeArray<PathNode> pathNodeArray = GetPathNodeArray();
-
+        
+        //PathfindingParams里记录了起点和终点
         Entities.ForEach((Entity entity, ref PathfindingParams pathfindingParams) => {
-
+            
+            //copy一个NativeArray
+            //这里这么做的目的是为了让不同job不同时操作同一个nativeContainer，如果同时操作会很不安全
             NativeArray<PathNode> tmpPathNodeArray = new NativeArray<PathNode>(pathNodeArray, Allocator.TempJob);
-
+            
+            
             FindPathJob findPathJob = new FindPathJob {
                 gridSize = gridSize,
                 pathNodeArray = tmpPathNodeArray,
@@ -62,16 +67,16 @@ public class Pathfinding : ComponentSystem {
             PostUpdateCommands.RemoveComponent<PathfindingParams>(entity);
         });
 
-        JobHandle.CompleteAll(jobHandleList);
+        JobHandle.CompleteAll(jobHandleList); //等所有job都做完
 
         foreach (FindPathJob findPathJob in findPathJobList) {
             new SetBufferPathJob {
                 entity = findPathJob.entity,
                 gridSize = findPathJob.gridSize,
-                pathNodeArray = findPathJob.pathNodeArray,
+                pathNodeArray = findPathJob.pathNodeArray, //所有节点信息
                 pathfindingParamsComponentDataFromEntity = GetComponentDataFromEntity<PathfindingParams>(),
                 pathFollowComponentDataFromEntity = GetComponentDataFromEntity<PathFollow>(),
-                pathPositionBufferFromEntity = GetBufferFromEntity<PathPosition>(),
+                pathPositionBufferFromEntity = GetBufferFromEntity<PathPosition>(), //BufferCompoent获取
             }.Run();
         }
 
@@ -110,7 +115,7 @@ public class Pathfinding : ComponentSystem {
         public int2 gridSize;
 
         [DeallocateOnJobCompletion]
-        public NativeArray<PathNode> pathNodeArray;
+        public NativeArray<PathNode> pathNodeArray; //所有节点信息
 
         public Entity entity;
 
@@ -120,7 +125,7 @@ public class Pathfinding : ComponentSystem {
 
         public void Execute() {
             DynamicBuffer<PathPosition> pathPositionBuffer = pathPositionBufferFromEntity[entity];
-            pathPositionBuffer.Clear();
+            pathPositionBuffer.Clear(); //清除一遍信息
 
             PathfindingParams pathfindingParams = pathfindingParamsComponentDataFromEntity[entity];
             int endNodeIndex = CalculateIndex(pathfindingParams.endPosition.x, pathfindingParams.endPosition.y, gridSize.x);
@@ -130,9 +135,10 @@ public class Pathfinding : ComponentSystem {
                 //Debug.Log("Didn't find a path!");
                 pathFollowComponentDataFromEntity[entity] = new PathFollow { pathIndex = -1 };
             } else {
-                // Found a path
+                // Found a path  pathPositionBuffer从后遍历，起点到终点
                 CalculatePath(pathNodeArray, endNode, pathPositionBuffer);
                 
+                //PathFollowSystem 逻辑执行
                 pathFollowComponentDataFromEntity[entity] = new PathFollow { pathIndex = pathPositionBuffer.Length - 1 };
             }
 
@@ -156,6 +162,7 @@ public class Pathfinding : ComponentSystem {
         public void Execute() {
             for (int i = 0; i < pathNodeArray.Length; i++) {
                 PathNode pathNode = pathNodeArray[i];
+                //计算node的H值
                 pathNode.hCost = CalculateDistanceCost(new int2(pathNode.x, pathNode.y), endPosition);
                 pathNode.cameFromNodeIndex = -1;
 
@@ -189,51 +196,56 @@ public class Pathfinding : ComponentSystem {
                 PathNode currentNode = pathNodeArray[currentNodeIndex];
 
                 if (currentNodeIndex == endNodeIndex) {
-                    // Reached our destination!
+                    // Reached our destination! 找到目标点退出，目标点的cameFromNodeIndex不为-1
                     break;
                 }
 
-                // Remove current node from Open List
+                // Remove current node from Open List 从openList里移除
                 for (int i = 0; i < openList.Length; i++) {
                     if (openList[i] == currentNodeIndex) {
                         openList.RemoveAtSwapBack(i);
                         break;
                     }
                 }
-
+                //加入close列表
                 closedList.Add(currentNodeIndex);
-
+                
+                //遍历邻居节点
                 for (int i = 0; i < neighbourOffsetArray.Length; i++) {
                     int2 neighbourOffset = neighbourOffsetArray[i];
                     int2 neighbourPosition = new int2(currentNode.x + neighbourOffset.x, currentNode.y + neighbourOffset.y);
 
                     if (!IsPositionInsideGrid(neighbourPosition, gridSize)) {
-                        // Neighbour not valid position
+                        // Neighbour not valid position 无效点跳过
                         continue;
                     }
 
                     int neighbourNodeIndex = CalculateIndex(neighbourPosition.x, neighbourPosition.y, gridSize.x);
 
                     if (closedList.Contains(neighbourNodeIndex)) {
-                        // Already searched this node
+                        // Already searched this node 已经在closelist里跳过
                         continue;
                     }
 
                     PathNode neighbourNode = pathNodeArray[neighbourNodeIndex];
                     if (!neighbourNode.isWalkable) {
-                        // Not walkable
+                        // Not walkable  不可行走跳过
                         continue;
                     }
 
                     int2 currentNodePosition = new int2(currentNode.x, currentNode.y);
-
-	                int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNodePosition, neighbourPosition);
+                    
+                    //因为从邻居点到目标点的H值固定的
+                    //只比较从当前点到邻居点的G值，跟邻居点上已有G值的大小，如果前者较小则更新邻居点信息
+                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNodePosition, neighbourPosition);
 	                if (tentativeGCost < neighbourNode.gCost) {
+                        //更新邻居节点值
 		                neighbourNode.cameFromNodeIndex = currentNodeIndex;
 		                neighbourNode.gCost = tentativeGCost;
 		                neighbourNode.CalculateFCost();
 		                pathNodeArray[neighbourNodeIndex] = neighbourNode;
-
+                        
+                        //加入到openlist里
 		                if (!openList.Contains(neighbourNode.index)) {
 			                openList.Add(neighbourNode.index);
 		                }
@@ -241,7 +253,8 @@ public class Pathfinding : ComponentSystem {
 
                 }
             }
-
+            
+            //这里为什么要拆开？？
             //pathPositionBuffer.Clear();
 
             /*

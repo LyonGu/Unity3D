@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//寻路最小单位
 public class GridNode {
 
     private Grid<GridNode> grid;

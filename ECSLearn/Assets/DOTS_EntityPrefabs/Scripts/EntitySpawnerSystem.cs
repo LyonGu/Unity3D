@@ -8,6 +8,7 @@ namespace DOTS_EntityPrefabs.Scripts
 {
     
     //继承ComponentSystem，Entities.ForEach直接在主线程执行，以后可能会被废弃，建议使用SystemBase
+    [DisableAutoCreation]
     public class EntitySpawnerSystem : ComponentSystem {
 
         private float spawnTimer;
