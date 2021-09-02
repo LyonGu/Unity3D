@@ -303,3 +303,11 @@ A-Star PathFind/Library/
 A-Star PathFind/Temp/
 A-Star PathFind/.vsconfig
 GrideSystemEx/.idea/
+A-Star PathFind/.vs/
+A-Star PathFind/obj/
+Pathfinding-Algorithms/.vsconfig
+Pathfinding-Algorithms/.vs/
+Pathfinding-Algorithms/Library/
+Pathfinding-Algorithms/obj/
+Pathfinding-Algorithms/Temp/
+Pathfinding-Algorithms/Logs/
