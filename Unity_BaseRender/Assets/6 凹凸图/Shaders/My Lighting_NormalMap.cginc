@@ -62,11 +62,13 @@ Interpolators MyVertexProgram (VertexData v) {
 	Interpolators i;
 	i.position = UnityObjectToClipPos(v.position);
 	i.worldPos = mul(unity_ObjectToWorld, v.position);
-	i.normal = UnityObjectToWorldNormal(v.normal);
+	i.normal = UnityObjectToWorldNormal(v.normal); // 世界空间法线
 
 	#if defined(BINORMAL_PER_FRAGMENT)
-		i.tangent = float4(UnityObjectToWorldDir(v.tangent.xyz), v.tangent.w);
+		//逐像素 计算副法线
+		i.tangent = float4(UnityObjectToWorldDir(v.tangent.xyz), v.tangent.w);  //世界空间切线
 	#else
+		//逐顶点 计算副法线
 		i.tangent = UnityObjectToWorldDir(v.tangent.xyz);
 		i.binormal = CreateBinormal(i.normal, i.tangent, v.tangent.w);
 	#endif
@@ -110,17 +112,18 @@ UnityIndirect CreateIndirectLight (Interpolators i) {
 
 void InitializeFragmentNormal(inout Interpolators i) {
 	float3 mainNormal =
-		UnpackScaleNormal(tex2D(_NormalMap, i.uv.xy), _BumpScale);
+		UnpackScaleNormal(tex2D(_NormalMap, i.uv.xy), _BumpScale); //UnpackScaleNormal得到的是切线空间的数据
 	float3 detailNormal =
 		UnpackScaleNormal(tex2D(_DetailNormalMap, i.uv.zw), _DetailBumpScale);
 	float3 tangentSpaceNormal = BlendNormals(mainNormal, detailNormal);
 
 	#if defined(BINORMAL_PER_FRAGMENT)
-		float3 binormal = CreateBinormal(i.normal, i.tangent.xyz, i.tangent.w);
+		float3 binormal = CreateBinormal(i.normal, i.tangent.xyz, i.tangent.w); //世界空间副法线
 	#else
 		float3 binormal = i.binormal;
 	#endif
 	
+	//从切线空间转到世界空间==》得到世界空间的法线
 	i.normal = normalize(
 		tangentSpaceNormal.x * i.tangent +
 		tangentSpaceNormal.y * binormal +
