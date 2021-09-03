@@ -57,7 +57,7 @@ UnityLight CreateLight (Interpolators i) {
 	#if defined(POINT) || defined(POINT_COOKIE) || defined(SPOT)
 		light.dir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos);
 	#else
-		light.dir = _WorldSpaceLightPos0.xyz;
+		light.dir = _WorldSpaceLightPos0.xyz; //方向光位置就是方向
 	#endif
 	
 	UNITY_LIGHT_ATTENUATION(attenuation, 0, i.worldPos);
@@ -76,7 +76,7 @@ UnityIndirect CreateIndirectLight (Interpolators i) {
 	#endif
 
 	#if defined(FORWARD_BASE_PASS)
-		indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+		indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1))); //使用球谐函数
 	#endif
 
 	return indirectLight;
