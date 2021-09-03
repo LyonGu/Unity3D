@@ -1,0 +1,4 @@
+
+此lightning材质纪要：
+	Detail Texture 可以不用
+	Detail Normal 可以不用
