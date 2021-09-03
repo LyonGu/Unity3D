@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/My First Lighting Shader" {
+Shader "Custom/My First Lighting Shader singleLight" {
 
 	Properties {
 		_Tint ("Tint", Color) = (1, 1, 1, 1)
