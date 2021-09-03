@@ -49,7 +49,13 @@ Shader "Custom/My First Lighting Shader" {
 				Interpolators i;
 				i.position = UnityObjectToClipPos(v.position);
 				i.worldPos = mul(unity_ObjectToWorld, v.position);
-				i.normal = UnityObjectToWorldNormal(v.normal);
+				/*
+					 // mul(IT_M, norm) => mul(norm, I_M) => {dot(norm, I_M.col0), dot(norm, I_M.col1), dot(norm, I_M.col2)}
+    				return normalize(mul(norm, (float3x3)unity_WorldToObject));
+
+    				是为了解决因为当曲面沿一个纬度拉伸时，其法线不会以相同的方式拉伸。需要使用逆转置矩阵
+				*/
+				i.normal = UnityObjectToWorldNormal(v.normal); //法线需要逆转置矩阵
 				i.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return i;
 			}
@@ -68,11 +74,14 @@ Shader "Custom/My First Lighting Shader" {
 					albedo, _Metallic, specularTint, oneMinusReflectivity
 				);
 
+
+				//直接光
 				UnityLight light;
 				light.color = lightColor;
 				light.dir = lightDir;
 				light.ndotl = DotClamped(i.normal, lightDir);
 
+				//间接光
 				UnityIndirect indirectLight;
 				indirectLight.diffuse = 0;
 				indirectLight.specular = 0;
