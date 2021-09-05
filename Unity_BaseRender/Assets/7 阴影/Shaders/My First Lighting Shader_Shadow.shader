@@ -37,7 +37,7 @@
 
 			#define FORWARD_BASE_PASS
 
-			#include "My Lighting.cginc"
+			#include "My Lighting_Shadow.cginc"
 
 			ENDCG
 		}
@@ -59,7 +59,7 @@
 			#pragma vertex MyVertexProgram
 			#pragma fragment MyFragmentProgram
 
-			#include "My Lighting.cginc"
+			#include "My Lighting_Shadow.cginc"
 
 			ENDCG
 		}

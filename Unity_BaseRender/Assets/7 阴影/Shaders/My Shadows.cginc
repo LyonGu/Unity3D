@@ -25,13 +25,13 @@ struct VertexData {
 	float4 MyShadowFragmentProgram (Interpolators i) : SV_TARGET {
 		float depth = length(i.lightVec) + unity_LightShadowBias.x;
 		depth *= _LightPositionRange.w;
-		return UnityEncodeCubeShadowDepth(depth);
+		return UnityEncodeCubeShadowDepth(depth); 
 	}
 #else
 	float4 MyShadowVertexProgram (VertexData v) : SV_POSITION {
 		float4 position =
-			UnityClipSpaceShadowCasterPos(v.position.xyz, v.normal);
-		return UnityApplyLinearShadowBias(position);
+			UnityClipSpaceShadowCasterPos(v.position.xyz, v.normal); //支持法线bias设置
+		return UnityApplyLinearShadowBias(position); //支持bias设置
 	}
 
 	half4 MyShadowFragmentProgram () : SV_TARGET {
