@@ -37,7 +37,7 @@ struct Interpolators {
 
 	float3 worldPos : TEXCOORD4;
 
-	SHADOW_COORDS(5)
+	SHADOW_COORDS(5) //SHADOW_COORDS在需要时定义阴影坐标的插值器
 
 	#if defined(VERTEXLIGHT_ON)
 		float3 vertexLightColor : TEXCOORD6;
@@ -76,7 +76,7 @@ Interpolators MyVertexProgram (VertexData v) {
 	i.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
 	i.uv.zw = TRANSFORM_TEX(v.uv, _DetailTex);
 
-	TRANSFER_SHADOW(i);
+	TRANSFER_SHADOW(i);  //TRANSFER_SHADOW将这些坐标填充到顶点程序中, 片段着色器计算阴影使用
 
 	ComputeVertexLightColor(i);
 	return i;
@@ -91,7 +91,8 @@ UnityLight CreateLight (Interpolators i) {
 		light.dir = _WorldSpaceLightPos0.xyz;
 	#endif
 
-	UNITY_LIGHT_ATTENUATION(attenuation, i, i.worldPos);
+	//可以通过_ShadowMapTexture访问屏幕空间阴影  float attenuation = tex2D(_ShadowMapTexture, i.shadowCoordinates.xy);
+	UNITY_LIGHT_ATTENUATION(attenuation, i, i.worldPos); // 使用封装方法，处理各种不同光源
 
 	light.color = _LightColor0.rgb * attenuation;
 	light.ndotl = DotClamped(i.normal, light.dir);

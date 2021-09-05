@@ -54,7 +54,7 @@
 
 			#pragma target 3.0
 
-			#pragma multi_compile_fwdadd_fullshadows
+			#pragma multi_compile_fwdadd_fullshadows  //以支持不同的光源类型的阴影
 			
 			#pragma vertex MyVertexProgram
 			#pragma fragment MyFragmentProgram

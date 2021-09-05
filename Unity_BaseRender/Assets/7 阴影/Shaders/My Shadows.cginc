@@ -9,6 +9,8 @@ struct VertexData {
 };
 
 #if defined(SHADOWS_CUBE)
+	//点光
+	//渲染点光源阴影贴图时，Unity将使用定义的SHADOWS_CUBE关键字查找阴影投射器变体
 	struct Interpolators {
 		float4 position : SV_POSITION;
 		float3 lightVec : TEXCOORD0;
@@ -28,6 +30,7 @@ struct VertexData {
 		return UnityEncodeCubeShadowDepth(depth); 
 	}
 #else
+	//定向光和聚光
 	float4 MyShadowVertexProgram (VertexData v) : SV_POSITION {
 		float4 position =
 			UnityClipSpaceShadowCasterPos(v.position.xyz, v.normal); //支持法线bias设置
