@@ -315,3 +315,8 @@ A-Star PathFind/.idea/
 Unity_BaseRender/.vs/
 Unity_BaseRender/obj/
 Unity_BaseRender/.vsconfig
+Stencil/.vs/
+Stencil/Library/
+Stencil/obj/
+Stencil/Temp/
+Stencil/Logs/
