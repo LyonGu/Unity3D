@@ -19,7 +19,7 @@ float _Smoothness;
 struct VertexData {
 	float4 position : POSITION;
 	float3 normal : NORMAL;
-	float4 tangent : TANGENT;
+	float4 tangent : TANGENT; //顶点的切线
 	float2 uv : TEXCOORD0;
 };
 
@@ -29,7 +29,7 @@ struct Interpolators {
 	float3 normal : TEXCOORD1;
 
 	#if defined(BINORMAL_PER_FRAGMENT)
-		float4 tangent : TEXCOORD2;
+		float4 tangent : TEXCOORD2; //传到像素着色器里的切线
 	#else
 		float3 tangent : TEXCOORD2;
 		float3 binormal : TEXCOORD3;
@@ -67,10 +67,11 @@ Interpolators MyVertexProgram (VertexData v) {
 	#if defined(BINORMAL_PER_FRAGMENT)
 		//逐像素 计算副法线
 		i.tangent = float4(UnityObjectToWorldDir(v.tangent.xyz), v.tangent.w);  //世界空间切线
+		//binormal在fs里需要叉积计算
 	#else
 		//逐顶点 计算副法线
 		i.tangent = UnityObjectToWorldDir(v.tangent.xyz);
-		i.binormal = CreateBinormal(i.normal, i.tangent, v.tangent.w);
+		i.binormal = CreateBinormal(i.normal, i.tangent, v.tangent.w); //binormal在fs里直接使用
 	#endif
 		
 	i.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
