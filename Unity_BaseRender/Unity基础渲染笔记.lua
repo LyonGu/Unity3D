@@ -941,3 +941,290 @@
 
 	}
 }
+
+
+8 ***************反射
+{
+	1 环境贴图
+	{
+		当前，我们的着色器通过组合表面上的环境反射，漫反射和镜面反射为片段着色。至少在表面比较粗糙的情况下，会产生看似逼真的图像。
+		但是，有光泽的表面看起来就不太正确。
+		闪亮的表面就像镜子一样，尤其是金属的时候。完美的镜子可以反射所有光线。
+		这意味着根本没有漫反射。只有镜面反射。
+		因此，通过将“Metallic ”设置为1，将“Smoothness”设置为0.95，将我们的材质变成一面镜子。使其成为为纯白色。
+		但结果表面几乎是全黑的，即使它自己的颜色设置是白色。我们只看到一个小的亮点，把光源直接反射给了我们。所有其他光都沿不同方向反射回去。如果将平滑度增加到1，则高光也会消失
+		这看起来根本不像是真正的镜子。镜子不是黑色的，它们可以反射事物！在这种情况下，它应该反映出天空盒，显示蓝天和灰色地面才对。
+
+
+		间接镜面光照
+		{
+			我们的球体变了黑色，因为我们只包含了方向光。为了反映环境，我们还必须包括间接光。具体而言，间接光用于镜面反射
+
+			表面越光滑，菲涅耳反射越强。使用高平滑度值时，红色环变得非常明显。
+			因为反射来自于间接光，所以它与直接光源无关。结果，反射也独立计算该光源的阴影。因此，菲涅耳反射在球的其他阴影边缘变得非常明显。
+		}
+
+		采样环境： 天空盒立方体贴图unity_SpecCube0  使用宏UNITY_SAMPLE_TEXCUBE进行采样
+		{
+			为了反映实际环境，我们必须对天空盒立方体贴图进行采样。它在UnityShaderVariables中定义为unity_SpecCube0。此变量的类型取决于目标平台，该目标平台在HSLSupport中确定。
+			使用3D向量对立方体贴图进行采样，该向量指定了采样方向。我们可以为此使用UNITY_SAMPLE_TEXCUBE宏，它会为我们处理类型差异。
+			#if defined(FORWARD_BASE_PASS)
+				indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+				float3 envSample = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, i.normal); //还需要从HDR转成RGB
+				indirectLight.specular = envSample;
+			#endif
+
+			天空盒出现了，但是太亮了。这是因为立方体贴图包含HDR（高动态范围）颜色，这使其可以包含大于1的亮度值。我们必须将样本从HDR格式转换为RGB。
+			#if defined(FORWARD_BASE_PASS)
+				indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+				float4 envSample = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, i.normal);
+				indirectLight.specular = DecodeHDR(envSample, unity_SpecCube0_HDR); //间接光镜面光照
+			#endif
+
+			//我们得到了正确的颜色，但是还没有看到实际的反射。因为我们使用球体的法线来采样环境，所以投影不取决于视图方向。这就像在一个球体画了环境一样
+			
+		}
+
+		追踪反射
+		{
+			我们得到了正确的颜色，但是还没有看到实际的反射。因为我们使用球体的法线来采样环境，所以投影不取决于视图方向。这就像在一个球体画了环境一样
+			为了产生实际的反射，我们必须采取从照相机到表面的方向，并使用表面法线对其进行反射。可以为此使用反射功能
+			UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
+				…
+				
+				#if defined(FORWARD_BASE_PASS)
+					indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+					float3 reflectionDir = reflect(-viewDir, i.normal); //反射方向
+					float4 envSample = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, reflectionDir);
+					indirectLight.specular = DecodeHDR(envSample, unity_SpecCube0_HDR);
+				#endif
+
+				return indirectLight;
+			}
+
+			…
+
+			float4 MyFragmentProgram (Interpolators i) : SV_TARGET {
+				…
+
+				return UNITY_BRDF_PBS(
+					albedo, specularTint,
+					oneMinusReflectivity, _Smoothness,
+					i.normal, viewDir,
+					CreateLight(i), CreateIndirectLight(i, viewDir) //传入视觉方向（摄像机位置-片段位置）
+				);
+			}
+		}
+
+
+		使用反射探针：反射实际场景的几何形状，默认形式为烘焙，该模式只对静态物体生效
+		{
+			要查看建筑物的反射，必须首先捕获它。这是通过反射探针完成的，可以通过GameObject/ Light / Reflection Probe添加。创建一个并将其放置在与我们的球体相同的位置。
+
+			反射探针通过渲染立方体贴图来捕获环境。这意味着它将渲染场景六次，每个立方体的面一次。
+			默认情况下，其类型设置为烘焙。在这种模式下，立方体贴图由编辑器生成并包含在构建中。这些贴图仅包含静态几何体。因此，我们的建筑物在呈现到立方体贴图之前必须是静态的。
+
+			实时反射探针比较昂贵
+			尽管实时探针最灵活，但是如果频繁更新，它们也是最昂贵的。同样，实时探针不会在编辑模式下更新，而烘焙的探针或静态几何图形在编辑时会更新。这里，我们使用烘焙好的探针并使我们的建筑物保持静态。
+
+
+			对象实际上不需要完全是静态的。你可以将它们标记为静态，以用于各种子系统。
+			在这种情况下，相关设置为“Reflection Probe Static”。启用后，将对象渲染到烘焙的探针。你可以在运行时移动它们，但是它们的反射会保持冻结。
+		}
+	}
+
+
+	2 不完美的反射：模糊的反射，使用不同等级的mipMap
+	{
+		只有完全光滑的表面才能产生完全清晰的反射。表面变得越粗糙，其反射越扩散。钝镜会产生模糊的反射
+
+		纹理可以具有mipmap，它是原始图像的降采样版本。以全尺寸查看时，较高的Mipmap会产生模糊的图像。
+		这些将是块状图像，但是Unity使用不同的算法来生成环境图的mipmap。这些代理体积的贴图代表了从清晰到模糊的良好发展。
+
+		粗糙的镜子: 模糊的反射
+		{
+			使用UNITY_SAMPLE_TEXCUBE_LOD宏在特定的mipmap级别对立方体贴图进行采样，材质越粗糙，我们应该使用的mipmap级别越高
+
+			当粗糙度从0变为1时，我们必须按使用的mipmap范围对其进行缩放。Unity使用UNITY_SPECCUBE_LOD_STEPS宏来确定此范围，
+
+			float roughness = 1 - _Smoothness;
+			float4 envSample = UNITY_SAMPLE_TEXCUBE_LOD(
+				unity_SpecCube0, reflectionDir, roughness * UNITY_SPECCUBE_LOD_STEPS
+			);
+
+
+			实际上，粗糙度与mipmap级别之间的关系不是线性的。Unity使用转换公式
+			1.7r−0.7r的平方，r为原始的粗糙度
+				float roughness = 1 - _Smoothness;
+				roughness *= 1.7 - 0.7 * roughness;
+				float4 envSample = UNITY_SAMPLE_TEXCUBE_LOD(
+					unity_SpecCube0, reflectionDir, roughness * UNITY_SPECCUBE_LOD_STEPS
+				);
+
+
+			使用Unity封装好的方法 ：天空盒立方体贴图==》unity_SpecCube0, 天空盒立方体贴图HDR数据==》unity_SpecCube0_HDR
+			{
+				UnityStandardBRDF包含文件包含Unity_GlossyEnvironment函数。它包含所有用于转换粗糙度，对立方体贴图采样以及从HDR转换的代码。因此，让我们使用该函数代替我们自己的代码。
+					indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+					float3 reflectionDir = reflect(-viewDir, i.normal);
+
+			//		float roughness = 1 - _Smoothness;
+			//		roughness *= 1.7 - 0.7 * roughness;
+			//		float4 envSample = UNITY_SAMPLE_TEXCUBE_LOD(
+			//			unity_SpecCube0, reflectionDir, roughness * UNITY_SPECCUBE_LOD_STEPS
+			//		);
+			//		indirectLight.specular = DecodeHDR(envSample, unity_SpecCube0_HDR);
+
+					Unity_GlossyEnvironmentData envData;
+					envData.roughness = 1 - _Smoothness;
+					envData.reflUVW = reflectionDir;
+					indirectLight.specular = Unity_GlossyEnvironment(
+						UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
+					);
+			}
+
+		}
+
+		金属与非金属
+		{
+			金属和非金属表面都可以产生清晰的反射，只是看起来有所不同。镜面反射在发亮的介电材质上看起来可能很好，但是它们并不能控制外观。仍然有大量的漫反射可见
+			回想一下，金属会使其镜面反射着色，而非金属则不会。对于镜面高光和镜面环境反射都是如此
+		}
+
+
+		间接反射与表面的直接照明无关，阴影区域最为明显看的特比明显
+		在非金属的情况下，这只会导致视觉上更亮的表面。你仍然可以看到直接光线投射的阴影。
+		相同的规则适用于金属，但间接反射占主导地位。因此，随着光亮度的增加，直接光的阴影消失。完美的镜子上没有阴影。
+	}
+
+	3 盒投影：有限的空间里反射，反射探针可以设置盒投影区域 Box Projection Bounds
+	{
+		当一片环境无限远时，确定反射率，我们无需考虑视角位置。但是，当大多数环境都在附近时，我们就需要注意。
+		假设我们在一个空的房间中间有一个反射探针。它的环境图包含此房间的墙壁，地板和天花板。如果立方体贴图和房间对齐，则立方体贴图的每个面都与墙壁，地板或天花板之一精确对应。
+
+
+		反射探针盒：需要初始反射方向，来从中采样的位置，立方体贴图位置以及盒边界
+		{
+			反射探针的大小和原点确定了相对于其位置的世界空间中的立方区域。它始终与轴对齐，这意味着它将忽略所有旋转。它也忽略缩放。
+			该区域用于两个目的。首先，Unity使用这些区域来决定在渲染对象时使用哪个探针。其次，该区域用于盒投影，这就是我们要做的。
+
+			要计算盒投影，需要初始反射方向，来从中采样的位置，立方体贴图位置以及盒边界。为此，在CreateIndirectLight上方的着色器中添加一个函数
+			float3 BoxProjection (
+				float3 direction, float3 position,
+				float4 cubemapPosition, float3 boxMin, float3 boxMax
+			) {
+				#if UNITY_SPECCUBE_BOX_PROJECTION
+					UNITY_BRANCH
+					if (cubemapPosition.w > 0) {
+						float3 factors =
+							((direction > 0 ? boxMax : boxMin) - position) / direction;
+						float scalar = min(min(factors.x, factors.y), factors.z);
+						direction = direction * scalar + (position - cubemapPosition);
+					}
+				#endif
+				return direction;
+			}
+
+			float3 reflectionDir = reflect(-viewDir, i.normal);
+			Unity_GlossyEnvironmentData envData;
+			envData.roughness = 1 - _Smoothness;
+
+			//BoxProjection 自己封装的函数，计算盒空间反射的，近处物体的反射
+			//unity_SpecCube0_ProbePosition 第一个反射探针的位置
+			envData.reflUVW = BoxProjection(
+				reflectionDir, i.worldPos,
+				unity_SpecCube0_ProbePosition,
+				unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax
+			);
+
+
+			事实证明，单个盒投影探头产生的反射与九个独立探头的反射非常相似！因此，盒投影是一个非常方便的技巧，尽管它并不完美。
+		}
+
+	}
+
+	4 混合反射探针：为了较好的反射融合（房间内到房间外）
+	{
+		为了获得建筑物内部和外部的良好反射，我们必须使用多个反射探针
+
+		插值探针
+		{
+			Unity为着色器提供了两个反射探针的数据，因此我们可以在它们之间进行混合。第二个探针是unity_SpecCube1。我们可以对两个环境图都进行采样并根据哪个更占优势进行插值。
+			Unity为我们计算此值，并将插值器存储在unity_SpecCube0_BoxMin的第四个坐标中。如果仅使用第一个探针，则将其设置为1；如果存在混合，则将其设置为较低的值。
+		}
+
+		重叠探针盒
+		{
+			为了使混合有效，多个探针的边界必须重叠。因此，调整第二个盒，使其延伸到建筑物中。重叠区域中的球应获得混合反射。网格渲染器组件的检查器还显示了正在使用的探针及其权重。
+			如果过渡不够顺畅，你可以在其他两个之间添加第三个探针。该探针的框与其他两个框重叠。因此，在向外移动时，首先要在内部和中间探针之间以及在中间和外部探针之间进行混合。
+
+			还可以在探针和天空盒之间进行混合。你必须将对象的“Reflection Probes”模式从“Blend Probes”更改为“Blend Probes and Skybox”。当对象的边界框部分超出探针边界时，就会发生混合。
+		}
+
+		最后实现源码
+		{
+			UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
+				UnityIndirect indirectLight;
+				indirectLight.diffuse = 0;
+				indirectLight.specular = 0;
+
+				#if defined(VERTEXLIGHT_ON)
+					indirectLight.diffuse = i.vertexLightColor;
+				#endif
+
+				#if defined(FORWARD_BASE_PASS)
+					indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+					float3 reflectionDir = reflect(-viewDir, i.normal);
+					Unity_GlossyEnvironmentData envData;
+					envData.roughness = 1 - _Smoothness;
+
+					//BoxProjection 自己封装的函数，计算盒空间反射的，近处物体的反射
+					//unity_SpecCube0_ProbePosition 第一个反射探针的位置
+					envData.reflUVW = BoxProjection(
+						reflectionDir, i.worldPos,
+						unity_SpecCube0_ProbePosition,
+						unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax
+					);
+
+					/*
+						Unity_GlossyEnvironment Unity自带函数
+						{
+							1 转换粗糙度，对立方体贴图采样，可以使用不同的立方体贴图Mipmap达到模糊的反射效果
+							2 立方体贴图包含HDR（高动态范围）颜色，这使其可以包含大于1的亮度值，必须HDR格式转换为RGB
+						}
+					*/
+					float3 probe0 = Unity_GlossyEnvironment(
+						UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
+					);
+
+					//unity_SpecCube1_ProbePosition 第二个反射探针的位置
+					envData.reflUVW = BoxProjection(
+						reflectionDir, i.worldPos,
+						unity_SpecCube1_ProbePosition,
+						unity_SpecCube1_BoxMin, unity_SpecCube1_BoxMax
+					);
+					#if UNITY_SPECCUBE_BLENDING
+						float interpolator = unity_SpecCube0_BoxMin.w;
+						UNITY_BRANCH
+						if (interpolator < 0.99999) {
+							float3 probe1 = Unity_GlossyEnvironment(
+								UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
+								unity_SpecCube0_HDR, envData
+							);
+							indirectLight.specular = lerp(probe1, probe0, interpolator);
+						}
+						else {
+							indirectLight.specular = probe0;
+						}
+					#else
+						indirectLight.specular = probe0;
+					#endif
+				#endif
+
+				return indirectLight;
+			}
+		}
+
+		
+	}
+}

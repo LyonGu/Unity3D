@@ -130,7 +130,7 @@ UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
 		envData.roughness = 1 - _Smoothness;
 
 		//BoxProjection 自己封装的函数，计算盒空间反射的，近处物体的反射
-		//unity_SpecCube0_ProbePosition 天空盒反射探针的位置
+		//unity_SpecCube0_ProbePosition 第一个反射探针的位置
 		envData.reflUVW = BoxProjection(
 			reflectionDir, i.worldPos,
 			unity_SpecCube0_ProbePosition,
@@ -147,6 +147,8 @@ UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
 		float3 probe0 = Unity_GlossyEnvironment(
 			UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
 		);
+
+		//unity_SpecCube1_ProbePosition 第二个反射探针的位置
 		envData.reflUVW = BoxProjection(
 			reflectionDir, i.worldPos,
 			unity_SpecCube1_ProbePosition,
