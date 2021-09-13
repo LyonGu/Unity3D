@@ -360,7 +360,7 @@ UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
 		#endif
 
 		#if defined(DYNAMICLIGHTMAP_ON)
-			//采样实时光照贴图
+			//采样实时光照贴图 unity_DynamicLightmap
 			float3 dynamicLightDiffuse = DecodeRealtimeLightmap(
 				UNITY_SAMPLE_TEX2D(unity_DynamicLightmap, i.dynamicLightmapUV)
 			);

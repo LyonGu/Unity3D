@@ -1912,7 +1912,7 @@
 
 }
 
-16***************静态光照：其实就是使用烘焙贴图（数据被认为是间接光照），只能作用于静态物体，包含漫射光不支持镜面光，不会投射实时阴影
+16***************静态光照：其实就是使用烘焙贴图（数据被认为是间接光照），只能作用于静态物体，包含漫射光不支持镜面光，不会投射实时阴影，光照探针可以支持动态物体（较小的）
 {
 	1 Lightmapping 光照贴图 ==> 静态物体
 	{
@@ -2270,7 +2270,7 @@
 }
 
 
-17***************混合光照：烘焙光和实时光，项目里用的最多
+17***************混合光照：烘焙光和实时光，项目里用的最多,支持实时阴影
 {
 	烘焙光的缺点
 		首先，镜面照明无法烘焙。
@@ -2342,4 +2342,142 @@
 		减法模式仅适用于正向渲染。使用延迟渲染路径时，相关对象将像透明对象一样回退到前向。
 	}
 
+}
+
+18***************实时光全局光照、探针体积、LOD组
+{
+	1 实时全局光照: 光源经常变化的，天气系统之类的，在运行时计算光照贴图和探针
+	{
+		得益于光探针的原理，烘焙光对于静态几何体非常友好，对于动态几何体也非常适用。但是，它不能处理动态光。混合模式下的光源可以进行一些实时调整，
+		但是太多的物体因为烘焙的间接光源，需要保持不变是显而易见的。因此，当你有户外场景时，太阳必须保持不变。它不能像现实生活中那样穿越天空，因为那样需要逐渐改变GI。
+
+		开启实时全局光照：“Lighting”窗口的“Realtime Lighting”部分中的复选框启用该功能。
+		要查看实时GI的实际效果，请将测试场景中的主光源模式设置为实时
+		只有动态物体接受实时GI
+
+		事实证明，只有动态对象才能从实时GI中受益。静态对象变暗了。那是因为光探针会自动包含实时GI。静态对象必须采样实时光照贴图，该实时光照贴图与烘焙的光照贴图不同。我们的着色器尚未执行此操作。
+
+		烘焙实时GI
+		{
+			尽管实时光照贴图已经烘焙，并且可能看起来正确，但是我们的meta pass实际上使用了错误的坐标。实时GI具有自己的光照贴图坐标，最终可能与静态光照贴图的坐标不同。
+			Unity根据光照贴图和对象设置自动生成这些坐标。它们存储在第三个网格UV通道中。因此，将此数据添加到“My Lightmapping”中的VertexData。
+
+
+			struct VertexData {
+				float4 vertex : POSITION;
+				float3 normal : NORMAL;
+				float4 tangent : TANGENT;
+				float2 uv : TEXCOORD0;
+				float2 uv1 : TEXCOORD1; //烘焙光照贴图坐标
+				float2 uv2 : TEXCOORD2; //实时光照贴图坐标
+			};
+		}
+
+		采样实时光照贴图
+		{
+			struct Interpolators {
+				…
+
+				#if defined(DYNAMICLIGHTMAP_ON)
+					float2 dynamicLightmapUV : TEXCOORD7;
+				#endif
+			};
+
+			Interpolators MyVertexProgram (VertexData v) {
+				…
+
+				#if defined(LIGHTMAP_ON) || ADDITIONAL_MASKED_DIRECTIONAL_SHADOWS
+					i.lightmapUV = v.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
+				#endif
+
+				#if defined(DYNAMICLIGHTMAP_ON)
+					i.dynamicLightmapUV =
+						v.uv2 * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+				#endif
+
+				…
+			}
+
+
+			UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir)
+			{
+				...
+				#if defined(DYNAMICLIGHTMAP_ON)
+					//采样实时光照贴图 unity_DynamicLightmap
+					float3 dynamicLightDiffuse = DecodeRealtimeLightmap(
+						UNITY_SAMPLE_TEX2D(unity_DynamicLightmap, i.dynamicLightmapUV)
+					);
+
+					#if defined(DIRLIGHTMAP_COMBINED)
+						float4 dynamicLightmapDirection = UNITY_SAMPLE_TEX2D_SAMPLER(
+							unity_DynamicDirectionality, unity_DynamicLightmap,
+							i.dynamicLightmapUV
+						);
+		            	indirectLight.diffuse += DecodeDirectionalLightmap(
+		            		dynamicLightDiffuse, dynamicLightmapDirection, i.normal
+		            	);
+					#else
+						indirectLight.diffuse += dynamicLightDiffuse;
+					#endif
+				#endif
+
+				...
+			}
+			
+		}
+	}
+
+	2 光探针代理体积（LPPVs）
+	{
+		烘焙GI和实时GI都通过光探针应用于动态对象。对象的位置用于内插值光探针数据，然后用于应用GI。这适用于比较小的对象，但对于较大的对象而言过于粗糙。
+	}
+
+	3 LOD组件
+	{
+		当对象最终仅覆盖应用程序窗口的一小部分时，你不需要高度详细的网格即可对其进行渲染。
+		可以根据对象的视图大小使用不同的网格。这称为细节级别（level of detail），或简称LOD。Unity允许我们通过LOD Group组件执行此操作
+
+		LOD不同级别之间的淡入淡出
+		{
+			LOD组的缺点是，当LOD级别更改时，它在视觉上很明显。几何突然出现，消失或改变形状。可以通过将相邻LOD级别之间的交叉淡入淡出来缓解这种情况，
+			这可以通过将组的“Fade Mode”设置为“Cross Fade”来实现
+		}
+
+		支持交叉淡化: 支持几何体以及阴影
+		{
+			默认情况下，Unity的标准着色器不支持交叉淡化。
+			需要复制标准着色器，并为LOD_FADE_CROSSFADE关键字添加一个多编译指令。我们也需要添加该指令以支持My First Lighting Shader的交叉渐变。将指令添加到除meta pass之外的所有pass中。
+			我们将使用抖动在LOD级别之间进行转换。该方法适用于正向和延迟渲染以及阴影
+
+			可以在片段程序开始时使用UnityApplyDitherCrossFade函数执行交叉淡化。
+			FragmentOutput MyFragmentProgram (Interpolators i) {
+				#if defined(LOD_FADE_CROSSFADE)
+					UnityApplyDitherCrossFade(i.vpos);
+				#endif
+
+				…
+			}
+
+			交叉淡化现在适用于几何体了。为了使它也适用于阴影，我们必须调整“My Shadows”。首先，在进行交叉淡入淡出时必须使用vpos。其次，我们还必须在片段程序开始时使用UnityApplyDitherCrossFade。
+			struct Interpolators {
+				#if SHADOWS_SEMITRANSPARENT || defined(LOD_FADE_CROSSFADE)
+					UNITY_VPOS_TYPE vpos : VPOS;
+				#else
+					float4 positions : SV_POSITION;
+				#endif
+
+				…
+			};
+
+			…
+
+			float4 MyShadowFragmentProgram (Interpolators i) : SV_TARGET {
+				#if defined(LOD_FADE_CROSSFADE)
+					UnityApplyDitherCrossFade(i.vpos);
+				#endif
+
+				…
+			}
+		}
+	}
 }
