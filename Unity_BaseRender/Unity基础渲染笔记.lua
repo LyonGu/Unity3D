@@ -1351,3 +1351,195 @@
 		}
 	}
 }
+
+11***************透明物体
+{
+	Cutout Rendering：alpha测试，直接丢弃像素
+	{
+		要创建透明材质，我们必须知道每个片段的透明度。此信息通常存储在颜色的Alpha通道中。在我们的例子中，这是主反照率纹理的Alpha通道，以及颜色色调的Alpha通道。
+
+		float GetAlpha (Interpolators i) {
+			return _Tint.a * tex2D(_MainTex, i.uv.xy).a;
+		}
+
+
+		Cutout: 使用Clip函数
+		{
+			对于不透明的材质，将渲染通过深度测试的每个片段。所有片段都是完全不透明的，并写入深度缓冲区。透明度让这里变得更复杂。
+			实现透明性的最简单方法是使其保持二进制状态。片段是完全不透明的，或者是完全透明的。如果它是透明的，那么根本就不会渲染。这使得可以在某表面上切孔。
+
+			要中止渲染片段，可以使用clip函数。如果此函数的参数为负，则片段将被丢弃
+
+			GPU不会混合其颜色，也不会写入深度缓冲区。如果发生这种情况，我们不必担心所有其他材质特性。因此，尽早clip是最有效的方法。
+			在我们的例子中，那是MyFragmentProgram函数的开始
+
+			我们将使用alpha值来确定是否应该裁剪。由于alpha介于零和一之间，因此我们必须减去一些值使其变为负数。
+			通过减去½，我们将使alpha范围的下半部分为负。这意味着将渲染alpha值至少为½的片段，而所有其他片段将被剪切掉。
+			float4 MyFragmentProgram (Interpolators i) : SV_TARGET {
+				float alpha = GetAlpha(i);
+				clip(alpha - 0.5);
+
+				…
+			}
+
+
+			不透明渲染队列为2000
+			CutOut渲染队列为2450
+			他们将cutout 材质放入了不透明材质的不同渲染队列中。
+			不透明的东西首先被渲染，然后是cutout的东西。这样做是因为cutout更加昂贵。首先渲染不透明的对象意味着我们永远不会渲染最终在实体对象之后的剪切对象。
+		}
+	}
+
+
+	半透明渲染：在表面的不透明部分和透明部分之间有平滑过渡效果
+	{
+		当想在某个物体上切一个洞时，cutout 渲染就足够了，但是当你需要半透明效果时就不行了。同样，cutout 渲染是针对每个片段的，这意味着边缘会出现锯齿。
+		因为在表面的不透明部分和透明部分之间没有平滑过渡。为了解决这个问题，我们必须增加对另一种渲染模式的支持。此模式将支持半透明。Unity的标准着色器将此模式命名为Fade
+
+		渲染队列值为3000，这是透明对象的默认值。渲染类型为“Transparent”。
+
+		如果同时具有不透明对象和透明对象，则将同时调用Render.OpaqueGeometry和Render.TransparentGeometry方法。
+		首先渲染不透明和cut off的几何体，然后渲染透明的几何体。因此，半透明对象永远不会在实体对象之后绘制。
+
+
+		混合片段
+		{
+			当alpha为1时，渲染完全不透明的东西。在那种情况下，应该像往常一样将Blend One Zero用作基础pass，将Blend One one用作附加pass。
+			但是当alpha为零时，我们呈现的内容是完全透明的。如果是这样，我们不需要改变任何事情。然后，两次pass的混合模式必须为Blend   Zero   One 。如果alpha为¼，那么我们需要Blend 0.25 0.75和Blend 0.25 One之类的东西。
+
+			为了实现这个效果，可以使用SrcAlpha和OneMinusSrcAlpha混合关键字。
+			Pass {
+				Tags {
+					"LightMode" = "ForwardBase"
+				}
+				Blend SrcAlpha OneMinusSrcAlpha
+
+				…
+			}
+
+			Pass {
+				Tags {
+					"LightMode" = "ForwardAdd"
+				}
+
+				Blend SrcAlpha One
+				ZWrite Off
+
+				…
+			}
+
+			使用这些float属性代替必须可变的blend关键字。你需要将它们放在方括号内。这是旧的着色器语法，用于配置GPU。我们不需要在我们的顶点和片段程序中访问这些属性。
+			Properties {
+				…
+				
+				_SrcBlend ("_SrcBlend", Float) = 1
+				_DstBlend ("_DstBlend", Float) = 0
+			}
+
+			[HideInInspector] _SrcBlend ("_SrcBlend", Float) = 1
+			[HideInInspector] _DstBlend ("_DstBlend", Float) = 0
+
+			Pass {
+				Tags {
+					"LightMode" = "ForwardBase"
+				}
+				Blend [_SrcBlend] [_DstBlend]
+
+				…
+			}
+
+			Pass {
+				Tags {
+					"LightMode" = "ForwardAdd"
+				}
+
+				Blend [_SrcBlend] One
+				ZWrite Off
+
+				…
+			}
+
+
+			在使用Fade渲染模式时，必须禁用对深度缓冲区的写入
+			Pass {
+				Tags {
+					"LightMode" = "ForwardBase"
+				}
+				Blend [_SrcBlend] [_DstBlend]
+				ZWrite [_ZWrite] //Off
+			}
+		}
+	}
+}
+
+12***************透明物体的阴影
+{
+	Cutout阴影
+	{
+		为了考虑透明度，我们需要访问阴影投射器着色器通道中的alpha值,这意味着我们需要对反照率纹理进行采样
+
+		丢弃阴影片段
+		{
+			首先要处理cutout阴影。通过丢弃片段来在阴影中切出洞，就像在其他渲染过程中对Cutout渲染模式所做的那样。为此，我们需要材质的色调，反照率纹理和Alpha Cut设置
+			#include "UnityCG.cginc"
+
+			float4 _Tint;
+			sampler2D _MainTex;
+			float4 _MainTex_ST;
+			float _AlphaCutoff;
+
+
+			当我们使用Cutout渲染模式时，必须对反照率纹理进行采样。需要将UV坐标传递给片段程序
+			Interpolators MyShadowVertexProgram (VertexData v) {
+				…
+
+				#if SHADOWS_NEED_UV
+					i.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				#endif
+				return i;
+			}
+
+			float GetAlpha (Interpolators i) {
+				float alpha = _Tint.a;
+				#if SHADOWS_NEED_UV
+					alpha *= tex2D(_MainTex, i.uv.xy).a;
+				#endif
+				return alpha;
+			}
+
+
+			float4 MyShadowFragmentProgram (Interpolators i) : SV_TARGET {
+				float alpha = GetAlpha(i);
+				#if defined(_RENDERING_CUTOUT)
+					clip(alpha - _AlphaCutoff);
+				#endif
+				
+				…
+			}
+		}
+
+
+
+	}
+
+	半透明阴影：同时支持“Fade”和“Transprant”渲染模式的阴影，技术实现有点麻烦
+	{
+		抖动
+		{
+			阴影贴图包含到阻挡光线的表面的距离。光线被阻挡了一定距离，或者没有被阻挡。因此，没有办法指定光被半透明表面部分阻挡。
+			我们能做的就是将阴影表面的一部分剪掉。这也是我们为cutoff阴影所做的。
+			但是，除了基于阈值进行裁剪外，我们还可以统一裁剪片段。例如，如果一个表面让一半的光通过。总而言之，生成的阴影将显示为完整阴影的一半。
+			不必总是使用相同的模式。依靠alpha值，我们可以使用带有更多或更少孔的图案。
+			而且，如果我们混合这些模式，则可以创建阴影密度的平滑过渡。基本上，我们仅使用两种状态来近似渐变。这种技术被称为抖动（Dither）。
+
+			Unity包含我们可以使用的抖动模式图集。它包含4 x 4像素的16种不同图案。它以完全空的模式开始。每个连续的图案填充一个附加像素，直到填充了七个像素。然后反转，直到所有像素都被填充。
+		}
+
+		VPOS
+		{
+			要对我们的阴影应用抖动模式，我们需要对其进行采样。
+			不能使用网格的UV坐标，因为它们在阴影空间中不一致。
+			相反，我们需要使用片段的屏幕空间坐标。从光的角度渲染阴影贴图时，这会使图案与阴影贴图对齐。
+		}
+	}
+}
