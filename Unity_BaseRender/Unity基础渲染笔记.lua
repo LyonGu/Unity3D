@@ -2481,3 +2481,191 @@
 		}
 	}
 }
+
+19***************GPU实例（Instancing）：相同的mesh和material
+{
+	1、合并实例 Batching Instances
+	{
+		指示GPU绘制图像需要花费时间。为其提供数据（包括网格和材质属性）也需要时间。我们已经知道有两种方法可以减少绘制调用的数量，即静态和动态批处理。
+		Unity可以将静态对象的网格合并为更大的静态网格，从而减少draw calls。但只有使用相同材质的对象才能以这种方式组合，它是以存储更多网格数据为代价的。
+		启用动态批处理后，Unity在运行时会对视图中的动态对象执行相同的操作。但仅适用于小型网格，否则会适得其反，开销反而变得非常大。
+
+		还有另一种组合绘图调用的方法。被称为GPUinstancing 或几何instancing 。与动态批处理一样，此操作在运行时针对可见对象完成。这个想法是让GPU一次性渲染同一网格多次。
+		因此，它不能组合不同的网格或材质，但不局限于小网格。这里我们将试试这个方法。
+
+
+		支持实例化（Instancing）
+		{
+			默认情况下，还无法进行GPU实例化。必须设计着色器来支持它。我们需要给每种材质显式的启用实例化。Unity的标准着色器对此有一个开关。
+			我们也向MyLightingShaderGUI添加实例化的开关。像标准着色器的GUI一样，我们将为其创建“Advanced Options”部分。
+			可以通过调用MaterialEditor.EnableInstancingField方法来添加开关。在一个新的DoAdvanced方法里添加逻辑吧。
+
+			仅当着色器实际支持实例化时，才会显示该开关。我们可以通过将#pragma multi_compile_instancing指令添加到着色器来启用此支持。
+			这将为一些关键字启用着色器变体，在我们的示例中为INSTANCING_ON，但其他关键字也是可以的。为“My First Lighting”的base pass执行此操作。
+
+
+		}
+
+		实例 Ids： 与实例相对应的数组索引称为其实例ID
+		{
+			GPU通过顶点数据将其传递到着色器的顶点程序。在大多数平台上，它是一个无符号整数，名为instanceID，具有SV_InstanceID语义。
+			我们可以简单地使用UNITY_VERTEX_INPUT_INSTANCE_ID宏将其包含在我们的VertexData结构中
+			struct VertexData {
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				float4 vertex : POSITION;
+				…
+			};
+
+			//启用实例化后，我们现在可以在顶点程序中访问实例ID。有了它，就可以在变换顶点位置时使用正确的矩阵。
+			//但是，UnityObjectToClipPos没有矩阵参数。它始终使用unity_ObjectToWorld。
+			//要解决此问题，UnityInstancing包含文件会使用使用矩阵数组的宏覆盖unity_ObjectToWorld。这可以被认为是一种宏的
+			//要使Hack工作，实例的数组索引必须对所有着色器代码全局可用。我们通过UNITY_SETUP_INSTANCE_ID宏进行手动设置，该宏必须在顶点程序中完成，然后再执行任何可能需要它的代码。
+			InterpolatorsVertex MyVertexProgram (VertexData v) {
+				InterpolatorsVertex i;
+				UNITY_INITIALIZE_OUTPUT(Interpolators, i);
+				UNITY_SETUP_INSTANCE_ID(v);
+				i.pos = UnityObjectToClipPos(v.vertex);
+				…
+
+			}
+		}
+
+		合批大小: 缓冲区的大小不同平台导致合批次数不同
+		{
+			你最终得到的批次数量可能与我得到的数量不同。在我的情况下，以40批渲染5000个球体实例，这意味着每批125个球体。
+			每个批次都需要自己的矩阵数组，此数据发送到GPU并存储在内存缓冲区中，
+			在Direct3D中称为常量缓冲区，在OpenGL中称为统一（uniform）缓冲区。这些缓冲区具有最大容量限制，它限制了一个批次中可以容纳多少个实例。假设台式机GPU每个缓冲区的限制为64KB
+		}
+
+		实例化阴影
+		{
+			为5000个球体渲染阴影会给GPU造成巨大损失。但是我们也可以在渲染球体阴影时使用GPU实例化。将所需指令添加到阴影caster pass中。
+			#pragma multi_compile_shadowcaster
+			#pragma multi_compile_instancing
+
+			再将UNITY_VERTEX_INPUT_INSTANCE_ID和UNITY_SETUP_INSTANCE_ID添加到“My Shadows”中。
+			struct VertexData {
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				…
+			};
+
+			…
+
+			InterpolatorsVertex MyShadowVertexProgram (VertexData v) {
+				InterpolatorsVertex i;
+				UNITY_SETUP_INSTANCE_ID(v);
+				…
+			}
+
+
+			现在批次有了大幅度的降低。
+		}
+
+		多灯光： 只能使用延迟渲染
+		{
+			我们仅在base pass和shadow caster pass中添加了实例化支持。
+			因此，批处理不适用于其他光源。要验证这一点，请停用主光源并添加一些会影响多个球体的聚光灯或点光源。但不要为它们打开阴影，因为那样会降低帧率
+
+			事实证明，不受额外光照影响的球体仍与阴影一起进行批处理。但是其他区域甚至没有在其base pass中分批处理。对于这些情况，Unity完全不支持批处理。要将实例化与多个光源结合使用，
+			现在别无选择，只能切换到deferred rendering 路径。为此，请将所需的编译器指令添加到着色器的deferred pass中。
+		}
+	}
+
+	2 混合材质属性
+	{
+		所有批处理形式的限制之一是它们仅限于具有相同材质的对象。当我们希望渲染的对象具有多样性时，此限制就会成为阻碍。
+
+		材质属性块 Material Property Blocks
+		{
+			除了使用每个球体创建新的材质实例外，我们还可以使用材质属性块。这些是小的对象，其中包含着色器属性的重写。设置属性块的颜色并将其传递给球体的渲染器，而不是直接分配材质的颜色
+			MaterialPropertyBlock properties = new MaterialPropertyBlock();
+			properties.SetColor(
+				"_Color", new Color(Random.value, Random.value, Random.value)
+			);
+			t.GetComponent<MeshRenderer>().SetPropertyBlock(properties);
+
+			MeshRenderer.SetPropertyBlock方法复制该块的数据，因此不依赖于我们在本地创建的块。这使我们可以重用一个块来配置所有实例。
+			void Start () {
+				MaterialPropertyBlock properties = new MaterialPropertyBlock();
+				for (int i = 0; i < instances; i++) {
+					Transform t = Instantiate(prefab);
+					t.localPosition = Random.insideUnitSphere * radius;
+					t.SetParent(transform);
+
+					//MaterialPropertyBlock properties = new MaterialPropertyBlock();
+					properties.SetColor(
+						"_Color", new Color(Random.value, Random.value, Random.value)
+					);
+					t.GetComponent<MeshRenderer>().SetPropertyBlock(properties);
+				}
+			}
+		}
+
+		Property Buffers：UNITY_INSTANCING_CBUFFER_START ，UNITY_INSTANCING_CBUFFER_END
+		{
+			渲染实例对象时，Unity通过将数组上传到其内存来使转换矩阵可用于GPU。Unity对存储在材料属性块（Material Property Blocks）中的属性执行相同的操作。
+			但这要起作用的话，必须在“My Lighting”中定义一个适当的缓冲区。
+
+			声明实例化缓冲区的工作类似于创建诸如插值器之类的结构，但是确切的语法因平台而异。
+			我们可以使用UNITY_INSTANCING_CBUFFER_START和UNITY_INSTANCING_CBUFFER_END宏来解决差异。启用实例化后，它们还不会做任何操作。
+
+			将_Color变量的定义放在实例缓冲区中。UNITY_INSTANCING_CBUFFER_START宏需要一个名称参数。实际名称无关紧要。宏以UnityInstancing_为其前缀，以防止名称冲突
+			UNITY_INSTANCING_CBUFFER_START(InstanceProperties)
+				float4 _Color;
+			UNITY_INSTANCING_CBUFFER_END
+
+			像变换矩阵一样，启用实例化后，颜色数据将作为数组上传到GPU。UNITY_DEFINE_INSTANCED_PROP宏会为我们处理正确的声明语法。
+			UNITY_INSTANCING_CBUFFER_START(InstanceProperties)
+			//	float4 _Color;
+				UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
+			UNITY_INSTANCING_CBUFFER_END
+
+
+			要访问片段程序中的数组，我们还需要在其中知道实例ID。因此，将其添加到interpolator 结构中。
+			struct InterpolatorsVertex {
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				…
+			};
+
+			struct Interpolators {
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				…
+			};
+
+
+			在顶点程序中，将ID从顶点数据复制到interpolators。启用实例化时，UNITY_TRANSFER_INSTANCE_ID宏定义此简单操作，否则不执行任何操作
+
+			InterpolatorsVertex MyVertexProgram (VertexData v) {
+				InterpolatorsVertex i;
+				UNITY_INITIALIZE_OUTPUT(Interpolators, i);
+
+				//要使Hack工作，实例的数组索引必须对所有着色器代码全局可用。
+				//我们通过UNITY_SETUP_INSTANCE_ID宏进行手动设置，该宏必须在顶点程序中完成，然后再执行任何可能需要它的代码。
+				UNITY_SETUP_INSTANCE_ID(v);
+
+				//从顶点数据复制到interpolators
+				UNITY_TRANSFER_INSTANCE_ID(v, i);
+				…
+			}
+
+			在片段程序的开头，使ID全局可用，就像在顶点程序中一样
+			FragmentOutput MyFragmentProgram (Interpolators i) {
+				UNITY_SETUP_INSTANCE_ID(i);
+				…
+			}
+
+			现在，我们必须在不使用实例化时以_Color的形式访问颜色，而在启用实例化时以_Color [unity_InstanceID]的形式访问颜色。我们可以为此使用UNITY_ACCESS_INSTANCED_PROP宏。
+			float3 GetAlbedo (Interpolators i) {
+				float3 albedo =
+					tex2D(_MainTex, i.uv.xy).rgb * UNITY_ACCESS_INSTANCED_PROP(_Color).rgb;
+				…
+			}
+
+			float GetAlpha (Interpolators i) {
+				float alpha = UNITY_ACCESS_INSTANCED_PROP(_Color).a;
+				…
+			}
+		}
+	}
+
+}
