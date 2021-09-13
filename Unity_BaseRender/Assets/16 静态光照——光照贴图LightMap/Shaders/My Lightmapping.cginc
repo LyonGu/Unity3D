@@ -71,6 +71,8 @@ float3 GetEmission (Interpolators i) {
 
 Interpolators MyLightmappingVertexProgram (VertexData v) {
 	Interpolators i;
+
+	//必须使用光照贴图坐标
 	v.vertex.xy = v.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
 	v.vertex.z = v.vertex.z > 0 ? 0.0001 : 0;
 
@@ -85,11 +87,16 @@ float4 MyLightmappingFragmentProgram (Interpolators i) : SV_TARGET {
 	UnityMetaInput surfaceData;
 	surfaceData.Emission = GetEmission(i);
 	float oneMinusReflectivity;
+
+	//要获得反照率，必须再次使用DiffuseAndSpecularFromMetallic。该函数具有用于镜面反射的颜色和反射率的输出参数
+	//surfaceData.SpecularColor捕捉镜面颜色
 	surfaceData.Albedo = DiffuseAndSpecularFromMetallic(
 		GetAlbedo(i), GetMetallic(i),
 		surfaceData.SpecularColor, oneMinusReflectivity
 	);
-
+	
+	//非常粗糙的金属应该产生比我们目前的计算结果更多的间接光
+	//标准着色器通过将部分镜面反射颜色添加到反照率来对此进行补偿
 	float roughness = SmoothnessToRoughness(GetSmoothness(i)) * 0.5;
 	surfaceData.Albedo += surfaceData.SpecularColor * roughness;
 

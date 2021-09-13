@@ -1911,3 +1911,360 @@
 
 
 }
+
+15***************静态光照：其实就是使用烘焙贴图，只能作用于静态物体，包含漫射光不支持镜面光
+{
+	1 Lightmapping 光照贴图 ==> 静态物体
+	{
+		执行照明计算非常昂贵。延迟渲染使我们可以使用很多灯光，但是阴影仍然是一个限制因素。
+		如果场景是动态的，那么我们将不可避免地执行这些计算。但是，如果光源和几何物体都不变，那么我们可以只计算一次光源并重复使用它。
+		这样的话就可以在我们的场景中放置许多灯光，而又不必在运行时渲染它们。也可以使用区域光，但这些区域光同样不能用作实时照明
+
+		烘焙光：只作用于静态对象
+		{
+			开始进行光照映射之前，请将唯一的灯光对象的“Mode”更改为“Baked”，而不是“Realtime”。
+			将主定向光转换为烘焙光后，它将不再包含在动态光照中。从动态对象的角度来看，就不存在光了。唯一剩下的就是环境照明，它仍然基于主光源
+
+			要实际启用光照贴图Lightmapping，请在照明窗口的“Mixed Lighting”部分中启用“Baked Global Illumination”。然后将“Lighting Mode”设置为“Baked Indirect”。
+			尽管是间接光的名称，但它也包括直接照明。它通常仅用于向场景添加间接光。另外，请确保已禁用“Realtime Global Illumination”，因为我们尚不支持。
+		}
+
+		标记对象为static：  静态几何体
+
+		请注意，与使用实时照明相比，光照贴图的结果亮度较弱。那是因为缺少镜面光，它只是包含漫射光。
+		因为镜面光取决于视角，也就是取决于相机。通常，相机是可移动的，因此不能包含在光照贴图中。此限制意味着光照贴图可以用于微弱的灯光和暗淡的表面，但不适用于强直射的灯光或闪亮的表面。
+		如果要使用镜面光，则必须使用实时照明。因此，通常最终会混合使用烘焙光和实时光。
+
+		光照贴图设置
+		{
+			现在都使用Progressive
+			在执行其他任何操作之前，请将“Directional”设置为“Non-Direction”。稍后我们将讨论其他模式。// 其实区别就是是否把法线信息也烘焙到光照贴图里
+
+			Unity的默认对象都具有配置为光照贴图的UV坐标。对于导入的网格，你可以提供自己的坐标，或者让Unity为你生成它们。
+			烘焙后，可以在光照贴图中看到纹理展开。它们需要多少空间取决于场景中对象的大小和光照贴图分辨率设置
+		}
+
+		间接光：烘焙光意味着我们失去了镜面光，但我们获得了间接光
+		{
+			烘焙间接光时，Unity考虑到这一点。结果就是，物体会根据附近的物体进行上色。
+			自发光表面也会影响烘焙的光线。它们成为间接光源。
+		}
+
+		光照贴图最多可以处理半透明的表面。光线将通过它们，其颜色不会被它们过滤。
+		cutout 材质也可以
+	}
+
+	2 使用光照贴图：数据被认为是间接光照
+	{
+		对光照贴图进行采样
+		{
+			当着色器应该使用光照贴图时，Unity将寻找与LIGHTMAP_ON关键字关联的变体。因此，我们必须为此关键字添加一个多编译指令。使用前向渲染路径时，仅在基本pass中对光照贴图进行采样
+
+			#pragma multi_compile _ LIGHTMAP_ON
+
+			使用光照贴图时，Unity将永远不会包含顶点光照。他们的关键字是互斥的。因此，我们不需要同时具有VERTEXLIGHT_ON和LIGHTMAP_ON的变体
+			延迟渲染路径中也支持光照贴图，因此也应将关键字添加到延迟pass中
+		}
+
+		光照贴图坐标
+		{
+			用于采样光照贴图的坐标存储在第二个纹理坐标通道uv1中。因此，将此通道添加到“My Lighting”中的VertexData。
+			struct VertexData {
+				float4 vertex : POSITION;
+				float3 normal : NORMAL;
+				float4 tangent : TANGENT;
+				float2 uv : TEXCOORD0;
+				float2 uv1 : TEXCOORD1; //光照贴图的纹理坐标
+			};
+
+			顶点数据中的坐标定义了用于光照贴图的网格的纹理展开。但这并没有告诉我们该展开的位置在光照图中的位置，也没有告诉我们其大小
+			我们必须缩放和偏移坐标才能得出最终的光照贴图坐标
+
+			不幸的是，我们不能使用方便的TRANSFORM_TEX宏，因为它假定光照贴图转换定义为unity_Lightmap_ST，而实际上是unity_LightmapST。由于这种不一致，我们必须手动进行操作。
+			i.lightmapUV = v.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
+		}
+
+		采样光照贴图: 使用UNITY_SAMPLE_TEX2D
+		{
+			因为光照贴图数据被认为是间接光照，所以我们将在CreateIndirectLight函数中对其进行采样。当有光照贴图可用时，我们必须将它们用作间接光照的源，而不是球谐函数
+			UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
+				…
+				
+				#if defined(VERTEXLIGHT_ON)
+					indirectLight.diffuse = i.vertexLightColor;
+				#endif
+
+				#if defined(FORWARD_BASE_PASS) || defined(DEFERRED_PASS)
+					#if defined(LIGHTMAP_ON)
+						indirectLight.diffuse = 0; //****
+					#else
+						indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+					#endif
+					float3 reflectionDir = reflect(-viewDir, i.normal);
+					…
+				#endif
+
+				return indirectLight;
+			}
+
+
+			unity_Lightmap的确切形式取决于目标平台。它定义为UNITY_DECLARE_TEX2D（unity_Lightmap）。为了对其进行采样，我们将使用UNITY_SAMPLE_TEX2D宏而不是tex2D
+
+			indirectLight.diffuse =
+				UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lightmapUV); //表现不对，还需要解码
+
+
+			现在我们得到了间接照明，但看起来不对。那是因为光照图数据已被编码。颜色以RGBM格式存储或以半强度存储，以支持高强度光。UnityCG的DecodeLightmap函数负责为我们解码
+			indirectLight.diffuse = DecodeLightmap(
+				UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lightmapUV)
+			);
+
+
+			完整的代码
+			{
+				#if defined(LIGHTMAP_ON)
+					//光照贴图数据被认为是间接光照
+					//必须将它们用作间接光照的源，而不是球谐函数
+					//采样光照贴图 UNITY_SAMPLE_TEX2D
+					//因为光照图数据已被编码,颜色以RGBM格式存储或以半强度存储，以支持高强度光
+					//DecodeLightmap解码函数
+					indirectLight.diffuse =
+						DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lightmapUV));
+					
+					#if defined(DIRLIGHTMAP_COMBINED)
+						//直接需要烘焙光方向 方向图可通过unity_LightmapInd获得
+						float4 lightmapDirection = UNITY_SAMPLE_TEX2D_SAMPLER(
+							unity_LightmapInd, unity_Lightmap, i.lightmapUV
+						);
+						//解码
+						indirectLight.diffuse = DecodeDirectionalLightmap(
+							indirectLight.diffuse, lightmapDirection, i.normal
+						);
+					#endif
+				#else
+					//球谐函数
+					indirectLight.diffuse += max(0, ShadeSH9(float4(i.normal, 1)));
+				#endif
+			}
+		}
+	}
+
+	3 创建光照贴图：继续支持透明物体
+	{
+		虽然光照贴图似乎已经可以与我们的着色器一起使用，但这仅适用于我们简单的测试场景。
+		当前，光照贴图器始终将我们的对象视为不透明和纯白色，即使它们并非如此。我们必须对着色器进行一些调整，甚至还要添加另一个pass来完全支持光照贴图
+
+		半透明阴影：_Color 属性
+		{
+			光照贴图器不使用实时渲染管道，因此不使用着色器来完成其工作。当尝试使用半透明阴影时，这是最明显的。通过给它的色调的alpha分量设置为小于1的材质，使立方体顶面为半透明的。==》 （半透明的顶，错误的阴影）
+
+			光照贴图器仍将屋顶视为实心，这是不正确的。它使用材质的渲染类型来确定如何处理表面，这应该告诉我们我们的对象是半透明的。
+			实际上，它确实知道屋顶是半透明的，只是将其视为完全不透明。发生这种情况是因为它使用_Color材质属性的alpha成分以及主纹理来设置不透明度。但是我们没有该属性，而是使用_Tint！
+
+			更糟糕的是，没有办法告诉灯光映射器要使用哪个属性。因此，要使光照贴图起作用，除了将_Tint的用法替换为_Color之外，我们别无选择。首先，更新我们的着色器的属性
+			Properties {
+			//		_Tint ("Tint", Color) = (1, 1, 1, 1)
+					_Color ("Tint", Color) = (1, 1, 1, 1)
+					…
+				}
+
+			//float4 _Tint;
+			float4 _Color;
+			…
+
+			float3 GetAlbedo (Interpolators i) {
+				float3 albedo = tex2D(_MainTex, i.uv.xy).rgb * _Color.rgb;
+				…
+			}
+
+			float GetAlpha (Interpolators i) {
+				float alpha = _Color.a;
+				…
+			}
+
+
+			The same goes for My Shadows.
+			//float4 _Tint;
+			float4 _Color;
+			…
+
+			float GetAlpha (Interpolators i) {
+				float alpha = _Color.a;
+				…
+			}
+
+		}
+
+		Cutout 阴影：_Cutoff属性
+		{
+			Cutout 阴影也有类似的问题。光照贴图器希望将alpha截止值存储在_Cutoff属性中，但是我们正在使用_AlphaCutoff。结果，它使用默认截止值为1
+
+				Properties {
+					…
+
+			//		_AlphaCutoff ("Alpha Cutoff", Range(0, 1)) = 0.5
+					_Cutoff ("Alpha Cutoff", Range(0, 1)) = 0.5
+
+					…
+				}
+
+				//float _AlphaCutoff;
+				float _Cutoff;
+
+				…
+
+				FragmentOutput MyFragmentProgram (Interpolators i) {
+					float alpha = GetAlpha(i);
+					#if defined(_RENDERING_CUTOUT)
+						clip(alpha - _Cutoff);
+					#endif
+
+					…
+				}
+
+
+				Update My Shadows too
+
+				//float _AlphaCutoff;
+				float _Cutoff;
+
+				…
+
+				float4 MyShadowFragmentProgram (Interpolators i) : SV_TARGET {
+					float alpha = GetAlpha(i);
+					#if defined(_RENDERING_CUTOUT)
+						clip(alpha - _Cutoff);
+					#endif
+
+					…
+				}
+		}
+
+
+		增加meta pass ：弄清楚对象的表面颜色
+		{
+			下一步是确保光照贴图器使用正确的表面反照率和发射率。现在，一切总是纯白色的。你可以通过将地板变绿来看到此情况。它应该导致绿色的间接光，但仍然是白色。
+
+			为了弄清楚对象的表面颜色，光照贴图器查找其光照模式设置为Meta的着色器通道
+			让我们向着色器添加这样的pass。这是一个基本pass，不应使用剔除
+			Pass {
+				Tags {
+					"LightMode" = "Meta"
+				}
+
+				Cull Off
+
+				CGPROGRAM
+
+				#pragma vertex MyLightmappingVertexProgram
+				#pragma fragment MyLightmappingFragmentProgram
+
+				#include "My Lightmapping.cginc"
+
+				ENDCG
+			}
+		}
+
+		完整的代码
+		{
+			Interpolators MyLightmappingVertexProgram (VertexData v) {
+				Interpolators i;
+
+				//必须使用光照贴图坐标
+				v.vertex.xy = v.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
+				v.vertex.z = v.vertex.z > 0 ? 0.0001 : 0;
+
+			    i.pos = UnityObjectToClipPos(v.vertex);
+
+				i.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
+				i.uv.zw = TRANSFORM_TEX(v.uv, _DetailTex);
+				return i;
+			}
+
+			float4 MyLightmappingFragmentProgram (Interpolators i) : SV_TARGET {
+				UnityMetaInput surfaceData;
+				surfaceData.Emission = GetEmission(i);
+				float oneMinusReflectivity;
+
+				//要获得反照率，必须再次使用DiffuseAndSpecularFromMetallic。该函数具有用于镜面反射的颜色和反射率的输出参数
+				//surfaceData.SpecularColor捕捉镜面颜色
+				surfaceData.Albedo = DiffuseAndSpecularFromMetallic(
+					GetAlbedo(i), GetMetallic(i),
+					surfaceData.SpecularColor, oneMinusReflectivity
+				);
+				
+				//非常粗糙的金属应该产生比我们目前的计算结果更多的间接光
+				//标准着色器通过将部分镜面反射颜色添加到反照率来对此进行补偿
+				float roughness = SmoothnessToRoughness(GetSmoothness(i)) * 0.5;
+				surfaceData.Albedo += surfaceData.SpecularColor * roughness;
+
+				return UnityMetaFragment(surfaceData);
+			}
+		}
+	}
+
+	4 定向光照贴图:包含了大多数烘焙光所来自的方向
+	{
+		光照贴图器仅使用几何图形的顶点数据，不考虑法线贴图。光照贴图分辨率太低，无法捕获典型法线贴图提供的细节。这意味着静态照明将是平坦的。当使用具有法线贴图的材质时，这一点变得非常明显。
+
+		定向
+		{
+			通过将“Directional Mode”改回“Directional”，可以使法线贴图在烘焙的光照下工作。
+			使用定向光照贴图时，Unity将创建两个贴图，而不只是一个。第一张图包含照常的照明信息，称为强度图。第二张地图称为方向图。它包含了大多数烘焙光所来自的方向。
+
+			当方向图可用时，我们可以使用它来对烘焙的光执行简单的漫反射着色。这使得可以应用法线贴图
+		}
+
+		采样方向
+		{
+			当有方向性光照贴图可用时，Unity将寻找同时带有LIGHTMAP_ON和DIRLIGHTMAP_COMBINED关键字的着色器变体。无需手动为此添加多编译指令，我们可以在正向基本传递中使用#pragma multi_compile_fwdbase
+
+			#if defined(DIRLIGHTMAP_COMBINED)
+				float4 lightmapDirection = UNITY_SAMPLE_TEX2D_SAMPLER(
+					unity_LightmapInd, unity_Lightmap, i.lightmapUV
+				);
+			#endif
+		}
+
+		使用方向: 先解碼
+		{
+			要使用此方向，我们首先必须对其进行解码。然后，我们可以使用法线向量执行点积运算，以找到漫反射因子并将其应用于颜色。
+			但是方向贴图实际上并不包含单位长度方向，它要更复杂一些。幸运的是，我们可以使用UnityCG的DecodeDirectionalLightmap函数解码方向性数据并为我们执行着色。
+
+				float4 lightmapDirection = UNITY_SAMPLE_TEX2D_SAMPLER(
+					unity_LightmapInd, unity_Lightmap, i.lightmapUV
+				);
+
+				//****
+				indirectLight.diffuse = DecodeDirectionalLightmap(
+					indirectLight.diffuse, lightmapDirection, i.normal
+				);
+		}
+	}
+
+	5 光照探针:Light Probes, 用于动态物体，使用球谐函数存储照明信息，仅适用于相当小的对象
+	{
+		光照贴图仅适用于静态对象，不适用于动态对象。结果，动态对象无法放入带有烘焙照明的场景中。当根本没有实时照明时，这是非常明显的。
+		为了更好地混合静态和动态对象，我们还必须以某种方式将烘焙的光照应用于动态对象。Unity为此提供了光照探针
+
+		光照探针是空间中的一个点，具有有关该位置的照明的信息。代替纹理，它使用球谐函数来存储此信息
+
+		如果可用，这些探针将用于动态对象，而不是全局环境数据。因此，我们要做的就是创建一些探针，等到烘焙完成，我们的着色器将自动使用它们
+
+
+		创建一个光探针组
+		{
+			通过GameObject/ Light / Light Probe Group将一组光探测器添加到场景中。
+			这将创建一个新的游戏对象，其中包含八个以立方体形式排列的探针。在为动态对象着色时将立即使用它
+		}
+
+		放置光照探针
+		{
+			光探针组将其包围的体积划分为四面体区域。四个探针定义了四面体的角。对这些探针进行插值，以确定动态对象所用的最终球谐函数，具体取决于其在四面体内部的位置。
+			这意味着将动态对象视为单个点，因此它仅适用于相当小的对象。
+			放置光探针只需调整一下，直到获得可接受的结果，就像操作光贴图设置一样。首先将要包含动态对象的区域包围起来。
+
+			然后根据照明条件的变化添加更多的探头。请勿将它们放置在静态几何体中，这一点至关重要。也不要将它们放在不透明的单面几何图形的错误一侧。
+		}
+	}
+}
