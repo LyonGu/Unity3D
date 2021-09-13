@@ -221,7 +221,7 @@
 		因此，镜面强度和反射值与金属滑块的值不完全匹配。而且这也受到色彩空间的影响。幸运的是，UnityStandardUtils还具有DiffuseAndSpecularFromMetallic函数，该函数为我们解决了这一问题。
 				float3 specularTint; // = albedo * _Metallic;
 				float oneMinusReflectivity; // = 1 - _Metallic;
-//				albedo *= oneMinusReflectivity;
+				//albedo *= oneMinusReflectivity;
 				albedo = DiffuseAndSpecularFromMetallic(
 					albedo, _Metallic, specularTint, oneMinusReflectivity
 				);
@@ -1226,5 +1226,128 @@
 		}
 
 		
+	}
+}
+
+9 10***************复合材质
+{
+	自定义材质检查器UI： ShaderGUI
+	{
+		要使用自定义GUI，必须将CustomEditor指令添加到着色器，后面跟着包含要使用的GUI类名称的字符串。
+		Shader "Custom/My First Lighting Shader" {
+			…
+			
+			CustomEditor "MyLightingShaderGUI"
+		}
+
+		ShaderGUI类可以放在命名空间中吗？
+			是的。但必须在着色器中指定完全限定的类名称。 CustomEditor "MyNamespace.MyShaderGUI"
+
+
+		要替换默认的检查器，我们必须重写ShaderGUI.OnGUI方法。此方法有两个参数。首先，对MaterialEditor的引用。该对象管理当前选定材质的检查器。其次，包含该材质属性的数组
+			MaterialEditor editor;
+			MaterialProperty[] properties;
+
+			public override void OnGUI (
+				MaterialEditor editor, MaterialProperty[] properties
+			) {
+				this.editor = editor;
+				this.properties = properties;
+				DoMain();
+			}
+
+		反照率贴图首先显示在标准着色器中。这是主要的纹理。
+		它的属性位于properties数组内的某个位置。它的数组索引取决于在着色器中定义属性的顺序。
+		但是按名称搜索它会更可靠。ShaderGUI包含FindProperty方法，该方法可以在给定名称和属性数组的情况下做到这一点。
+		void DoMain () {
+			GUILayout.Label("Main Maps", EditorStyles.boldLabel);
+
+			MaterialProperty mainTex = FindProperty("_MainTex", properties);
+			//我们已经在着色器中将主要纹理命名为Albedo。所以我们只能使用该名称，可以通过属性访问该名称。
+			GUIContent albedoLabel = new GUIContent(mainTex.displayName);
+		}
+		
+
+	}
+
+	混合金属和非金属: 金属度贴图 R通道，平滑度贴图 A通道
+	{
+		因为我们的着色器使用统一的值来确定某种东西的金属性，所以它不能在材质的整个表面上变化。这使我们无法创建实际上代表不同材质混合的复杂材质
+
+
+		金属贴图:贴图定义了每个纹理像素的金属值,只使用了R通道
+		{
+
+			贴图定义了每个纹理像素的金属值，而不是一次定义整个材质。这是一张灰度图，将电路标记为金属，其余标记为非金属。染色的金属较暗，因为其顶部为半透明的脏层。
+
+			//创建一个函数，以插值器作为参数来检索片段的金属值。它只是对金属贴图进行采样，然后将其乘以统一的金属值。Unity使用贴图的R通道
+			float GetMetallic (Interpolators i) {
+				return tex2D(_MetallicMap, i.uv.xy).r * _Metallic;
+			}
+		}
+
+
+		平滑度贴图: 数据存到了a通道，Unity的标准着色器希望将平滑度存储在Alpha通道中
+		{
+			像金属贴图一样，也可以通过贴图定义平滑度。这是一张电路的灰度平滑纹理。金属部分最光滑。其余部分相当粗糙。污渍比木板光滑，因此那里的纹理更浅。
+
+			实际上，可以实现，金属贴图和平滑贴图在同一纹理中结合在一起
+
+			float GetSmoothness (Interpolators i) {
+			#if defined(_METALLIC_MAP)
+				return tex2D(_MetallicMap, i.uv.xy).a; //平滑度存在A通道
+			#else
+				return _Smoothness;
+			#endif
+		}
+		}
+	}
+
+	自发光表面：自发光贴图
+	{
+		HDR自发光
+		{
+			标准着色器不使用常规颜色进行自发光。相反，它支持高动态范围的颜色。这意味着该颜色的RGB分量可以高于1。这样，你就可以表示非常明亮的光
+
+			要有意义的使用HDR颜色，必须执行色调映射。这意味着你将一种颜色范围转换为另一种颜色范围。我们将在以后的教程中研究色调映射。HDR颜色通常也用于创建光晕效果。
+
+			由于颜色属性是浮点向量，因此我们不仅限于0–1范围内的值。但是，标准颜色挂件在设计时考虑了此限制。
+			幸运的是，MaterialEditor包含TexturePropertyWithHDRColor方法，该方法专门用于纹理以及HDR颜色属性。它需要两个附加参数。
+			首先，HDR范围的配置选项。其次，是否应该显示Alpha通道，这是我们不想要的。
+
+				static ColorPickerHDRConfig emissionConfig = new ColorPickerHDRConfig(0f, 99f, 1f / 99f, 3f);
+				void DoEmission () {
+					…
+					editor.TexturePropertyWithHDRColor(
+						MakeLabel("Emission (RGB)"), map, FindProperty("_Emission"),
+						emissionConfig, false
+					);
+					…
+				}
+		}
+	}
+
+	遮挡区域： 使用遮挡贴图，使用G通道
+	{
+		//创建一个函数以对贴图进行采样（如果存在）。如果不存在，则不应调制光，结果保持为1
+		//当遮挡强度为零时，贴图完全不会影响光线，因此，该函数需要返回1。当处于全强度时，结果恰好是贴图中的结果。我们可以通过基于滑块在1和贴图之间进行插值来实现。
+		float GetOcclusion (Interpolators i) {
+			#if defined(_OCCLUSION_MAP)
+				return lerp(1, tex2D(_OcclusionMap, i.uv.xy).g, _OcclusionStrength);
+			#else
+				return 1;
+			#endif
+		}
+
+
+		UnityLight CreateLight (Interpolators i) {
+			…
+
+			UNITY_LIGHT_ATTENUATION(attenuation, i, i.worldPos);
+			attenuation *= GetOcclusion(i);
+			light.color = _LightColor0.rgb * attenuation;
+			light.ndotl = DotClamped(i.normal, light.dir);
+			return light;
+		}
 	}
 }
