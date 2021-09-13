@@ -1543,3 +1543,371 @@
 		}
 	}
 }
+
+
+13***************延迟着色：延迟渲染路径，多光源比较合适，但是使用缓冲区内存较大,移动设备上很难支持，也无法MSAA，绘制不透明物体和cutout物体，透明物体还是前向渲染
+{
+	切换路径
+	{
+		使用哪个渲染路径由项目设置的图形设置定义的。你可以通过“Edit/ Project Settings/Graphics”到达那里。渲染路径和其他一些设置分为三个层级。
+		这些层级对应于不同类别的GPU。GPU越好，Unity使用的层级就越高。你可以通过“Editor /Graphics Emulation”子菜单选择编辑器使用的层级。
+	}
+
+	为什么MSAA无法在延迟模式下工作？
+		延迟着色依赖于每个片段存储的数据，这是通过纹理完成的。
+		这与MSAA不兼容，因为该抗锯齿技术依赖于子像素数据。尽管三角形边缘仍然可以从MSAA中受益，但延迟的数据仍会锯齿。你必须依靠一个后处理过滤器来进行抗锯齿。
+
+	看起来deferred总共只绘制每个对象一次，而不是每个灯光一次
+
+
+	与前向阴影相比，在渲染多个光源时，延迟阴影似乎更有效。
+	前向渲染需要每个物体每个灯光额外增加一次pass，但延迟渲染不需要这样做。当然，两者仍然都必须渲染阴影贴图，但是延迟不必为定向阴影所需的深度纹理支付额外的费用
+
+	延迟渲染路径是如何解决它的呢？==》 Deffered存储了一些着色器必须获取网格数据到Gbuffer中，前向着色器必须对受光对象的每个像素光重复所有这些操作
+	{
+		要渲染物体，着色器必须获取网格数据，将其转换为正确的空间，对其进行插值，检索和导出表面属性，并计算照明度。前向着色器必须对受光对象的每个像素光重复所有这些操作。
+		附加的通道比基本通道便宜一些，因为深度缓冲区已经准备好了，它们不会被间接光打扰。但是他们仍然必须重复基本通道已经完成的大部分工作
+
+		由于几何的属性每次都是相同的，为什么不缓存它们呢？让基本通道将它们存储在缓冲区中。然后，附加通道可以重复使用该数据，从而消除了重复工作。
+		我们必须按片段存储此数据，因此我们需要一个适合显示的缓冲区，就像深度缓冲区和帧缓冲区一样。
+
+		现在，缓冲区中提供了照明所需的所有几何数据。唯一缺少的是灯光本身。
+		但这意味着我们不再需要渲染几何体。可以只渲染光就足够了。此外，基本通道只需要填充缓冲区。可以推迟所有直接照明计算，直到分别渲染它们为止。因此叫延迟着色。
+	}
+
+	更多的灯光
+	{
+		如果只使用一个光源，那么单个延迟将不会带来任何好处。但是当使用非常多灯光时，它就派上大用场了。只要不投射阴影，每增加一个灯光就只会增加一点点额外的工作。
+		同样，当分别渲染几何图形和灯光时，可以影响对象的灯光数量没有限制。所有的灯都是像素灯，并照亮其范围内的所有物体。质量设置里“Pixel Light Count ”不再适用。
+	}
+
+	渲染灯光：使用Internal-DeferredShading着色器渲染， Unity内置的，也可以自己实现
+	{
+		那么灯光本身如何渲染？由于定向光源会影响所有事物，因此将使用覆盖整个视图的单个四边形对其进行渲染。
+		该四边形使用Internal-DeferredShading着色器渲染。它的片段程序从缓冲区获取几何数据，并依赖UnityDeferredLibrary包含文件来配置灯光。然后，它像前向着色器一样计算照明。
+	}
+	
+	几何缓冲区（GBuffers）
+	{
+		缓存数据的缺点是必须将其存储在某个位置。为此，延迟的渲染路径使用了多个渲染纹理。这些纹理称为几何缓冲区，简称G缓冲区。
+		延迟着色需要四个G缓冲区。对于LDR，它们的组合大小为每像素160位，对于HDR，它们的组合大小为每像素192位。这比单个32位帧缓冲区要多得多。
+		现代的台式机GPU可以解决这个问题，但是移动甚至笔记本电脑的GPU在分辨率更高时都会遇到麻烦
+	}
+
+	填充G-Buffers
+	{
+		Unity检测到我们的着色器具有延迟的pass，因此它包含在延迟阶段使用我们的着色器的不透明对象和剪切对象。当然，透明对象仍将在透明阶段渲染。
+
+		4个输出,四个缓冲区, 移动设备有的也不支持多目标输出
+		{
+			struct FragmentOutput {
+			#if defined(DEFERRED_PASS)
+				float4 gBuffer0 : SV_Target0;
+				float4 gBuffer1 : SV_Target1;
+				float4 gBuffer2 : SV_Target2;
+				float4 gBuffer3 : SV_Target3;
+			#else
+				float4 color : SV_Target;
+			#endif
+			};
+
+			不应该是SV_TARGET吗？
+				可以混合使用大写字母和小写字母作为目标语义，Unity可以全部理解。在这里，我使用的是Unity最新着色器的相同格式。
+
+
+			Buffer 0 ==》 albedo和Occlusion
+			{
+				第一个G缓冲区用于存储漫反射反照率和表面遮挡
+				它是ARGB32纹理，就像常规的帧缓冲区一样。反照率存储在RGB通道中，遮挡存储在A通道中
+
+				output.gBuffer0.rgb = albedo;
+				output.gBuffer0.a = GetOcclusion(i);
+			}
+
+			Buffer 1 ==》 specular和Smoothness
+			{
+				第二个G缓冲区用于在RGB通道中存储镜面颜色，在A通道中存储平滑度值
+				它也是ARGB32纹理。我们知道镜面反射的色调是什么，并且可以使用GetSmoothness检索平滑度值
+
+				output.gBuffer1.rgb = specularTint;
+				output.gBuffer1.a = GetSmoothness(i);
+			}
+
+			Buffer 2 ==》 世界空间法线向量
+			{
+				第三个G缓冲区包含世界空间法线向量。
+				它们存储在ARGB2101010纹理的RGB通道中。这意味着每个坐标使用10位存储，而不是通常的8位，这使它们更加精确。A通道只有2位-因此总数又是32位，但它未使用，因此我们将其设置为1
+
+				output.gBuffer2 = float4(i.normal * 0.5 + 0.5, 1); //存储的范围为0~1
+			}
+
+			Buffer 3 ==》 自发光
+			{
+				添加到此缓冲区的第一个光是自发光。
+
+				最终的G缓冲区用于累积场景的光照。其格式取决于相机是设置为LDR还是HDR。
+				就LDR而言，它是ARGB2101010纹理，就像法线的缓冲区一样。启用HDR时，格式为ARGBHalf，每个通道存储一个16位浮点值，总共64位。
+				因此，HDR版本是其他缓冲区的两倍。仅使用RGB通道，因此可以将A通道再次设置为1
+
+				我们使用ARGBHalf的原因是大多数GPU都使用四个字节的块。大多数纹理是每个像素32位，相当于一个块。64位需要两个块，因此也可以使用。
+				但是48位对应于1.5个块。这会导致未对齐，可以通过将两个块用于48位来避免。这导致每个像素填充16位，又与ARGBHalf相同了。
+			}
+		}
+
+
+		HDR和LDR
+		{
+			我们的着色器在正向和延迟模式下都产生相同的结果，至少在使用HDR摄像机时是这样。在LDR模式下看起来也很不对劲
+			发生这种情况是因为Unity期望对LDR数据进行对数编码，如前所述。因此，对于自发光和环境影响，我们也必须使用这种编码
+				#if defined(DEFERRED_PASS)
+					#if !defined(UNITY_HDR_ON)
+						color.rgb = exp2(-color.rgb);
+					#endif
+					…
+				#else
+					output.color = color;
+				#endif
+		}
+	}
+
+
+	延迟反射：延迟路径下渲染支持反射
+	{
+		逐像素探针
+		{
+			延迟模式的不同之处在于，不会针对每个对象混合探针。相反，它们是按像素混合的
+		}
+	}
+
+}
+
+15***************延迟光照：将自己渲染这些灯光
+{
+	场景中的所有对象都使用我们自己的着色器渲染到G缓冲区。但是灯光是使用Unity的默认延迟着色器渲染的，该着色器名为Hidden Internal-DefferedShader。
+	你可以通过“EditProject Settings / Graphics”进入图形设置，然后将“Deferredshader”模式切换到“Custom shader”，以验证这一点。
+
+
+	1 灯光着色器
+	{
+		第二个Pass
+		{
+			切换到我们的着色器后，Unity报错说它没有足够的通道数量。显然，它需要第二个pass。我们只复制已经拥有的pass，看看会发生什么。
+			现在，Unity接受我们的着色器，并使用它来渲染定向光。结果，一切都变黑了。唯一的例外是天空。把模板缓冲区用作遮罩以避免在此处进行渲染，因为定向光不会影响背景
+
+			但是为什么要使用第二个pass呢？
+				请记住，禁用HDR后，灯光数据将会进行对数编码。最后的pass需要转换此编码。那就是第二个pass的目的。因此，如果你为相机禁用了HDR，那么我们着色器的第二个pass也要被用一次
+		}
+
+		避开天空
+		{
+			在LDR模式下渲染时，你可能还会看到天空也变黑了。这可以在场景视图或游戏视图中发生。如果天空变黑，则转换过程将无法正确使用模板缓冲区作为遮罩。
+			要解决此问题，请显式配置第二个Pass的模板设置，仅在处理不属于背景的片段时才应该渲染。通过_StencilNonBackground提供适当的模板值。
+
+			Pass {
+				Cull Off
+				ZTest Always
+				ZWrite Off
+
+				Stencil {
+					Ref [_StencilNonBackground]
+					ReadMask [_StencilNonBackground]
+					CompBack Equal
+					CompFront Equal
+				}
+				
+				…
+			}
+		}
+
+		转换颜色
+		{
+			为了使第二个pass工作正常，必须转换灯光缓冲区中的数据。像我们的雾着色器一样，使用UV坐标绘制全屏四边形，可用于对缓冲区进行采样。
+		}
+	}
+
+	2 方向光
+	{
+		第一个pass负责渲染灯光,因此它会相当复杂。让我们为其创建一个包含文件，名为MyDeferredShading.cginc
+
+		我们需要所有可能的灯光配置的着色器变体。multi_compile_lightpass编译器指令创建我们需要的所有关键字组合。唯一的例外是HDR模式。为此，我们必须添加一个单独的多编译指令。
+
+		G-Buffer UV 坐标
+		{
+			我们需要UV坐标才能从G缓冲区采样。不幸的是，Unity不提供具有方便的纹理坐标的灯光pass。相反，必须从剪辑空间位置间接获取它们
+			以使用在UnityCG中定义的ComputeScreenPos，该函数产生齐次坐标，就像剪辑空间坐标一样，因此需要使用float4来存储它们
+
+			struct Interpolators {
+				float4 pos : SV_POSITION;
+				float4 uv : TEXCOORD0;
+			};
+
+			Interpolators VertexProgram (VertexData v) {
+				Interpolators i;
+				i.pos = UnityObjectToClipPos(v.vertex);
+				i.uv = ComputeScreenPos(i.pos);
+				return i;
+			}
+
+			//在片段程序中，我们可以计算最终的2D坐标
+			float4 FragmentProgram (Interpolators i) : SV_Target {
+				float2 uv = i.uv.xy / i.uv.w;
+
+				return 0;
+			}
+		}
+
+
+		世界坐标
+		{
+			必须找出片段与相机的距离。这个实现过程是通过从相机发射穿过每个片段到远平面的射线，然后按片段的深度值缩放这些光线
+			在定向光的情况下，将四边形的四个顶点的光线作为法线矢量提供。因此，我们可以将它们传递给顶点程序并进行插值。
+
+			struct VertexData {
+				float4 vertex : POSITION;
+				float3 normal : NORMAL; //***
+			};
+
+			struct Interpolators {
+				float4 pos : SV_POSITION;
+			    float4 uv : TEXCOORD0;
+			    float3 ray : TEXCOORD1; //***
+			};
+
+			Interpolators VertexProgram (VertexData v) {
+				Interpolators i;
+				i.pos = UnityObjectToClipPos(v.vertex);
+				i.uv = ComputeScreenPos(i.pos);
+				i.ray = v.normal;
+				return i;
+			}
+
+			可以通过采样_CameraDepthTexture纹理并将其线性化来在片段程序中找到深度值，
+			float4 FragmentProgram (Interpolators i) : SV_Target {
+				float2 uv = i.uv.xy / i.uv.w;
+				
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv); //****
+				depth = Linear01Depth(depth);
+
+				return 0;
+			}
+
+			但是，最大的不同是我们将到达远平面的光线提供给了雾的着色器。这时，我们会获得到达近平面的射线。需要按比例缩放它们，以便获得到达远平面的射线。通过缩放射线使其Z坐标变为1并将其乘以远平面距离来完成。
+			float3 rayToFarPlane = i.ray * _ProjectionParams.z / i.ray.z;
+
+
+			按深度值缩放此射线可得到一个位置。因为所提供的光线在视图空间中定义的，所以得到的空间也是相机的局部空间。因此，我们现在也以片段在视图空间中的位置作为终点。
+			float3 viewPos = rayToFarPlane * depth; //视觉空间下位置
+
+			从相机空间到世界空间的转换是通过在ShaderVariables中定义的unity_CameraToWorld矩阵完成的。
+
+			float3 worldPos = mul(unity_CameraToWorld, float4(viewPos, 1)).xyz; //得到世界空间下位置
+
+			完整的代码
+			float4 FragmentProgram (Interpolators i) : SV_Target {
+				float2 uv = i.uv.xy / i.uv.w;
+				
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv); //****
+				depth = Linear01Depth(depth);
+				float3 rayToFarPlane = i.ray * _ProjectionParams.z / i.ray.z;
+				float3 viewPos = rayToFarPlane * depth; //视觉空间下位置
+				float3 worldPos = mul(unity_CameraToWorld, float4(viewPos, 1)).xyz; //得到世界空间下位置
+
+				return 0;
+			}
+
+		}
+
+		读取 G-Buffer数据
+		{
+			我们需要访问G缓冲区以检索表面属性。通过三个_CameraGBufferTexture变量可以使用这些缓冲区。
+			sampler2D _CameraGBufferTexture0;
+			sampler2D _CameraGBufferTexture1;
+			sampler2D _CameraGBufferTexture2;
+
+
+			float4 FragmentProgram (Interpolators i) : SV_Target {
+				...
+				float3 worldPos = mul(unity_CameraToWorld, float4(viewPos, 1)).xyz;
+
+				float3 albedo = tex2D(_CameraGBufferTexture0, uv).rgb;
+				float3 specularTint = tex2D(_CameraGBufferTexture1, uv).rgb;
+				float3 smoothness = tex2D(_CameraGBufferTexture1, uv).a;
+				float3 normal = tex2D(_CameraGBufferTexture2, uv).rgb * 2 - 1; //存出的范围为0~1, 转成法线的范围-1~1
+
+			}
+			
+		}
+
+		计算BRDF以及配置灯光：UNITY_BRDF_PBS
+		{
+			FragmentOutput MyFragmentProgram (Interpolators i) {
+				float alpha = GetAlpha(i);
+				#if defined(_RENDERING_CUTOUT)
+					clip(alpha - _AlphaCutoff);
+				#endif
+
+				InitializeFragmentNormal(i);
+
+				float3 viewDir = normalize(_WorldSpaceCameraPos - i.worldPos.xyz);
+
+				float3 specularTint;
+				float oneMinusReflectivity;
+				float3 albedo = DiffuseAndSpecularFromMetallic(
+					GetAlbedo(i), GetMetallic(i), specularTint, oneMinusReflectivity
+				);
+				#if defined(_RENDERING_TRANSPARENT)
+					albedo *= alpha;
+					alpha = 1 - oneMinusReflectivity + alpha * oneMinusReflectivity;
+				#endif
+
+				//计算BRDF
+				float4 color = UNITY_BRDF_PBS(
+					albedo, specularTint,
+					oneMinusReflectivity, GetSmoothness(i),
+					i.normal, viewDir,
+					CreateLight(i), CreateIndirectLight(i, viewDir)
+				);
+				color.rgb += GetEmission(i);
+				#if defined(_RENDERING_FADE) || defined(_RENDERING_TRANSPARENT)
+					color.a = alpha;
+				#endif
+
+				FragmentOutput output;
+				#if defined(DEFERRED_PASS)
+					#if !defined(UNITY_HDR_ON)
+						color.rgb = exp2(-color.rgb);
+					#endif
+					output.gBuffer0.rgb = albedo;
+					output.gBuffer0.a = GetOcclusion(i);
+					output.gBuffer1.rgb = specularTint;
+					output.gBuffer1.a = GetSmoothness(i);
+					output.gBuffer2 = float4(i.normal * 0.5 + 0.5, 1);
+					output.gBuffer3 = color;
+				#else
+					output.color = ApplyFog(color, i);
+				#endif
+				return output;
+			}
+		}
+
+
+		阴影：_ShadowMapTexture 屏幕空间阴影贴图
+		{	
+
+			MyDeferredShading.cginc ==> 延迟渲染下，灯光使用的shader
+
+			在“My Lighting”中，我们依靠AutoLight中的宏来确定由阴影引起的光衰减。遗憾的是，该文件在编写时并没有考虑到延迟光照的情况。因此，我们需要自己进行阴影采样。通过_ShadowMapTexture变量可以访问阴影贴图
+			UnityLight CreateLight (float2 uv) {
+				UnityLight light;
+				light.dir = -_LightDir;
+				float shadowAttenuation = tex2D(_ShadowMapTexture, uv).r;
+				light.color = _LightColor.rgb * shadowAttenuation;
+				return light;
+			}
+		}
+	}
+
+	
+
+
+}
