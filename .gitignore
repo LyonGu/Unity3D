@@ -320,3 +320,7 @@ Stencil/Library/
 Stencil/obj/
 Stencil/Temp/
 Stencil/Logs/
+URP_CakeLike/custom-srp-01-custom-render-pipeline/Library/
+URP_CakeLike/custom-srp-01-custom-render-pipeline/obj/
+URP_CakeLike/custom-srp-01-custom-render-pipeline/Logs/
+URP_CakeLike/custom-srp-02-draw-calls/Assets/Custom RP/ShaderLibrary/
