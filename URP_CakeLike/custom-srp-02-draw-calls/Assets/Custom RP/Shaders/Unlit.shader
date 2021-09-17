@@ -4,6 +4,8 @@
 		_BaseMap("Texture", 2D) = "white" {}
 		_BaseColor("Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_Cutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+		
+		//设置宏属性，_CLIPPING
 		[Toggle(_CLIPPING)] _Clipping ("Alpha Clipping", Float) = 0
 
 		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src Blend", Float) = 1
@@ -18,6 +20,8 @@
 
 			HLSLPROGRAM
 			#pragma shader_feature _CLIPPING
+			
+			//支持GPU实例化
 			#pragma multi_compile_instancing
 			#pragma vertex UnlitPassVertex
 			#pragma fragment UnlitPassFragment

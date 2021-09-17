@@ -324,3 +324,10 @@ URP_CakeLike/custom-srp-01-custom-render-pipeline/Library/
 URP_CakeLike/custom-srp-01-custom-render-pipeline/obj/
 URP_CakeLike/custom-srp-01-custom-render-pipeline/Logs/
 URP_CakeLike/custom-srp-02-draw-calls/Assets/Custom RP/ShaderLibrary/
+URP_CakeLike/custom-srp-02-draw-calls/.idea/
+URP_CakeLike/custom-srp-02-draw-calls/.vs/
+URP_CakeLike/custom-srp-02-draw-calls/Library/
+URP_CakeLike/custom-srp-02-draw-calls/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
+URP_CakeLike/custom-srp-02-draw-calls/Logs/
+URP_CakeLike/custom-srp-02-draw-calls/obj/
+URP_CakeLike/custom-srp-02-draw-calls/Temp/

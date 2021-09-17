@@ -12,6 +12,8 @@ public class CustomRenderPipeline : RenderPipeline {
 	) {
 		this.useDynamicBatching = useDynamicBatching;
 		this.useGPUInstancing = useGPUInstancing;
+		
+		//启用SRP批处理程序
 		GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
 	}
 

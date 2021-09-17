@@ -76,8 +76,8 @@ public partial class CameraRenderer {
 		var drawingSettings = new DrawingSettings(
 			unlitShaderTagId, sortingSettings
 		) {
-			enableDynamicBatching = useDynamicBatching,
-			enableInstancing = useGPUInstancing
+			enableDynamicBatching = useDynamicBatching, //是否开启动态合批
+			enableInstancing = useGPUInstancing			//是否开启GPU Instancing ==》 相同的材质才行
 		};
 		var filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
 
