@@ -8,10 +8,11 @@ public partial class CameraRenderer {
 	static ShaderTagId unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit");
 
     /*
-        我们对其进行配置并向其添加命令以供后续的执行。某些任务（例如绘制天空盒）提供了专属方法，
-        但其他命令则必须通过单独的命令缓冲区（command buffer）间接执行。我们需要用这样的缓冲区来绘制场景中的其他几何图形。 
+        上下文会延迟实际的渲染，直到我们提交它为止。
+        在此之前，我们对其进行配置并向其添加命令以供后续的执行。某些任务（例如绘制天空盒）提供了专属方法，
+        但其他命令则必须通过单独的命令缓冲区（command buffer）间接执行。我们需要用这样的缓冲区来绘制场景中的其他几何图形 
     */
-   
+
     //必须创建一个新的CommandBuffer对象实例
     CommandBuffer buffer = new CommandBuffer {
 		name = bufferName
@@ -94,14 +95,14 @@ public partial class CameraRenderer {
                 camera.backgroundColor.linear : Color.clear
 		);
 
-        //可以使用命令缓冲区注入给Profiler注入样本，这些样本将同时显示在Profiler和帧调试器中
+        //可以使用命令缓冲区注入给Profiler注入样本，这些样本将显示在Profiler
         buffer.BeginSample(SampleName);
 
 		ExecuteBuffer();
 	}
 
 	void Submit () {
-        //可以使用命令缓冲区注入给Profiler注入样本，这些样本将同时显示在Profiler和帧调试器中
+        //可以使用命令缓冲区注入给Profiler注入样本，这些样本将显示在Profiler
         buffer.EndSample(SampleName);
 
 		ExecuteBuffer();
@@ -112,8 +113,10 @@ public partial class CameraRenderer {
 
         //要执行缓冲区，需以缓冲区为参数在上下文上调用ExecuteCommandBuffer
         //这会从缓冲区复制命令但并不会清除它，如果要重用它的话，就必须在之后明确地执行该操作。因为执行和清除总是一起完成的
+        //context 会从buffer里获取提交命令
+        //绘制几何体的命令也会添加到这个缓冲区里
         context.ExecuteCommandBuffer(buffer);
-        buffer.Clear();
+        buffer.Clear(); //缓冲区清除，后续能够复用同一个对象
 	}
 
     //首先绘制不透明对象，然后是Skybox，然后才是透明对象
@@ -134,6 +137,8 @@ public partial class CameraRenderer {
         /*
             一旦我们知道什么是可见的，我们就可以继续渲染它们。这是通过调用上下文中的DrawRenderers作为参数来实现的，并告诉它要使用哪个renderers 。
             此外，我们还必须提供绘图设置和筛选设置。这两种都是结构体DrawingSettings和FilteringSettings
+
+            context.DrawRenderers 会把渲染命令提交到缓冲区里，知道submit才会真正的从缓冲区里复制命令提交给GPU
          */
         context.DrawRenderers(
 			cullingResults, ref drawingSettings, ref filteringSettings

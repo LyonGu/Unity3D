@@ -63,6 +63,8 @@ partial class CameraRenderer {
 
 	partial void PrepareBuffer () {
 		Profiler.BeginSample("Editor Only");
+		//buffer.name 是显示在FrameDebug里的标签
+		//SampleName 是显示在Profile里的标题
 		buffer.name = SampleName = camera.name;
 		Profiler.EndSample();
 	}

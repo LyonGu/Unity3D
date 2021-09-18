@@ -27,7 +27,7 @@ public class Lighting {
 		ScriptableRenderContext context, CullingResults cullingResults
 	) {
 		this.cullingResults = cullingResults;
-		buffer.BeginSample(bufferName);
+		buffer.BeginSample(bufferName); //Profile里的标签
 		SetupLights();
 		buffer.EndSample(bufferName);
 		context.ExecuteCommandBuffer(buffer);

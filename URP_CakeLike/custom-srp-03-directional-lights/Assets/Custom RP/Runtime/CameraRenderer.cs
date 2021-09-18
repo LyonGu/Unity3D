@@ -5,6 +5,14 @@ public partial class CameraRenderer {
 
 	const string bufferName = "Render Camera";
 
+	//这里的SRPDefaultUnlit和CustomLit都是LightMode标签
+	//SRPDefaultUnlit是内置的tag
+	/*
+	 * Tags {
+				"LightMode" = "CustomLit"
+			}
+	 * 
+	 */
 	static ShaderTagId
 		unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit"),
 		litShaderTagId = new ShaderTagId("CustomLit");
@@ -53,6 +61,7 @@ public partial class CameraRenderer {
 	void Setup () {
 		context.SetupCameraProperties(camera);
 		CameraClearFlags flags = camera.clearFlags;
+		//buffer里有一条clear命令，需要调用context.ExecuteCommandBuffer(buffer);才能执行
 		buffer.ClearRenderTarget(
 			flags <= CameraClearFlags.Depth,
 			flags == CameraClearFlags.Color,
@@ -78,12 +87,15 @@ public partial class CameraRenderer {
 		var sortingSettings = new SortingSettings(camera) {
 			criteria = SortingCriteria.CommonOpaque
 		};
+		//unlitShaderTagId 为 0号pass
 		var drawingSettings = new DrawingSettings(
 			unlitShaderTagId, sortingSettings
 		) {
 			enableDynamicBatching = useDynamicBatching,
 			enableInstancing = useGPUInstancing
 		};
+		
+		//1号pass
 		drawingSettings.SetShaderPassName(1, litShaderTagId);
 
 		var filteringSettings = new FilteringSettings(RenderQueueRange.opaque);

@@ -63,6 +63,8 @@ partial class CameraRenderer {
 	partial void PrepareBuffer () {
 		Profiler.BeginSample("Editor Only");
 		buffer.name = SampleName = camera.name;
+		// buffer.name = camera.name + "FrameDebug";
+		// SampleName = camera.name + "ProfileDebug";
 		Profiler.EndSample();
 	}
 
