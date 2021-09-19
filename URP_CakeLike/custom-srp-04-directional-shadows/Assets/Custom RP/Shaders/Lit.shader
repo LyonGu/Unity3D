@@ -45,7 +45,7 @@
 			Tags {
 				"LightMode" = "ShadowCaster"
 			}
-
+            //只需要写深度，禁用颜色功能
 			ColorMask 0
 
 			HLSLPROGRAM

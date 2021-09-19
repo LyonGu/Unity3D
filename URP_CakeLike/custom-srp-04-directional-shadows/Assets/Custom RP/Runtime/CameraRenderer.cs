@@ -49,6 +49,7 @@ public partial class CameraRenderer {
 
 	bool Cull (float maxShadowDistance) {
 		if (camera.TryGetCullingParameters(out ScriptableCullingParameters p)) {
+			//设置阴影距离
 			p.shadowDistance = Mathf.Min(maxShadowDistance, camera.farClipPlane);
 			cullingResults = context.Cull(ref p);
 			return true;

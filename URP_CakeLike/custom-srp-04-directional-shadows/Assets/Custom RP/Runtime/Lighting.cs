@@ -34,8 +34,10 @@ public class Lighting {
 	) {
 		this.cullingResults = cullingResults;
 		buffer.BeginSample(bufferName);
+		//添加阴影设置
 		shadows.Setup(context, cullingResults, shadowSettings);
 		SetupLights();
+		//阴影绘制
 		shadows.Render();
 		buffer.EndSample(bufferName);
 		context.ExecuteCommandBuffer(buffer);

@@ -69,7 +69,8 @@ public class Shadows {
 		buffer.ReleaseTemporaryRT(dirShadowAtlasId);
 		ExecuteBuffer();
 	}
-
+	
+	//在阴影图集中为灯光的阴影贴图保留空间，并存储渲染它们所需的信息
 	public Vector3 ReserveDirectionalShadows (
 		Light light, int visibleLightIndex
 	) {
@@ -107,14 +108,23 @@ public class Shadows {
 
 	void RenderDirectionalShadows () {
 		int atlasSize = (int)settings.directional.atlasSize;
+		
+		//创景一张阴影贴图
 		buffer.GetTemporaryRT(
 			dirShadowAtlasId, atlasSize, atlasSize,
 			32, FilterMode.Bilinear, RenderTextureFormat.Shadowmap
 		);
+		//如何加载和存储其数据 RenderBufferLoadAction.DontCare  RenderBufferStoreAction.Store
+		/*
+		 * 我们不在乎它的初始状态，因为会立即清除它，因此我们将使用RenderBufferLoadAction.DontCare。
+		 * 纹理的目的是包含阴影数据，因此我们需要使用RenderBufferStoreAction.Store作为第三个参数
+		 */
 		buffer.SetRenderTarget(
 			dirShadowAtlasId,
 			RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store
 		);
+		
+		//并不是立即执行，你可以理解为给buff里加了个一条ClearRenderTarget渲染命令，context.submit后才会依次执行
 		buffer.ClearRenderTarget(true, false, Color.clear);
 		buffer.BeginSample(bufferName);
 		ExecuteBuffer();
