@@ -45,7 +45,11 @@
 			#pragma shader_feature _PREMULTIPLY_ALPHA
 			#pragma multi_compile _ _DIRECTIONAL_PCF3 _DIRECTIONAL_PCF5 _DIRECTIONAL_PCF7
 			#pragma multi_compile _ _CASCADE_BLEND_SOFT _CASCADE_BLEND_DITHER
+			
+			//Unity将使用具有LIGHTMAP_ON关键字的着色器变体来渲染光照对象。
+			//因此，需要将一个多编译指令添加到我们的Lit着色器的CustomLit传递中。
 			#pragma multi_compile _ LIGHTMAP_ON
+			
 			#pragma multi_compile_instancing
 			#pragma vertex LitPassVertex
 			#pragma fragment LitPassFragment
@@ -71,6 +75,12 @@
 		}
 
 		Pass {
+		
+		/*
+		    由于间接漫反射光会从表面反射，因此应该受到这些表面的漫反射率的影响。
+		    但目前还没有这个效果。Unity将我们的表面均匀地视为白色了。
+		    Unity使用特殊的元通道来确定烘焙时的反射光。由于我们尚未定义此类通道，因此Unity使用默认pass，该pass以白色结尾。
+		*/
 			Tags {
 				"LightMode" = "Meta"
 			}

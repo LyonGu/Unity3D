@@ -84,11 +84,17 @@ public partial class CameraRenderer {
 		var sortingSettings = new SortingSettings(camera) {
 			criteria = SortingCriteria.CommonOpaque
 		};
+		
+		/*
+		 * 要得到光照贴图的UV坐标，就必须由Unity将其发送到着色器。我们需要告诉管线对每个被烘焙了灯光信息的对象执行此操作。
+		 * 通过将CameraRenderer.DrawVisibleGeometry中的图形设置的每对象数据属性设置为PerObjectData.Lightmaps来完成的。
+		 */
 		var drawingSettings = new DrawingSettings(
 			unlitShaderTagId, sortingSettings
 		) {
 			enableDynamicBatching = useDynamicBatching,
 			enableInstancing = useGPUInstancing,
+			//光照贴图(用于静态物体)，光照探针(用于小的动态几何体)，光照探针代理集LPPVs(用于大的动态几何体)
 			perObjectData =
 				PerObjectData.Lightmaps | PerObjectData.LightProbe |
 				PerObjectData.LightProbeProxyVolume

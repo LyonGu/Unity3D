@@ -22,7 +22,12 @@ SAMPLER(samplerunity_ProbeVolumeSH);
 	#define TRANSFER_GI_DATA(input, output)
 	#define GI_FRAGMENT_DATA(input) 0.0
 #endif
-
+/*
+    因为间接光来自四面八方，所有只能用于漫反射，而不能用于镜面反射。
+    因此，给GI结构一个diffuse color的属性。初始化的时候，用光照贴图的UV填充它，以便进行调试。
+    
+    镜面反射通常是通过反射探针提供的
+*/
 struct GI {
 	float3 diffuse;
 };
@@ -44,6 +49,11 @@ float3 SampleLightMap (float2 lightMapUV) {
 	#endif
 }
 
+/*
+    我们通过新的SampleLightProbe函数对GI中的光探针进行采样。但它需要一个方向，所以给它一个世界空间的surface参数
+    如果此对象正在使用光照贴图，则返回零。否则，返回零和SampleSH9的最大值。
+    该功能需要探针数据和法线向量作为参数。探针数据必须作为系数数组提供。
+*/
 float3 SampleLightProbe (Surface surfaceWS) {
 	#if defined(LIGHTMAP_ON)
 		return 0.0;
@@ -73,6 +83,7 @@ float3 SampleLightProbe (Surface surfaceWS) {
 
 GI GetGI (float2 lightMapUV, Surface surfaceWS) {
 	GI gi;
+    //光照贴图和光照探针
 	gi.diffuse = SampleLightMap(lightMapUV) + SampleLightProbe(surfaceWS);
 	return gi;
 }
