@@ -234,17 +234,17 @@ float3 ColorGradingShadowsMidtonesHighlights (float3 color, bool useACES) {
 }
 
 float3 ColorGrade (float3 color, bool useACES = false) {
-	color = ColorGradePostExposure(color);
-	color = ColorGradeWhiteBalance(color);
-	color = ColorGradingContrast(color, useACES);
-	color = ColorGradeColorFilter(color);
+	color = ColorGradePostExposure(color); //后曝光
+	color = ColorGradeWhiteBalance(color); //白平衡
+	color = ColorGradingContrast(color, useACES); //对比度
+	color = ColorGradeColorFilter(color); //颜色滤镜
 	color = max(color, 0.0);
-	color =	ColorGradeSplitToning(color, useACES);
-	color = ColorGradingChannelMixer(color);
+	color =	ColorGradeSplitToning(color, useACES); //分离色调
+	color = ColorGradingChannelMixer(color); //通道混合
 	color = max(color, 0.0);
 	color = ColorGradingShadowsMidtonesHighlights(color, useACES);
-	color = ColorGradingHueShift(color);
-	color = ColorGradingSaturation(color, useACES);
+	color = ColorGradingHueShift(color); //色相转换
+	color = ColorGradingSaturation(color, useACES); //饱和度
 	return max(useACES ? ACEScg_to_ACES(color) : color, 0.0);
 }
 
