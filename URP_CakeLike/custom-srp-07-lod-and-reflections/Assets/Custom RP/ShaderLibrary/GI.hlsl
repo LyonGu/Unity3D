@@ -13,8 +13,8 @@ SAMPLER(samplerunity_ShadowMask);
 TEXTURE3D_FLOAT(unity_ProbeVolumeSH);
 SAMPLER(samplerunity_ProbeVolumeSH);
 
-TEXTURECUBE(unity_SpecCube0);
-SAMPLER(samplerunity_SpecCube0);
+TEXTURECUBE(unity_SpecCube0); //天空盒的立方体贴图
+SAMPLER(samplerunity_SpecCube0); //声明其采样器
 
 #if defined(LIGHTMAP_ON)
 	#define GI_ATTRIBUTE_DATA float2 lightMapUV : TEXCOORD1;
@@ -105,9 +105,13 @@ float4 SampleBakedShadows (float2 lightMapUV, Surface surfaceWS) {
 	#endif
 }
 
+//对立方体纹理进行采样，并返回其RGB分量
 float3 SampleEnvironment (Surface surfaceWS, BRDF brdf) {
+    //立方体贴图的采样是通过一个方向完成的，在这种情况下，该方向是从相机到从表面反射的表面的视图方向。
+    //通过调用带有负视角方向和表面法线作为参数的reflect函数来获得它
 	float3 uvw = reflect(-surfaceWS.viewDirection, surfaceWS.normal);
 	float mip = PerceptualRoughnessToMipmapLevel(brdf.perceptualRoughness);
+	//通过SAMPLE_TEXTURECUBE_LOD宏对立方体贴图进行采样，该宏将贴图，采样器状态，UVW坐标和mip级别作为参数
 	float4 environment = SAMPLE_TEXTURECUBE_LOD(
 		unity_SpecCube0, samplerunity_SpecCube0, uvw, mip
 	);

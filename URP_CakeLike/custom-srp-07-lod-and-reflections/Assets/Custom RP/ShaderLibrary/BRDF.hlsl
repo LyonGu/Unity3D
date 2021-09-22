@@ -51,8 +51,11 @@ float3 DirectBRDF (Surface surface, BRDF brdf, Light light) {
 float3 IndirectBRDF (
 	Surface surface, BRDF brdf, float3 diffuse, float3 specular
 ) {
+    //我们通过获取表面法线和视图方向的点积，从1中减去该点积，并将结果提高到四次方来求出菲涅耳效应的强度
 	float fresnelStrength = surface.fresnelStrength *
 		Pow4(1.0 - saturate(dot(surface.normal, surface.viewDirection)));
+		
+	//根据强度在BRDF镜面和菲涅耳颜色之间进行插值，然后使用对环境反射进行着色的结果
 	float3 reflection =
 		specular * lerp(brdf.specular, brdf.fresnel, fresnelStrength);
 	reflection /= brdf.roughness * brdf.roughness + 1.0;
