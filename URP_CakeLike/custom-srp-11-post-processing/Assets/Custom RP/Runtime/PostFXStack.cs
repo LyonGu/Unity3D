@@ -155,6 +155,10 @@ public partial class PostFXStack {
 			to, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store
 		);
 		
+		//RenderBufferLoadAction ==> 渲染像素时
+		//RenderBufferStoreAction ==> 渲染像素结束时
+		
+		
 		/*
 		 * 现在我们可以定义自己的Draw方法。给它两个RenderTargetIdentifier参数以指示应该从何处绘制到何处，以及一个pass参数。
 		 * 在其中，通过_PostFXSource纹理使源可用，像以前一样将目标用作渲染目标，然后绘制三角形。
