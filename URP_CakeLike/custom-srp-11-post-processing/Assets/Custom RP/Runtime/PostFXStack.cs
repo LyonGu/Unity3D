@@ -89,7 +89,13 @@ public partial class PostFXStack {
 		Draw(sourceId, bloomPrefilterId, Pass.BloomPrefilter);
 		width /= 2;
 		height /= 2;
-
+		
+		/*
+		 *使用小型2×2滤波器进行下采样会产生非常块状的结果。通过使用更大的滤波器内核（例如大约9×9高斯滤波器），可以大大提高效果。
+		 * 如果我们将其与双线性下采样相结合，我们会将其有效倍增至18×18
+		 * 
+		 */
+		//降采样 使用高斯模糊 (使用更大的滤波器内核) 水平和竖直来代替双线性滤波
 		int fromId = bloomPrefilterId, toId = bloomPyramidId + 1;
 		int i;
 		for (i = 0; i < bloom.maxIterations; i++) {
@@ -103,6 +109,8 @@ public partial class PostFXStack {
 			buffer.GetTemporaryRT(
 				toId, width, height, 0, FilterMode.Bilinear, format
 			);
+			
+			//Draw(fromId, toId, Pass.Copy);
 			Draw(fromId, midId, Pass.BloomHorizontal);
 			Draw(midId, toId, Pass.BloomVertical);
 			fromId = toId;
@@ -141,10 +149,19 @@ public partial class PostFXStack {
 	void Draw (
 		RenderTargetIdentifier from, RenderTargetIdentifier to, Pass pass
 	) {
+		//设置纹理
 		buffer.SetGlobalTexture(fxSourceId, from);
 		buffer.SetRenderTarget(
 			to, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store
 		);
+		
+		/*
+		 * 现在我们可以定义自己的Draw方法。给它两个RenderTargetIdentifier参数以指示应该从何处绘制到何处，以及一个pass参数。
+		 * 在其中，通过_PostFXSource纹理使源可用，像以前一样将目标用作渲染目标，然后绘制三角形。
+		 * 我们通过使用未使用的矩阵，栈材质和pass作为参数调用缓冲区上的DrawProcedural来做到这一点。之后又有两个需要解决的问题。
+		 * 首先是我们要绘制的形状，即MeshTopology.Triangles。第二个是我们想要多少个顶点，单个三角形是三个。
+		 */
+		//绘制屏幕时，用一个三角形代替四边形
 		buffer.DrawProcedural(
 			Matrix4x4.identity, settings.Material, (int)pass,
 			MeshTopology.Triangles, 3
