@@ -10,8 +10,8 @@
 
 struct Attributes {
 	float3 positionOS : POSITION;
-	float3 normalOS : NORMAL;
-	float4 tangentOS : TANGENT;
+	float3 normalOS : NORMAL;   //法线信息
+	float4 tangentOS : TANGENT; //切线信息
 	float2 baseUV : TEXCOORD0;
 	GI_ATTRIBUTE_DATA
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -20,9 +20,9 @@ struct Attributes {
 struct Varyings {
 	float4 positionCS : SV_POSITION;
 	float3 positionWS : VAR_POSITION;
-	float3 normalWS : VAR_NORMAL;
+	float3 normalWS : VAR_NORMAL; //世界空间法线信息
 	#if defined(_NORMAL_MAP)
-		float4 tangentWS : VAR_TANGENT;
+		float4 tangentWS : VAR_TANGENT; //世界空间切线信息
 	#endif
 	float2 baseUV : VAR_BASE_UV;
 	#if defined(_DETAIL_MAP)

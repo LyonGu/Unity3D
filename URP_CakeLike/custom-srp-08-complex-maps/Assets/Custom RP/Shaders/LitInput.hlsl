@@ -1,6 +1,7 @@
 ﻿#ifndef CUSTOM_LIT_INPUT_INCLUDED
 #define CUSTOM_LIT_INPUT_INCLUDED
 
+//几张图公用一个采样器
 TEXTURE2D(_BaseMap);
 TEXTURE2D(_MaskMap);
 TEXTURE2D(_NormalMap);
@@ -88,6 +89,8 @@ float4 GetBase (InputConfig c) {
 float3 GetNormalTS (InputConfig c) {
 	float4 map = SAMPLE_TEXTURE2D(_NormalMap, sampler_BaseMap, c.baseUV);
 	float scale = INPUT_PROP(_NormalScale);
+	
+	//切线空间的法线信息
 	float3 normal = DecodeNormal(map, scale);
 
 	if (c.useDetail) {
