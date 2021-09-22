@@ -91,6 +91,7 @@ public class Shadows {
 				lightBaking.lightmapBakeType == LightmapBakeType.Mixed &&
 				lightBaking.mixedLightingMode == MixedLightingMode.Shadowmask
 			) {
+				//使用阴影遮罩
 				useShadowMask = true;
 				maskChannel = lightBaking.occlusionMaskChannel;
 			}

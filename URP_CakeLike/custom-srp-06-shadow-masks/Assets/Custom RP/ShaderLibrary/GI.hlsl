@@ -3,9 +3,14 @@
 
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
 
+//光照贴图
 TEXTURE2D(unity_Lightmap);
 SAMPLER(samplerunity_Lightmap);
 
+/*
+Unity通过unity_ShadowMask纹理和接下来的采样器状态使阴影遮罩贴图可用于着色器
+*/
+//阴影遮罩贴图
 TEXTURE2D(unity_ShadowMask);
 SAMPLER(samplerunity_ShadowMask);
 
@@ -111,6 +116,7 @@ GI GetGI (float2 lightMapUV, Surface surfaceWS) {
 		gi.shadowMask.always = true;
 		gi.shadowMask.shadows = SampleBakedShadows(lightMapUV, surfaceWS);
 	#elif defined(_SHADOW_MASK_DISTANCE)
+	    //烘焙的阴影进行采样
 		gi.shadowMask.distance = true;
 		gi.shadowMask.shadows = SampleBakedShadows(lightMapUV, surfaceWS);
 	#endif
