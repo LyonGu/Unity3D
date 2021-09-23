@@ -149,3 +149,20 @@
 	}
 
 ]==]
+
+首先URP分为4个部分，pipeline，renderer，feature和pass。
+
+渲染基于pass，pass设定渲染对象和方法的各种指令，许多pass组合成为renderer。Feature是存储自定义pass数据的容器，可存储的数量不限，支持任何类型的数据。Feature一般用于扩展。
+
+pipeline是一个整体的管理类，通过一系列的指令和设置渲染一帧，负责渲染每个相机，每个相机有自己的renderer，这个renderer才是常规说的渲染管线，URP默认有forward和2D两个。
+
+
+1 渲染管线设置
+{
+	UniversalRenderPipelineAsset : RenderPipelineAsset ==》 // 继承RenderPipelineAsset 实现CreatePipeline方法
+	{
+		new UniversalRenderPipeline(this); //UniversalRenderPipeline是继承RenderPipeline，会实现Render方法
+	}
+}
+
+

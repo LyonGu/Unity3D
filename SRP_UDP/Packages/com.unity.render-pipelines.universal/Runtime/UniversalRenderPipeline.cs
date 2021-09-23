@@ -23,6 +23,7 @@ namespace UnityEngine.Rendering.LWRP
 
 namespace UnityEngine.Rendering.Universal
 {
+    //继承RenderPipeline 实现render方法
     public sealed partial class UniversalRenderPipeline : RenderPipeline
     {
         public const string k_ShaderTagName = "UniversalPipeline";
@@ -139,11 +140,14 @@ namespace UnityEngine.Rendering.Universal
                         ? k_MaxVisibleAdditionalLightsMobile : k_MaxVisibleAdditionalLightsNonMobile;
             }
         }
-
+        
+        //UniversalRenderPipelineAsset的CreatePipeline方法会创建一个UniversalRenderPipeline实例，调用构造方法
         public UniversalRenderPipeline(UniversalRenderPipelineAsset asset)
         {
+            //仅仅Editor下生效
             SetSupportedRenderingFeatures();
-
+            
+            //抗锯齿设置 MSAA
             // In QualitySettings.antiAliasing disabled state uses value 0, where in URP 1
             int qualitySettingsMsaaSampleCount = QualitySettings.antiAliasing > 0 ? QualitySettings.antiAliasing : 1;
             bool msaaSampleCountNeedsUpdate = qualitySettingsMsaaSampleCount != asset.msaaSampleCount;
@@ -151,6 +155,7 @@ namespace UnityEngine.Rendering.Universal
             // Let engine know we have MSAA on for cases where we support MSAA backbuffer
             if (msaaSampleCountNeedsUpdate)
             {
+                //项目启动就是设置MSAA的样式
                 QualitySettings.antiAliasing = asset.msaaSampleCount;
 #if ENABLE_VR && ENABLE_XR_MODULE
                 XRSystem.UpdateMSAALevel(asset.msaaSampleCount);
@@ -217,6 +222,8 @@ namespace UnityEngine.Rendering.Universal
 #else
             using(new ProfilingScope(null, Profiling.Pipeline.beginFrameRendering))
             {
+                //发送一个渲染开始事件，发送RenderPipelineManager.beginFrameRendering事件
+                //PixelPerfectCamera的OnEnable方法里注册，这个脚本好像一般不会添加
                 BeginFrameRendering(renderContext, cameras);
             }
 #endif
@@ -225,7 +232,8 @@ namespace UnityEngine.Rendering.Universal
 
             //是否开启SRP Batcher
             GraphicsSettings.useScriptableRenderPipelineBatching = asset.useSRPBatcher;
-
+            
+            //设置shader变量值
             //主要设置了未开启环境反射时的默认颜色、阴影颜色
             SetupPerFrameShaderConstants();
 #if ENABLE_VR && ENABLE_XR_MODULE
@@ -251,6 +259,7 @@ namespace UnityEngine.Rendering.Universal
                 }
                 else
                 {
+                    //scene窗口相机
                     using (new ProfilingScope(null, Profiling.Pipeline.beginCameraRendering))
                     {
                         BeginCameraRendering(renderContext, camera);
@@ -422,28 +431,37 @@ namespace UnityEngine.Rendering.Universal
         static void RenderCameraStack(ScriptableRenderContext context, Camera baseCamera)
         {
             using var profScope = new ProfilingScope(null, ProfilingSampler.Get(URPProfileId.RenderCameraStack));
-
+            
+            //读取UniversalAdditionalCameraData数据
             //UniversalAdditionalCameraDatas 组件上有一个相机的stack
             baseCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseCameraAdditionalData);
-
+            
+            // 当渲染baseCamera时会把rendered stacked里的overlayer camera渲染了，这里就不用再次渲染了直接返回
             // Overlay cameras will be rendered stacked while rendering base cameras
             if (baseCameraAdditionalData != null && baseCameraAdditionalData.renderType == CameraRenderType.Overlay)
                 return;
 
             // renderer contains a stack if it has additional data and the renderer supports stacking
-            var renderer = baseCameraAdditionalData?.scriptableRenderer;
+            //m_Renderers使用的是Quality面板里设置的渲染资产文件对应的渲染器列表,
+            var renderer = baseCameraAdditionalData?.scriptableRenderer; //当前相机使用的渲染器对象
             bool supportsCameraStacking = renderer != null && renderer.supportedRenderingFeatures.cameraStacking;
             List<Camera> cameraStack = (supportsCameraStacking) ? baseCameraAdditionalData?.cameraStack : null;
-
+            
+            //是否开启后效
             bool anyPostProcessingEnabled = baseCameraAdditionalData != null && baseCameraAdditionalData.renderPostProcessing;
-
+            
+            
+            //确定最后一个激活的摄像机，来把最后的渲染数据解析到屏幕上（其实就是用最后一个激活相机渲染到屏幕）
             // We need to know the last active camera in the stack to be able to resolve
             // rendering to screen when rendering it. The last camera in the stack is not
             // necessarily the last active one as it users might disable it.
             int lastActiveOverlayCameraIndex = -1;
             if (cameraStack != null)
             {
+                //baseCamera使用的渲染器对象类型，这里为ForwardRenderer
                 var baseCameraRendererType = baseCameraAdditionalData?.scriptableRenderer.GetType();
+                
+                //是否需要刷新CameraStack
                 bool shouldUpdateCameraStack = false;
 
                 for (int i = 0; i < cameraStack.Count; ++i)
@@ -451,6 +469,7 @@ namespace UnityEngine.Rendering.Universal
                     Camera currCamera = cameraStack[i];
                     if (currCamera == null)
                     {
+                        //有空数据是需要刷新stack
                         shouldUpdateCameraStack = true;
                         continue;
                     }
@@ -464,10 +483,11 @@ namespace UnityEngine.Rendering.Universal
                             Debug.LogWarning(string.Format("Stack can only contain Overlay cameras. {0} will skip rendering.", currCamera.name));
                             continue;
                         }
-
+                        //CameraStack里的相机必须是overlay类型
                         var currCameraRendererType = data?.scriptableRenderer.GetType();
                         if (currCameraRendererType != baseCameraRendererType)
                         {
+                            //overlay相机和base相机好的渲染器对象类型不一致会判断是否要跳过
                             var renderer2DType = typeof(Experimental.Rendering.Universal.Renderer2D);
                             if (currCameraRendererType != renderer2DType && baseCameraRendererType != renderer2DType)
                             {
@@ -1080,19 +1100,22 @@ namespace UnityEngine.Rendering.Universal
             //设置了未开启环境反射时的默认颜色、阴影颜色
 
             using var profScope = new ProfilingScope(null, Profiling.Pipeline.setupPerFrameShaderConstants);
-
+            
+            //当高光反射被关闭的时候，使用一个颜色值来代替间接高光反射率值 specular
+            //_GlossyEnvironmentColor
             // When glossy reflections are OFF in the shader we set a constant color to use as indirect specular
             SphericalHarmonicsL2 ambientSH = RenderSettings.ambientProbe;
             Color linearGlossyEnvColor = new Color(ambientSH[0, 0], ambientSH[1, 0], ambientSH[2, 0]) * RenderSettings.reflectionIntensity;
             Color glossyEnvColor = CoreUtils.ConvertLinearToActiveColorSpace(linearGlossyEnvColor);
             Shader.SetGlobalVector(ShaderPropertyId.glossyEnvironmentColor, glossyEnvColor);
 
-            // Ambient
+            // Ambient 环境光
             Shader.SetGlobalVector(ShaderPropertyId.ambientSkyColor, CoreUtils.ConvertSRGBToActiveColorSpace(RenderSettings.ambientSkyColor));
             Shader.SetGlobalVector(ShaderPropertyId.ambientEquatorColor, CoreUtils.ConvertSRGBToActiveColorSpace(RenderSettings.ambientEquatorColor));
             Shader.SetGlobalVector(ShaderPropertyId.ambientGroundColor, CoreUtils.ConvertSRGBToActiveColorSpace(RenderSettings.ambientGroundColor));
 
-            // Used when subtractive mode is selected
+            // Used when subtractive mode is selected 
+            //灯光的lightmode为Mixed，在lighting面板里设置subtractive模式
             Shader.SetGlobalVector(ShaderPropertyId.subtractiveShadowColor, CoreUtils.ConvertSRGBToActiveColorSpace(RenderSettings.subtractiveShadowColor));
 
             // Required for 2D Unlit Shadergraph master node as it doesn't currently support hidden properties.

@@ -178,8 +178,10 @@ namespace UnityEngine.Experimental.Rendering.Universal
             Vector3 roundedCameraPosition = RoundToPixel(cameraPosition);
             Vector3 offset = roundedCameraPosition - cameraPosition;
             offset.z = -offset.z;
+            //Matrix4x4.TRS --> 位移/旋转/缩放 矩阵设置
             Matrix4x4 offsetMatrix = Matrix4x4.TRS(-offset, Quaternion.identity, new Vector3(1.0f, 1.0f, -1.0f));
-
+            
+            //设置视觉矩阵
             m_Camera.worldToCameraMatrix = offsetMatrix * m_Camera.transform.worldToLocalMatrix;
         }
 
@@ -198,11 +200,13 @@ namespace UnityEngine.Experimental.Rendering.Universal
 
         void OnBeginFrameRendering(ScriptableRenderContext context, Camera[] cameras)
         {
+            //获取rt大小，camera上targetTexture不为空就是targetTexture大小，为空的就是屏幕大小
             var rtSize = cameraRTSize;
             m_Internal.CalculateCameraProperties(rtSize.x, rtSize.y);
 
             PixelSnap();
-
+            
+            //设置视口区域
             if (m_Internal.useOffscreenRT)
                 m_Camera.pixelRect = m_Internal.CalculateFinalBlitPixelRect(rtSize.x, rtSize.y);
             else

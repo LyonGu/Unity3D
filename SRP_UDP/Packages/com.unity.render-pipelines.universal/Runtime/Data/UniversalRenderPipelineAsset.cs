@@ -95,6 +95,7 @@ namespace UnityEngine.Rendering.Universal
         HighDynamicRange
     }
 
+    // 继承RenderPipelineAsset 实现CreatePipeline方法
     [ExcludeFromPreset]
     public partial class UniversalRenderPipelineAsset : RenderPipelineAsset, ISerializationCallbackReceiver
     {
@@ -299,6 +300,7 @@ namespace UnityEngine.Rendering.Universal
             }
 
             CreateRenderers();
+            //URP渲染管线
             return new UniversalRenderPipeline(this);
         }
 
@@ -434,7 +436,7 @@ namespace UnityEngine.Rendering.Universal
                 DestroyRenderer(ref m_Renderers[index]);
                 m_Renderers[index] = m_RendererDataList[index].InternalCreateRenderer();
             }
-
+            //m_Renderers为什么使用的是Quality面板里设置的渲染资产文件对应的渲染器列表
             return m_Renderers[index];
         }
 

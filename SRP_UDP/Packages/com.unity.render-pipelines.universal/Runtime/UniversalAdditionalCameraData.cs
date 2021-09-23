@@ -323,6 +323,7 @@ namespace UnityEngine.Rendering.Universal
                         UniversalRenderPipeline.asset);
                     return UniversalRenderPipeline.asset.GetRenderer(defaultIndex);
                 }
+                //UniversalRenderPipeline.asset ==> GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset
                 return UniversalRenderPipeline.asset.GetRenderer(m_RendererIndex);
             }
         }
