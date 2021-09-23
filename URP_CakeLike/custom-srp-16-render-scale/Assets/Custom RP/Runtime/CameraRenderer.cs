@@ -43,7 +43,11 @@ public partial class CameraRenderer {
 	bool useHDR, useScaledRendering;
 
 	bool useColorTexture, useDepthTexture, useIntermediateBuffer;
-
+	
+	/*
+	 * 因为我们的相机的缓冲区大小现在可以不同于Camera组件指示的缓冲区大小，
+	 * 所以我们需要跟踪最终使用的缓冲区大小。我们可以为此使用一个Vector2Int字段
+	 */
 	Vector2Int bufferSize;
 
 	Material material;
@@ -103,6 +107,7 @@ public partial class CameraRenderer {
 		useHDR = bufferSettings.allowHDR && camera.allowHDR;
 		if (useScaledRendering) {
 			renderScale = Mathf.Clamp(renderScale, renderScaleMin, renderScaleMax);
+			//如果按比例缩放渲染，则按比例缩放摄影机的像素宽度和高度，并将结果转换为整数，向下取舍
 			bufferSize.x = (int)(camera.pixelWidth * renderScale);
 			bufferSize.y = (int)(camera.pixelHeight * renderScale);
 		}
@@ -112,6 +117,7 @@ public partial class CameraRenderer {
 		}
 
 		buffer.BeginSample(SampleName);
+		//引入备用_CameraBufferSize向量来解决此问题，该向量包含相机调整后大小的数据。
 		buffer.SetGlobalVector(bufferSizeId, new Vector4(
 			1f / bufferSize.x, 1f / bufferSize.y,
 			bufferSize.x, bufferSize.y
@@ -157,7 +163,8 @@ public partial class CameraRenderer {
 	void Setup () {
 		context.SetupCameraProperties(camera);
 		CameraClearFlags flags = camera.clearFlags;
-
+		
+		//在使用缩放渲染时，我们还需要使用中间缓冲区
 		useIntermediateBuffer = useScaledRendering ||
 			useColorTexture || useDepthTexture || postFXStack.IsActive;
 		if (useIntermediateBuffer) {
@@ -173,6 +180,8 @@ public partial class CameraRenderer {
 				depthAttachmentId, bufferSize.x, bufferSize.y,
 				32, FilterMode.Point, RenderTextureFormat.Depth
 			);
+			
+			//设置渲染目标，颜色数据渲染到colorAttachmentId的RT，深度缓冲数据渲染到depthAttachmentId的RT
 			buffer.SetRenderTarget(
 				colorAttachmentId,
 				RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store,
