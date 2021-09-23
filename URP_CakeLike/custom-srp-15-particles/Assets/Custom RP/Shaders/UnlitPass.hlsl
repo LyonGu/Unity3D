@@ -25,12 +25,16 @@ struct Varyings {
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
+/*
+在顶点函数中，SV_POSITION表示顶点的裁剪空间位置，为4D齐次坐标。
+但是在片段函数中，SV_POSITION表示片段的屏幕空间（也称为窗口空间）位置。空间转换由GPU执行
+*/
 Varyings UnlitPassVertex (Attributes input) {
 	Varyings output;
 	UNITY_SETUP_INSTANCE_ID(input);
 	UNITY_TRANSFER_INSTANCE_ID(input, output);
 	float3 positionWS = TransformObjectToWorld(input.positionOS);
-	output.positionCS_SS = TransformWorldToHClip(positionWS);
+	output.positionCS_SS = TransformWorldToHClip(positionWS);  //裁剪空间坐标
 	#if defined(_VERTEX_COLORS)
 		output.color = input.color;
 	#endif
@@ -65,6 +69,7 @@ float4 UnlitPassFragment (Varyings input) : SV_TARGET {
 		clip(base.a - GetCutoff(config));
 	#endif
 	#if defined(_DISTORTION)
+	    //启用抖动
 		float2 distortion = GetDistortion(config) * base.a;
 		base.rgb = lerp(
 			GetBufferColor(config.fragment, distortion).rgb, base.rgb,

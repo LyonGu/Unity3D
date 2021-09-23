@@ -19,6 +19,17 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
 
+//内联采样器状态
+/*
+采样器名称被识别为“内联”采样器状态（全都不区分大小写）：
+
+*“Point”、“Linear”或“Trilinear”（必需）设置纹理过滤模式。
+
+*“Clamp”、“Repeat”、“Mirror”或“MirrorOnce”（必需）设置纹理包裹模式
+
+sampler_point_clamp // filter:point, wrap: clamp u & v
+sampler_linear_clamp // filter:linear, wrap: clamp u & v
+*/
 SAMPLER(sampler_linear_clamp);
 SAMPLER(sampler_point_clamp);
 

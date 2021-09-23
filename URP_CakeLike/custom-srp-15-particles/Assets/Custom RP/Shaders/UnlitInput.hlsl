@@ -2,7 +2,7 @@
 #define CUSTOM_LIT_INPUT_INCLUDED
 
 TEXTURE2D(_BaseMap);
-TEXTURE2D(_DistortionMap);
+TEXTURE2D(_DistortionMap); //抖动图，其实也是一张发现图
 SAMPLER(sampler_BaseMap);
 
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
@@ -22,7 +22,7 @@ UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct InputConfig {
 	Fragment fragment;
-	float4 color;
+	float4 color; //顶点颜色
 	float2 baseUV;
 	float3 flipbookUVB;
 	bool flipbookBlending;
@@ -33,7 +33,7 @@ struct InputConfig {
 InputConfig GetInputConfig (float4 positionSS, float2 baseUV) {
 	InputConfig c;
 	c.fragment = GetFragment(positionSS);
-	c.color = 1.0;
+	c.color = 1.0; //顶点颜色
 	c.baseUV = baseUV;
 	c.flipbookUVB = 0.0;
 	c.flipbookBlending = false;
@@ -82,6 +82,9 @@ float4 GetBase (InputConfig c) {
 	return baseMap * baseColor * c.color;
 }
 
+/*
+让它对变形贴图进行采样并像基础贴图一样应用flipbook混合，然后通过distortion strength解码法向缩放的法线。我们只需要向量的XY分量，因此丢弃Z。
+*/
 float2 GetDistortion (InputConfig c) {
 	float4 rawMap = SAMPLE_TEXTURE2D(_DistortionMap, sampler_BaseMap, c.baseUV);
 	if (c.flipbookBlending) {

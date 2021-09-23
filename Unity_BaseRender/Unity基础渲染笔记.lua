@@ -2687,6 +2687,38 @@
 	多个材质使用同一个shader，开启SRP，可以减少setPass数量，提高渲染效率 ==》 只要shader的变种一样就行
 
 	SRP批处理程序无法处理每个对象的材质属性（例如不同材质上颜色属性不同）==》 需要使用GPU Instancing来合批
+
+
+	到目前为止，我们一直为相机使用单个帧缓冲区，其中包含颜色和深度信息。这是典型的帧缓冲区配置，但是颜色和深度数据始终存储在单独的缓冲区中，称为帧缓冲区附件
+
+	/*
+		在顶点函数中，SV_POSITION表示顶点的裁剪空间位置，为4D齐次坐标。
+		但是在片段函数中，SV_POSITION表示片段的屏幕空间（也称为窗口空间）位置。空间转换由GPU执行， 第4个分量就代表深度值
+	*/
+
+	要采样深度纹理，我们需要在屏幕空间中的片段的UV坐标
+	可以通过将其位置除以屏幕像素尺寸来找到这些像素，Unity通过float4 _ScreenParams的XY组件可以使用这些像素，因此将其添加到UnityInput。
+
+
+	TEXTURE2D(_CameraDepthTexture);
+
+	struct Fragment {
+		float2 positionSS;
+		float2 screenUV;
+		float depth;
+		float bufferDepth;
+	};
+
+	Fragment GetFragment (float4 positionCS_SS) {
+		Fragment f;
+		f.positionSS = positionSS.xy; //裁剪空间坐标
+		f.screenUV = f.positionSS / _ScreenParams.xy; //屏幕空间UV坐标
+		f.depth = IsOrthographicCamera() ?
+			OrthographicDepthBufferToLinear(positionSS.z) : positionSS.w; //片段的深度值
+		f.bufferDepth =
+			SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, sampler_point_clamp, f.screenUV, 0); //当前深度缓冲区中的深度值
+		return f;
+	}
 }
 
 

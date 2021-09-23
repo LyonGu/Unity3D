@@ -9,6 +9,14 @@ public partial class CameraRenderer {
 		unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit"),
 		litShaderTagId = new ShaderTagId("CustomLit");
 
+	//颜色缓冲区，深度缓冲
+	/*
+	 * 到目前为止，我们一直为相机使用单个帧缓冲区，其中包含颜色和深度信息。
+	 * 这是典型的帧缓冲区配置，但是颜色和深度数据始终存储在单独的缓冲区中，称为帧缓冲区附件。要访问深度缓冲区，我们需要分开定义这些附件
+	 *
+	 * 我们不能在深度缓冲区用于渲染的同时对其进行采样。我们需要复制它。因此，引入_CameraDepthTexture标识符，并添加一个布尔值字段以指示我们是否正在使用深度纹理。
+	 * 仅应在需要时才考虑复制深度，这将在获取相机设置后在Render中确定。但是我们一开始只是始终启用它。
+	 */
 	static int
 		colorAttachmentId = Shader.PropertyToID("_CameraColorAttachment"),
 		depthAttachmentId = Shader.PropertyToID("_CameraDepthAttachment"),
@@ -143,11 +151,17 @@ public partial class CameraRenderer {
 			if (flags > CameraClearFlags.Color) {
 				flags = CameraClearFlags.Color;
 			}
+			
+			//获得两个独立缓冲区
+			
+			//颜色缓冲区
 			buffer.GetTemporaryRT(
 				colorAttachmentId, camera.pixelWidth, camera.pixelHeight,
 				0, FilterMode.Bilinear, useHDR ?
 					RenderTextureFormat.DefaultHDR : RenderTextureFormat.Default
 			);
+			
+			//深度缓冲区
 			buffer.GetTemporaryRT(
 				depthAttachmentId, camera.pixelWidth, camera.pixelHeight,
 				32, FilterMode.Point, RenderTextureFormat.Depth
@@ -225,12 +239,14 @@ public partial class CameraRenderer {
 		var filteringSettings = new FilteringSettings(
 			RenderQueueRange.opaque, renderingLayerMask: (uint)renderingLayerMask
 		);
-
+		//绘制不透明
 		context.DrawRenderers(
 			cullingResults, ref drawingSettings, ref filteringSettings
 		);
-
+		//绘制天空盒
 		context.DrawSkybox(camera);
+		
+		//拷贝颜色缓冲和深度缓冲
 		if (useColorTexture || useDepthTexture) {
 			CopyAttachments();
 		}
@@ -238,7 +254,8 @@ public partial class CameraRenderer {
 		sortingSettings.criteria = SortingCriteria.CommonTransparent;
 		drawingSettings.sortingSettings = sortingSettings;
 		filteringSettings.renderQueueRange = RenderQueueRange.transparent;
-
+		
+		//绘制透明物体
 		context.DrawRenderers(
 			cullingResults, ref drawingSettings, ref filteringSettings
 		);
@@ -259,6 +276,11 @@ public partial class CameraRenderer {
 			}
 		}
 		if (useDepthTexture) {
+			//复制深度数据
+			/*
+			 * 将在需要时获取一个临时的重复深度纹理，并将深度附件数据复制到其中。这可以通过在命令缓冲区上使用源纹理和目标纹理调用CopyTexture来完成
+			 * 这比通过全屏draw call进行操作要有效得多。另外，请确保在Cleanup中释放额外的深度纹理。
+			 */
 			buffer.GetTemporaryRT(
 				depthTextureId, camera.pixelWidth, camera.pixelHeight,
 				32, FilterMode.Point, RenderTextureFormat.Depth
@@ -278,6 +300,7 @@ public partial class CameraRenderer {
 				RenderBufferLoadAction.Load, RenderBufferStoreAction.Store
 			);
 		}
+		//重置渲染目标并执行一次缓冲区
 		ExecuteBuffer();
 	}
 
