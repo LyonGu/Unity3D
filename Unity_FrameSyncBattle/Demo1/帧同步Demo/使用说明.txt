@@ -1,0 +1,5 @@
+1 FrameClient 帧同步客户端 Unity版本 教学课程123
+2 FrameServer 帧同步服务器端 Unity版本 教学课程123
+3 使用步骤：
+   先运行FrameServer，启动服务器。
+   再运行FrameClient 登录游戏，匹配成功后进入战场。
