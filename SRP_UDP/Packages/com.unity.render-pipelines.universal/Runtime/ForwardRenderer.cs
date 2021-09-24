@@ -677,7 +677,7 @@ namespace UnityEngine.Rendering.Universal
                     EnqueuePass(m_CapturePass);
                 }
                 
-                //判断是否要最后输出到屏幕上 final blit，满足条件之一即可
+                //判断是否要最后执行一次 final blit，满足条件之一即可
                 // applyFinalPostProcessing: 最后一个相机也开启了后效
                 // applyPostProcessing: 当前相机是否开启了后效，
                 // hasPassesAfterPostProcessing: 一般为false
