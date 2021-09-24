@@ -79,7 +79,9 @@
 
 	6 设置渲染器配置文件
 	{
-		GraphicsSettings.renderPipelineAsset = pipelineAsset;
+		//hight可以直接头拖到对应的脚本上
+		GraphicsSettings.renderPipelineAsset = hight;
+        QualitySettings.renderPipeline = hight;
 	}
 
 	7 如果一个场景里具有摄像机组 MainCamera相机，UI相机 Blur相机

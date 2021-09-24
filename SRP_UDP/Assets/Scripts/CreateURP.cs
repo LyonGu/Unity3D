@@ -6,8 +6,8 @@ using UnityEngine.Rendering.Universal;
 
 public class CreateURP : MonoBehaviour
 {
-    private UniversalRenderPipelineAsset hight;
-    private UniversalRenderPipelineAsset low;
+    public UniversalRenderPipelineAsset hight;
+    public UniversalRenderPipelineAsset low;
 
     // Start is called before the first frame update
 
@@ -75,8 +75,13 @@ public class CreateURP : MonoBehaviour
 
 
         //高低配配置不同的渲染配置文件
-        if(hight!=null)
+        if (hight != null)
+        {
             GraphicsSettings.renderPipelineAsset = hight;
+            QualitySettings.renderPipeline = hight;
+        }
+
+        
 
         //摄像机可以绑定多个渲染器（就是渲染配置文件 renderlist中的文件），代码里动态切换每个渲染器 设置index索引即可
         //UniversalAdditionalCameraData universalAdditionalCameraData = mainCamera.GetComponent<UniversalAdditionalCameraData>();
@@ -86,8 +91,8 @@ public class CreateURP : MonoBehaviour
         //universalAdditionalCameraData.cameraStack.Clear();
         //universalAdditionalCameraData.renderType = CameraRenderType.Overlay;
         //相机输出设置
-        var rt = RenderTexture.GetTemporary(1334, 750, 24, RenderTextureFormat.ARGB32);
-        mainCamera.targetTexture = rt;
+//        var rt = RenderTexture.GetTemporary(1334, 750, 24, RenderTextureFormat.ARGB32);
+//        mainCamera.targetTexture = rt;
 
         //StartCoroutine("ResetCameraSetting");
 

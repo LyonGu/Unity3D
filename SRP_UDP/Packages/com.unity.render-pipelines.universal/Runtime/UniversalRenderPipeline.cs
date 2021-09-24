@@ -1135,7 +1135,8 @@ namespace UnityEngine.Rendering.Universal
         {
             using var profScope = new ProfilingScope(null, Profiling.Pipeline.getPerObjectLightFlags);
             
-            //反射探针，光照贴图，光照探针，ShadowMask，LightData，OcclusionProbe
+            //反射探针，光照贴图，光照探针，ShadowMask，OcclusionProbe
+            //逐物体的灯光数据(LightData)
             var configuration = PerObjectData.ReflectionProbes | PerObjectData.Lightmaps | PerObjectData.LightProbe | PerObjectData.LightData | PerObjectData.OcclusionProbe | PerObjectData.ShadowMask;
 
             if (additionalLightsCount > 0)

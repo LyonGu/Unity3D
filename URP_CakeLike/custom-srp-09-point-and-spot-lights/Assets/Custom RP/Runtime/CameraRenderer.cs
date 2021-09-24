@@ -34,7 +34,7 @@ public partial class CameraRenderer {
 		if (!Cull(shadowSettings.maxDistance)) {
 			return;
 		}
-		
+
 		buffer.BeginSample(SampleName);
 		ExecuteBuffer();
 		lighting.Setup(
@@ -87,6 +87,8 @@ public partial class CameraRenderer {
 	void DrawVisibleGeometry (
 		bool useDynamicBatching, bool useGPUInstancing, bool useLightsPerObject
 	) {
+		//向CameraRenderer.DrawVisibleGeometry添加一个布尔参数，以指示是否应使用lights-per-object模式。
+		//如果是，请为图形设置的每个对象数据启用PerObjectData.LightData和PerObjectData.LightIndices标志。
 		PerObjectData lightsPerObjectFlags = useLightsPerObject ?
 			PerObjectData.LightData | PerObjectData.LightIndices :
 			PerObjectData.None;
