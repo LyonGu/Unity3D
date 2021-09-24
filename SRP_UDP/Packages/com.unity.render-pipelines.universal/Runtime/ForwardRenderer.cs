@@ -303,7 +303,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 //这块逻辑走的情况比较少
                 
-                //设置相机的颜色缓冲区目标对象和深度缓冲区目标对象都为默认帧缓冲，就是屏幕
+                //设置相机的渲染目标（颜色缓冲区目标对象和深度缓冲区目标对象）都为默认帧缓冲，就是屏幕
                 ConfigureCameraTarget(BuiltinRenderTextureType.CameraTarget, BuiltinRenderTextureType.CameraTarget);
 
                 //加入 RenderFeature
@@ -355,7 +355,7 @@ namespace UnityEngine.Rendering.Universal
 
             // Should apply post-processing after rendering this camera?
             //正在渲染的相机上是否开启后效,只要相机上开了就行
-            bool applyPostProcessing = cameraData.postProcessEnabled; //是否开启后期
+            bool applyPostProcessing = cameraData.postProcessEnabled;
 
             // There's at least a camera in the camera stack that applies post-processing
             //只要有一个相机开启了后效就为true，包括 base Camera和 overlay Camera
@@ -407,12 +407,12 @@ namespace UnityEngine.Rendering.Universal
             // - Scene or preview cameras always require a depth texture. We do a depth pre-pass to simplify it and it shouldn't matter much for editor.
             // - Render passes require it
             
-            //这命名真是醉了，其实就是表示是不是需要产生一张深度图，有一个为true最后结果就为true
+            //这命名真是醉了，其实就是表示是不是需要产生一张深度图RT，有一个为true最后结果就为true
             bool requiresDepthPrepass = requiresDepthTexture && !CanCopyDepth(ref renderingData.cameraData);
             requiresDepthPrepass |= isSceneViewCamera;
             requiresDepthPrepass |= isPreviewCamera;
-            requiresDepthPrepass |= renderPassInputs.requiresDepthPrepass;
-            requiresDepthPrepass |= renderPassInputs.requiresNormalsTexture;
+            requiresDepthPrepass |= renderPassInputs.requiresDepthPrepass; //一般为false
+            requiresDepthPrepass |= renderPassInputs.requiresNormalsTexture; //一般为false
 
             // The copying of depth should normally happen after rendering opaques.
             // But if we only require it for post processing or the scene camera then we do it after rendering transparent objects
@@ -421,7 +421,7 @@ namespace UnityEngine.Rendering.Universal
             m_CopyDepthPass.renderPassEvent = (!requiresDepthTexture && (applyPostProcessing || isSceneViewCamera)) ? RenderPassEvent.AfterRenderingTransparents : RenderPassEvent.AfterRenderingOpaques;
 
             //再次判断是否需要ColorTexture（绘制了不透明物体和天空盒的RT）
-            bool IntermediateColorTexture = RequiresIntermediateColorTexture(ref cameraData); //一般返回true
+            bool IntermediateColorTexture = RequiresIntermediateColorTexture(ref cameraData); //是否产生中间RT，一般返回true
             createColorTexture |= IntermediateColorTexture; 
             createColorTexture |= renderPassInputs.requiresColorTexture;
             createColorTexture &= !isPreviewCamera;
@@ -460,7 +460,7 @@ namespace UnityEngine.Rendering.Universal
             // Configure all settings require to start a new camera stack (base camera only)
             if (cameraData.renderType == CameraRenderType.Base)
             {
-                RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer
+                RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer 帧缓冲
 
                 m_ActiveCameraColorAttachment = (createColorTexture) ? m_CameraColorAttachment : cameraTargetHandle;
                 m_ActiveCameraDepthAttachment = (createDepthTexture) ? m_CameraDepthAttachment : cameraTargetHandle;
@@ -514,7 +514,8 @@ namespace UnityEngine.Rendering.Universal
                     activeDepthRenderTargetId = new RenderTargetIdentifier(activeDepthRenderTargetId, 0, CubemapFace.Unknown, -1);
                 }
 #endif
-                //配置渲染目标 m_CameraColorTarget 和 m_CameraDepthTarget
+                //配置摄像机的渲染目标 m_CameraColorTarget 和 m_CameraDepthTarget
+                //默认情况下，是帧缓冲区，但也可能是渲染纹理
                 ConfigureCameraTarget(activeColorRenderTargetId, activeDepthRenderTargetId);
             }
 
@@ -620,7 +621,8 @@ namespace UnityEngine.Rendering.Universal
             //ObjectPass 渲染事件回调Pass
             EnqueuePass(m_OnRenderObjectCallbackPass);
             
-            //判断是否是最后一个渲染目标，当前相机是否要输出到屏幕 如果当前相机的camerastack里有激活的相机就不需要绘制到屏幕
+            //判断是否是最后一个渲染目标，当前相机是否要输出到屏幕 
+            //当前相机的stack为空，或者 stack里有相机 但都没有激活 cameraData.resolveFinalTarget值为true
             bool lastCameraInTheStack = cameraData.resolveFinalTarget; 
             bool hasCaptureActions = renderingData.cameraData.captureActions != null && lastCameraInTheStack;
 

@@ -393,7 +393,62 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 	ForwardRenderer.Setup (//根据配置确定是否加入对应的Pass参与渲染  UniversalRenderPipeline.RenderSingleCamera 会调用这个方法)
 	{
+		1 判断当前相机是只渲染深度： 只渲染不透明物体pass 天空盒pass 透明物体pass
+		2 第一次判断是否需要创建颜色纹理 ColorTexture，有自定义feature以及不是preveiew相机 ==》 设置相机的颜色缓冲区目标对象 为一张rt，名字叫“_CameraColorTexture”
+		3 RenderFeature Pass 调用每个激活featrure的 AddRenderPasses
+		4 设置一些逻辑变量
+		{
+			//正在渲染的相机上是否开启后效,只要相机上开了就行
+            bool applyPostProcessing = cameraData.postProcessEnabled;
 
+            //只要有一个相机开启了后效就为true，包括 base Camera和 overlay Camera
+            bool anyPostProcessing = renderingData.postProcessingEnabled;
+
+            bool generateColorGradingLUT = cameraData.postProcessEnabled; //是否生成LUT 表  后期开启了就会生成LUT表
+            bool isSceneViewCamera = cameraData.isSceneViewCamera; //Scene窗口相机
+		}
+
+		5 再次判断是否需要深度图， 
+		{
+			bool requiresDepthTexture = cameraData.requiresDepthTexture || renderPassInputs.requiresDepthTexture || this.actualRenderingMode == RenderingMode.Deferred;
+		}
+		6 判断主光和副光是否需要阴影
+		7 判断是不是需要产生深度的pass，并且设置对应pass的event
+		{
+			bool requiresDepthPrepass = requiresDepthTexture && !CanCopyDepth(ref renderingData.cameraData);
+            requiresDepthPrepass |= isSceneViewCamera;
+            requiresDepthPrepass |= isPreviewCamera;
+            requiresDepthPrepass |= renderPassInputs.requiresDepthPrepass; //一般为false
+            requiresDepthPrepass |= renderPassInputs.requiresNormalsTexture; //一般为false
+
+            //需要深度贴图==》 直接在渲染完不透明物体后渲染
+            //不需要深度贴图 + (当前相机开启了后效或者当前相机是场景相机) ==》直接在渲染完透明物体后渲染
+            m_CopyDepthPass.renderPassEvent = (!requiresDepthTexture && (applyPostProcessing || isSceneViewCamera)) ? RenderPassEvent.AfterRenderingTransparents : RenderPassEvent.AfterRenderingOpaques;
+		}
+		8 第二次判断是否需要产生颜色纹理RT _CameraColorTexture
+		{
+			 bool IntermediateColorTexture = RequiresIntermediateColorTexture(ref cameraData); //是否产生中间RT，一般返回true
+            createColorTexture |= IntermediateColorTexture; 
+            createColorTexture |= renderPassInputs.requiresColorTexture;
+            createColorTexture &= !isPreviewCamera;
+		}
+		9 最终判断是否需要产生深度纹理RT _CameraDepthAttachment
+		{
+			bool createDepthTexture = cameraData.requiresDepthTexture && !requiresDepthPrepass;
+            
+            //cameraData.resolveFinalTarget 当前相机是否需要最后绘制到屏幕上，如果当前相机的camerastack里有激活的相机就不需要绘制到屏幕
+            createDepthTexture |= (cameraData.renderType == CameraRenderType.Base && !cameraData.resolveFinalTarget);
+            // Deferred renderer always need to access depth buffer.
+            createDepthTexture |= this.actualRenderingMode == RenderingMode.Deferred;
+		}
+
+		9 设置摄像机的渲染目标：颜色缓冲和深度缓冲
+		{
+			baseCamera==》如果有需要颜色rt和深度rt，渲染目标就设置为rt纹理，不需要的话就设置为默认的帧缓冲
+			overlay相机==》渲染目标设置为默认的帧缓冲
+		}
+		10 根据逻辑判断是否把对应的pass加入队列，并且调用pass的SetUp方法
+		11 判断是否要最后执行一次 final blit，满足条件之一即可
 	}
 }
 
