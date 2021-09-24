@@ -48,7 +48,7 @@ namespace UnityEngine.Rendering.Universal
         internal ScriptableRenderer InternalCreateRenderer()
         {
             isInvalidated = false;
-            return Create();
+            return Create();//调用到不同Render的重载方法，这里一般是ForwardRender
         }
 
         protected virtual void OnValidate()

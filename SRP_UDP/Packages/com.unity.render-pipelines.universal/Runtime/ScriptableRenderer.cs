@@ -610,6 +610,7 @@ namespace UnityEngine.Rendering.Universal
         /// <param name="pass">Render pass to be enqueued.</param>
         public void EnqueuePass(ScriptableRenderPass pass)
         {
+            //Execute方法里会根据pass的事件id排序
             m_ActiveRenderPassQueue.Add(pass);
         }
 
@@ -673,6 +674,7 @@ namespace UnityEngine.Rendering.Universal
                 {
                     continue;
                 }
+                //每个自定义的Feature需要自己实现AddRenderPasses
                 rendererFeatures[i].AddRenderPasses(this, ref renderingData);
             }
 

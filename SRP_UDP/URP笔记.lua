@@ -163,6 +163,9 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 {
 	UniversalRenderPipelineAsset : RenderPipelineAsset ==》 // 继承RenderPipelineAsset 实现CreatePipeline方法
 	{
+		//创建当前渲染资产文件对应的渲染对象：基本都是ForwardRender类型
+        CreateRenderers();
+
 		new UniversalRenderPipeline(this); //UniversalRenderPipeline是继承RenderPipeline，会实现Render方法
 	}
 }
@@ -326,5 +329,71 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 					3.2.2 RenderSingleCamera
 				}
 			}
+}
+
+3 ForwardRenderer
+{
+	核心部分，pass ： ForwardRenderer可以简单理解成驱动各个pass执行的一个管理者，pass则实现了具体的渲染逻辑。
+	pass的功能，分为两部分，配置rt和执行最终渲染。
+
+	pass-事件
+	{
+		基类文件中定义了一系列的渲染事件，RenderPassEvent。每个pass，在初始化的时候，都定义了一个event，这个event用于pass的排序。id之间间隔50，可加offet以添加额外的event。
+	}
+
+	pass-配置rt
+	{
+		pass在渲染前需要先配置渲染目标，renderer基类调用pass的Configure抽象函数
+		renderPass.Configure(cmd, cameraData.cameraTargetDescriptor); 
+
+		每个pass实现具体逻辑，pass子类调用基类的ConfigureTarget方法，配置渲染目标和clear方法，子类没实现则渲染到相机的目标。
+
+		渲染目标分两个，color和depth，depth只有一个，color是个数组，默认第一个是相机目标，最大值在SystemInfo.supportedRenderTargetCount定义。注意这个步骤只是设置了pass内部的数据，并没有真的通知到管线。
+		RenderTargetIdentifier[] m_ColorAttachments = new RenderTargetIdentifier[]{BuiltinRenderTextureType.CameraTarget}; 
+		RenderTargetIdentifier m_DepthAttachment = BuiltinRenderTextureType.CameraTarget; 
+
+		真正设置渲染目标，是通过CommandBuffer的SetRenderTarget方法，URP在CoreUtils类封装了一个静态函数SetRenderTarget。ScriptableRenderer类在ExecuteRenderPass方法中，先调用pass的Config函数，然后取pass的color和depth数据，设置为真正的渲染目标。
+	}
+
+	构造方法 ForwardRenderer
+	{
+		1 提前创建一堆材质信息
+		2 是否重载模板测试信息
+		3 定义一堆pass，使用事件排序，越小排到越前，越先执行
+		{
+			//主光阴影ShadowCaster，附光阴影ShadowCaster  50
+			//pre深度pass  150
+			//深度+法线pass 150
+			//颜色分级Lut pass 150
+			//不透明物体pass 250
+			//天空盒绘制Pass 350
+			//CopyDepthPass 400
+			//透明物体设置渲染pass 450
+			//透明物体渲染pass 450
+			//无效物体渲染Pass，callback  550
+			//后效pass 550
+			//最终的pass 1000+1
+			//截屏pass 1000
+			//FinalBlitPass 最后输出到屏幕的pass  1000+1
+		}
+
+		4 定义各种RT名称 RenderTargetHandle.id 
+		{
+			m_CameraColorAttachment ==> _CameraColorTexture
+			m_CameraDepthAttachment ==> _CameraDepthAttachment
+			m_DepthTexture ==> _CameraDepthTexture
+			m_NormalsTexture ==> _CameraNormalsTexture
+			m_OpaqueColor ==> _CameraOpaqueTexture
+			m_AfterPostProcessColor ==> _AfterPostProcessTexture
+			m_ColorGradingLut ==> _InternalGradingLut
+			m_DepthInfoTexture ==> _DepthInfoTexture
+			m_TileDepthInfoTexture ==> _TileDepthInfoTexture
+		}
+	}
+
+	ForwardRenderer.Setup (//根据配置确定是否加入对应的Pass参与渲染  UniversalRenderPipeline.RenderSingleCamera 会调用这个方法)
+	{
+
+	}
 }
 

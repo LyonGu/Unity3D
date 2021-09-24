@@ -298,7 +298,7 @@ namespace UnityEngine.Rendering.Universal
                     this);
                 return null;
             }
-
+            //创建当前渲染资产文件对应的渲染对象：基本都是ForwardRender类型
             CreateRenderers();
             //URP渲染管线
             return new UniversalRenderPipeline(this);

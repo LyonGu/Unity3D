@@ -5,7 +5,7 @@ namespace UnityEngine.Rendering.Universal.Internal
     // Note: this pass can't be done at the same time as post-processing as it needs to be done in
     // advance in case we're doing on-tile color grading.
     /// <summary>
-    /// Renders a color grading LUT texture.  //LUTÌùÍ¼ ¸ù¾İÒ»¸öÏñËØµÄRGB²é±íÈ¡µÃÁíÒ»¸öRGB²¢ÇÒÌæ»»
+    /// Renders a color grading LUT texture.  //LUTè´´å›¾ æ ¹æ®ä¸€ä¸ªåƒç´ çš„RGBæŸ¥è¡¨å–å¾—å¦ä¸€ä¸ªRGBå¹¶ä¸”æ›¿æ¢
     /// </summary>
     public class ColorGradingLutPass : ScriptableRenderPass
     {
@@ -64,7 +64,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.ColorGradingLUT)))
             {
                 // Fetch all color grading settings
-                //VolumeÏÂµÄºóĞ§Ğ§¹û×é¼ş: ChannelMixer,ColorAdjustments,ColorCurves,LiftGammaGain,ShadowsMidtonesHighlights....
+                //Volumeä¸‹çš„åæ•ˆæ•ˆæœç»„ä»¶: ChannelMixer,ColorAdjustments,ColorCurves,LiftGammaGain,ShadowsMidtonesHighlights....
                 var stack = VolumeManager.instance.stack;
                 var channelMixer = stack.GetComponent<ChannelMixer>();
                 var colorAdjustments = stack.GetComponent<ColorAdjustments>();
@@ -192,7 +192,7 @@ namespace UnityEngine.Rendering.Universal.Internal
         // Precomputed shader ids to same some CPU cycles (mostly affects mobile)
         static class ShaderConstants
         {
-            // shaderÄÚÖÃÊôĞÔ
+            // shaderå†…ç½®å±æ€§
             public static readonly int _Lut_Params        = Shader.PropertyToID("_Lut_Params");
             public static readonly int _ColorBalance      = Shader.PropertyToID("_ColorBalance");
             public static readonly int _ColorFilter       = Shader.PropertyToID("_ColorFilter");

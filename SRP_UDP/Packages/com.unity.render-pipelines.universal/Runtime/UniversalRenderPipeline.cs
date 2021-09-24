@@ -449,7 +449,8 @@ namespace UnityEngine.Rendering.Universal
         {
             using var profScope = new ProfilingScope(null, ProfilingSampler.Get(URPProfileId.RenderCameraStack));
             
-            //读取UniversalAdditionalCameraData数据 可以理解为UniversalAdditionalCameraData其实就是camera的一个分身数据代表
+            //读取UniversalAdditionalCameraData数据 可以理解为UniversalAdditionalCameraData其实就是camera的一个分身数据代表,
+            //有camera的数据也有自己数据
             //UniversalAdditionalCameraDatas 组件上有一个相机的stack
             baseCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseCameraAdditionalData);
             
