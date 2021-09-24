@@ -165,4 +165,164 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	}
 }
 
+2 渲染管线流程
+{
+	UniversalRenderPipeline.Render
+	{
+		 //是否使用线性空间
+        GraphicsSettings.lightsUseLinearIntensity = (QualitySettings.activeColorSpace == ColorSpace.Linear);
+
+        //是否开启SRP Batcher
+        GraphicsSettings.useScriptableRenderPipelineBatching = asset.useSRPBatcher;
+
+        //设置shader变量值
+        //主要设置了未开启环境反射时的默认颜色、阴影颜色
+        SetupPerFrameShaderConstants();
+
+        //通过相机深度进行排序
+        SortCameras(cameras);
+
+        遍历所有的相机，游戏窗口相机，场景窗口相机
+        {
+        	//每个相机渲染的总入口， 先渲染baseCamera，再渲染overLay相机
+        	RenderCameraStack(renderContext, camera);
+        	{
+        		//读取UniversalAdditionalCameraData数据 可以理解为UniversalAdditionalCameraData其实就是camera的一个分身数据代表
+	            //UniversalAdditionalCameraDatas 组件上有一个相机的stack
+	            baseCamera.TryGetComponent<UniversalAdditionalCameraData>(out var baseCameraAdditionalData);
+
+	            //确定最后一个激活的摄像机，来把最后的渲染数据解析到屏幕上（其实就是用最后一个激活相机渲染到屏幕）
+
+	            //对volume系统的支持，核心是调用VolumeManager的Update方法
+	            UpdateVolumeFramework(baseCamera, baseCameraAdditionalData);
+
+	            //给相机初始化数据CameraData，使用baseCameraAdditionalData填充CameraData结构体，这里传入的是baseCamera
+		        //isStackedRendering标识stack里有相机需要渲染
+	            /*
+	             *    //cameraData初始化了一些基本数据： InitializeStackedCameraData
+	             *         targetTexture，cameraType，volumeLayerMask，抗锯齿，HDR，屏幕大小数据，renderScale，RT描述器对象
+	                 
+	                 //cameraData初始化了一些额外数据：InitializeAdditionalCameraData
+	                        camera对象，renderType，是否清除深度，是否开启后效（后面还有判断），最大阴影距离，是否需要深度贴图，是否需要颜色贴图，渲染器对象，
+	                        是否需要最后绘制到屏幕上，矩阵信息
+	             */
+	            InitializeCameraData(baseCamera, baseCameraAdditionalData, !isStackedRendering, out var baseCameraData);
+
+	            //每个相机真正的渲染
+                //anyPostProcessingEnabled 只要有一个相机开启了后效这个值就为true
+	            RenderSingleCamera(context, baseCameraData, anyPostProcessingEnabled);
+	            {
+	            	//调用裁剪接口 CPU层先裁剪一遍 避免多余的点进行空间位置转换
+	            	//返回失败会直接退出，成功的话会调用context.Cull(ref cullingParameters)进行真正裁剪
+		            if (!TryGetCullingParameters(cameraData, out var cullingParameters))
+		                return;
+			        }
+
+			        //重置RT附件，颜色RT，深度RT，
+                	//设置颜色缓冲区目标和深度缓冲区目标为屏幕
+                	renderer.Clear(cameraData.renderType);
+
+                	//override 方法 设置裁剪参数 每个Render可以自己实现, 一般是调用forwardRender的SetupCullingParameters方法
+                    renderer.SetupCullingParameters(ref cullingParameters, ref cameraData);
+
+                    //将commanderbuffer中所有的命令都发给context，其实是一个复制的过程
+                    context.ExecuteCommandBuffer(cmd); // Send all the commands enqueued so far in the CommandBuffer cmd, to the ScriptableRenderContext context
+                    //发送完清除，可复用对象
+                	cmd.Clear();
+
+                	//得到裁剪结果
+                	var cullResults = context.Cull(ref cullingParameters);
+
+                	//填充RenderingData结构体，这个结构体包含渲染相关的所有参数，裁剪信息，相机数据，光照阴影数据，后处理等很多
+                	InitializeRenderingData(asset, ref cameraData, ref cullResults, anyPostProcessingEnabled, out var renderingData);
+
+                	//抽象方法 每个Render自己实现 一般是调用forwardRender的Setup方法
+                    renderer.Setup(context, ref renderingData);
+
+                    // Timing scope inside 一般是调用forwardRender的Execute方法
+                	renderer.Execute(context, ref renderingData);
+
+                	//再次复制commandbuffer里的命令给context
+                	context.ExecuteCommandBuffer(cmd);
+
+                	//真正执行command的地方，把之前的设置统一执行一遍, 提交给GPU
+                	context.Submit(); // Actually execute the commands that we previously sent to the ScriptableRenderContext context
+        		}
+
+        		//遍历stack里所有的相机，开始渲染overlay相机
+        		{
+        			//Stack里的overlay相机开始渲染, 走一遍跟base相机一样的流程
+        			{
+        				//拿到每个overlay相机的UniversalAdditionalCameraData数据，其实就是对应camera的一个分身数据
+	        			currCamera.TryGetComponent<UniversalAdditionalCameraData>(out var currCameraData);
+
+	        			//copy 一份baseCamera数据
+	        			CameraData overlayCameraData = baseCameraData;
+
+	        			//判断是否是最后一个激活相机
+                        bool lastCamera = i == lastActiveOverlayCameraIndex;
+
+                        //调用overlay相机的VolumeManager的Update方法，后效方法
+	        			UpdateVolumeFramework(currCamera, currCameraData);
+	        			//仅仅只初始化了一些额外数据
+	        			InitializeAdditionalCameraData(currCamera, currCameraData, lastCamera, ref overlayCameraData);
+
+	        			//overlay相机 填充RenderingData结构体，这个结构体包含渲染相关的所有参数，裁剪信息，相机数据，光照阴影数据，后处理等很多
+	        			RenderSingleCamera(context, overlayCameraData, anyPostProcessingEnabled);()
+        			}
+        		}
+        		
+        		
+        }
+	}
+
+
+
+	总结下：
+		UniversalRenderPipeline.Render
+			==》 1 设置shader变量值 SetupPerFrameShaderConstants
+			==》 2 通过相机深度进行排序 SortCameras(cameras);
+			==》 3 遍历所有的相机，游戏窗口相机，场景窗口相机
+			{
+				3.1 游戏相机
+				{
+					3.1.1 RenderCameraStack(renderContext, camera);
+					{
+						==》 3.1.1.1 渲染base相机
+						{
+							a: UpdateVolumeFramework
+							b:InitializeCameraData （包含InitializeStackedCameraData和InitializeAdditionalCameraData）
+							c:*****RenderSingleCamera (这个方法很重要)
+							{
+								==》调用裁剪接口 CPU层先裁剪一遍 避免多余的点进行空间位置转换 TryGetCullingParameters
+								==》重置RT附件，颜色RT，深度RT，设置颜色缓冲区目标和深度缓冲区目标为屏幕 renderer.Clear(cameraData.renderType);
+								==》将commanderbuffer中所有的命令都发给context，其实是一个复制的过程 context.ExecuteCommandBuffer(cmd)
+								==》发送完清除，可复用对象 cmd.Clear();
+								==》进行裁剪，得到裁剪结果 var cullResults = context.Cull(ref cullingParameters);
+								==》****InitializeRenderingData 填充RenderingData结构体，这个结构体包含渲染相关的所有参数，裁剪信息，相机数据，光照阴影数据，后处理等很多
+								==》****对应Render的SetUp和Excute方法，这里可以自定义pass实现重载，默认是走forwardRender的方法
+								==》再次复制commandbuffer里的命令给context
+								==》提交命令给GPU，执行命令 context.Submit()
+							}
+
+						}
+						==》 3.1.1.2 渲染overlay相机
+						{
+							a: UpdateVolumeFramework
+							b: InitializeAdditionalCameraData
+							c: RenderSingleCamera
+							{
+								-- 跟base相机的一样
+							}
+						}
+					}
+				}
+
+				3.2 场景相机
+				{
+					3.2.1 UpdateVolumeFramework
+					3.2.2 RenderSingleCamera
+				}
+			}
+}
 

@@ -443,6 +443,8 @@ namespace UnityEngine.Rendering.Universal
 
             if (camera.targetTexture == null)
             {
+                //camera.targetTexture为空，使用相机数据创建一个新的RenderTextureDescriptor，一般走这
+                //获取屏幕大小后需要乘以缩放比例
                 desc = new RenderTextureDescriptor(camera.pixelWidth, camera.pixelHeight);
                 desc.width = (int)((float)desc.width * renderScale);
                 desc.height = (int)((float)desc.height * renderScale);
@@ -455,14 +457,15 @@ namespace UnityEngine.Rendering.Universal
                     hdrFormat = GraphicsFormat.R16G16B16A16_SFloat;
                 else
                     hdrFormat = SystemInfo.GetGraphicsFormat(DefaultFormat.HDR); // This might actually be a LDR format on old devices.
-
+                //HDR还是LDR
                 desc.graphicsFormat = isHdrEnabled ? hdrFormat : renderTextureFormatDefault;
-                desc.depthBufferBits = 32;
-                desc.msaaSamples = msaaSamples;
-                desc.sRGB = (QualitySettings.activeColorSpace == ColorSpace.Linear);
+                desc.depthBufferBits = 32; //4个通道 每个通道8位
+                desc.msaaSamples = msaaSamples; //MSAA的超采样数目
+                desc.sRGB = (QualitySettings.activeColorSpace == ColorSpace.Linear); //是否是线性空间
             }
             else
             {
+                //camera.targetTexture不为空，使用camera.targetTexture的descriptor
                 desc = camera.targetTexture.descriptor;
                 desc.width = camera.pixelWidth;
                 desc.height = camera.pixelHeight;

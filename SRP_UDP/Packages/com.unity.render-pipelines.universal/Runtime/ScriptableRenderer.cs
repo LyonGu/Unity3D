@@ -704,7 +704,8 @@ namespace UnityEngine.Rendering.Universal
 
         internal void Clear(CameraRenderType cameraType)
         {
-            //重置各种渲染对象以及执行状态
+            //重置RT附件，颜色RT，深度RT，
+            //设置颜色缓冲区目标和深度缓冲区目标为屏幕
             m_ActiveColorAttachments[0] = BuiltinRenderTextureType.CameraTarget;
             for (int i = 1; i < m_ActiveColorAttachments.Length; ++i)
                 m_ActiveColorAttachments[i] = 0;
