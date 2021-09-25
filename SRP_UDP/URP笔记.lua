@@ -227,7 +227,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 	//设置颜色缓冲区目标和深度缓冲区目标为屏幕
                 	renderer.Clear(cameraData.renderType);
 
-                	//override 方法 设置裁剪参数 每个Render可以自己实现, 一般是调用forwardRender的SetupCullingParameters方法
+                	//******override 方法 设置裁剪参数 每个Render可以自己实现, 一般是调用forwardRender的SetupCullingParameters方法
                     renderer.SetupCullingParameters(ref cullingParameters, ref cameraData);
 
                     //将commanderbuffer中所有的命令都发给context，其实是一个复制的过程
@@ -241,10 +241,10 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 	//填充RenderingData结构体，这个结构体包含渲染相关的所有参数，裁剪信息，相机数据，光照阴影数据，后处理等很多
                 	InitializeRenderingData(asset, ref cameraData, ref cullResults, anyPostProcessingEnabled, out var renderingData);
 
-                	//抽象方法 每个Render自己实现 一般是调用forwardRender的Setup方法
+                	//******override 方法抽象方法 每个Render自己实现 一般是调用forwardRender的Setup方法
                     renderer.Setup(context, ref renderingData);
 
-                    // Timing scope inside 一般是调用forwardRender的Execute方法
+                    // ******override 方法Timing scope inside 一般是调用forwardRender的Execute方法
                 	renderer.Execute(context, ref renderingData);
 
                 	//再次复制commandbuffer里的命令给context
@@ -352,7 +352,9 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		RenderTargetIdentifier[] m_ColorAttachments = new RenderTargetIdentifier[]{BuiltinRenderTextureType.CameraTarget}; 
 		RenderTargetIdentifier m_DepthAttachment = BuiltinRenderTextureType.CameraTarget; 
 
-		真正设置渲染目标，是通过CommandBuffer的SetRenderTarget方法，URP在CoreUtils类封装了一个静态函数SetRenderTarget。ScriptableRenderer类在ExecuteRenderPass方法中，先调用pass的Config函数，然后取pass的color和depth数据，设置为真正的渲染目标。
+		真正设置渲染目标，是通过CommandBuffer的SetRenderTarget方法，
+		URP在CoreUtils类封装了一个静态函数SetRenderTarget。
+		ScriptableRenderer类在ExecuteRenderPass方法中，先调用pass的Config函数，然后取pass的color和depth数据，设置为真正的渲染目标。
 	}
 
 	构造方法 ForwardRenderer
@@ -449,6 +451,11 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 		10 根据逻辑判断是否把对应的pass加入队列，并且调用pass的SetUp方法
 		11 判断是否要最后执行一次 final blit，满足条件之一即可
+	}
+
+	ForwardRenderer.Excute(UniversalRenderPipeline.RenderSingleCamera 会调用)
+	{
+		
 	}
 }
 
