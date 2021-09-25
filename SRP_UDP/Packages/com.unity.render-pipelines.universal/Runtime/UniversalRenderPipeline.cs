@@ -420,7 +420,7 @@ namespace UnityEngine.Rendering.Universal
                     renderer.Setup(context, ref renderingData);
                 }
 
-                // Timing scope inside 一般是调用forwardRender的Execute方法
+                // Timing scope inside 这里是直接调用基类ScriptableRenderer的Execute方法，一般都不重载
                 renderer.Execute(context, ref renderingData);
 
             } // When ProfilingSample goes out of scope, an "EndSample" command is enqueued into CommandBuffer cmd

@@ -484,10 +484,14 @@ namespace UnityEngine.Rendering.Universal
         public void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             m_IsPipelineExecuting = true;
+            
+            //摄像机数据
             ref CameraData cameraData = ref renderingData.cameraData;
+            
+            //摄像机对象
             Camera camera = cameraData.camera;
 
-            CommandBuffer cmd = CommandBufferPool.Get();
+            CommandBuffer cmd = CommandBufferPool.Get(); //获取一个commandbuffer
             using (new ProfilingScope(cmd, profilingExecute))
             {
                 //渲染开始 调用每个激活pass的OnCameraSetup方法
@@ -1056,13 +1060,20 @@ namespace UnityEngine.Rendering.Universal
             CommandBuffer cmd = CommandBufferPool.Get();
             using (new ProfilingScope(cmd, Profiling.internalStartRendering))
             {
+                /*
+                 * m_ActiveRenderPassQueue里的pass一般是ForwardRender的SetUp里设置的 + 自定义的Feature
+                 *     DrawSkyboxPass, MainLightShadowCasterPass, AdditionalLightsShadowCasterPass, InvokeOnRenderObjectCallbackPass
+                 *     DepthOnlyPass, CopyDepthPass,CopyColorPass,DrawObjectsPass,PostProcessPass,ColorGradingLutPass,FinalBlitPass
+                 */
                 for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
                 {
-                    //每个pass 单独实现
-                    m_ActiveRenderPassQueue[i].OnCameraSetup(cmd, ref renderingData);
+                    //每个pass如果重载就调用基类ScriptableRenderPass的OnCameraSetup方法
+                    // DepthOnlyPass, CopyDepthPass, CopyColorPass, PostProcessPass 这几种pass重载了 大致功能都是==>配置RT 设置渲染目标 清除帧缓冲一些数据（深度或者颜色）
+                    var pass = m_ActiveRenderPassQueue[i];
+                    pass.OnCameraSetup(cmd, ref renderingData);
                 }
             }
-
+            //把coommandbuff里的执行命令复制到connext里
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
