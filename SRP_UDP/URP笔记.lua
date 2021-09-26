@@ -188,9 +188,9 @@
 			实现方法?????
 			{
 				FrowardRender.SetUp：设置源rt关联到shader的_CameraDepthAttachment。目标rt关联到_CameraDepthTexture。
-				CopyDepthPass.OnCameraSetup：设置目标rt格式，colorFormat为Depth，32位，msaa为1不开启，filterMode为Point ???? 没找到这个方法
+				CopyDepthPass.OnCameraSetup：设置目标rt格式，colorFormat为Depth，32位，msaa为1不开启，filterMode为Point 
 
-				Execute， ？？？？？？
+				CopyDepthPass.Execute
 				{
 					先将源rt的内容赋值到shader定义的_CameraDepthAttachment贴图中
 					然后调用基类的Blit方法，先设置管线的color为depth，也就是将depth渲染到color buffer中，然后执行Blit指令，用CopyDepth shader将buffer渲染到指定贴图上，后续shader直接采样这张贴图。
@@ -255,8 +255,10 @@ UniversalRenderPipelineAsset.DestroyRenderers
 		m_ColorAttachments ==》 一个数组，第一个元素为 BuiltinRenderTextureType.CameraTarget 
 
 		colorAttachment = m_ColorAttachments[0]
-		m_DepthAttachment = BuiltinRenderTextureType.CameraTarget
+		m_DepthAttachment = BuiltinRenderTextureType.CameraTarget 
 		默认都是帧缓冲
+
+		colorAttachment和m_DepthAttachment类型为 RenderTargetIdentifier
 	}
 
 
@@ -1078,7 +1080,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 	}
 	——————————————————————————————————————————————————————————
-	8 CopyColorPass
+	8 CopyColorPass：渲染结果绘制到 颜色缓冲数据绘制到 “m_OpaqueColor” RT，深度缓冲数据会绘制到帧缓冲
 	{
 		绘制颜色RT  _CameraOpaqueTexture，只要不透明颜色数据
 
@@ -1134,7 +1136,90 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	            RenderBufferStoreAction colorStoreAction = RenderBufferStoreAction.Store,
 	            RenderBufferLoadAction depthLoadAction = RenderBufferLoadAction.Load,
 	            RenderBufferStoreAction depthStoreAction = RenderBufferStoreAction.Store
+
+
+	             //设置shader全局属性_SourceTex
+            	cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, source);
+
+	            //设置渲染目标，这里参数使用的都是默认值 这里destination就是opaqueColorRT
+                cmd.SetRenderTarget(destination, colorLoadAction, colorStoreAction, depthLoadAction, depthStoreAction);
+
+                /????TODO
+                cmd.Blit(source, BuiltinRenderTextureType.CurrentActive, material, passIndex);
             }
+		}
+
+		OnCameraCleanup
+		{
+			//destination如果不是默认帧缓冲需要执行清理操作
+            if (destination != RenderTargetHandle.CameraTarget)
+            {
+                //释放RT
+                cmd.ReleaseTemporaryRT(destination.id);
+                //重置destination为帧缓冲
+                destination = RenderTargetHandle.CameraTarget;
+            }
+		}
+	}
+	——————————————————————————————————————————————————————————
+	9 CopyDepthPass: 渲染结果 颜色缓冲数据绘制到_CameraDepthTexture RT(存的其实是深度数据) ，深度缓冲数据会绘制到帧缓冲
+	{
+		Setup
+		{
+			//设置源目标为 m_ActiveCameraColorAttachment所对应的目标
+            //m_ActiveCameraColorAttachment为ScriptableRenderer的变量，可能为_CameraColorTexture也可能为默认帧缓冲
+            this.source = source;
+            
+            //destination为_CameraDepthTexture RT
+            this.destination = destination;
+            this.AllocateRT = AllocateRT && !destination.HasInternalRenderTargetId();
+		}
+
+		OnCameraSetup
+		{
+			//设置RT的格式：colorFormat为Depth，32位，msaa为1不开启，filterMode为Point
+            var descriptor = renderingData.cameraData.cameraTargetDescriptor;
+            descriptor.colorFormat = RenderTextureFormat.Depth; //先设置管线的color为depth，也就是将depth渲染到color buffer中
+            descriptor.depthBufferBits = 32; //TODO: do we really need this. double check;
+            descriptor.msaaSamples = 1;
+            if (this.AllocateRT)
+                cmd.GetTemporaryRT(destination.id, descriptor, FilterMode.Point);
+
+             //设置颜色缓冲目标为_CameraDepthTexture RT， 设置了pass的overrideCameraTarget为true，会使用pass的渲染目标
+            ConfigureTarget(new RenderTargetIdentifier(destination.Identifier(), 0, CubemapFace.Unknown, -1));
+            
+            //这里设置m_ClearFlag为None，，这样什么都不会清除
+            ConfigureClear(ClearFlag.None, Color.black);
+		}
+
+		Execute
+		{
+			//复制一份rt描述数据
+            RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
+            int cameraSamples = descriptor.msaaSamples;
+
+            CameraData cameraData = renderingData.cameraData;
+            //判断是否开启MSAA，设置shader的变体宏开关
+
+            //设置shader的全局属性 _CameraDepthAttachment
+            cmd.SetGlobalTexture("_CameraDepthAttachment", source.Identifier());
+
+            //shader全局属性 _ScaleBiasRt
+            cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBiasRt);
+            //commanderbuffer绘制命令，
+            cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CopyDepthMaterial);
+
+            //复制命令到context里
+            context.ExecuteCommandBuffer(cmd);
+		}
+
+		OnCameraCleanup
+		{
+			//释放RT
+            if (this.AllocateRT)
+                cmd.ReleaseTemporaryRT(destination.id);
+            //重置为帧缓冲
+            destination = RenderTargetHandle.CameraTarget;
 		}
 	}
 

@@ -956,6 +956,7 @@ namespace UnityEngine.Rendering.Universal
                 }
                 else
                 {
+                    //只有renderPass.clearFlag为Color或者All时才为true 是否清颜色缓冲
                     finalClearFlag |= (renderPass.clearFlag & ClearFlag.Color);
                     finalClearColor = renderPass.clearColor;
                 }
@@ -970,11 +971,15 @@ namespace UnityEngine.Rendering.Universal
                     // finalClearFlag |= (cameraClearFlag & ClearFlag.Color);  // <- m_CameraDepthTarget is never a color-surface, so no need to add this here.
                 }
                 else
+                    //只有renderPass.clearFlag为Depth或者All时才为true 是否清深度缓冲
                     finalClearFlag |= (renderPass.clearFlag & ClearFlag.Depth);
 
                 // Only setup render target if current render pass attachments are different from the active ones
                 if (passColorAttachment != m_ActiveColorAttachments[0] || passDepthAttachment != m_ActiveDepthAttachment || finalClearFlag != ClearFlag.None)
                 {
+                    //passColorAttachment跟m_ActiveColorAttachments[0],m_ActiveColorAttachments[0]默认为帧缓冲
+                    //passDepthAttachment != m_ActiveDepthAttachment，m_ActiveDepthAttachment为默认为帧缓冲
+                    //finalClearFlag != ClearFlag.None
                     SetRenderTarget(cmd, passColorAttachment, passDepthAttachment, finalClearFlag, finalClearColor);
 
 #if ENABLE_VR && ENABLE_XR_MODULE

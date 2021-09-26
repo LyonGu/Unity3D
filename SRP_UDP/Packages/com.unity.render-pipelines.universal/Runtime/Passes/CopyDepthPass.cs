@@ -32,7 +32,11 @@ namespace UnityEngine.Rendering.Universal.Internal
         /// <param name="destination">Destination Render Targt</param>
         public void Setup(RenderTargetHandle source, RenderTargetHandle destination)
         {
+            //设置源目标为 m_ActiveCameraColorAttachment所对应的目标
+            //m_ActiveCameraColorAttachment为ScriptableRenderer的变量，可能为_CameraColorTexture也可能为默认帧缓冲
             this.source = source;
+            
+            //destination为_CameraDepthTexture RT
             this.destination = destination;
             this.AllocateRT = AllocateRT && !destination.HasInternalRenderTargetId();
         }
@@ -41,15 +45,17 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             //设置RT的格式：colorFormat为Depth，32位，msaa为1不开启，filterMode为Point
             var descriptor = renderingData.cameraData.cameraTargetDescriptor;
-            descriptor.colorFormat = RenderTextureFormat.Depth;
+            descriptor.colorFormat = RenderTextureFormat.Depth; //先设置管线的color为depth，也就是将depth渲染到color buffer中
             descriptor.depthBufferBits = 32; //TODO: do we really need this. double check;
             descriptor.msaaSamples = 1;
             if (this.AllocateRT)
                 cmd.GetTemporaryRT(destination.id, descriptor, FilterMode.Point);
 
             // On Metal iOS, prevent camera attachments to be bound and cleared during this pass.
-            //这里为什么是设置颜色缓冲目标
+            //设置颜色缓冲目标为_CameraDepthTexture RT
             ConfigureTarget(new RenderTargetIdentifier(destination.Identifier(), 0, CubemapFace.Unknown, -1));
+            
+            //这里设置m_ClearFlag为None，这样什么都不会清除
             ConfigureClear(ClearFlag.None, Color.black);
         }
 
@@ -64,11 +70,12 @@ namespace UnityEngine.Rendering.Universal.Internal
             CommandBuffer cmd = CommandBufferPool.Get();
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.CopyDepth)))
             {
+                //复制一份rt描述数据
                 RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
                 int cameraSamples = descriptor.msaaSamples;
 
                 CameraData cameraData = renderingData.cameraData;
-                //判断是否开启MSAA
+                //判断是否开启MSAA，设置shader的变体宏开关
                 switch (cameraSamples)
                 {
                     case 8:
@@ -96,7 +103,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                         cmd.DisableShaderKeyword(ShaderKeywordStrings.DepthMsaa8);
                         break;
                 }
-
+                //设置shader的全局属性 _CameraDepthAttachment
                 cmd.SetGlobalTexture("_CameraDepthAttachment", source.Identifier());
 
 
@@ -117,7 +124,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                         ? new Vector4(flipSign, 1.0f, -1.0f, 1.0f)
                         : new Vector4(flipSign, 0.0f, 1.0f, 1.0f);
                     cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBiasRt);
-                    //这个方法可以绘制一个三角形来替代一个矩形的效果
+                    
                     cmd.DrawProcedural(Matrix4x4.identity, m_CopyDepthMaterial, 0, MeshTopology.Quads, 4);
                 }
                 else
@@ -135,12 +142,14 @@ namespace UnityEngine.Rendering.Universal.Internal
                     Vector4 scaleBiasRt = (flipSign < 0.0f)
                         ? new Vector4(flipSign, 1.0f, -1.0f, 1.0f)
                         : new Vector4(flipSign, 0.0f, 1.0f, 1.0f);
+                    
+                    //shader全局属性 _ScaleBiasRt
                     cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBiasRt);
-
+                    //commanderbuffer绘制命令，
                     cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CopyDepthMaterial);
                 }
             }
-
+            //复制命令到context里
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
@@ -150,9 +159,10 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             if (cmd == null)
                 throw new ArgumentNullException("cmd");
-
+            //释放RT
             if (this.AllocateRT)
                 cmd.ReleaseTemporaryRT(destination.id);
+            //重置为帧缓冲
             destination = RenderTargetHandle.CameraTarget;
         }
     }
