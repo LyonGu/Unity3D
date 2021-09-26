@@ -54,6 +54,8 @@ namespace UnityEngine.Rendering.Universal.Internal
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
             //创建一个rt记录深度值，“_CameraDepthTexture”
+            //depthAttachmentHandle.id 是属性值通过Shader.PropertyToID(“_CameraDepthTexture”) 转的
+            //可以理解为会创建一张名为"_CameraDepthTexture"的RT
             cmd.GetTemporaryRT(depthAttachmentHandle.id, descriptor, FilterMode.Point);
             
             //设置颜色缓冲渲染目标，绘制到_CameraDepthTexture RT上
@@ -100,7 +102,10 @@ namespace UnityEngine.Rendering.Universal.Internal
             //渲染目标如果不是默认帧缓冲需要执行清理操作
             if (depthAttachmentHandle != RenderTargetHandle.CameraTarget)
             {
+                //释放深度图RT
                 cmd.ReleaseTemporaryRT(depthAttachmentHandle.id);
+                
+                //重置深度缓冲的渲染目标为帧缓冲
                 depthAttachmentHandle = RenderTargetHandle.CameraTarget;
             }
         }
