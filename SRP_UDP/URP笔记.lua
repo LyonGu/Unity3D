@@ -504,7 +504,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 			ExecuteRenderPass
 			{
-				//********先调用pass的Configure方法
+				//********先调用pass的Configure方法 大部分内置的pass都没有实现，自定义的pass可以自己实现
 	            renderPass.Configure(cmd, cameraData.cameraTargetDescriptor);
 
                 //设置pass的渲染目标对象，Clore和Depth，摄像机真正的渲染目标对象
@@ -513,7 +513,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 //又执行了一次拷贝渲染命令到context里
                 context.ExecuteCommandBuffer(cmd);
                 
-                //*******再调用pass的Execute方法
+                //*******再调用pass的Execute方法，基本都重载了
             	renderPass.Execute(context, ref renderingData);
 			}
 
