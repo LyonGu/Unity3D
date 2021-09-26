@@ -188,7 +188,7 @@ namespace UnityEngine.Rendering.Universal
                 RenderPassEvent.BeforeRenderingOpaques, RenderQueueRange.opaque, data.opaqueLayerMask,
                 m_DefaultStencilState, stencilData.stencilReference);
             
-            //CopyDepthPass 400
+            //CopyDepthPass 400 也有能是300
             m_CopyDepthPass = new CopyDepthPass(RenderPassEvent.AfterRenderingSkybox, m_CopyDepthMaterial);
             
             //天空盒绘制Pass 350
@@ -798,7 +798,7 @@ namespace UnityEngine.Rendering.Universal
             cullingParameters.shadowDistance = cameraData.maxShadowDistance;
         }
 
-        //清理操作
+        //清理操作：清理RT，重置渲染目标为帧缓冲
         /// <inheritdoc />
         public override void FinishRendering(CommandBuffer cmd)
         {

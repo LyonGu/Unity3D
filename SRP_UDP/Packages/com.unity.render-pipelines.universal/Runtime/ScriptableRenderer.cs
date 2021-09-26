@@ -510,32 +510,50 @@ namespace UnityEngine.Rendering.Universal
                 float smoothDeltaTime = Time.smoothDeltaTime;
 
                 // Initialize Camera Render State
-                ClearRenderingState(cmd); //禁用一些shader里的宏设置
-                SetPerCameraShaderVariables(cmd, ref cameraData);  //设置一些摄像机相关shader的参数
-                SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime); //设置shader里的时间参数
-                context.ExecuteCommandBuffer(cmd);  //执行commandbuff
+                //重置一些shader里的宏设置
+                ClearRenderingState(cmd); 
+                
+                //设置一些摄像机相关shader的参数
+                // 摄像机的世界坐标 "_WorldSpaceCameraPos", 屏幕参数 “_ScreenParams”
+                SetPerCameraShaderVariables(cmd, ref cameraData);  
+                
+                //设置shader里的时间参数
+                // _Time  _SinTime  _CosTime  unity_DeltaTime  _TimeParameters
+                SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime); 
+                context.ExecuteCommandBuffer(cmd);  //复制命令到context里
                 cmd.Clear(); //cmd清理，可以重复使用同一个实例对象
                 using (new ProfilingScope(cmd, Profiling.sortRenderPasses))
                 {
                     // Sort the render pass queue   renderpass的排序，重载了< 操作符,根据pass的渲染事件 ，越小的排在越前
                     SortStable(m_ActiveRenderPassQueue);
                 }
-
+                
+                //RenderBlocks是封装好的数据结构，主要是让pass分类，存储在m_BlockRanges字段里，m_BlockRanges[0]为0,从1开始
+                /*
+               * 将pass按event顺序，分成四块
+                      BeforeRendering：用于处理阴影等，不是实际的渲染，只作为功能使用 事件顺序小于BeforeRenderingPrepasses（150）
+                      MainRenderingOpaque：渲染不透明物体，事件顺序小于AfterRenderingOpaques (300) 大于等于 BeforeRenderingPrepasses (150)
+                      MainRenderingTransparent：透明物体  事件顺序小于AfterRenderingPostProcessing（600）大于等于 AfterRenderingOpaques (300)
+                      AfterRendering：在后处理之后，事件顺序小于(RenderPassEvent) Int32.MaxValue，大于等于AfterRenderingPostProcessing（600）
+               */
                 using var renderBlocks = new RenderBlocks(m_ActiveRenderPassQueue);
 
                 using (new ProfilingScope(cmd, Profiling.setupLights))
                 {
-                    //Render自己实现 设置光照数据
+                    //Render自己实现 设置光照需要的一系列参数 一般调用ForwardRender的SetupLights方法
                     SetupLights(context, ref renderingData);
                 }
-
-                //BeforeRendering事件
+                
+                //pass的Configure的方法一般为配置RT和设置渲染目标
+                //pass的Execute的应该是给commanderbuffer设置渲染命令？？ TODO 后面看下
+                //渲染之前的pass的一些配置，调用pass的Configure方法 再调用pass的Execute方法
                 using (new ProfilingScope(cmd, Profiling.RenderBlock.beforeRendering))
                 {
+                    //渲染之前的处理：里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU
                     // Before Render Block. This render blocks always execute in mono rendering.
                     // Camera is not setup. Lights are not setup.
                     // Used to render input textures like shadowmaps.
-                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+                    //这里调用的是时间顺序小于150的, 主要是阴影相关的一些pass，MainLightShadowCasterPass和AdditionalLightsShadowCasterPass
                     ExecuteBlock(RenderPassBlock.BeforeRendering, in renderBlocks, context, ref renderingData);
                 }
 
@@ -549,7 +567,7 @@ namespace UnityEngine.Rendering.Universal
                     // is because this need to be called for each eye in multi pass VR.
                     // The side effect is that this will override some shader properties we already setup and we will have to
                     // reset them.
-                    //设置摄像机数据
+                    //设置摄像机数据，设置矩阵以及其他一些属性 unity_MatrixVP 视图投影矩阵
                     context.SetupCameraProperties(camera);
                     SetCameraMatrices(cmd, ref cameraData, true);
 
@@ -571,16 +589,24 @@ namespace UnityEngine.Rendering.Universal
                 // Opaque blocks... 主要的渲染基本都在这里
                 if (renderBlocks.GetLength(RenderPassBlock.MainRenderingOpaque) > 0)
                 {
+                    //渲染不透明物体:里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
                     using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.mainRenderingOpaque);
-                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+                    
+                    //这里调用的是时间顺序小于300大于等于150的,
+                    //相关的一些pass: DepthOnlyPass,DepthNormalOnlyPass,ColorGradingLutPass，DrawObjectsPass(不透明)
                     ExecuteBlock(RenderPassBlock.MainRenderingOpaque, in renderBlocks, context, ref renderingData);
                 }
 
                 // Transparent blocks...  主要的渲染基本都在这里
                 if (renderBlocks.GetLength(RenderPassBlock.MainRenderingTransparent) > 0)
                 {
-                    // 里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
-                    using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.mainRenderingTransparent);
+                    //渲染透明物体里面,对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+                    using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.mainRenderingTransparent); 
+                    //这里调用的是时间顺序小于600大于等于300的,
+                    //相关的一些pass:
+                    //DrawSkyboxPass, CopyDepthPass, CopyColorPass, TransparentSettingsPass, DrawObjectsPass(透明), InvokeOnRenderObjectCallbackPass
+                    //PostProcessPass(后效pass，这个变量m_PostProcessPass)
+             
                     ExecuteBlock(RenderPassBlock.MainRenderingTransparent, in renderBlocks, context, ref renderingData);
                 }
 
@@ -592,6 +618,9 @@ namespace UnityEngine.Rendering.Universal
                 if (renderBlocks.GetLength(RenderPassBlock.AfterRendering) > 0)
                 {
                     using var profScope = new ProfilingScope(cmd, Profiling.RenderBlock.afterRendering);
+                    //渲染完成之后的处理,对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+                    //这里调用的是时间顺序大于等于600的,
+                    //相关的一些pass: PostProcessPass(后效pass，这个变量m_FinalPostProcessPass)，CapturePass， FinalBlitPass
                     ExecuteBlock(RenderPassBlock.AfterRendering, in renderBlocks, context, ref renderingData);
                 }
 
@@ -601,9 +630,13 @@ namespace UnityEngine.Rendering.Universal
                 DrawGizmos(context, camera, GizmoSubset.PostImageEffects);
 
                 //cleanup了一下所有的pass，释放了RT，重置渲染对象，清空pass队列
+                //执行每个pass的FrameCleanup方法
+                //最后一个输出到帧缓冲的相机调用：
+                //    pass的FrameCleanup方法和OnFinishCameraStackRendering方法、
+                //    对应Render的FinishRendering方法，一般调用ForwarRender的FinishRendering
                 InternalFinishRendering(context, cameraData.resolveFinalTarget);
             }
-
+            //把commanderbuffer里的命令复制到context里，这个方法仍然没有把渲染命令提交给GPU
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
@@ -754,7 +787,7 @@ namespace UnityEngine.Rendering.Universal
                 //先调用pass的Configure方法
                 renderPass.Configure(cmd, cameraData.cameraTargetDescriptor);
 
-                //设置pass的渲染目标对象，Clore和Depth
+                //设置pass的渲染目标对象，Clore和Depth，摄像机真正的渲染目标对象
                 SetRenderPassAttachments(cmd, renderPass, ref cameraData);
             }
 
@@ -1067,7 +1100,7 @@ namespace UnityEngine.Rendering.Universal
                  */
                 for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
                 {
-                    //每个pass如果重载就调用基类ScriptableRenderPass的OnCameraSetup方法
+                    //每个pass如果没有重载就调用基类ScriptableRenderPass的OnCameraSetup方法，是个空方法
                     // DepthOnlyPass, CopyDepthPass, CopyColorPass, PostProcessPass 这几种pass重载了 大致功能都是==>配置RT 设置渲染目标 清除帧缓冲一些数据（深度或者颜色）
                     var pass = m_ActiveRenderPassQueue[i];
                     pass.OnCameraSetup(cmd, ref renderingData);
@@ -1093,7 +1126,8 @@ namespace UnityEngine.Rendering.Universal
                 {
                     for (int i = 0; i < m_ActiveRenderPassQueue.Count; ++i)
                         m_ActiveRenderPassQueue[i].OnFinishCameraStackRendering(cmd); //执行pass的OnFinishCameraStackRendering方法
-
+                    
+                    //调用Render的FinishRendering方法，重载方法，一般调用ForwarRender的FinishRendering
                     FinishRendering(cmd);
 
                     // We finished camera stacking and released all intermediate pipeline textures.

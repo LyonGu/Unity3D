@@ -305,7 +305,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 								==》发送完清除，可复用对象 cmd.Clear();
 								==》进行裁剪，得到裁剪结果 var cullResults = context.Cull(ref cullingParameters);
 								==》****InitializeRenderingData 填充RenderingData结构体，这个结构体包含渲染相关的所有参数，裁剪信息，相机数据，光照阴影数据，后处理等很多
-								==》****对应Render的SetUp和Excute方法，这里可以自定义pass实现重载，默认是走forwardRender的方法
+								==》****对应Render的SetUp和Excute方法，默认是走forwardRender的方法
 								==》再次复制commandbuffer里的命令给context
 								==》提交命令给GPU，执行命令 context.Submit()
 							}
@@ -449,13 +449,122 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			baseCamera==》如果有需要颜色rt和深度rt，渲染目标就设置为rt纹理，不需要的话就设置为默认的帧缓冲
 			overlay相机==》渲染目标设置为默认的帧缓冲
 		}
-		10 根据逻辑判断是否把对应的pass加入队列，并且调用pass的SetUp方法
+		10 根据逻辑判断是否把对应的pass加入队列，并且调用pass的SetUp方法 ***
 		11 判断是否要最后执行一次 final blit，满足条件之一即可
 	}
 
-	ForwardRenderer.Excute(UniversalRenderPipeline.RenderSingleCamera 会调用)
+	//各个render都没有实现Execute方法，调用基类的ScriptableRenderer.Execute
+	ScriptableRenderer.Execute(UniversalRenderPipeline.RenderSingleCamera 会调用)
 	{
-		
+		1 渲染开始 调用每个激活pass的OnCameraSetup方法
+		{
+			//每个pass如果没有重载就调用基类ScriptableRenderPass的OnCameraSetup方法，是个空方法
+            //DepthOnlyPass, CopyDepthPass, CopyColorPass, PostProcessPass 这几种pass重载了 大致功能都是==>配置RT 设置渲染目标 清除帧缓冲一些数据（深度或者颜色）
+
+            //context.ExecuteCommandBuffer(cmd); 把coommandbuff里的执行命令复制到connext里
+		}
+		2 提前设置一些shader变量，把命令从commandbuffer复制到context里，并且清除commandbuffer
+		{
+			//重置一些shader里的宏设置
+
+			//设置一些摄像机相关shader的参数
+            // 摄像机的世界坐标 "_WorldSpaceCameraPos", 屏幕参数 “_ScreenParams”
+
+			//设置shader里的时间参数
+            // _Time  _SinTime  _CosTime  unity_DeltaTime  _TimeParameters
+
+            context.ExecuteCommandBuffer(cmd);  //复制命令到context里
+            cmd.Clear(); //cmd清理，可以重复使用同一个实例对象
+		}
+
+		3 renderpass的排序，重载了< 操作符,根据pass的渲染事件 ，越小的排在越前
+
+		4 渲染pass分类
+		{
+			 //RenderBlocks是封装好的数据结构，主要是让pass分类，存储在m_BlockRanges字段里，m_BlockRanges[0]为0,从1开始
+			 * 将pass按event顺序，分成四块
+                      BeforeRendering：用于处理阴影等，不是实际的渲染，只作为功能使用 事件顺序小于BeforeRenderingPrepasses（150）
+                      MainRenderingOpaque：渲染不透明物体，事件顺序小于AfterRenderingOpaques (300) 大于等于 BeforeRenderingPrepasses (150)
+                      MainRenderingTransparent：透明物体  事件顺序小于AfterRenderingPostProcessing（600）大于等于 AfterRenderingOpaques (300)
+                      AfterRendering：在后处理之后，事件顺序小于(RenderPassEvent) Int32.MaxValue，大于等于AfterRenderingPostProcessing（600）
+               */
+		}
+		5 Render自己实现 设置光照需要的一系列参数 ，调用render的SetupLights方法
+
+
+		接下来*****按照分类分别执行ExecuteBlock方法和ExecuteRenderPass方法，调用不同的pass的Configure方法和Execute方法，注意这里暂时不把渲染命令提交给GPU
+
+		6 先执行渲染之前的处理，主要是阴影相关的pass，这里调用的是时间顺序小于150的, 主要是阴影相关的一些pass，MainLightShadowCasterPass和AdditionalLightsShadowCasterPass
+		{
+
+			ExecuteBlock
+			{
+				遍历m_ActiveRenderPassQueue，分别调用ExecuteRenderPass(context, renderPass, ref renderingData)
+			}
+
+			ExecuteRenderPass
+			{
+				//********先调用pass的Configure方法
+	            renderPass.Configure(cmd, cameraData.cameraTargetDescriptor);
+
+                //设置pass的渲染目标对象，Clore和Depth，摄像机真正的渲染目标对象
+                SetRenderPassAttachments(cmd, renderPass, ref cameraData);
+
+                //又执行了一次拷贝渲染命令到context里
+                context.ExecuteCommandBuffer(cmd);
+                
+                //*******再调用pass的Execute方法
+            	renderPass.Execute(context, ref renderingData);
+			}
+
+
+
+			//渲染之前的处理：这里调用的是时间顺序小于150的, 主要是阴影相关的一些pass，MainLightShadowCasterPass和AdditionalLightsShadowCasterPass
+
+		}
+
+		7 设置摄像机数据，设置矩阵以及其他一些属性 unity_MatrixVP 视图投影矩阵
+		{
+			context.SetupCameraProperties(camera);
+            SetCameraMatrices(cmd, ref cameraData, true);
+
+            SetShaderTimeValues(cmd, time, deltaTime, smoothDeltaTime);
+		}
+		8 渲染之前再次复制渲染命令到context里，复制完成后调用commanderbuffer的clear方法，重用commanderbuffer对象
+		{
+			context.ExecuteCommandBuffer(cmd); //继续执行cmd 
+            cmd.Clear();
+		}
+		9 渲染不透明物体:里面对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+		{
+			//这里调用的是时间顺序小于300大于等于150的,
+            //相关的一些pass: DepthOnlyPass,DepthNormalOnlyPass,ColorGradingLutPass，DrawObjectsPass(不透明)
+            ExecuteBlock(RenderPassBlock.MainRenderingOpaque, in renderBlocks, context, ref renderingData);
+		}
+		10 渲染透明物体里面,对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+		{
+			//这里调用的是时间顺序小于600大于等于300的,
+            //相关的一些pass:
+            //DrawSkyboxPass, CopyDepthPass, CopyColorPass, TransparentSettingsPass, DrawObjectsPass(透明), InvokeOnRenderObjectCallbackPass
+            //PostProcessPass(后效pass，这个变量m_PostProcessPass)
+		}
+
+		11 编辑器下生效 DrawGizmos
+		12 渲染完成之后的处理,对m_ActiveRenderPassQueue中的pass 进行调用，先调用pass的Configure方法 再调用pass的Execute方法  暂时不提交给GPU 
+		{
+			//这里调用的是时间顺序大于等于600的,
+            //相关的一些pass: PostProcessPass(后效pass，这个变量m_FinalPostProcessPass)，CapturePass， FinalBlitPass
+            ExecuteBlock(RenderPassBlock.AfterRendering, in renderBlocks, context, ref renderingData);
+		}
+		13 编辑器下生效DrawWireOverlay(context, camera); DrawGizmos(context, camera, GizmoSubset.PostImageEffects);
+		14 cleanup了一下所有的pass，释放了RT，重置渲染对象，清空pass队列 InternalFinishRendering
+		{
+			//执行每个pass的FrameCleanup方法
+            //最后一个输出到帧缓冲的相机调用：
+            //    pass的FrameCleanup方法和OnFinishCameraStackRendering方法、
+            //    对应Render的FinishRendering方法，一般调用ForwarRender的FinishRendering
+		}
+		15 再次复制渲染命令到context里，context.ExecuteCommandBuffer(cmd);
 	}
 }
 
