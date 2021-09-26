@@ -566,7 +566,8 @@ namespace UnityEngine.Rendering.Universal
             if (this.actualRenderingMode == RenderingMode.Deferred)
                 EnqueueDeferred(ref renderingData, requiresDepthPrepass, mainLightShadows, additionalLightShadows);
             else
-                EnqueuePass(m_RenderOpaqueForwardPass);// 不透明物体渲染队列
+                //不透明物体渲染队列，pass没有重置渲染目标，直接使用ScriptableRenderer的渲染目标变量作为最后输出
+                EnqueuePass(m_RenderOpaqueForwardPass);
 
             Skybox cameraSkybox;
             cameraData.camera.TryGetComponent<Skybox>(out cameraSkybox);

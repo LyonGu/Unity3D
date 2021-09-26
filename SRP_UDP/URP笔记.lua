@@ -247,6 +247,35 @@ UniversalRenderPipelineAsset.DestroyRenderers
 		}
 }
 
+*******最后pass的渲染目标
+{
+	ScriptableRenderer里有m_CameraColorTarget和m_CameraDepthTarget，默认都是帧缓冲BuiltinRenderTextureType.CameraTarget
+	ScriptableRenderPass每个pass里自己有
+	{
+		m_ColorAttachments ==》 一个数组，第一个元素为 BuiltinRenderTextureType.CameraTarget 
+
+		colorAttachment = m_ColorAttachments[0]
+		m_DepthAttachment = BuiltinRenderTextureType.CameraTarget
+		默认都是帧缓冲
+	}
+
+
+	ScriptableRenderer.SetRenderPassAttachments方法里会有判断
+	{
+		//默认是使用pass的colorAttachment和depthAttachment
+		RenderTargetIdentifier passColorAttachment = renderPass.colorAttachment;
+        RenderTargetIdentifier passDepthAttachment = renderPass.depthAttachment;
+
+		if（！renderPass.overrideCameraTarget）
+		{
+			//未重载，直接使用ScriptableRenderer的渲染目标变量作为最后输出
+			passColorAttachment = m_CameraColorTarget;
+            passDepthAttachment = m_CameraDepthTarget;
+		}
+	}
+	
+}
+
 ]==]
 
 --[==[
@@ -996,6 +1025,43 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		OnFinishCameraStackRendering
 		{
 			cmd.ReleaseTemporaryRT(m_InternalLut.id);
+		}
+	}
+	——————————————————————————————————————————————————————————
+	//不透明物体和透明物体都是用这个pass，
+	//默认有 SRPDefaultUnlit UniversalForward UniversalForwardOnly LightweightForward
+	6 DrawObjectsPass:  
+	{
+		pass没有重置渲染目标，直接使用ScriptableRenderer的渲染目标变量作为最后输出,
+		如果没有中间RT产生(颜色RT和深度RT)，输出到帧缓冲
+		如果有中间RT产生，颜色缓冲数据输出到_CameraColorTexture，深度缓冲数据输出到 _CameraDepthAttachment
+
+		Execute
+		{
+			 //设置shader属性_DrawObjectPassData，w分量标识为透明或者不透明
+			 cmd.SetGlobalVector(s_DrawObjectPassDataPropID, drawObjectPassData);
+
+			 //设置shader属性_ScaleBiasRt
+              cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBias);
+
+             //复制命令到context里
+            context.ExecuteCommandBuffer(cmd);
+            cmd.Clear(); //ExecuteCommandBuffer 执行后就把相关参数给设置好了，然后调用cmd.clear可以复用cmd对象
+
+            //排序设置是根据Opaque字段决定，DrawSettings通过CreateDrawingSettings方法生成
+            var sortFlags = (m_IsOpaque) ? renderingData.cameraData.defaultOpaqueSortFlags : SortingCriteria.CommonTransparent;
+            var drawSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, sortFlags);
+            var filterSettings = m_FilteringSettings;
+
+            //绘制几何体，如果overrideCameraTarget为false在，最后会使用ScriptableRenderer的渲染目标变量作为最后输出
+            //m_CameraColorTarget 和 m_CameraDepthTarget
+            context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filterSettings, ref m_RenderStateBlock);
+
+            // Render objects that did not match any shader pass with error shader
+            // fallback shader
+            RenderingUtils.RenderObjectsWithError(context, ref renderingData.cullResults, camera, filterSettings, SortingCriteria.None);
+
+            context.ExecuteCommandBuffer(cmd);
 		}
 	}
 }

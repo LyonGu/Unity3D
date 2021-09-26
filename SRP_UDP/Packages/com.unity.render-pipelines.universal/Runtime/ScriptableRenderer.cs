@@ -816,10 +816,11 @@ namespace UnityEngine.Rendering.Universal
             // We use a different code path for MRT since it calls a different version of API SetRenderTarget
             if (RenderingUtils.IsMRT(renderPass.colorAttachments))
             {
+                //MRT，一般不会走，多渲染目标
                 // In the MRT path we assume that all color attachments are REAL color attachments,
                 // and that the depth attachment is a REAL depth attachment too.
 
-
+        
                 // Determine what attachments need to be cleared. ----------------
 
                 bool needCustomCameraColorClear = false;

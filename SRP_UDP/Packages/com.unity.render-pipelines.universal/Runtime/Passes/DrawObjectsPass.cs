@@ -14,6 +14,11 @@ namespace UnityEngine.Rendering.Universal.Internal
     {
         FilteringSettings m_FilteringSettings;
         RenderStateBlock m_RenderStateBlock;
+        //会有很多pass，用一个list
+        //new ShaderTagId("SRPDefaultUnlit"),
+        //new ShaderTagId("UniversalForward"),
+        //new ShaderTagId("UniversalForwardOnly"),
+        //new ShaderTagId("LightweightForward")
         List<ShaderTagId> m_ShaderTagIdList = new List<ShaderTagId>();
         string m_ProfilerTag;
         ProfilingSampler m_ProfilingSampler;
@@ -30,6 +35,8 @@ namespace UnityEngine.Rendering.Universal.Internal
             foreach (ShaderTagId sid in shaderTagIds)
                 m_ShaderTagIdList.Add(sid);
             renderPassEvent = evt;
+            //设置过滤层，指出哪些 render 队列是允许的， layerMask默认为-1，表示所有层
+            //RenderQueueRange.opaque或者RenderQueueRange.transparent
             m_FilteringSettings = new FilteringSettings(renderQueueRange, layerMask);
             m_RenderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
             m_IsOpaque = opaque; //外部参数赋值，判断是用来渲染不透明物体还是半透明物体
@@ -68,6 +75,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 // x,y,z are currently unused
                 // w is used for knowing whether the object is opaque(1) or alpha blended(0)
                 Vector4 drawObjectPassData = new Vector4(0.0f, 0.0f, 0.0f, (m_IsOpaque) ? 1.0f : 0.0f);
+                //设置shader属性_DrawObjectPassData，w分量标识为透明或者不透明
                 cmd.SetGlobalVector(s_DrawObjectPassDataPropID, drawObjectPassData);
 
                 // scaleBias.x = flipSign
@@ -78,8 +86,10 @@ namespace UnityEngine.Rendering.Universal.Internal
                 Vector4 scaleBias = (flipSign < 0.0f)
                     ? new Vector4(flipSign, 1.0f, -1.0f, 1.0f)
                     : new Vector4(flipSign, 0.0f, 1.0f, 1.0f);
+                
+                //设置shader属性_ScaleBiasRt
                 cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBias);
-
+                //复制命令到context里
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear(); //ExecuteCommandBuffer 执行后就把相关参数给设置好了，然后调用cmd.clear可以复用cmd对象
 
@@ -96,10 +106,12 @@ namespace UnityEngine.Rendering.Universal.Internal
                     filterSettings.layerMask = -1;
                 }
                 #endif
-
+                //绘制几何体，如果overrideCameraTarget为false在，最后会使用ScriptableRenderer的渲染目标变量作为最后输出
+                //m_CameraColorTarget 和 m_CameraDepthTarget
                 context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filterSettings, ref m_RenderStateBlock);
 
                 // Render objects that did not match any shader pass with error shader
+                // fallback shader
                 RenderingUtils.RenderObjectsWithError(context, ref renderingData.cullResults, camera, filterSettings, SortingCriteria.None);
             }
             context.ExecuteCommandBuffer(cmd);
