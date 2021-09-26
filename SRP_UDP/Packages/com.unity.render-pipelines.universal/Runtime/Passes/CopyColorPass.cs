@@ -57,6 +57,8 @@ namespace UnityEngine.Rendering.Universal.Internal
             
             //禁用msaa
             descriptor.msaaSamples = 1;
+            
+            //depthBufferBits 为0 不需要深度信息
             descriptor.depthBufferBits = 0;
             
             //设置降采样后RT的尺寸

@@ -1080,7 +1080,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 	}
 	——————————————————————————————————————————————————————————
-	8 CopyColorPass：渲染结果绘制到 颜色缓冲数据绘制到 “m_OpaqueColor” RT，深度缓冲数据会绘制到帧缓冲
+	8 CopyColorPass：渲染结果绘制到 颜色缓冲数据绘制到 “m_OpaqueColor” RT，不需要深度信息
 	{
 		绘制颜色RT  _CameraOpaqueTexture，只要不透明颜色数据
 
@@ -1103,6 +1103,8 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
             
             //禁用msaa
             descriptor.msaaSamples = 1;
+
+            //depthBufferBits 为0 不需要深度信息
             descriptor.depthBufferBits = 0;
             
             //设置降采样后RT的尺寸
@@ -1225,7 +1227,161 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	——————————————————————————————————————————————————————————
 	10 PostProcessPass
 	{
+		Setup
+		{
+			//复制rt描述文件，设置useMipMap和autoGenerateMips为false
+            m_Descriptor = baseDescriptor;
+            m_Descriptor.useMipMap = false;
+            m_Descriptor.autoGenerateMips = false;
+            
+            //ForwardRender的m_ActiveCameraColorAttachment，有可能是默认帧缓冲也有可能是RT _CameraColorTexture
+            m_Source = source;
+            //destination为RT _AfterPostProcessTexture 或者 默认帧缓冲
+            m_Destination = destination;
+            
+            //ForwardRender的m_ActiveCameraDepthAttachment，有可能是默认帧缓冲也有可能是RT _CameraDepthAttachment
+            m_Depth = depth;
+            
+            m_InternalLut = internalLut;
+            m_IsFinalPass = false;
+            
+            //ForwardRender的applyFinalPostProcessing:当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
+            //是否是最后的后期pass，如果这个为true，finalBlitPass就不需要执行
+            m_HasFinalPass = hasFinalPass;
+            
+            //是否需要对sRGB做转换,destination为帧缓冲时就需要，destination为RT时不需要
+            m_EnableSRGBConversionIfNeeded = enableSRGBConversion;
+		}
 
+		OnCameraSetup
+		{
+			//m_Destination为帧缓冲直接返回
+            if (m_Destination == RenderTargetHandle.CameraTarget)
+                return;
+
+            if (m_Destination.HasInternalRenderTargetId())
+                return;
+
+            var desc = GetCompatibleDescriptor();
+            
+            //设置rt的渲染纹理深度缓冲区的精度，0表示不需要深度信息
+            desc.depthBufferBits = 0;
+            
+            //创建一个RT， _AfterPostProcessTexture
+            cmd.GetTemporaryRT(m_Destination.id, desc, FilterMode.Point);
+		}
+
+		Execute
+		{
+			//定义一系列后效
+      
+            if (m_IsFinalPass)
+            {
+                //如果是最后一个pass
+                var cmd = CommandBufferPool.Get();
+                using (new ProfilingScope(cmd, m_ProfilingRenderFinalPostProcessing))
+                {
+                    //最后一个pass
+                    RenderFinalPass(cmd, ref renderingData)
+                    {
+                    	//finalPass材质的对象
+			            var material = m_Materials.finalPass;
+			            material.shaderKeywords = null;
+
+			            // FXAA setup
+			            if (cameraData.antialiasing == AntialiasingMode.FastApproximateAntialiasing)
+			                material.EnableKeyword(ShaderKeywordStrings.Fxaa);
+			            
+			            //cameraData.cameraTargetDescriptor RT的描述文件对象
+			            //设置shader全局属性 _SourceSize
+			            PostProcessUtils.SetSourceSize(cmd, cameraData.cameraTargetDescriptor);
+			            
+			            //如果对应效果开启，设置shader关键字或贴图，shader用的是finalPass。这俩并不对应具体的shader。
+			            SetupGrain(cameraData, material);
+			            SetupDithering(cameraData, material);
+			            
+			            //是否SRGB转换，有的设备不支持SRGB，需要在shader里转换下
+			            if (RequireSRGBConversionBlitToBackBuffer(cameraData))
+			                material.EnableKeyword(ShaderKeywordStrings.LinearToSRGBConversion);
+			            // shader 全局属性 "_SourceTex"
+			            cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, m_Source.Identifier());
+			            
+			            //是否是默认视口（看到全屏）,true就直接RenderBufferLoadAction.DontCare，直接清除不需要知道上一帧数据，效率较高
+			            var colorLoadAction = cameraData.isDefaultViewport ? RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
+			            
+			            //获取代表默认帧缓冲的RenderTargetHandle对象
+			            RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
+
+			            //如果相机上有targetTexture，就使用targetTexture对作为渲染目标，否则使用默认帧缓冲
+		                RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null) ? new RenderTargetIdentifier(cameraData.targetTexture) : cameraTargetHandle.Identifier();
+		                
+		                //Add a "set active render target" command
+		                //Render target to set for both color & depth buffers
+		                //*******把渲染数据（颜色+深度）信息都绘制到cameraTarget上
+		                cmd.SetRenderTarget(cameraTarget, colorLoadAction, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
+		                //设置VP矩阵
+		                cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+		                //设置V矩阵
+		                cmd.SetViewport(cameraData.pixelRect);
+		                //添加绘制命令 Add a "draw mesh" command
+		                cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, material);
+		                cmd.SetViewProjectionMatrices(cameraData.camera.worldToCameraMatrix, cameraData.camera.projectionMatrix);
+
+                	}
+                }
+                //复制命令到context里
+                context.ExecuteCommandBuffer(cmd);
+                CommandBufferPool.Release(cmd);
+            }
+            else if (CanRunOnTile())
+            {
+                // TODO: Add a fast render path if only on-tile compatible effects are used and we're actually running on a platform that supports it
+                // Note: we can still work on-tile if FXAA is enabled, it'd be part of the final pass
+            }
+            else
+            {
+                //后期pass
+         
+                var cmd = CommandBufferPool.Get();
+                using (new ProfilingScope(cmd, m_ProfilingRenderPostProcessing))
+                {
+                	//后期效果都在这
+                    Render(cmd, ref renderingData);
+                    {
+                    	//后效的顺序都是固定的
+			            /*
+			                DepthOfField ;
+			                MotionBlur ;
+			                PaniniProjection ;
+			                Bloom ;
+			                LensDistortion ;
+			                ChromaticAberration ;
+			                Vignette ;
+			                ColorLookup ;
+			                ColorAdjustments ;
+			                Tonemapping ;
+			                FilmGrain ;
+			             */
+                	}
+                }
+                //复制命令到context里
+                context.ExecuteCommandBuffer(cmd);
+                CommandBufferPool.Release(cmd);
+            }
+		}
+
+		OnCameraCleanup
+		{
+			//m_Destination为帧缓冲直接返回
+			if (m_Destination == RenderTargetHandle.CameraTarget)
+                return;
+
+            // Logic here matches the if check in OnCameraSetup
+            if (m_Destination.HasInternalRenderTargetId())
+                return;
+            //释放RT
+            cmd.ReleaseTemporaryRT(m_Destination.id);
+		}
 	}
 	——————————————————————————————————————————————————————————
 	11 CapturePass
@@ -1233,7 +1389,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		
 	}
 	——————————————————————————————————————————————————————————
-	12 CapturePass
+	12 FinalBlitPass
 	{
 		
 	}

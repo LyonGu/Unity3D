@@ -81,10 +81,27 @@ namespace UnityEngine.Rendering.Universal.Internal
             base.profilingSampler = new ProfilingSampler(nameof(PostProcessPass));
             renderPassEvent = evt;
             m_Data = data;
-            m_Materials = new MaterialLibrary(data); //定义了一堆后期材质
-            m_BlitMaterial = blitMaterial;
+            
+            //定义了一堆后期材质
+            /*
+             *  stopNaN 
+                subpixelMorphologicalAntialiasing 
+                gaussianDepthOfField
+                bokehDepthOfField 
+                cameraMotionBlur
+                paniniProjection 
+                bloom 
+                uber 
+                finalPass
+             */
+           
+            m_Materials = new MaterialLibrary(data); 
+            
+            ///定义了一堆后期材质
+            m_BlitMaterial = blitMaterial; 
 
-            // Texture format pre-lookup
+            // Texture format pre-lookup 
+            // 设置HDR的格式
             if (SystemInfo.IsFormatSupported(GraphicsFormat.B10G11R11_UFloatPack32, FormatUsage.Linear | FormatUsage.Render))
             {
                 m_DefaultHDRFormat = GraphicsFormat.B10G11R11_UFloatPack32;
@@ -131,15 +148,27 @@ namespace UnityEngine.Rendering.Universal.Internal
 
         public void Setup(in RenderTextureDescriptor baseDescriptor, in RenderTargetHandle source, in RenderTargetHandle destination, in RenderTargetHandle depth, in RenderTargetHandle internalLut, bool hasFinalPass, bool enableSRGBConversion)
         {
+            //复制rt描述文件，设置useMipMap和autoGenerateMips为false
             m_Descriptor = baseDescriptor;
             m_Descriptor.useMipMap = false;
             m_Descriptor.autoGenerateMips = false;
+            
+            //ForwardRender的m_ActiveCameraColorAttachment，有可能是默认帧缓冲也有可能是RT _CameraColorTexture
             m_Source = source;
+            //destination为RT _AfterPostProcessTexture 或者 默认帧缓冲
             m_Destination = destination;
+            
+            //ForwardRender的m_ActiveCameraDepthAttachment，有可能是默认帧缓冲也有可能是RT _CameraDepthAttachment
             m_Depth = depth;
+            
             m_InternalLut = internalLut;
             m_IsFinalPass = false;
+            
+            //ForwardRender的applyFinalPostProcessing:当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
+            //是否是最后的后期pass，如果这个为true，finalBlitPass就不需要执行
             m_HasFinalPass = hasFinalPass;
+            
+            //是否需要对sRGB做转换,destination为帧缓冲时就需要，destination为RT时不需要
             m_EnableSRGBConversionIfNeeded = enableSRGBConversion;
         }
 
@@ -155,6 +184,7 @@ namespace UnityEngine.Rendering.Universal.Internal
         /// <inheritdoc/>
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
+            //m_Destination为帧缓冲直接返回
             if (m_Destination == RenderTargetHandle.CameraTarget)
                 return;
 
@@ -163,7 +193,11 @@ namespace UnityEngine.Rendering.Universal.Internal
                 return;
 
             var desc = GetCompatibleDescriptor();
+            
+            //设置rt的渲染纹理深度缓冲区的精度，0表示不需要深度信息
             desc.depthBufferBits = 0;
+            
+            //创建一个RT， _AfterPostProcessTexture
             cmd.GetTemporaryRT(m_Destination.id, desc, FilterMode.Point);
         }
 
@@ -176,7 +210,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             // Logic here matches the if check in OnCameraSetup
             if (m_Destination.HasInternalRenderTargetId())
                 return;
-
+            //释放RT
             cmd.ReleaseTemporaryRT(m_Destination.id);
         }
 
@@ -196,6 +230,7 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             // Start by pre-fetching all builtin effect settings we need
             // Some of the color-grading settings are only used in the color grading lut pass
+            //定义一系列后效
             var stack = VolumeManager.instance.stack;
             m_DepthOfField        = stack.GetComponent<DepthOfField>();
             m_MotionBlur          = stack.GetComponent<MotionBlur>();
@@ -212,12 +247,14 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             if (m_IsFinalPass)
             {
+                //如果是最后一个pass
                 var cmd = CommandBufferPool.Get();
                 using (new ProfilingScope(cmd, m_ProfilingRenderFinalPostProcessing))
                 {
+                    //最后一个pass
                     RenderFinalPass(cmd, ref renderingData);
                 }
-
+                //复制命令到context里
                 context.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
             }
@@ -234,9 +271,10 @@ namespace UnityEngine.Rendering.Universal.Internal
                 var cmd = CommandBufferPool.Get();
                 using (new ProfilingScope(cmd, m_ProfilingRenderPostProcessing))
                 {
+                    //后期效果都在这
                     Render(cmd, ref renderingData);
                 }
-
+                //复制命令到context里
                 context.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
             }
@@ -314,6 +352,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             {
                 if (destination == -1)
                 {
+                    //创建"_TempTarget' RT
                     cmd.GetTemporaryRT(ShaderConstants._TempTarget, GetCompatibleDescriptor(), FilterMode.Bilinear);
                     destination = ShaderConstants._TempTarget;
                     tempTargetUsed = true;
@@ -321,6 +360,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 else if (destination == m_Source.id && m_Descriptor.msaaSamples > 1)
                 {
                     // Avoid using m_Source.id as new destination, it may come with a depth buffer that we don't want, may have MSAA that we don't want etc
+                    //创建"_TempTarget2' RT
                     cmd.GetTemporaryRT(ShaderConstants._TempTarget2, GetCompatibleDescriptor(), FilterMode.Bilinear);
                     destination = ShaderConstants._TempTarget2;
                     tempTarget2Used = true;
@@ -332,6 +372,8 @@ namespace UnityEngine.Rendering.Universal.Internal
             void Swap() => CoreUtils.Swap(ref source, ref destination);
 
             // Setup projection matrix for cmd.DrawMesh()
+            //"_FullscreenProjMat"
+            //Compute GPU projection matrix from camera's projection matrix
             cmd.SetGlobalMatrix(ShaderConstants._FullscreenProjMat, GL.GetGPUProjectionMatrix(Matrix4x4.identity, true));
 
             // Optional NaN killer before post-processing kicks in
@@ -349,7 +391,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 }
             }
 
-            // Anti-aliasing
+            // Anti-aliasing 抗锯齿
             if (cameraData.antialiasing == AntialiasingMode.SubpixelMorphologicalAntiAliasing && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLES2)
             {
 
@@ -451,11 +493,13 @@ namespace UnityEngine.Rendering.Universal.Internal
                 cameraTarget = (m_Destination == RenderTargetHandle.CameraTarget) ? cameraTarget : m_Destination.Identifier();
 
                 // With camera stacking we not always resolve post to final screen as we might run post-processing in the middle of the stack.
+                //使用相机堆叠，我们并不总是解析到最终屏幕，因为我们可能会在堆栈的中间运行后处理
                 bool finishPostProcessOnScreen = cameraData.resolveFinalTarget || (m_Destination == cameraTargetHandle || m_HasFinalPass == true);
 
 #if ENABLE_VR && ENABLE_XR_MODULE
                 if (cameraData.xr.enabled)
                 {
+                    //深度和颜色信息都绘制到RT上
                     cmd.SetRenderTarget(new RenderTargetIdentifier(cameraTarget, 0, CubemapFace.Unknown, -1),
                          colorLoadAction, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
 
@@ -488,6 +532,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 else
 #endif
                 {
+                    //深度和颜色信息都绘制到cameraTarget上
                     cmd.SetRenderTarget(cameraTarget, colorLoadAction, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
                     cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
 
@@ -1197,26 +1242,33 @@ namespace UnityEngine.Rendering.Universal.Internal
         void RenderFinalPass(CommandBuffer cmd, ref RenderingData renderingData)
         {
             ref var cameraData = ref renderingData.cameraData;
+            //finalPass材质的对象
             var material = m_Materials.finalPass;
             material.shaderKeywords = null;
 
             // FXAA setup
             if (cameraData.antialiasing == AntialiasingMode.FastApproximateAntialiasing)
                 material.EnableKeyword(ShaderKeywordStrings.Fxaa);
-
+            
+            //cameraData.cameraTargetDescriptor RT的描述文件对象
+            //设置shader全局属性 _SourceSize
             PostProcessUtils.SetSourceSize(cmd, cameraData.cameraTargetDescriptor);
-
+            
+            //如果对应效果开启，设置shader关键字或贴图，shader用的是finalPass。这俩并不对应具体的shader。
             SetupGrain(cameraData, material);
             SetupDithering(cameraData, material);
-
+            
+            //是否SRGB转换，有的设备不支持SRGB，需要在shader里转换下
             if (RequireSRGBConversionBlitToBackBuffer(cameraData))
                 material.EnableKeyword(ShaderKeywordStrings.LinearToSRGBConversion);
-
+            // shader 全局属性 "_SourceTex"
             cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, m_Source.Identifier());
-
+            
+            //是否是默认视口（看到全屏）,true就直接RenderBufferLoadAction.DontCare，直接清除不需要知道上一帧数据，效率较高
             var colorLoadAction = cameraData.isDefaultViewport ? RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
-
-            RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer
+            
+            //获取代表默认帧缓冲的RenderTargetHandle对象
+            RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
 
 #if ENABLE_VR && ENABLE_XR_MODULE
             if (cameraData.xr.enabled)
@@ -1243,11 +1295,19 @@ namespace UnityEngine.Rendering.Universal.Internal
             {
                 // Note: We need to get the cameraData.targetTexture as this will get the targetTexture of the camera stack.
                 // Overlay cameras need to output to the target described in the base camera while doing camera stack.
+                
+                //如果相机上有targetTexture，就使用targetTexture对作为渲染目标，否则使用默认帧缓冲
                 RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null) ? new RenderTargetIdentifier(cameraData.targetTexture) : cameraTargetHandle.Identifier();
-
+                
+                //Add a "set active render target" command
+                //Render target to set for both color & depth buffers
+                //把渲染数据（颜色+深度）信息都绘制到cameraTarget上
                 cmd.SetRenderTarget(cameraTarget, colorLoadAction, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
+                //设置VP矩阵
                 cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+                //设置V矩阵
                 cmd.SetViewport(cameraData.pixelRect);
+                //添加绘制命令 Add a "draw mesh" command
                 cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, material);
                 cmd.SetViewProjectionMatrices(cameraData.camera.worldToCameraMatrix, cameraData.camera.projectionMatrix);
             }
@@ -1271,6 +1331,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             public MaterialLibrary(PostProcessData data)
             {
+                //一堆后期材质
                 stopNaN = Load(data.shaders.stopNanPS);
                 subpixelMorphologicalAntialiasing = Load(data.shaders.subpixelMorphologicalAntialiasingPS);
                 gaussianDepthOfField = Load(data.shaders.gaussianDepthOfFieldPS);

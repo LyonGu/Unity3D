@@ -636,7 +636,7 @@ namespace UnityEngine.Rendering.Universal
             bool lastCameraInTheStack = cameraData.resolveFinalTarget; 
             bool hasCaptureActions = renderingData.cameraData.captureActions != null && lastCameraInTheStack;
 
-            //判断是否执行最后后效处理：当前相机开启后效&&最后一个渲染目标&&抗锯齿为FAXX
+            //判断是否执行最后后效处理：当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
             bool isFAXX = renderingData.cameraData.antialiasing == AntialiasingMode.FastApproximateAntialiasing;
             bool applyFinalPostProcessing = anyPostProcessing && lastCameraInTheStack && isFAXX;
 
@@ -646,7 +646,7 @@ namespace UnityEngine.Rendering.Universal
             
             //hasCaptureActions 一般为false
             //hasPassesAfterPostProcessing 一般为false
-            //applyFinalPostProcessing: stack里最后一个激活相机 && isFAXX && 所有相机里有开启后效的相机
+            //applyFinalPostProcessing: 当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
             bool resolvePostProcessingToCameraTarget = !hasCaptureActions && !hasPassesAfterPostProcessing && !applyFinalPostProcessing;
             
             //resolvePostProcessingToCameraTarget这个变量指给lastCameraInTheStack为true时才会使用，其实可以放到if里面
@@ -662,12 +662,15 @@ namespace UnityEngine.Rendering.Universal
                 //applyPostProcessing为true 表示当前相机开启了后效
                 if (applyPostProcessing)
                 {
+                    //如果相机为最后输出到屏幕上并且抗锯齿为FAXX ==》 destination为RenderTargetHandle.CameraTarget 默认帧缓冲 否则为RT _AfterPostProcessTexture
                     //m_AfterPostProcessColor ==> _AfterPostProcessTexture
                     var destination = resolvePostProcessingToCameraTarget ? RenderTargetHandle.CameraTarget : m_AfterPostProcessColor;
 
                     // if resolving to screen we need to be able to perform sRGBConvertion in post-processing if necessary
                     bool doSRGBConvertion = resolvePostProcessingToCameraTarget;
                     //处理的原始图其实就是m_CameraColorAttachment==> "_CameraColorTexture"
+                    // destination为RT _AfterPostProcessTextur或者默认帧缓冲
+                    // applyFinalPostProcessing:当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
                     m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, destination, m_ActiveCameraDepthAttachment, m_ColorGradingLut, applyFinalPostProcessing, doSRGBConvertion);
                     EnqueuePass(m_PostProcessPass); //后效pass入队列
                 }

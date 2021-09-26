@@ -76,10 +76,12 @@ namespace UnityEngine.Rendering.Universal
 
         internal static void SetSourceSize(CommandBuffer cmd, RenderTextureDescriptor desc)
         {
+            //屏幕大小
             float width = desc.width;
             float height = desc.height;
             if (desc.useDynamicScale)
             {
+                //使用了相机使用了动态分辨率下需要乘以缩放比例
                 width *= ScalableBufferManager.widthScaleFactor;
                 height *= ScalableBufferManager.heightScaleFactor;
             }
