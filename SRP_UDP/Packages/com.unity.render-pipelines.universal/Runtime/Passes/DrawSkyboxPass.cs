@@ -66,6 +66,9 @@ namespace UnityEngine.Rendering.Universal
             else
 #endif
             {
+                //直接有接口可以绘制天空盒
+                //如果overrideCameraTarget为false在，最后会使用ScriptableRenderer的渲染目标变量作为最后输出
+                //m_CameraColorTarget 和 m_CameraDepthTarget
                 context.DrawSkybox(renderingData.cameraData.camera);
             }
         }

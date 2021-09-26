@@ -1064,6 +1064,20 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
             context.ExecuteCommandBuffer(cmd);
 		}
 	}
+	——————————————————————————————————————————————————————————
+	7 DrawSkyboxPass
+	{
+		pass没有重置渲染目标，直接使用ScriptableRenderer的渲染目标变量作为最后输出,
+		如果没有中间RT产生(颜色RT和深度RT)，输出到帧缓冲
+		如果有中间RT产生，颜色缓冲数据输出到_CameraColorTexture，深度缓冲数据输出到 _CameraDepthAttachment
+		
+		Execute
+		{
+			//直接有接口可以绘制天空盒
+			context.DrawSkybox(renderingData.cameraData.camera);
+		}
+	}
+
 }
 
 5 Feature相关
