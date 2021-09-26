@@ -368,6 +368,7 @@ namespace UnityEngine.Rendering
             RenderTargetIdentifier depthBuffer, RenderBufferLoadAction depthLoadAction, RenderBufferStoreAction depthStoreAction,
             ClearFlag clearFlag, Color clearColor)
         {
+            //******这里的colorBuffer和depthBuffer 其实就是pass上colorAttachment和depthAttachment
             cmd.SetRenderTarget(colorBuffer, colorLoadAction, colorStoreAction, depthBuffer, depthLoadAction, depthStoreAction);
             ClearRenderTarget(cmd, clearFlag, clearColor);
         }
