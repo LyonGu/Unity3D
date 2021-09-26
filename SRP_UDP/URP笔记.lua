@@ -699,7 +699,51 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering
 {
+	1 MainLightShadowCasterPass：渲染结果最后绘制在RT上
+	{
+		Setup
+		{
+			判断是否需要绘制阴影，不需要直接返回false
+			ShadowMap分辨率大小 最大阴影距离设置
+		}
 
+		Configure
+		{
+			//获取一张阴影贴图RT
+            m_MainLightShadowmapTexture = ShadowUtils.GetTemporaryShadowTexture(m_ShadowmapWidth,
+                    m_ShadowmapHeight, k_ShadowmapBufferBits);
+            //配置color buffer渲染目标，设置颜色渲染到RT上
+            ConfigureTarget(new RenderTargetIdentifier(m_MainLightShadowmapTexture));
+            //清一遍帧缓冲数据
+            ConfigureClear(ClearFlag.All, Color.black);
+		}
+
+		Execute
+		{
+			RenderMainLightCascadeShadowmap
+			{
+				 //根据阴影联级，给shader中的一些变量设置值：_ShadowBias:阴影偏移，是为了自遮挡阴影瑕疵(shadow acne)，LightDirection:光的方向
+				 ShadowUtils.SetupShadowCasterConstantBuffer(cmd, ref shadowLight, shadowBias);
+
+				 //设置视口，设置vp矩阵，绘制阴影，添加渲染命令到context里 ******
+				  ShadowUtils.RenderShadowSlice
+
+				  //shader变体设置，开启和关闭对应的宏
+				  	CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadows, true);
+                	CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadowCascades, shadowData.mainLightShadowCascadesCount > 1);
+                	CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);
+                
+
+				   //设置shader相关常量
+				   SetupMainLightShadowReceiverConstants(cmd, shadowLight, shadowData.supportsSoftShadows);
+
+
+				   //复制渲染命令到context
+            		context.ExecuteCommandBuffer(cmd);
+			}
+		}
+		
+	}
 }
 
 5 Feature相关

@@ -71,12 +71,21 @@ namespace UnityEngine.Rendering.Universal
             ref ShadowSliceData shadowSliceData, ref ShadowDrawingSettings settings,
             Matrix4x4 proj, Matrix4x4 view)
         {
+            //设置视口
             cmd.SetViewport(new Rect(shadowSliceData.offsetX, shadowSliceData.offsetY, shadowSliceData.resolution, shadowSliceData.resolution));
+            
+            //设置vp矩阵
             cmd.SetViewProjectionMatrices(view, proj);
+            
+            //复制渲染命令到context
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
+            
+            //添加绘制阴影的命令
             context.DrawShadows(ref settings);
             cmd.DisableScissorRect();
+            
+            //再次复制渲染命令到context
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
         }

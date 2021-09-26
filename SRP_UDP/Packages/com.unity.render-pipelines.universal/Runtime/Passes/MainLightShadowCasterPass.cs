@@ -44,8 +44,11 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             base.profilingSampler = new ProfilingSampler(nameof(MainLightShadowCasterPass));
             renderPassEvent = evt;
-
+            
+            //阴影矩阵相关
             m_MainLightShadowMatrices = new Matrix4x4[k_MaxCascades + 1];
+            
+            //阴影联级相关
             m_CascadeSlices = new ShadowSliceData[k_MaxCascades];
             m_CascadeSplitDistances = new Vector4[k_MaxCascades];
 
@@ -61,7 +64,8 @@ namespace UnityEngine.Rendering.Universal.Internal
             MainLightShadowConstantBuffer._ShadowOffset2 = Shader.PropertyToID("_MainLightShadowOffset2");
             MainLightShadowConstantBuffer._ShadowOffset3 = Shader.PropertyToID("_MainLightShadowOffset3");
             MainLightShadowConstantBuffer._ShadowmapSize = Shader.PropertyToID("_MainLightShadowmapSize");
-
+            
+            //保存shader变量的id，提升性能，避免多次hash计算
             m_MainLightShadowmap.Init("_MainLightShadowmapTexture");
             m_SupportsBoxFilterForShadows = Application.isMobilePlatform || SystemInfo.graphicsDeviceType == GraphicsDeviceType.Switch;
         }
@@ -69,17 +73,21 @@ namespace UnityEngine.Rendering.Universal.Internal
         public bool Setup(ref RenderingData renderingData)
         {
             using var profScope = new ProfilingScope(null, m_ProfilingSetupSampler);
-
+            
+            //如果不支持主阴影 返回fasle
             if (!renderingData.shadowData.supportsMainLightShadows)
                 return false;
-
+            //重置阴影矩阵和阴影联级相关数据
             Clear();
+            
+            //没有主光直接返回false
             int shadowLightIndex = renderingData.lightData.mainLightIndex;
             if (shadowLightIndex == -1)
                 return false;
 
             VisibleLight shadowLight = renderingData.lightData.visibleLights[shadowLightIndex];
             Light light = shadowLight.light;
+            //对应光源未设置阴影 直接返回false
             if (light.shadows == LightShadows.None)
                 return false;
 
@@ -89,6 +97,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             }
 
             Bounds bounds;
+            //renderingData.cullResults 相机的裁剪结果
             if (!renderingData.cullResults.GetShadowCasterBounds(shadowLightIndex, out bounds))
                 return false;
 
@@ -96,6 +105,8 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             int shadowResolution = ShadowUtils.GetMaxTileResolutionInAtlas(renderingData.shadowData.mainLightShadowmapWidth,
                 renderingData.shadowData.mainLightShadowmapHeight, m_ShadowCasterCascadesCount);
+            
+            //ShadowMap分辨率大小
             m_ShadowmapWidth = renderingData.shadowData.mainLightShadowmapWidth;
             m_ShadowmapHeight = (m_ShadowCasterCascadesCount == 2) ?
                 renderingData.shadowData.mainLightShadowmapHeight >> 1 :
@@ -110,7 +121,8 @@ namespace UnityEngine.Rendering.Universal.Internal
                 if (!success)
                     return false;
             }
-
+            
+            //最大阴影距离设置，距离之内使用实时阴影，距离之外使用烘焙阴影
             m_MaxShadowDistance = renderingData.cameraData.maxShadowDistance * renderingData.cameraData.maxShadowDistance;
 
             return true;
@@ -118,9 +130,13 @@ namespace UnityEngine.Rendering.Universal.Internal
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
+            //获取一张阴影贴图RT
             m_MainLightShadowmapTexture = ShadowUtils.GetTemporaryShadowTexture(m_ShadowmapWidth,
                     m_ShadowmapHeight, k_ShadowmapBufferBits);
+            m_MainLightShadowmapTexture.name = "m_MainLightShadowmapTexture";
+            //配置color buffer渲染目标，设置颜色渲染到RT上
             ConfigureTarget(new RenderTargetIdentifier(m_MainLightShadowmapTexture));
+            //清一遍帧缓冲数据
             ConfigureClear(ClearFlag.All, Color.black);
         }
 
@@ -171,26 +187,34 @@ namespace UnityEngine.Rendering.Universal.Internal
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.MainLightShadow)))
             {
                 var settings = new ShadowDrawingSettings(cullResults, shadowLightIndex);
-
+                //根据阴影联级，给shader中的一些变量设置值 
                 for (int cascadeIndex = 0; cascadeIndex < m_ShadowCasterCascadesCount; ++cascadeIndex)
                 {
                     var splitData = settings.splitData;
                     splitData.cullingSphere = m_CascadeSplitDistances[cascadeIndex];
                     settings.splitData = splitData;
                     Vector4 shadowBias = ShadowUtils.GetShadowBias(ref shadowLight, shadowLightIndex, ref shadowData, m_CascadeSlices[cascadeIndex].projectionMatrix, m_CascadeSlices[cascadeIndex].resolution);
+                    //设置shader变量，
+                    //_ShadowBias:阴影偏移，是为了自遮挡阴影瑕疵(shadow acne)
+                    //_LightDirection:光的方向
                     ShadowUtils.SetupShadowCasterConstantBuffer(cmd, ref shadowLight, shadowBias);
+                    
+                    //设置视口，设置vp矩阵，绘制阴影，添加渲染命令到context里
                     ShadowUtils.RenderShadowSlice(cmd, ref context, ref m_CascadeSlices[cascadeIndex],
                         ref settings, m_CascadeSlices[cascadeIndex].projectionMatrix, m_CascadeSlices[cascadeIndex].viewMatrix);
                 }
 
                 bool softShadows = shadowLight.light.shadows == LightShadows.Soft && shadowData.supportsSoftShadows;
+                
+                //shader变体设置，开启和关闭对应的宏
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadows, true);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadowCascades, shadowData.mainLightShadowCascadesCount > 1);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);
-
+                
+                //设置shader相关常量
                 SetupMainLightShadowReceiverConstants(cmd, shadowLight, shadowData.supportsSoftShadows);
             }
-
+            //复制渲染命令到context
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
