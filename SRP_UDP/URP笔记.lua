@@ -116,6 +116,132 @@
 ]==]
 
 --[==[
+	RT理解:
+	{
+
+		1 RT是什么，用在哪
+		{
+			首先rt是一张特殊贴图，这张贴图对应的是GPU上的FrameBuffer，一般用到的是颜色和深度，从这张图取数据用于计算，或是直接对这张图进行修改，以得到想要的效果。
+			FrameBuffer就是gpu里渲染结果的目的地，我们绘制的所有结果（包括color depth stencil等）都最终存在这个这里。现代GPU通常都有几个FBO，实现双缓冲，以及将渲染结果保存在GPU的一块存储区域，之后使用。
+			RT的应用主要是几个方式，一是从rt取数据，比如取深度用于各种计算。二是取这张图，比如在UI上显示模型，或是截图保存等。再一个就是是对图进行处理，实现扭曲或是其他全屏效果。
+			一般来说，不使用rt也是可以渲染出想要的图的，但是drawcall就会很多，unity内置管线，获取深度就是渲染一遍物体，这必然比直接取buffer消耗要大很多。
+			但是从GPU拷贝数据回CPU，需要硬件支持，unity提供了CopyTextureSupport接口判断支持的拷贝方法，按硬件的发展速度应该不支持的会越来越少的。
+		}
+
+		2 unity接口
+		{
+		  	unity对rt的抽象是RenderTexture这个类，定义了一些属性，包括大小，精度等各种
+		  	RenderTargetIdentifier
+		  	{
+				unity CoreModule实现，定义CommandBuffer用到的RenderTextur
+				封装了texture的创建，因为texture创建方式有几种，rt，texture，BuiltinRenderTextureType，GetTemporaryRT
+				这个类只是定义了rt的各种属性，真正创建应该是在CommandBuffer内部
+				BuiltinRenderTextureType类型：cameratarget、depth、gbuffer等多种
+				CommandBuffer.SetRenderTarget，可分别设置color和depth，以及贴图处理方式
+				CommandBuffer.SetGlobalTexture，效果是把texture赋值给shader变量，shader采样这个texture
+		  	}
+
+		  	RenderTextureDescriptor
+		  	{
+				封装创建rt需要的所有信息，可复用，修改部分值，减少创建消耗
+		  	}
+
+		  	RenderTargetHandle
+		  	{
+				URP对RenderTargetIdentifier的一个封装
+				保存shader变量的id，提升性能，避免多次hash计算
+				真正用rt的时候，才会创建RenderTargetIdentifier
+				定义了一个静态CameraTarget
+		  	}
+		}
+
+		3 URP用法
+		{
+			URP不会直接用到rt，而是通过CommandBuffer的接口设置，参数是RenderTargetIdentifier
+			CoreUtils封装了SetRenderTarget方法，ScriptableRenderer调用
+			ScriptableRenderPass，封装ConfigureTarget方法，可以设置color和depth
+			pass设置好color和depth的rt后，renderer执行ExecuteRenderPass函数时读取，并设置给cb
+			pass内部会根据需要设置color和depth的渲染内容
+
+
+			总结下来是由pass决定要渲染到哪个rt，以及用什么方式。然后renderer调用CoreUtils设置，设置好后调用pass的Execute方法渲染。
+
+		}
+	}
+
+	RT应用--深度纹理获取
+	{
+		URP提供了两种获取深度图的方法，一种是像内置管线那样，直接渲染指定pass，另一种是取深度buffer，渲染到一张rt上，优先用取深度buffer的方法，效率更高，但是需要系统和硬件支持。
+
+		1 先看下什么情况会生成深度图
+		{
+			主动开启，在PipelineAsset选择DepthTexture
+			渲染scene相机，固定开启，并用DepthOnly的方式获得
+			对于game相机，后处理，SMAA抗锯齿，DOF，运动模糊，用到了一个就会自动开启。判断在UniversalRenderPipeline的CheckPostProcessForDepth方法。
+		}
+
+		2 获取深度纹理的方法一：取深度buffer，CopyDepthPass
+		{
+			CanCopyDepth函数判断当前环境是否可开启。现在看起来需要系统支持拷贝深度贴图并且不能开启MSAA，看注释之后的版本会支持MSAA
+			这个pass一般在不透明渲染之后执行。看代码对scene相机执行时间不同，可是现在scene不会用这个渲染，可能是给以后留的吧。
+
+			实现方法
+			{
+				FrowardRender.SetUp：设置源rt关联到shader的_CameraDepthAttachment。目标rt关联到_CameraDepthTexture。
+				CopyDepthPass.OnCameraSetup：设置目标rt格式，colorFormat为Depth，32位，msaa为1不开启，filterMode为Point ???? 没找到这个方法
+
+				Execute， ？？？？？？
+				{
+					先将源rt的内容赋值到shader定义的_CameraDepthAttachment贴图中
+					然后调用基类的Blit方法，先设置管线的color为depth，也就是将depth渲染到color buffer中，然后执行Blit指令，用CopyDepth shader将buffer渲染到指定贴图上，后续shader直接采样这张贴图。
+
+					vert函数，坐标转换，object-clip，实际是没用的，有用的操作是设置uv，用于采样buffer，实际uv应该就是对应分辨率的。
+					frag：定义了msaa的处理，现在不会用到。直接采样_CameraDepthAttachment输出颜色，按现在的写法，应该直接用_CameraDepthAttachment就行了。额外渲染一次，应该是为了msaa准备的。
+
+
+
+					流程总结：先设置管线的color buffer为depth，将相机得到的深度渲染到_CameraDepthAttachment，再调用CopyDepth shader渲染到_CameraDepthTexture
+				}
+			}
+		}
+
+		3 获取深度纹理的方法二：DepthOnlyPass
+		{
+			渲染所有shader中有DepthOnly pass的物体到指定深度buffer。
+			相机的rt，设置为哪个texture，渲染的物体就都渲染到这个rt上
+		}
+
+		总结下： DepthOnlyPass和CopyDepthPass是互斥的，
+				只要配置文件上开启了msaa，CanCopyDepth就返回false，关闭msaa就返回ture
+            	所以 CopyDepthPass和 DepthOnlyPass的使用谁可以通过是否开启msaa来控制，CopyDepthPass从buffer里直接取，少了很多drawCall
+	}
+
+	RT应用-opaque纹理获取
+	{
+		这个在内置的管线，是通过shader的grab指令获取的，移动设备支持的不好，URP加了一个拷贝buffer的方式，性能会好一些。
+
+		通过CopyColor pass实现 相比深度纹理简单很多，不需要判断硬件是否支持
+
+	}
+
+	ForwardRenderer对depth和opaque贴图处理流程
+	{
+		renderer类相当于pass和unity底层交互的一个接口，定义了各个opaque和depth的rt
+		各个rt默认是相机目标，可用于获取color和depth的buffer
+		如果需要渲染color或depth到贴图中，在添加pass之前要做一些操作，只有base相机才能渲染到color和depth
+		{
+			判断createColorTexture和createDepthTexture，设置m_CameraColorAttachment和m_CameraDepthAttachment
+			如果需要创建texture，执行CreateCameraRenderTarget函数，这个函数会调用GetTemporaryRT生成rt，函数执行后，color的depthBufferBits可能会设置为32位
+			设置好后，会传给基类的m_CameraColorTarget。每个pass执行Execute方法前，会先设置camera的rt。
+		}
+	}
+
+	
+
+
+]==]
+
+--[==[
 	Feature 和 pass 函数执行顺序
 
 	Feature  --> 验证下
@@ -453,6 +579,9 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		11 判断是否要最后执行一次 final blit，满足条件之一即可
 	}
 
+
+	/*超级重点*/
+
 	//各个render都没有实现Execute方法，调用基类的ScriptableRenderer.Execute
 	ScriptableRenderer.Execute(UniversalRenderPipeline.RenderSingleCamera 会调用)
 	{
@@ -567,4 +696,11 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		15 再次复制渲染命令到context里，context.ExecuteCommandBuffer(cmd);
 	}
 }
+
+4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering
+{
+
+}
+
+5 Feature相关
 

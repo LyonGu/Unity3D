@@ -188,7 +188,8 @@ namespace UnityEngine.Rendering.Universal
                 RenderPassEvent.BeforeRenderingOpaques, RenderQueueRange.opaque, data.opaqueLayerMask,
                 m_DefaultStencilState, stencilData.stencilReference);
             
-            //CopyDepthPass 400 也有能是300
+            //CopyDepthPass 会动态设置成500或300
+            //RenderPassEvent.AfterRenderingTransparents : RenderPassEvent.AfterRenderingOpaques
             m_CopyDepthPass = new CopyDepthPass(RenderPassEvent.AfterRenderingSkybox, m_CopyDepthMaterial);
             
             //天空盒绘制Pass 350
@@ -408,6 +409,8 @@ namespace UnityEngine.Rendering.Universal
             // - Render passes require it
             
             //这命名真是醉了，其实就是表示是不是需要产生一张深度图RT，有一个为true最后结果就为true
+            // 只要配置文件上开启了msaa，CanCopyDepth就返回false，关闭msaa就返回ture
+            //所以 CopyDepthPass和 DepthOnlyPass的使用谁可以通过是否开启msaa来控制，CopyDepthPass从buffer里直接取，少了很多drawCall
             bool requiresDepthPrepass = requiresDepthTexture && !CanCopyDepth(ref renderingData.cameraData);
             requiresDepthPrepass |= isSceneViewCamera;
             requiresDepthPrepass |= isPreviewCamera;
@@ -541,7 +544,8 @@ namespace UnityEngine.Rendering.Universal
                 }
                 else
                 {
-                    //只生成深度图  DepthPrePass加入对列 生成_CameraDepthTexture 
+                    //只生成深度图  DepthOnlyPass加入对列 生成_CameraDepthTexture 
+                    //使用DepthOnlyPass 生成深度图
                     m_DepthPrepass.Setup(cameraTargetDescriptor, m_DepthTexture);
                     EnqueuePass(m_DepthPrepass);
                 }
@@ -579,7 +583,12 @@ namespace UnityEngine.Rendering.Universal
                                          && this.actualRenderingMode != RenderingMode.Deferred;
             if (requiresDepthCopyPass)
             {
-                //CopyDepthPass  
+                //取深度buffer，使用CopyDepthPass  这个效率比DepthOnlyPass高
+                /*
+                 * 1先将源rt的内容赋值到shader定义的_CameraDepthAttachment贴图中
+                 * 2.1然后调用基类的Blit方法，先设置管线的color为depth，也就是将depth渲染到color buffer中，然后执行Blit指令，
+                 * 2.2用CopyDepth shader将buffer渲染到指定贴图上，后续shader直接采样这张贴图。
+                 */
                 m_CopyDepthPass.Setup(m_ActiveCameraDepthAttachment, m_DepthTexture);
                 EnqueuePass(m_CopyDepthPass);
             }
@@ -990,6 +999,7 @@ namespace UnityEngine.Rendering.Universal
         bool CanCopyDepth(ref CameraData cameraData)
         {
             //只要开启了MSAA就返回false
+            //cameraData.cameraTargetDescriptor.msaaSamples 是 配置文件上的msaaSamples
             bool msaaEnabledForCamera = cameraData.cameraTargetDescriptor.msaaSamples > 1;
             bool supportsTextureCopy = SystemInfo.copyTextureSupport != CopyTextureSupport.None;
             bool supportsDepthTarget = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.Depth);

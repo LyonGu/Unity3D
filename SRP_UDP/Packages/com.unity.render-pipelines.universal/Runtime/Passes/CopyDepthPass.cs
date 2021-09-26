@@ -39,6 +39,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
+            //设置RT的格式：colorFormat为Depth，32位，msaa为1不开启，filterMode为Point
             var descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.colorFormat = RenderTextureFormat.Depth;
             descriptor.depthBufferBits = 32; //TODO: do we really need this. double check;
@@ -47,6 +48,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 cmd.GetTemporaryRT(destination.id, descriptor, FilterMode.Point);
 
             // On Metal iOS, prevent camera attachments to be bound and cleared during this pass.
+            //这里为什么是设置颜色缓冲目标
             ConfigureTarget(new RenderTargetIdentifier(destination.Identifier(), 0, CubemapFace.Unknown, -1));
             ConfigureClear(ClearFlag.None, Color.black);
         }
@@ -66,7 +68,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 int cameraSamples = descriptor.msaaSamples;
 
                 CameraData cameraData = renderingData.cameraData;
-
+                //判断是否开启MSAA
                 switch (cameraSamples)
                 {
                     case 8:
@@ -115,7 +117,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                         ? new Vector4(flipSign, 1.0f, -1.0f, 1.0f)
                         : new Vector4(flipSign, 0.0f, 1.0f, 1.0f);
                     cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBiasRt);
-
+                    //这个方法可以绘制一个三角形来替代一个矩形的效果
                     cmd.DrawProcedural(Matrix4x4.identity, m_CopyDepthMaterial, 0, MeshTopology.Quads, 4);
                 }
                 else

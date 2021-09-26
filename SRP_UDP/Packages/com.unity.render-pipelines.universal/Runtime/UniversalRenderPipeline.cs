@@ -697,7 +697,7 @@ namespace UnityEngine.Rendering.Universal
         {
             if (!cameraData.postProcessEnabled)
                 return false;
-
+            //开启SMAA抗锯齿 直接返回true
             if (cameraData.antialiasing == AntialiasingMode.SubpixelMorphologicalAntiAliasing)
                 return true;
 
@@ -821,7 +821,7 @@ namespace UnityEngine.Rendering.Universal
             //渲染器对象的Features是否支持MSAA
             bool rendererSupportsMSAA = renderer != null && renderer.supportedRenderingFeatures.msaa;
             
-            //设置msaa的超采样数
+            //设置msaa的超采样数， baseCamera.allowMSAA默认就开启了一直未true
             int msaaSamples = 1;
             if (baseCamera.allowMSAA && settings.msaaSampleCount > 1 && rendererSupportsMSAA)
                 msaaSamples = (baseCamera.targetTexture != null) ? baseCamera.targetTexture.antiAliasing : settings.msaaSampleCount;
