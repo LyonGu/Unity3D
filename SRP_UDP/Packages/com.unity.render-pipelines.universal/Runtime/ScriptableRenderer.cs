@@ -1024,10 +1024,12 @@ namespace UnityEngine.Rendering.Universal
 
             m_ActiveDepthAttachment = depthAttachment;
             
-            //渲染时颜色信息配置
+            //渲染时颜色信息配置，如果clearFlag为ClearFlag.Color或者ClearFlag.All, 返回RenderBufferLoadAction.DontCare，效率高
             RenderBufferLoadAction colorLoadAction = ((uint)clearFlag & (uint)ClearFlag.Color) != 0 ?
                 RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
+            
             //渲染时深度信息配置
+            //如果clearFlag为ClearFlag.Depth或者ClearFlag.All, 返回RenderBufferLoadAction.DontCare，效率高
             RenderBufferLoadAction depthLoadAction = ((uint)clearFlag & (uint)ClearFlag.Depth) != 0 ?
                 RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
 

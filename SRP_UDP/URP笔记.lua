@@ -1070,11 +1070,71 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		pass没有重置渲染目标，直接使用ScriptableRenderer的渲染目标变量作为最后输出,
 		如果没有中间RT产生(颜色RT和深度RT)，输出到帧缓冲
 		如果有中间RT产生，颜色缓冲数据输出到_CameraColorTexture，深度缓冲数据输出到 _CameraDepthAttachment
-		
+
 		Execute
 		{
 			//直接有接口可以绘制天空盒
 			context.DrawSkybox(renderingData.cameraData.camera);
+		}
+	}
+	——————————————————————————————————————————————————————————
+	8 CopyColorPass
+	{
+		绘制颜色RT  _CameraOpaqueTexture，只要不透明颜色数据
+
+		Setup
+		{
+			//设置源目标为 m_ActiveCameraColorAttachment所对应的目标
+            //m_ActiveCameraColorAttachment为ScriptableRenderer的变量，可能为_CameraColorTexture也可能为默认帧缓冲
+            this.source = source;
+            
+            //设置target目标 “m_OpaqueColor” RT
+            this.destination = destination;
+            
+            //降采样信息
+            m_DownsamplingMethod = downsampling;
+		}
+
+		OnCameraSetup
+		{
+			RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
+            
+            //禁用msaa
+            descriptor.msaaSamples = 1;
+            descriptor.depthBufferBits = 0;
+            
+            //设置降采样后RT的尺寸
+            if (m_DownsamplingMethod == Downsampling._2xBilinear)
+            {
+                //双性过滤降采样
+                descriptor.width /= 2;
+                descriptor.height /= 2;
+            }
+            else if (m_DownsamplingMethod == Downsampling._4xBox || m_DownsamplingMethod == Downsampling._4xBilinear)
+            {
+                descriptor.width /= 4;
+                descriptor.height /= 4;
+            }
+            
+            //创建“m_OpaqueColor” RT
+            cmd.GetTemporaryRT(destination.id, descriptor, m_DownsamplingMethod == Downsampling.None ? FilterMode.Point : FilterMode.Bilinear);
+		}
+
+		Execute
+		{
+			//设置渲染目标，颜色缓冲区目标为opaqueColorRT，深度缓冲区目标为帧缓冲
+            //clearFlag为None
+            ScriptableRenderer.SetRenderTarget(cmd, opaqueColorRT, BuiltinRenderTextureType.CameraTarget, clearFlag,
+                clearColor);
+
+            RenderingUtils.Blit(cmd, source, opaqueColorRT, m_CopyColorMaterial, 0, useDrawProceduleBlit);
+            {
+            	默认参数使用都是load
+            	RenderBufferLoadAction colorLoadAction = RenderBufferLoadAction.Load, //效率最低
+	            RenderBufferStoreAction colorStoreAction = RenderBufferStoreAction.Store,
+	            RenderBufferLoadAction depthLoadAction = RenderBufferLoadAction.Load,
+	            RenderBufferStoreAction depthStoreAction = RenderBufferStoreAction.Store
+            }
 		}
 	}
 

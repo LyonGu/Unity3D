@@ -202,6 +202,7 @@ namespace UnityEngine.Rendering.Universal
             RenderBufferLoadAction depthLoadAction = RenderBufferLoadAction.Load,
             RenderBufferStoreAction depthStoreAction = RenderBufferStoreAction.Store)
         {
+            //设置shader全局属性_SourceTex
             cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, source);
             if (useDrawProcedural)
             {
@@ -209,13 +210,20 @@ namespace UnityEngine.Rendering.Universal
                 Vector4 scaleBiasRt = new Vector4(1, 1, 0, 0);
                 cmd.SetGlobalVector(ShaderPropertyId.scaleBias, scaleBias);
                 cmd.SetGlobalVector(ShaderPropertyId.scaleBiasRt, scaleBiasRt);
+                
+                //设置渲染目标，这里参数使用的都是默认值
                 cmd.SetRenderTarget(new RenderTargetIdentifier(destination, 0, CubemapFace.Unknown, -1),
                     colorLoadAction, colorStoreAction, depthLoadAction, depthStoreAction);
+                
+                //绘制到屏幕时
                 cmd.DrawProcedural(Matrix4x4.identity, material, passIndex, MeshTopology.Quads, 4, 1, null);
             }
             else
             {
+                //设置渲染目标，这里参数使用的都是默认值
                 cmd.SetRenderTarget(destination, colorLoadAction, colorStoreAction, depthLoadAction, depthStoreAction);
+                
+                //????TODO
                 cmd.Blit(source, BuiltinRenderTextureType.CurrentActive, material, passIndex);
             }
         }
