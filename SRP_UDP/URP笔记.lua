@@ -237,7 +237,15 @@
 	}
 
 	
-
+UniversalRenderPipelineAsset.DestroyRenderers
+{
+	DestroyRenderer(Render)
+	==> renderer.Dispose();
+		==> {
+			rendererFeature.Dispose 
+			各个render自己实现的Dispose(true)
+		}
+}
 
 ]==]
 
@@ -726,7 +734,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	}
 }
 
-4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering
+4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering（只要最后一个输出到屏幕的相机才会调用OnFinishCameraStackRendering）
 {
 	1 MainLightShadowCasterPass：渲染结果最后绘制在RT上
 	{
@@ -952,6 +960,44 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 	}
 	——————————————————————————————————————————————————————————
+	//LUT贴图 根据一个像素的RGB查表取得另一个RGB并且替换
+	5 ColorGradingLutPass(颜色分级lut Pass)：渲染目标为颜色缓冲渲染目标为RT（名字为 _InternalGradingLut），深度缓冲目标为帧缓冲
+	{
+		Setup
+		{
+			//设置RenderTargetHandle 
+			m_InternalLut = internalLut;
+		}
+
+		Execute
+		{
+			//获取所有颜色分级设置
+			//Volume下的后效效果组件: ChannelMixer,ColorAdjustments,ColorCurves,LiftGammaGain,ShadowsMidtonesHighlights....
+
+			//创建一个RT，名字为 _InternalGradingLut
+			cmd.GetTemporaryRT(m_InternalLut.id, desc, FilterMode.Bilinear);
+
+			//设置一系列shader属性
+
+			//绘制命令，scr和des都传参为 m_InternalLut.id
+			Blit(cmd, m_InternalLut.id, m_InternalLut.id, material);
+			{
+				//设置颜色缓冲渲染目标为RT，深度缓冲目标为帧缓冲
+				ScriptableRenderer.SetRenderTarget(cmd, destination, BuiltinRenderTextureType.CameraTarget, clearFlag, clearColor);
+
+				//执行对应pass，把最后输出结果到原始RT上
+            	cmd.Blit(source, destination, material, passIndex);
+			}
+
+			//复制渲染命令到context
+			context.ExecuteCommandBuffer(cmd);
+		}
+
+		OnFinishCameraStackRendering
+		{
+			cmd.ReleaseTemporaryRT(m_InternalLut.id);
+		}
+	}
 }
 
 5 Feature相关

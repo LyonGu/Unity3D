@@ -32,7 +32,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
                 return CoreUtils.CreateEngineMaterial(shader);
             }
-
+            //相关shader
             m_LutBuilderLdr = Load(data.shaders.lutBuilderLdrPS); //"Shaders/PostProcessing/LutBuilderLdr.shader"
             m_LutBuilderHdr = Load(data.shaders.lutBuilderHdrPS); //"Shaders/PostProcessing/LutBuilderHdr.shader"
 
@@ -66,19 +66,20 @@ namespace UnityEngine.Rendering.Universal.Internal
                 // Fetch all color grading settings
                 //Volume下的后效效果组件: ChannelMixer,ColorAdjustments,ColorCurves,LiftGammaGain,ShadowsMidtonesHighlights....
                 var stack = VolumeManager.instance.stack;
-                var channelMixer = stack.GetComponent<ChannelMixer>();
-                var colorAdjustments = stack.GetComponent<ColorAdjustments>();
+                var channelMixer = stack.GetComponent<ChannelMixer>(); //通道混合
+                var colorAdjustments = stack.GetComponent<ColorAdjustments>(); //对比度，色相，饱和度，滤镜，曝光度
                 var curves = stack.GetComponent<ColorCurves>();
                 var liftGammaGain = stack.GetComponent<LiftGammaGain>();
                 var shadowsMidtonesHighlights = stack.GetComponent<ShadowsMidtonesHighlights>();
-                var splitToning = stack.GetComponent<SplitToning>();
-                var tonemapping = stack.GetComponent<Tonemapping>();
-                var whiteBalance = stack.GetComponent<WhiteBalance>();
+                var splitToning = stack.GetComponent<SplitToning>(); //色调分离
+                var tonemapping = stack.GetComponent<Tonemapping>(); //
+                var whiteBalance = stack.GetComponent<WhiteBalance>(); //白平衡
 
                 ref var postProcessingData = ref renderingData.postProcessingData;
                 bool hdr = postProcessingData.gradingMode == ColorGradingMode.HighDynamicRange;
 
-                // Prepare texture & material  RT
+                // Prepare texture & material  RT 
+                //创建一个RT，名字为 _InternalGradingLut
                 int lutHeight = postProcessingData.lutSize;
                 int lutWidth = lutHeight * lutHeight;
                 var format = hdr ? m_HdrLutFormat : m_LdrLutFormat;
@@ -180,11 +181,14 @@ namespace UnityEngine.Rendering.Universal.Internal
         /// <inheritdoc/>
         public override void OnFinishCameraStackRendering(CommandBuffer cmd)
         {
+            //释放RT
             cmd.ReleaseTemporaryRT(m_InternalLut.id);
         }
 
+        //ForwarRender.Dispose会被调用
         public void Cleanup()
         {
+            //Destroy 材质
             CoreUtils.Destroy(m_LutBuilderLdr);
             CoreUtils.Destroy(m_LutBuilderHdr);
         }

@@ -401,7 +401,7 @@ namespace UnityEngine.Rendering.Universal
 
         public void Dispose()
         {
-            // Dispose all renderer features...
+            // Dispose all renderer features...，调用所有Feature的Dispose
             for (int i = 0; i < m_RendererFeatures.Count; ++i)
             {
                 if (rendererFeatures[i] == null)
@@ -411,6 +411,8 @@ namespace UnityEngine.Rendering.Universal
             }
 
             Dispose(true);
+            
+            //告诉GC管理器，这个对象不需要执行析构方法了
             GC.SuppressFinalize(this);
         }
 
