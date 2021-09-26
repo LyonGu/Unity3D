@@ -652,7 +652,10 @@ namespace UnityEngine.Rendering.Universal
             //resolvePostProcessingToCameraTarget这个变量指给lastCameraInTheStack为true时才会使用，其实可以放到if里面
             if (lastCameraInTheStack)
             {
-                //最后一个渲染目标: statck里相机没有激活 或者 Stack里最后一个激活相机 才会走这段逻辑
+                //最后一个渲染目标:
+                //    baseCamera的statck为空或者statck里相机都没有激活
+                //    overlay相机，必须在baseCamera的statck里，且为最后一个激活相机
+                //才会走这段逻辑
          
                 
                 // Post-processing will resolve to final target. No need for final blit pass.
