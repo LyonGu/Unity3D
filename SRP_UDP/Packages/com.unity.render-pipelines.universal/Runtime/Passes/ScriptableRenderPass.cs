@@ -243,6 +243,9 @@ namespace UnityEngine.Rendering.Universal
         /// <seealso cref="Configure"/>
         public void ConfigureClear(ClearFlag clearFlag, Color clearColor)
         {
+            //这几个变量会在ScriptableRenderer的SetRenderTarget里使用, 
+            //ScriptableRenderer.
+            //    Execute ==> ExecuteBlock=> ExecuteRenderPass=> SetRenderPassAttachments=> SetRenderTarget
             m_ClearFlag = clearFlag;
             m_ClearColor = clearColor;
         }

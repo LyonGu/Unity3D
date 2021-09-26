@@ -52,7 +52,8 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             base.profilingSampler = new ProfilingSampler(nameof(AdditionalLightsShadowCasterPass));
             renderPassEvent = evt;
-
+            
+            //shader中的一些属性
             AdditionalShadowsConstantBuffer._AdditionalLightsWorldToShadow = Shader.PropertyToID("_AdditionalLightsWorldToShadow");
             AdditionalShadowsConstantBuffer._AdditionalShadowParams = Shader.PropertyToID("_AdditionalShadowParams");
             AdditionalShadowsConstantBuffer._AdditionalShadowOffset0 = Shader.PropertyToID("_AdditionalShadowOffset0");
@@ -99,6 +100,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 m_ShadowCastingLightIndicesMap.Add(-1);
 
             int validShadowCastingLights = 0;
+            //软阴影
             bool supportsSoftShadows = renderingData.shadowData.supportsSoftShadows;
             for (int i = 0; i < visibleLights.Length && m_AdditionalShadowCastingLightIndices.Count < additionalLightsCount; ++i)
             {
@@ -233,8 +235,11 @@ namespace UnityEngine.Rendering.Universal.Internal
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
+            //设置阴影RT
             m_AdditionalLightsShadowmapTexture = ShadowUtils.GetTemporaryShadowTexture(m_ShadowmapWidth, m_ShadowmapHeight, k_ShadowmapBufferBits);
+            //配置color buffer渲染目标，设置颜色渲染到RT上
             ConfigureTarget(new RenderTargetIdentifier(m_AdditionalLightsShadowmapTexture));
+            //配置清一遍所有帧缓冲数据，颜色+深度+模板都清除
             ConfigureClear(ClearFlag.All, Color.black);
         }
 

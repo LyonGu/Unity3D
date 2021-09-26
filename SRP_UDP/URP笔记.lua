@@ -631,13 +631,42 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 				遍历m_ActiveRenderPassQueue，分别调用ExecuteRenderPass(context, renderPass, ref renderingData)
 			}
 
-			ExecuteRenderPass
+			ExecuteRenderPass*******
 			{
 				//********先调用pass的Configure方法 大部分内置的pass都没有实现，自定义的pass可以自己实现
 	            renderPass.Configure(cmd, cameraData.cameraTargetDescriptor);
 
-                //设置pass的渲染目标对象，Clore和Depth，摄像机真正的渲染目标对象
+                //*******设置pass的渲染目标对象，Clore和Depth，摄像机真正的渲染目标对象
                 SetRenderPassAttachments(cmd, renderPass, ref cameraData);
+                {
+                	//设置渲染目标
+                	SetRenderTarget
+                	{
+                		//渲染时颜色信息配置
+                		RenderBufferLoadAction colorLoadAction = ((uint)clearFlag & (uint)ClearFlag.Color) != 0 ?
+
+                			RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
+                		//渲染时深度信息配置
+                		RenderBufferLoadAction depthLoadAction = ((uint)clearFlag & (uint)ClearFlag.Depth) != 0 ?
+                			RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
+
+                		//继续调用重载方法SetRenderTarget，设置颜色缓冲区和深度缓冲区的操作，快到末尾了
+                		SetRenderTarget(cmd, colorAttachment, colorLoadAction, RenderBufferStoreAction.Store,
+                			depthAttachment, depthLoadAction, RenderBufferStoreAction.Store, clearFlag, clearColor);
+                		{
+                			//*******真正设置渲染目标，是通过CommandBuffer的SetRenderTarget方法和ClearRenderTarget方法
+                			CoreUtils.SetRenderTarget
+                			{
+                				//******这里的colorBuffer和depthBuffer 其实就是pass上colorAttachment和depthAttachment
+                				cmd.SetRenderTarget(colorBuffer, colorLoadAction, colorStoreAction, depthBuffer, depthLoadAction, depthStoreAction);
+            					ClearRenderTarget(cmd, clearFlag, clearColor);
+            					{
+            						cmd.ClearRenderTarget((clearFlag & ClearFlag.Depth) != 0, (clearFlag & ClearFlag.Color) != 0, clearColor);
+            					}
+                			}
+                		}
+                	}
+                }
 
                 //又执行了一次拷贝渲染命令到context里
                 context.ExecuteCommandBuffer(cmd);
@@ -743,6 +772,40 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			}
 		}
 		
+	}
+
+	2 AdditionalLightsShadowCasterPass：渲染结果最后绘制在RT上
+	{
+		Setup
+		{
+			设置副光源阴影数据
+		}
+
+		Configure
+		{
+			//设置阴影RT
+            m_AdditionalLightsShadowmapTexture = ShadowUtils.GetTemporaryShadowTexture(m_ShadowmapWidth, m_ShadowmapHeight, k_ShadowmapBufferBits);
+            //配置color buffer渲染目标，设置颜色渲染到RT上
+            ConfigureTarget(new RenderTargetIdentifier(m_AdditionalLightsShadowmapTexture));
+            //配置清一遍所有帧缓冲数据，颜色+深度+模板都清除
+            ConfigureClear(ClearFlag.All, Color.black);
+		}
+
+		Execute
+		{
+			RenderAdditionalShadowmapAtlas
+			{
+				//根据阴影联级，给shader中的一些变量设置值：_ShadowBias:阴影偏移，是为了自遮挡阴影瑕疵(shadow acne)，LightDirection:光的方向
+				ShadowUtils.SetupShadowCasterConstantBuffer(cmd, ref shadowLight, shadowBias);
+
+				//设置视口，设置vp矩阵，绘制阴影，添加渲染命令到context里 ******
+				ShadowUtils.RenderShadowSlice
+
+			  	//shader变体设置，开启和关闭对应的宏
+			    CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.AdditionalLightShadows, anyShadowSliceRenderer);
+            	CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.SoftShadows, softShadows);
+			}
+		}
 	}
 }
 

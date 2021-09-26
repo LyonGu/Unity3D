@@ -1020,10 +1020,11 @@ namespace UnityEngine.Rendering.Universal
                 m_ActiveColorAttachments[i] = 0;
 
             m_ActiveDepthAttachment = depthAttachment;
-
+            
+            //渲染时颜色信息配置
             RenderBufferLoadAction colorLoadAction = ((uint)clearFlag & (uint)ClearFlag.Color) != 0 ?
                 RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
-
+            //渲染时深度信息配置
             RenderBufferLoadAction depthLoadAction = ((uint)clearFlag & (uint)ClearFlag.Depth) != 0 ?
                 RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
 

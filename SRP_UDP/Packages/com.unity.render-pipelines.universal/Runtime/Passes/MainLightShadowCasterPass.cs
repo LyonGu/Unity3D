@@ -136,7 +136,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             m_MainLightShadowmapTexture.name = "m_MainLightShadowmapTexture";
             //配置color buffer渲染目标，设置颜色渲染到RT上
             ConfigureTarget(new RenderTargetIdentifier(m_MainLightShadowmapTexture));
-            //清一遍帧缓冲数据
+            //配置清一遍所有帧缓冲数据，颜色+深度+模板都清除
             ConfigureClear(ClearFlag.All, Color.black);
         }
 
