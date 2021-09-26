@@ -333,6 +333,7 @@ namespace UnityEngine.Rendering.Universal
         /// <seealso cref="DrawingSettings"/>
         public DrawingSettings CreateDrawingSettings(ShaderTagId shaderTagId, ref RenderingData renderingData, SortingCriteria sortingCriteria)
         {
+            //创建一个DrawingSettings结构体
             Camera camera = renderingData.cameraData.camera;
             SortingSettings sortingSettings = new SortingSettings(camera) { criteria = sortingCriteria };
             DrawingSettings settings = new DrawingSettings(shaderTagId, sortingSettings)
@@ -342,6 +343,7 @@ namespace UnityEngine.Rendering.Universal
                 enableDynamicBatching = renderingData.supportsDynamicBatching,
 
                 // Disable instancing for preview cameras. This is consistent with the built-in forward renderer. Also fixes case 1127324.
+                //非CameraType.Preview相机会开启GPUInstancing
                 enableInstancing = camera.cameraType == CameraType.Preview ? false : true,
             };
             return settings;

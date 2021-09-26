@@ -185,7 +185,7 @@
 			CanCopyDepth函数判断当前环境是否可开启。现在看起来需要系统支持拷贝深度贴图并且不能开启MSAA，看注释之后的版本会支持MSAA
 			这个pass一般在不透明渲染之后执行。看代码对scene相机执行时间不同，可是现在scene不会用这个渲染，可能是给以后留的吧。
 
-			实现方法
+			实现方法?????
 			{
 				FrowardRender.SetUp：设置源rt关联到shader的_CameraDepthAttachment。目标rt关联到_CameraDepthTexture。
 				CopyDepthPass.OnCameraSetup：设置目标rt格式，colorFormat为Depth，32位，msaa为1不开启，filterMode为Point ???? 没找到这个方法
@@ -207,8 +207,8 @@
 
 		3 获取深度纹理的方法二：DepthOnlyPass
 		{
-			渲染所有shader中有DepthOnly pass的物体到指定深度buffer。
-			相机的rt，设置为哪个texture，渲染的物体就都渲染到这个rt上
+			渲染所有shader中有DepthOnly pass的物体到指定RT上：_CameraDepthTexture。
+
 		}
 
 		总结下： DepthOnlyPass和CopyDepthPass是互斥的，
@@ -623,7 +623,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 		接下来*****按照分类分别执行ExecuteBlock方法和ExecuteRenderPass方法，调用不同的pass的Configure方法和Execute方法，注意这里暂时不把渲染命令提交给GPU
 
-		6 先执行渲染之前的处理，主要是阴影相关的pass，这里调用的是时间顺序小于150的, 主要是阴影相关的一些pass，MainLightShadowCasterPass和AdditionalLightsShadowCasterPass
+		6 ********先执行渲染之前的处理，主要是阴影相关的pass，这里调用的是时间顺序小于150的, 主要是阴影相关的一些pass，MainLightShadowCasterPass和AdditionalLightsShadowCasterPass
 		{
 
 			ExecuteBlock
@@ -773,7 +773,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 		
 	}
-
+	——————————————————————————————————————————————————————————
 	2 AdditionalLightsShadowCasterPass：渲染结果最后绘制在RT上
 	{
 		Setup
@@ -807,6 +807,70 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			}
 		}
 	}
+	——————————————————————————————————————————————————————————
+	3 DepthOnlyPass：渲染结果最后绘制在RT上，名为_CameraDepthTexture
+	{
+		Setup
+		{
+			/*
+             RenderTextureDescriptor 结构，里面记录的是对于RT的一些描述信息，depthBufferBits默认给的32bit。
+             RenderTargetHandle结构主要记录了一个shader property id
+             */
+            this.depthAttachmentHandle = depthAttachmentHandle;
+            
+            //先设置管线的color为depth
+            baseDescriptor.colorFormat = RenderTextureFormat.Depth; 
+            //32位 深度通道
+            baseDescriptor.depthBufferBits = kDepthBufferBits;
+
+            //禁用MSAA
+            baseDescriptor.msaaSamples = 1;
+            descriptor = baseDescriptor;
+		}
+
+		OnCameraSetup
+		{
+			//创建一个rt记录深度值，“_CameraDepthTexture”
+            cmd.GetTemporaryRT(depthAttachmentHandle.id, descriptor, FilterMode.Point);
+            
+            //设置颜色缓冲渲染目标
+            ConfigureTarget(new RenderTargetIdentifier(depthAttachmentHandle.Identifier(), 0, CubemapFace.Unknown, -1));
+            
+            //清除所有信息（颜色+深度+模板）
+            ConfigureClear(ClearFlag.All, Color.black);
+		}
+
+		Execute
+		{
+			//复制绘制命令到context里
+            context.ExecuteCommandBuffer(cmd);
+            cmd.Clear();
+
+            //设置一些渲染相关的参数：排序方式，passId，
+            //不透明物体排序
+            var sortFlags = renderingData.cameraData.defaultOpaqueSortFlags;
+
+            //只绘制具有"DepthOnly"pass的物体
+            //创建一个DrawingSettings结构体 非CameraType.Preview相机会开启GPUInstancing
+            var drawSettings = CreateDrawingSettings(m_ShaderTagId, ref renderingData, sortFlags);
+            drawSettings.perObjectData = PerObjectData.None;
+            
+            //绘制几何体：其实这里也只是把命令添加到队列里，需要 context.Submit()后才会真正绘制
+            context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref m_FilteringSettings);
+		}
+
+		OnCameraCleanup
+		{
+			//渲染目标如果不是默认帧缓冲需要执行清理操作
+            if (depthAttachmentHandle != RenderTargetHandle.CameraTarget)
+            {
+                cmd.ReleaseTemporaryRT(depthAttachmentHandle.id);
+                depthAttachmentHandle = RenderTargetHandle.CameraTarget;
+            }
+		}
+
+	}
+	——————————————————————————————————————————————————————————
 }
 
 5 Feature相关

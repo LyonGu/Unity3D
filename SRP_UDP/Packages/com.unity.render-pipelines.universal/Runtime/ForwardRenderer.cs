@@ -545,7 +545,7 @@ namespace UnityEngine.Rendering.Universal
                 else
                 {
                     //只生成深度图  DepthOnlyPass加入对列 生成_CameraDepthTexture 
-                    //使用DepthOnlyPass 生成深度图
+                    //使用DepthOnlyPass 生成深度图 ，这个是拷贝进去的数据cameraTargetDescriptor
                     m_DepthPrepass.Setup(cameraTargetDescriptor, m_DepthTexture);
                     EnqueuePass(m_DepthPrepass);
                 }
