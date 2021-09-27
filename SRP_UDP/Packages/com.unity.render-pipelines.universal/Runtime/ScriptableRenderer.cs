@@ -709,6 +709,7 @@ namespace UnityEngine.Rendering.Universal
             // Add render passes from custom renderer features
             for (int i = 0; i < rendererFeatures.Count; ++i)
             {
+                //不激活的直接跳过
                 if (!rendererFeatures[i].isActive)
                 {
                     continue;

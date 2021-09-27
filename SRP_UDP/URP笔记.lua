@@ -1514,6 +1514,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
     		// Add render passes from custom renderer features
             for (int i = 0; i < rendererFeatures.Count; ++i)
             {
+            	//不激活的直接跳过
                 if (!rendererFeatures[i].isActive)
                 {
                     continue;
@@ -1577,7 +1578,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 ? SortingCriteria.CommonTransparent
                 : renderingData.cameraData.defaultOpaqueSortFlags;
             
-            //创建绘制设置对象DrawingSettings
+            //创建绘制设置对象DrawingSettings,m_ShaderTagIdList里记录了使用的pass，并且把自定义pass加入到DrawingSettings对象里
             DrawingSettings drawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, sortingCriteria);
             drawingSettings.overrideMaterial = overrideMaterial;
             drawingSettings.overrideMaterialPassIndex = overrideMaterialPassIndex;
@@ -1592,5 +1593,6 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
             context.ExecuteCommandBuffer(cmd);
 		}
 	}
+	——————————————————————————————————————————————————————————
 }
 
