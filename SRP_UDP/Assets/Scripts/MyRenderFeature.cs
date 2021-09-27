@@ -46,10 +46,10 @@ public class MyRendererPass : ScriptableRenderPass
     {
         CommandBuffer cmd = CommandBufferPool.Get();
 
-        //Ìí¼ÓProfilingScope ÔÚFrameDeBuggerÖĞ·½±ã²é¿´
+        //æ·»åŠ ProfilingScope åœ¨FrameDeBuggerä¸­æ–¹ä¾¿æŸ¥çœ‹
         using (new ProfilingScope(cmd, profilingSampler))
         {
-            //cmd.draw ... µ÷ÓÃ»æÖÆ½Ó¿Ú
+            //cmd.draw ... è°ƒç”¨ç»˜åˆ¶æ¥å£
             cmd.DrawMesh(m_Setting.mesh, Matrix4x4.identity, m_Setting.material);
 
             //cmd.DrawMeshInstanced

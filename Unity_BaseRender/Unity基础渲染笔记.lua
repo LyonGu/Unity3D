@@ -2688,6 +2688,8 @@
 
 	SRP批处理程序无法处理每个对象的材质属性（例如不同材质上颜色属性不同）==》 需要使用GPU Instancing来合批
 
+	GPU Instancing和SRP Battch 不能同时生效，开启SRP Battch后优先考虑SRP Battch，然后才是GPU Instancing
+
 
 	到目前为止，我们一直为相机使用单个帧缓冲区，其中包含颜色和深度信息。这是典型的帧缓冲区配置，但是颜色和深度数据始终存储在单独的缓冲区中，称为帧缓冲区附件
 
@@ -2718,6 +2720,30 @@
 		f.bufferDepth =
 			SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, sampler_point_clamp, f.screenUV, 0); //当前深度缓冲区中的深度值
 		return f;
+	}
+
+
+
+	重建视口空间深度
+	{
+		这给了我们原始的深度缓冲值。要将其转换为视图空间深度，可以在使用正交摄影机的情况下再次调用OrthographicDepthBufferToLinear，
+		例如当前片段的深度。透视深度也需要转换，为此我们可以使用LinearEyeDepth。它需要_ZBufferParams作为第二个参数。
+
+		f.bufferDepth = LOAD_TEXTURE2D(_CameraDepthTexture, f.positionSS).r;
+		f.bufferDepth = IsOrthographicCamera() ?
+			OrthographicDepthBufferToLinear(f.bufferDepth) :
+			LinearEyeDepth(f.bufferDepth, _ZBufferParams);
+	}
+
+
+	可变分辨率： 改变渲染缓冲区的大小
+	{
+		应用程序一般以固定的分辨率运行。一些应用程序允许通过设置菜单更改分辨率，但这需要完全重新初始化图形。一个更灵活的方法是保持应用程序的分辨率不变，但改变相机用于渲染的缓冲区的大小
+		这将影响整个渲染过程，除了最终绘制到帧缓冲区。此时的结果将被重新缩放以匹配应用程序的分辨率。
+
+		通过减少缓冲区的大小，可以减少片段的数量，从而提高性能。
+		例如，可以对所有3D渲染执行此操作，同时使UI保持全分辨率。还可以动态调整比例，以保持可接受的帧频。
+		最后，我们还可以将缓冲区的大小增加到超采样，从而减少由有限分辨率引起的混叠失真。最后一种方法也称为SSAA，代表超采样抗锯齿。
 	}
 }
 

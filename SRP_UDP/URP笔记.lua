@@ -794,8 +794,14 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	}
 }
 
-4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering（只要最后一个输出到屏幕的相机才会调用OnFinishCameraStackRendering）
+4 一些pass的SetUp方法，以及前向渲染相关各种pass的重载方法：OnCameraSetup， Configure，Execute， FrameCleanup（最后调用pass的OnCameraCleanup），OnFinishCameraStackRendering（只要最后一个输出到屏幕的相机才会调用OnFinishCameraStackRendering）
 {
+	OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) ==》 可以拿到 RenderingData对象
+	Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor) ==》  可以拿到 RenderTextureDescriptor对象
+	Execute(ScriptableRenderContext context, ref RenderingData renderingData); ==》 可以拿到 RenderingData对象
+	FrameCleanup ==》 大部分pass都没有实现，调用基类的，最后会调用到pass的OnCameraCleanup
+	OnFinishCameraStackRendering(CommandBuffer cmd)
+	
 	1 MainLightShadowCasterPass：渲染结果最后绘制在RT上
 	{
 		Setup
@@ -1486,7 +1492,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 }
 
-5 Feature相关，继承ScriptableRendererFeature
+5 Feature相关，继承ScriptableRendererFeature，自己实现create方法和AddRenderPasses方法就能加入自定义pass了
 {
 	在创建Render对象时，就会调用基类ScriptableRenderer的构造函数，根据data.rendererFeatures判断是否要创建自定义feature
 	public ScriptableRenderer(ScriptableRendererData data)
