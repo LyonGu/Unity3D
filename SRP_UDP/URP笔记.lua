@@ -1225,8 +1225,14 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 	}
 	——————————————————————————————————————————————————————————
-	10 PostProcessPass
+	10 PostProcessPass:
 	{
+		分两种后期：
+		{
+			1 如果是finalPass，渲染结果 颜色缓冲和深度缓冲都绘制到帧缓冲
+			2 如果是不是finalPass,渲染结果 颜色缓冲绘制到 _AfterPostProcessTexture RT, 不绘制深度信息
+		}
+
 		Setup
 		{
 			//复制rt描述文件，设置useMipMap和autoGenerateMips为false
