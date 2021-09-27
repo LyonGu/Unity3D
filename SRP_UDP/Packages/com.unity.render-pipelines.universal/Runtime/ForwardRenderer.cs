@@ -691,7 +691,9 @@ namespace UnityEngine.Rendering.Universal
 
                 if (renderingData.cameraData.captureActions != null)
                 {
-                    //截屏pass
+                    //截屏pass，
+                    //当前相机开启了后效，sourceForFinalPass为 m_AfterPostProcessColor， RT _AfterPostProcessTexture
+                    //当前相机未开启了后效，sourceForFinalPass为 m_ActiveCameraColorAttachment，可能是RT _CameraColorTexture，也可能是默认帧缓冲
                     m_CapturePass.Setup(sourceForFinalPass);
                     EnqueuePass(m_CapturePass);
                 }
