@@ -386,12 +386,12 @@ namespace UnityEngine.Rendering.Universal
         public ScriptableRenderer(ScriptableRendererData data)
         {
             profilingExecute = new ProfilingSampler($"{nameof(ScriptableRenderer)}.{nameof(ScriptableRenderer.Execute)}: {data.name}");
-
+        
             foreach (var feature in data.rendererFeatures)
             {
                 if (feature == null)
                     continue;
-
+                //调用feature的Create方法，并且加入到 m_RendererFeatures
                 feature.Create();
                 m_RendererFeatures.Add(feature);
             }

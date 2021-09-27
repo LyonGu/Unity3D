@@ -55,6 +55,7 @@ namespace UnityEngine.Rendering.Universal
         public void Dispose()
         {
             Dispose(true);
+            //告诉GC管理器不要执行这个对象的析构方法
             GC.SuppressFinalize(this);
         }
 

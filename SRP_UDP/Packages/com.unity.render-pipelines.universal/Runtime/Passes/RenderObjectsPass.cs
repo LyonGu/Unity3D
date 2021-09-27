@@ -53,15 +53,19 @@ namespace UnityEngine.Experimental.Rendering.Universal
             RenderQueueRange renderQueueRange = (renderQueueType == RenderQueueType.Transparent)
                 ? RenderQueueRange.transparent
                 : RenderQueueRange.opaque;
+            
+            //过滤设置
             m_FilteringSettings = new FilteringSettings(renderQueueRange, layerMask);
 
             if (shaderTags != null && shaderTags.Length > 0)
             {
+                //加入自定义pass
                 foreach (var passName in shaderTags)
                     m_ShaderTagIdList.Add(new ShaderTagId(passName));
             }
             else
             {
+                //shaderTags为空时会默认加入URP内置shader
                 m_ShaderTagIdList.Add(new ShaderTagId("SRPDefaultUnlit"));
                 m_ShaderTagIdList.Add(new ShaderTagId("UniversalForward"));
                 m_ShaderTagIdList.Add(new ShaderTagId("UniversalForwardOnly"));
@@ -81,10 +85,12 @@ namespace UnityEngine.Experimental.Rendering.Universal
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
+            //设置排序规则
             SortingCriteria sortingCriteria = (renderQueueType == RenderQueueType.Transparent)
                 ? SortingCriteria.CommonTransparent
                 : renderingData.cameraData.defaultOpaqueSortFlags;
-
+            
+            //创建绘制设置对象DrawingSettings,m_ShaderTagIdList里记录了使用的pass
             DrawingSettings drawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, sortingCriteria);
             drawingSettings.overrideMaterial = overrideMaterial;
             drawingSettings.overrideMaterialPassIndex = overrideMaterialPassIndex;
@@ -93,6 +99,7 @@ namespace UnityEngine.Experimental.Rendering.Universal
             Camera camera = cameraData.camera;
 
             // In case of camera stacking we need to take the viewport rect from base camera
+            //屏幕大小
             Rect pixelRect = renderingData.cameraData.pixelRect;
             float cameraAspect = (float) pixelRect.width / (float) pixelRect.height;
 
@@ -103,27 +110,31 @@ namespace UnityEngine.Experimental.Rendering.Universal
             {
                 if (m_CameraSettings.overrideCamera)
                 {
+                    //重载了相机设置
                     if (cameraData.xr.enabled)
                     {
                         Debug.LogWarning("RenderObjects pass is configured to override camera matrices. While rendering in stereo camera matrices cannot be overridden.");
                     }
                     else
                     {
+                        //使用配置信息重新创建投影矩阵，
                         Matrix4x4 projectionMatrix = Matrix4x4.Perspective(m_CameraSettings.cameraFieldOfView, cameraAspect,
                             camera.nearClipPlane, camera.farClipPlane);
                         projectionMatrix = GL.GetGPUProjectionMatrix(projectionMatrix, cameraData.IsCameraProjectionMatrixFlipped());
-
+                        
+                        //重新计算视口矩阵
                         Matrix4x4 viewMatrix = cameraData.GetViewMatrix();
                         Vector4 cameraTranslation = viewMatrix.GetColumn(3);
                         viewMatrix.SetColumn(3, cameraTranslation + m_CameraSettings.offset);
-
+                        //重新设置shader中变量使用
                         RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, projectionMatrix, false);
                     }
                 }
 
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear();
-
+                
+                //添加绘制几何体命令
                 context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref m_FilteringSettings,
                     ref m_RenderStateBlock);
 
@@ -132,6 +143,7 @@ namespace UnityEngine.Experimental.Rendering.Universal
                     RenderingUtils.SetViewAndProjectionMatrices(cmd, cameraData.GetViewMatrix(), cameraData.GetGPUProjectionMatrix(), false);
                 }
             }
+            //把cmd里的命令复制到context上
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }

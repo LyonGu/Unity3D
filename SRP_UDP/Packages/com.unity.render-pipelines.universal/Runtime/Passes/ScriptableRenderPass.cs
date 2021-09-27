@@ -367,6 +367,7 @@ namespace UnityEngine.Rendering.Universal
             }
 
             DrawingSettings settings = CreateDrawingSettings(shaderTagIdList[0], ref renderingData, sortingCriteria);
+            //把自定义pass加入到DrawingSettings对象里
             for (int i = 1; i < shaderTagIdList.Count; ++i)
                 settings.SetShaderPassName(i, shaderTagIdList[i]);
             return settings;

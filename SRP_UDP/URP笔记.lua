@@ -1480,8 +1480,117 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
             }
 		}
 	}
+	——————————————————————————————————————————————————————————
+
+
 
 }
 
-5 Feature相关
+5 Feature相关，继承ScriptableRendererFeature
+{
+	在创建Render对象时，就会调用基类ScriptableRenderer的构造函数，根据data.rendererFeatures判断是否要创建自定义feature
+	public ScriptableRenderer(ScriptableRendererData data)
+    {
+        profilingExecute = new ProfilingSampler($"{nameof(ScriptableRenderer)}.{nameof(ScriptableRenderer.Execute)}: {data.name}");
+    
+        foreach (var feature in data.rendererFeatures)
+        {
+            if (feature == null)
+                continue;
+            //调用feature的Create方法，并且加入到 m_RendererFeatures
+            feature.Create();
+            m_RendererFeatures.Add(feature);
+        }
+        Clear(CameraRenderType.Base);
+        m_ActiveRenderPassQueue.Clear();
+    }
+
+
+    ForwardRender.Setup里调用feature的AddRenderPasses方法
+    {
+    	//RenderFeature Pass 调用每个激活featrure的 AddRenderPasses
+    	AddRenderPasses
+    	{
+    		// Add render passes from custom renderer features
+            for (int i = 0; i < rendererFeatures.Count; ++i)
+            {
+                if (!rendererFeatures[i].isActive)
+                {
+                    continue;
+                }
+                //每个自定义的Feature需要自己实现AddRenderPasses
+                rendererFeatures[i].AddRenderPasses(this, ref renderingData);
+            }
+    	}
+    }
+
+	——————————————————————————————————————————————————————————    
+	RenderObjects：ScriptableRendererFeature
+	{
+		Create
+		{
+			//settings为序列化对象，面板上的配置
+            FilterSettings filter = settings.filterSettings;
+
+ 			//限制最小事件
+            if (settings.Event < RenderPassEvent.BeforeRenderingPrepasses)
+                settings.Event = RenderPassEvent.BeforeRenderingPrepasses;
+            
+            //*****创建对应的Pass
+            //filter.RenderQueueType 代表只渲染哪个队列，目前只有透明和不透明两种选择
+            //filter.LayerMask 过滤层
+            //filter.PassNames 绘制时使用的的pass，这里传入的是shader里"LightMode"对应的名字 Tags {"LightMode" = "xxxx"}
+            //settings.cameraSettings 代表相机设置信息：
+            renderObjectsPass = new RenderObjectsPass(settings.passTag, settings.Event, filter.PassNames,
+                filter.RenderQueueType, filter.LayerMask, settings.cameraSettings);
+            
+            //是否重载材质信息
+            renderObjectsPass.overrideMaterial = settings.overrideMaterial;
+            renderObjectsPass.overrideMaterialPassIndex = settings.overrideMaterialPassIndex;
+            
+            //是否重载深度信息
+            if (settings.overrideDepthState)
+                renderObjectsPass.SetDetphState(settings.enableWrite, settings.depthCompareFunction);
+            
+            //是否重载模板信息
+            if (settings.stencilSettings.overrideStencilState)
+                renderObjectsPass.SetStencilState(settings.stencilSettings.stencilReference,
+                    settings.stencilSettings.stencilCompareFunction, settings.stencilSettings.passOperation,
+                    settings.stencilSettings.failOperation, settings.stencilSettings.zFailOperation);
+		}
+
+		AddRenderPasses
+		{
+			//把pass加入到渲染队列里
+			renderer.EnqueuePass(renderObjectsPass);
+		}
+
+		//后面的操作就跟内置的pass一样了，会依次调用Pass的OnCameraSetup， Configure，Execute， FrameCleanup，OnFinishCameraStackRendering
+	}
+
+	RenderObjectsPass
+	{
+		Execute
+		{
+			//设置排序规则
+            SortingCriteria sortingCriteria = (renderQueueType == RenderQueueType.Transparent)
+                ? SortingCriteria.CommonTransparent
+                : renderingData.cameraData.defaultOpaqueSortFlags;
+            
+            //创建绘制设置对象DrawingSettings
+            DrawingSettings drawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, sortingCriteria);
+            drawingSettings.overrideMaterial = overrideMaterial;
+            drawingSettings.overrideMaterialPassIndex = overrideMaterialPassIndex;
+
+            //判断是否重载了相机设置，如果是，使用配置信息重新创建投影矩阵/重新计算视口矩阵/重新设置shader中变量使用
+
+            //添加绘制几何体命令
+                context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref m_FilteringSettings,
+                    ref m_RenderStateBlock);
+
+            //把cmd里的命令复制到context上
+            context.ExecuteCommandBuffer(cmd);
+		}
+	}
+}
 
