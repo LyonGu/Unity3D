@@ -102,6 +102,7 @@ namespace UnityEngine.Rendering.Universal
         Material m_TileDeferredMaterial;
         Material m_StencilDeferredMaterial;
 
+        //首先调用基类ScriptableRenderer的构造函数，根据data.rendererFeatures判断是否要创建自定义feature
         public ForwardRenderer(ForwardRendererData data) : base(data)
         {
 #if ENABLE_VR && ENABLE_XR_MODULE

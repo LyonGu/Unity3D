@@ -524,9 +524,10 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 
 	构造方法 ForwardRenderer
 	{
-		1 提前创建一堆材质信息
-		2 是否重载模板测试信息
-		3 定义一堆pass，使用事件排序，越小排到越前，越先执行
+		1 首先调用基类ScriptableRenderer的构造函数，根据data.rendererFeatures判断是否要创建自定义feature
+		2 提前创建一堆材质信息
+		3 是否重载模板测试信息
+		4 定义一堆pass，使用事件排序，越小排到越前，越先执行
 		{
 			//主光阴影ShadowCaster，附光阴影ShadowCaster  50
 			//pre深度pass  150
@@ -544,7 +545,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			//FinalBlitPass 最后输出到屏幕的pass  1000+1
 		}
 
-		4 定义各种RT名称 RenderTargetHandle.id 
+		5定义各种RT名称 RenderTargetHandle.id 
 		{
 			m_CameraColorAttachment ==> _CameraColorTexture
 			m_CameraDepthAttachment ==> _CameraDepthAttachment
