@@ -27,6 +27,8 @@
         /// <param name="colorHandle"></param>
         public void Setup(RenderTextureDescriptor baseDescriptor, RenderTargetHandle colorHandle)
         {
+            //    当前相机开启了后效，colorHandle为 Render的m_AfterPostProcessColor， RT _AfterPostProcessTexture
+            //    当前相机未开启了后效，colorHandle为  Render的m_ActiveCameraColorAttachment，可能是RT _CameraColorTexture，也可能是默认帧缓冲
             m_Source = colorHandle;
         }
 
@@ -42,6 +44,7 @@
             // Note: We need to get the cameraData.targetTexture as this will get the targetTexture of the camera stack.
             // Overlay cameras need to output to the target described in the base camera while doing camera stack.
             ref CameraData cameraData = ref renderingData.cameraData;
+            //cameraTarget为targetTexture，或者 默认帧缓冲
             RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null) ? new RenderTargetIdentifier(cameraData.targetTexture) : BuiltinRenderTextureType.CameraTarget;
 
             bool isSceneViewCamera = cameraData.isSceneViewCamera;
@@ -63,7 +66,8 @@
                  */
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.LinearToSRGBConversion,
                     cameraData.requireSrgbConversion);
-
+                
+                //shader的全局属性 _SourceTex
                 cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, m_Source.Identifier());
 
 #if ENABLE_VR && ENABLE_XR_MODULE
@@ -100,10 +104,17 @@
                  */
                 if (isSceneViewCamera || cameraData.isDefaultViewport)
                 {
+                    //场景相机或者全屏视口，设置帧缓冲为颜色和深度数据的渲染目标
+                    //BuiltinRenderTextureType.CameraTarget 代表 Target texture of currently rendering camera
+                    //如果camera的targetTexure没有设置，就是默认帧缓冲，设置了就是相机的TargetTexure
+                    
                     // This set render target is necessary so we change the LOAD state to DontCare.
                     cmd.SetRenderTarget(BuiltinRenderTextureType.CameraTarget,
                         RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, // color
                         RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare); // depth
+                    //执行对应的pass，从m_Source输出到cameraTarget
+                    //Add a "blit into a render texture" command.
+                    //cameraTarget 大部分情况是BuiltinRenderTextureType.CameraTarget
                     cmd.Blit(m_Source.Identifier(), cameraTarget, m_BlitMaterial);
                 }
                 else
@@ -111,6 +122,7 @@
                     // TODO: Final blit pass should always blit to backbuffer. The first time we do we don't need to Load contents to tile.
                     // We need to keep in the pipeline of first render pass to each render target to properly set load/store actions.
                     // meanwhile we set to load so split screen case works.
+                    //设置颜色缓冲区目标为cameraTarget
                     CoreUtils.SetRenderTarget(
                         cmd,
                         cameraTarget,

@@ -187,6 +187,8 @@ namespace UnityEngine.Rendering
         /// <param name="clearColor">Specify with which color the render texture should be cleared.</param>
         public static void ClearRenderTarget(CommandBuffer cmd, ClearFlag clearFlag, Color clearColor)
         {
+            //clearFlag为ALL或者Depth时清除深度缓冲
+            //clearFlag为All或者Color时清除颜色缓冲
             if (clearFlag != ClearFlag.None)
                 cmd.ClearRenderTarget((clearFlag & ClearFlag.Depth) != 0, (clearFlag & ClearFlag.Color) != 0, clearColor);
         }

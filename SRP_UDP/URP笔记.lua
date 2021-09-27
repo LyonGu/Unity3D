@@ -46,6 +46,32 @@
 
 		//m_ActiveCameraColorAttachment为一个RenderTargetHandle对象，必须调用过RenderTargetHandle.Init
         cmd.GetTemporaryRT(m_ActiveCameraColorAttachment.id, colorDescriptor, FilterMode.Bilinear);
+
+
+		//通过RenderTargetHandle对象创建RT
+		cmd.GetTemporaryRT(depthAttachmentHandle.id, descriptor, FilterMode.Point);
+
+		//创建一个RenderTargetHandle对象
+		RenderTargetHandle rtHandle = new RenderTargetHandle()
+		rtHandle.Init("_CameraColorTexture");
+
+		//通过RenderTargetHandle对象返回一个RenderTargetIdentifier对象
+		RenderTargetIdentifier identifier = RenderTargetHandle.Identifier()
+
+		//通过一个RT 创建RenderTargetIdentifier对象
+		m_AdditionalLightsShadowmapTexture = ShadowUtils.GetTemporaryShadowTexture(m_ShadowmapWidth, m_ShadowmapHeight, k_ShadowmapBufferBits);
+        //配置color buffer渲染目标，设置颜色渲染到RT上
+        new RenderTargetIdentifier(m_AdditionalLightsShadowmapTexture);
+
+
+		*****BuiltinRenderTextureType.CameraTarget意思就是当前上摄像机的目标纹理，如果camera的targetTexure没有设置，就是默认帧缓冲，设置了就是相机的TargetTexure
+		*****RenderTargetHandle.CameraTarget 表示帧缓冲对象
+
+        
+        RenderTargetIdentifier identifier = BuiltinRenderTextureType.CameraTarget
+
+		//RenderTargetHandle对象为RenderTargetHandle.CameraTarget 表示帧缓冲对象
+        RenderTargetHandle depthAttachmentHandle = RenderTargetHandle.CameraTarget
 	}
 
 	5 两种blit方法
@@ -682,11 +708,11 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 	//设置渲染目标
                 	SetRenderTarget
                 	{
-                		//渲染时颜色信息配置
+                		//渲染时颜色信息配置 如果clearFlag为ClearFlag.Color或者ClearFlag.All, 返回RenderBufferLoadAction.DontCare，效率高
                 		RenderBufferLoadAction colorLoadAction = ((uint)clearFlag & (uint)ClearFlag.Color) != 0 ?
-
                 			RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
-                		//渲染时深度信息配置
+
+                		//渲染时深度信息配置，如果clearFlag为ClearFlag.Depth或者ClearFlag.All, 返回RenderBufferLoadAction.DontCare，效率高
                 		RenderBufferLoadAction depthLoadAction = ((uint)clearFlag & (uint)ClearFlag.Depth) != 0 ?
                 			RenderBufferLoadAction.DontCare : RenderBufferLoadAction.Load;
 
@@ -701,6 +727,8 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
                 				cmd.SetRenderTarget(colorBuffer, colorLoadAction, colorStoreAction, depthBuffer, depthLoadAction, depthStoreAction);
             					ClearRenderTarget(cmd, clearFlag, clearColor);
             					{
+            						//clearFlag为ALL或者Depth时清除深度缓冲
+            						//clearFlag为All或者Color时清除颜色缓冲
             						cmd.ClearRenderTarget((clearFlag & ClearFlag.Depth) != 0, (clearFlag & ClearFlag.Color) != 0, clearColor);
             					}
                 			}
@@ -1419,9 +1447,38 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		}
 	}
 	——————————————————————————————————————————————————————————
-	12 FinalBlitPass
+	12 FinalBlitPass: camera的targetexture未设置，渲染结果最后绘制到帧缓冲，设置了就渲染到相机的targetTexture上
 	{
-		
+		Setup
+		{
+			//当前相机开启了后效，colorHandle为 Render的m_AfterPostProcessColor， RT _AfterPostProcessTexture
+            //当前相机未开启了后效，colorHandle为  Render的m_ActiveCameraColorAttachment，可能是RT _CameraColorTexture，也可能是默认帧缓冲
+            m_Source = colorHandle;
+		}
+
+		Execute
+		{
+			ref CameraData cameraData = ref renderingData.cameraData;
+            //cameraTarget为targetTexture，或者 默认帧缓冲
+            RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null) ? new RenderTargetIdentifier(cameraData.targetTexture) : BuiltinRenderTextureType.CameraTarget;
+
+         	/*
+             RenderBufferLoadAction : 表示GUP渲染时对当前目标像素加载的操作, 当给目标纹理绘制的时候，目标纹理时有颜色的
+             RenderBufferStoreAction：表示GUP渲染结束后对当前目标像素保存的操作
+             */
+            if (isSceneViewCamera || cameraData.isDefaultViewport)
+            {
+                //场景相机或者全屏视口，设置帧缓冲为颜色和深度数据的渲染目标
+                // This set render target is necessary so we change the LOAD state to DontCare.
+                cmd.SetRenderTarget(BuiltinRenderTextureType.CameraTarget,
+                    RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, // color
+                    RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare); // depth
+                //执行对应的pass，从m_Source输出到cameraTarget
+                //Add a "blit into a render texture" command.
+                //cameraTarget 大部分情况是BuiltinRenderTextureType.CameraTarget
+                cmd.Blit(m_Source.Identifier(), cameraTarget, m_BlitMaterial);
+            }
+		}
 	}
 
 }

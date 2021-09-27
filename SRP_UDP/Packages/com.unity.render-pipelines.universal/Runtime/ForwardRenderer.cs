@@ -718,10 +718,15 @@ namespace UnityEngine.Rendering.Universal
                 // We need final blit to resolve to screen
                 if (!cameraTargetResolved)
                 {
+                    //如果最後一個激活相机不解析到屏幕，就执行FinalBlit
                     //如果硬件不支持SRGB转换，直接启动FinalBlit，就需要FinalBlitPass，shader里面有个宏开关打开后会进行SRGB转换
                     //if (Display.main.requiresSrgbBlitToBackbuffer)
                     {
                         //FinalBlitPass
+                        //cameraTargetDescriptor rt描述器对象
+                        //sourceForFinalPass
+                        //    当前相机开启了后效，sourceForFinalPass为 m_AfterPostProcessColor， RT _AfterPostProcessTexture
+                        //    当前相机未开启了后效，sourceForFinalPass为 m_ActiveCameraColorAttachment，可能是RT _CameraColorTexture，也可能是默认帧缓冲
                         m_FinalBlitPass.Setup(cameraTargetDescriptor, sourceForFinalPass);
                         EnqueuePass(m_FinalBlitPass);
                     }
@@ -744,7 +749,7 @@ namespace UnityEngine.Rendering.Universal
             // stay in RT so we resume rendering on stack after post-processing
             else if (applyPostProcessing)
             {
-                //**** baseCamera会走这段逻辑
+                //**** stack不为空且里面有激活的相机，baseCamera会走这段逻辑
                 //applyPostProcessing为true 表示当前相机开启了后效
                 
                 //if (Display.main.requiresSrgbBlitToBackbuffer)
