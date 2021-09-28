@@ -120,6 +120,8 @@ public class GrabPassImpl : ScriptableRenderPass
             cmd.Blit(blurredID2, blurredID, m_BlurMaterial);
             //最后在把临时RT Blit回颜色RT
             cmd.Blit(blurredID, m_CamerColorTexture);
+            
+//            cmd.Blit(blurredID, RenderTargetHandle.CameraTarget.Identifier());
 
         }
         context.ExecuteCommandBuffer(cmd);

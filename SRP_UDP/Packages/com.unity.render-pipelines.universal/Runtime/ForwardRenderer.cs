@@ -488,23 +488,31 @@ namespace UnityEngine.Rendering.Universal
             {
                 //overlay相机设置渲染目标
                 //URP 原本是将overlay的摄像机颜色和深度写入两张RT中，最后FInalBlit到FrameBuffer中
-                //if (Display.main.requiresSrgbBlitToBackbuffer)
-                //{
-                //    m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
-                //    m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
-                //}
-                //else
-                //{
-                //    //如果硬件支持SRGB转换，直接写入FrameBuffer
-                //    m_ActiveCameraColorAttachment = RenderTargetHandle.CameraTarget;
-                //    m_ActiveCameraDepthAttachment = RenderTargetHandle.CameraTarget;
-                //}
+//                if (Display.main.requiresSrgbBlitToBackbuffer)
+//                {
+//                    m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
+//                    m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
+//                }
+//                else
+//                {
+//                    //如果硬件支持SRGB转换，直接写入FrameBuffer
+//                    if (cameraData.resolveFinalTarget)
+//                    {
+//                        m_ActiveCameraColorAttachment = RenderTargetHandle.CameraTarget;
+//                        m_ActiveCameraDepthAttachment = RenderTargetHandle.CameraTarget;
+//                    }
+//                    else
+//                    {
+//                        m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
+//                        m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
+//                    }
+//                }
                 
                 //源码就是这个
                 
                 //overlay相机直接设置激活rt目标
-                m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
-                m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
+//                m_ActiveCameraColorAttachment = m_CameraColorAttachment;  //_CameraColorTexture
+//                m_ActiveCameraDepthAttachment = m_CameraDepthAttachment;  //_CameraDepthTexture
 
 
             }
@@ -757,18 +765,20 @@ namespace UnityEngine.Rendering.Universal
                 //**** stack不为空且里面有激活的相机，baseCamera会走这段逻辑
                 //applyPostProcessing为true 表示当前相机开启了后效
                 
-                //if (Display.main.requiresSrgbBlitToBackbuffer)
-                //{
-                //    //如果硬件不支持SRGB转换，在 _AfterPostProcessColor 上画
-                //    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-                //    EnqueuePass(m_PostProcessPass);
-                //}
-                //else
-                //{
-                //    //如果硬件支持SRGB转换，在 FrameBuffer 上画
-                //    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-                //    EnqueuePass(m_PostProcessPass);
-                //}
+//                if (Display.main.requiresSrgbBlitToBackbuffer)
+//                {
+//                    //如果硬件不支持SRGB转换，在 _AfterPostProcessColor 上画
+//                    //source m_ActiveCameraColorAttachment,
+//                    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+//                    EnqueuePass(m_PostProcessPass);
+//                }
+//                else
+//                {
+//                    //如果硬件支持SRGB转换，在 FrameBuffer 上画
+//                    //source m_ActiveCameraColorAttachment,
+//                    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+//                    EnqueuePass(m_PostProcessPass);
+//                }
                 
                 //目标destination 为m_AfterPostProcessColor 后效RT _AfterPostProcessTexture
                 //source m_ActiveCameraColorAttachment,

@@ -801,7 +801,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	Execute(ScriptableRenderContext context, ref RenderingData renderingData); ==》 可以拿到 RenderingData对象
 	FrameCleanup ==》 大部分pass都没有实现，调用基类的，最后会调用到pass的OnCameraCleanup
 	OnFinishCameraStackRendering(CommandBuffer cmd)
-
+	——————————————————————————————————————————————————————————
 	1 MainLightShadowCasterPass：渲染结果最后绘制在RT上
 	{
 		Setup
@@ -1492,7 +1492,8 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
             if (isSceneViewCamera || cameraData.isDefaultViewport)
             {
                 //场景相机或者全屏视口，设置帧缓冲为颜色和深度数据的渲染目标
-                // This set render target is necessary so we change the LOAD state to DontCare.
+                //BuiltinRenderTextureType.CameraTarget 代表 Target texture of currently rendering camera
+                //如果camera的targetTexure没有设置，就是默认帧缓冲，设置了就是相机的TargetTexure
                 cmd.SetRenderTarget(BuiltinRenderTextureType.CameraTarget,
                     RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, // color
                     RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare); // depth
@@ -1801,5 +1802,26 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	}
 
 	所有后效完成后都要从_AfterPostProcessTexture绘制到 _CameraColorTexture上
+}
+
+8 如果把后效的中间RT _AfterPostProcessTexture去掉，直接绘制在帧缓冲是否会有正确表现
+{
+	表现不正确，如果把baseCamera的后效数据直接绘制到帧缓冲，
+	overlay相机执行FinalBlitPass时使用的原始数据都来自RT _CameraColorTexture，最后相机的绘制到屏幕时候是不包含后效效果的
+
+	********除非overlay相机不执行FinalBlitPass，也直接绘制到帧缓冲
+
+}
+
+9 多个相机时是否能减少blit次数（减少后效拷贝到_AfterPostProcessTexture，减少最后一次FinalBlitPass），模糊好像不支持了
+{
+	因为开启模糊，overlay相机需要使用base相机输出到_CameraColorTexture的数据进行模糊处理后再次blit到_CameraColorTexture中，
+	最后还要执行FinalBlitPass，把_CameraColorTexture中的数据拷贝到帧缓冲中
+
+	修正
+	{
+		BaseCamera还是输出到_CameraColorTexture，进行模糊后直接输出到帧缓冲，中间的UICamera输出到_CameraColorTexture，最后一个UICamera输出到帧缓冲
+			不能减少后效拷贝到_AfterPostProcessTexture，但是模糊shader的最后输出必须是帧缓冲，可以减少最后一次FinalBlitPass
+	}
 }
 

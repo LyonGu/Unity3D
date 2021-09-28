@@ -109,9 +109,11 @@
                     //如果camera的targetTexure没有设置，就是默认帧缓冲，设置了就是相机的TargetTexure
                     
                     // This set render target is necessary so we change the LOAD state to DontCare.
+                    //深度信息渲染完成后不保存 depthstore 设置为RenderBufferStoreAction.DontCare
                     cmd.SetRenderTarget(BuiltinRenderTextureType.CameraTarget,
                         RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, // color
                         RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare); // depth
+                    
                     //执行对应的pass，从m_Source输出到cameraTarget
                     //Add a "blit into a render texture" command.
                     //cameraTarget 大部分情况是BuiltinRenderTextureType.CameraTarget
