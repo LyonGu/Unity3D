@@ -697,7 +697,7 @@ namespace UnityEngine.Rendering.Universal
         {
             if (!cameraData.postProcessEnabled)
                 return false;
-            //开启SMAA抗锯齿 直接返回true
+            //相机开启SMAA抗锯齿 直接返回true
             if (cameraData.antialiasing == AntialiasingMode.SubpixelMorphologicalAntiAliasing)
                 return true;
 

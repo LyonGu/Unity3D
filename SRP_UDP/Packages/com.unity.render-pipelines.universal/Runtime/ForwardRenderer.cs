@@ -335,6 +335,7 @@ namespace UnityEngine.Rendering.Universal
             var createColorTexture = rendererFeatures.Count != 0 && !isPreviewCamera;
             if (createColorTexture)
             {
+                //这里是basecamera和overlayCamera都会走
                 //配置ColorTexture渲染目标，其实就是一张RT，名字叫“_CameraColorTexture”
                 m_ActiveCameraColorAttachment = m_CameraColorAttachment;
                 var activeColorRenderTargetId = m_ActiveCameraColorAttachment.Identifier();
@@ -383,7 +384,7 @@ namespace UnityEngine.Rendering.Universal
              *     {
              *         if(相机未开启后效)
              *             return false;
-             *         if(相机的抗锯齿模式 == AntialiasingMode.SubpixelMorphologicalAntiAliasing)
+             *         if(相机的抗锯齿模式 == SMAA)
              *             return true;
              *         if(开启后效里有运动模糊和景深效果)
              *             return true;
@@ -464,6 +465,7 @@ namespace UnityEngine.Rendering.Universal
             // Configure all settings require to start a new camera stack (base camera only)
             if (cameraData.renderType == CameraRenderType.Base)
             {
+                //BaseCamera会走这边
                 RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);//FrameBuffer 帧缓冲
 
                 m_ActiveCameraColorAttachment = (createColorTexture) ? m_CameraColorAttachment : cameraTargetHandle;
@@ -484,6 +486,7 @@ namespace UnityEngine.Rendering.Universal
             }
             else
             {
+                //overlay相机设置渲染目标
                 //URP 原本是将overlay的摄像机颜色和深度写入两张RT中，最后FInalBlit到FrameBuffer中
                 //if (Display.main.requiresSrgbBlitToBackbuffer)
                 //{
@@ -905,13 +908,15 @@ namespace UnityEngine.Rendering.Universal
 
                 // 是否需要深度图 _CameraDepthTexture
                 //pass.input & ScriptableRenderPassInput.Depth   xxx & 1 ==> 取二进制的末位 
+                //pass.input很少设置，一般为ScriptableRenderPassInput.None
                 bool needsDepth   = (pass.input & ScriptableRenderPassInput.Depth) != ScriptableRenderPassInput.None; 
                 bool needsNormals = (pass.input & ScriptableRenderPassInput.Normal) != ScriptableRenderPassInput.None;
 
                 //  _CameraColorTexture
                 bool needsColor   = (pass.input & ScriptableRenderPassInput.Color) != ScriptableRenderPassInput.None;
                 bool eventBeforeOpaque = pass.renderPassEvent <= RenderPassEvent.BeforeRenderingOpaques;
-
+                
+                // needsDepth needsNormals needsColor eventBeforeOpaque 绝大部分情况都为false
                 inputSummary.requiresDepthTexture   |= needsDepth;
                 inputSummary.requiresDepthPrepass   |= needsNormals || needsDepth && eventBeforeOpaque; //Eealy-Z
                 inputSummary.requiresNormalsTexture |= needsNormals;
@@ -980,6 +985,16 @@ namespace UnityEngine.Rendering.Universal
             if (cameraData.renderType == CameraRenderType.Base && !cameraData.resolveFinalTarget)
                 return true;
 
+            
+                //overlayer相机满足一个就返回true
+            /*
+             *  场景相机
+			    渲染配置文件上开了MSAA抗锯齿
+			    渲染配置文件renderScale不为1
+			    cameraTargetDescriptor.dimension == TextureDimension.Tex2D ==》 这个默认就满足
+			    cameraData.targetTexture != null && !isSceneViewCamera
+			    cameraData.captureActions != null
+             */
             // Always force rendering into intermediate color texture if deferred rendering mode is selected.
             // Reason: without intermediate color texture, the target camera texture is y-flipped.
             // However, the target camera texture is bound during gbuffer pass and deferred pass.
@@ -991,8 +1006,8 @@ namespace UnityEngine.Rendering.Universal
 
             bool isSceneViewCamera = cameraData.isSceneViewCamera;
             var cameraTargetDescriptor = cameraData.cameraTargetDescriptor;
-            int msaaSamples = cameraTargetDescriptor.msaaSamples;
-            bool isScaledRender = !Mathf.Approximately(cameraData.renderScale, 1.0f);
+            int msaaSamples = cameraTargetDescriptor.msaaSamples; //渲染配置文件上开了MSAA抗锯齿
+            bool isScaledRender = !Mathf.Approximately(cameraData.renderScale, 1.0f); //渲染配置文件renderScale不为1
             bool isCompatibleBackbufferTextureDimension = cameraTargetDescriptor.dimension == TextureDimension.Tex2D;
             bool requiresExplicitMsaaResolve = msaaSamples > 1 && PlatformRequiresExplicitMsaaResolve();
             bool isOffscreenRender = cameraData.targetTexture != null && !isSceneViewCamera;

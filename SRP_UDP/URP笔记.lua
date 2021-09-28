@@ -801,7 +801,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	Execute(ScriptableRenderContext context, ref RenderingData renderingData); ==》 可以拿到 RenderingData对象
 	FrameCleanup ==》 大部分pass都没有实现，调用基类的，最后会调用到pass的OnCameraCleanup
 	OnFinishCameraStackRendering(CommandBuffer cmd)
-	
+
 	1 MainLightShadowCasterPass：渲染结果最后绘制在RT上
 	{
 		Setup
@@ -1601,4 +1601,140 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	}
 	——————————————————————————————————————————————————————————
 }
+
+6 ForwardRender多相机组合，一个base和多个overlay（overlay相机有激活的）Render的渲染目标是什么
+{
+	————————————————————————————————————————————————————————————————————————————————
+	Render的渲染目标都是在Render的SetUp方法里设置的, Pass里也可以设置渲染目标
+	最后在Render的SetRenderPassAttachments方法里会有判断
+	{
+		//默认是使用pass的colorAttachment和depthAttachment
+		RenderTargetIdentifier passColorAttachment = renderPass.colorAttachment;
+        RenderTargetIdentifier passDepthAttachment = renderPass.depthAttachment;
+
+		if（！renderPass.overrideCameraTarget）
+		{
+			//未重载，直接使用ScriptableRenderer的渲染目标变量作为最后输出
+			passColorAttachment = m_CameraColorTarget;
+            passDepthAttachment = m_CameraDepthTarget;
+		}
+	}
+
+	————————————————————————————————————————————————————————————————————————————————
+	****先不考虑camera的targetTexture不为空的情况，大部分是targetTexture为空的
+
+	设置Render的渲染目标
+	{
+		1 颜色缓冲区的渲染目标，默认是帧缓冲 
+		{
+			1 对于非Preview相机来说，使用的渲染器对象(Render对象)中有自定义的feature，就会产生中间RT _CameraColorTexture，颜色缓冲区的渲染目标就是 _CameraColorTexture
+
+			2 BaseCamera，一定要是非Preview相机，基本都满足
+			{
+				对应render的createColorTexture变量为true就会产生RT 并设置颜色缓冲渲染目标为RT，满足以下一个就行
+				{
+					1 渲染器对象(Render对象)中有自定义的feature
+					2 RequiresIntermediateColorTexture 返回true，在一个base多overlay且有激活overlay下这个方法一定返回true ******
+					3 renderPassInputs.requiresColorTexture 绝大部分返回false
+				}
+
+				********总结：BaseCamera在这种情况下Render的颜色缓冲区目标都会被设置为RT  _CameraColorTexture
+				
+			}
+			3 overlay相机
+			{
+				if(渲染器对象(Render对象)中有自定义的feature，（如果和base相机使用同样的渲染器对象）)
+				{
+					会产生RT 并设置颜色缓冲渲染目标为RT _CameraColorTexture
+				}
+				else
+				{
+					直接使用BaseCamera设置过的颜色缓冲渲染目标，因为base相机的颜色缓冲渲染目标一定为RT，所以overlay的颜色渲染目标也为RT
+				}
+
+				********总结：overlay相机在这种情况下Render的颜色缓冲区目标都会被设置为RT  _CameraColorTexture
+
+			}
+		}
+
+		2 深度缓冲区渲染目标，默认是帧缓冲
+		{
+			1 BaseCamera，是根据createDepthTexture变量来判断是否产生RT的， 满足以下中一个就行
+			{
+				1 cameraData.requiresDepthTexture && !requiresDepthPrepass
+				{
+					cameraData.requiresDepthTexture的逻辑判断
+					{
+						* if(配置文件勾选了开启获取深度)
+			             * {
+			             *     return true;
+			             * }
+			             * else
+			             * {
+			             *    if(相机为场景相机)
+			             *     {
+			             *        return true;
+			             *     }
+			             *     else
+			             *     {
+			             *         if(相机未开启后效)
+			             *             return false;
+			             *         if(相机的抗锯齿模式 == SMAA)
+			             *             return true;
+			             *         if(开启后效里有运动模糊和景深效果)
+			             *             return true;
+			             *         return false
+			             *     }
+			             * }
+			             */
+					}
+
+					requiresDepthPrepass，满足以下一个就为true，感觉就是cameraData.requiresDepthTexture和是否开启msaa来决定的
+					{
+						requiresDepthTexture && !CanCopyDepth(ref renderingData.cameraData)
+						{
+							bool requiresDepthTexture = cameraData.requiresDepthTexture || renderPassInputs.requiresDepthTexture || this.actualRenderingMode == RenderingMode.Deferred;
+							{
+								cameraData.requiresDepthTexture 跟之前的逻辑一样
+								renderPassInputs.requiresDepthTexture 一般为false
+								this.actualRenderingMode == RenderingMode.Deferred 一般手机上都为前向渲染，基本返回false
+
+							}
+
+							CanCopyDepth 只要配置文件上开启了msaa，CanCopyDepth就返回false，关闭msaa就返回ture
+						}
+
+						isSceneViewCamera
+						isPreviewCamera
+						renderPassInputs.requiresDepthPrepass; //一般为false
+						renderPassInputs.requiresNormalsTexture; //一般为false
+					}
+				}
+
+				2 (cameraData.renderType == CameraRenderType.Base && !cameraData.resolveFinalTarget); 基本都返回true ****
+				{
+					base相机不是最后一个激活的相机，对于一个base多overlay模式基本都满足
+				}
+				3 createDepthTexture |= this.actualRenderingMode == RenderingMode.Deferred; 手机上基本都返回false 
+
+
+				********总结：BaseCamera在这种情况下Render的深度缓冲区目标都会被设置为RT _CameraDepthAttachment
+			}
+
+			2 overlay Camera，
+			{
+				直接使用BaseCamera设置过的深度缓冲渲染目标，因为BaseCamera在这种情况下Render的深度缓冲区目标都会被设置为RT，所以overlay相机也是一样的深度缓冲渲染目标
+
+				********总结：overlay Camera在这种情况下Render的深度缓冲区目标都会被设置为RT _CameraDepthAttachment
+			}
+		}
+
+		********总结：base相机和overlay相机对应的render对象
+						颜色缓冲区的渲染目标为RT _CameraColorTexture  深度缓冲区渲染目标为RT _CameraDepthAttachment，但是最后的输出还要看对应的pass是否要使用自己的渲染目标对象
+
+	}
+	
+}
+
+7 多个后效怎样叠加的？TODO
 
