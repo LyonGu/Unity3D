@@ -447,7 +447,7 @@ namespace UnityEngine.Rendering.Universal
 #if ENABLE_VR && ENABLE_XR_MODULE
             if (cameraData.xr.enabled)
             {
-                // URP can't handle msaa/size mismatch between depth RT and color RT(for now we create intermediate textures to ensure they match)
+                // URP can't handle msaa/size mispmatch between depth RT and color RT(for now we create intermediate textures to ensure they match)
                 createDepthTexture |= createColorTexture;
                 createColorTexture = createDepthTexture;
             }
@@ -673,7 +673,7 @@ namespace UnityEngine.Rendering.Universal
                     // if resolving to screen we need to be able to perform sRGBConvertion in post-processing if necessary
                     bool doSRGBConvertion = resolvePostProcessingToCameraTarget;
                     //处理的原始图其实就是m_CameraColorAttachment==> "_CameraColorTexture"
-                    // destination为RT _AfterPostProcessTextur或者默认帧缓冲
+                    // destination为RT _AfterPostProcessTexture或者默认帧缓冲
                     // applyFinalPostProcessing:当前相机开启后效&&当前相机是最后输出到屏幕的相机&&抗锯齿为FAXX
                     m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, destination, m_ActiveCameraDepthAttachment, m_ColorGradingLut, applyFinalPostProcessing, doSRGBConvertion);
                     EnqueuePass(m_PostProcessPass); //后效pass入队列
@@ -688,6 +688,8 @@ namespace UnityEngine.Rendering.Universal
                 if (applyFinalPostProcessing)
                 {
                     //最后一个相机也开启了后效，加入m_FinalPostProcessPass
+                    //当前相机开启了后效，sourceForFinalPass为m_AfterPostProcessColor，(RT _AfterPostProcessTexture)
+                    //否则为 m_ActiveCameraColorAttachment (RT _CameraColorTexture 或者帧缓冲)
                     m_FinalPostProcessPass.SetupFinalPass(sourceForFinalPass);
                     EnqueuePass(m_FinalPostProcessPass);
                 }
@@ -767,7 +769,9 @@ namespace UnityEngine.Rendering.Universal
                 //    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
                 //    EnqueuePass(m_PostProcessPass);
                 //}
-
+                
+                //目标destination 为m_AfterPostProcessColor 后效RT _AfterPostProcessTexture
+                //source m_ActiveCameraColorAttachment,
                 m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
                 EnqueuePass(m_PostProcessPass); //后效的pass加入对列
 

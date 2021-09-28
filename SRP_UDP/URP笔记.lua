@@ -1265,7 +1265,10 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 		分两种后期：
 		{
 			1 如果是finalPass，渲染结果 颜色缓冲和深度缓冲都绘制到帧缓冲
-			2 如果是不是finalPass,渲染结果 颜色缓冲绘制到 _AfterPostProcessTexture RT, 不绘制深度信息
+			2 如果是不是finalPass,渲染结果根据后期效果会使用到中间RT，不绘制深度信息
+			{
+				先把颜色缓冲绘制到 _AfterPostProcessTexture RT, 最后所有合并特效完成后绘制到 帧缓冲或者_CameraColorTexture
+			}
 		}
 
 		Setup
@@ -1338,6 +1341,7 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			            PostProcessUtils.SetSourceSize(cmd, cameraData.cameraTargetDescriptor);
 			            
 			            //如果对应效果开启，设置shader关键字或贴图，shader用的是finalPass。这俩并不对应具体的shader。
+			            //Film Grain
 			            SetupGrain(cameraData, material);
 			            SetupDithering(cameraData, material);
 			            
@@ -1401,8 +1405,21 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 			                ColorLookup ;
 			                ColorAdjustments ;
 			                Tonemapping ;
-			                FilmGrain ;
+
+			                ColorLookup/ColorAdjustments/Tonemapping 这三个统一用ColorGrading处理了
+			 
 			             */
+
+			            //DoDepthOfField 使用了中间RT _HalfCoCTexture和_FullCoCTexture，最后输出到_TempTarget上
+
+			            //DoMotionBlur  最终输出是_TempTarget2
+
+			            //DoPaniniProjection 最终输出是_TempTarget
+
+			            //这几种后效会是合并后效效果 最终输出都是m_Destination
+                		//Bloom LensDistortion ChromaticAberration Vignette ColorGrading
+
+                		//最后所有后效完成后在进行一次绘制，输出到帧缓冲或者_CameraColorTexture
                 	}
                 }
                 //复制命令到context里
@@ -1736,5 +1753,53 @@ pipeline是一个整体的管理类，通过一系列的指令和设置渲染一
 	
 }
 
-7 多个后效怎样叠加的？TODO
+7 BaseCamera多个后效怎样叠加的 一个base和多个overlay（overlay相机有激活的） 不是最后一个后效Pass的情况
+{
+	BaseCamera这种情况对应PostProcessPass的SetUp
+	{
+		目标destination 为m_AfterPostProcessColor 后效RT _AfterPostProcessTexture
+		m_Source为 m_ActiveCameraColorAttachment,==》 RT  _CameraColorTexture
+
+
+	}
+
+	PostProcessPass的Render方法（不是最后一个后期pass会调用）
+	{
+		//使用camera上的targetexture，或者帧缓冲
+        RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
+        RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null && !cameraData.xr.enabled) ? new RenderTargetIdentifier(cameraData.targetTexture) : cameraTargetHandle.Identifier();
+        
+        //使用外部变量m_Destination再次判断下cameraTarget
+        //如果m_Destination为默认帧缓冲，cameraTarget保持不变，否则替换为m_Destination代表目标
+        cameraTarget = (m_Destination == RenderTargetHandle.CameraTarget) ? cameraTarget : m_Destination.Identifier();
+
+        //使用相机堆叠，我们并不总是解析到最终屏幕，因为我们可能会在堆栈的中间运行后处理
+        bool finishPostProcessOnScreen = cameraData.resolveFinalTarget || (m_Destination == cameraTargetHandle || m_HasFinalPass == true);
+
+        //深度和颜色信息都绘制到cameraTarget上
+        cmd.SetRenderTarget(cameraTarget, colorLoadAction, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
+        cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+
+        总结：一个base和多个overlay（overlay相机有激活的） 不是最后一个后效Pass的情况下
+        {
+        	//DoDepthOfField 最终输出是_HalfCoCTexture和_FullCoCTexture
+
+            //DoMotionBlur  最终输出是_TempTarget或者_TempTarget2
+
+            //DoPaniniProjection 最终输出是_TempTarget或者_TempTarget2
+
+            //这几种后效会是合并后效效果 最终输出都是_AfterPostProcessTexture
+    		//Bloom LensDistortion ChromaticAberration Vignette ColorGrading
+
+    		//如果不是最后一个后期pass，设置cameraTarget为 shader的_SourceTex
+            cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, cameraTarget);
+            
+            //最后设置渲染目标为m_Source，进行最后一次绘制命令 m_Source 其实就是_CameraColorTexture，所以最后还是会从cameraTarget绘制到_CameraColorTexture
+            cmd.SetRenderTarget(m_Source.id, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
+            cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_BlitMaterial);
+        }
+	}
+
+	所有后效完成后都要从_AfterPostProcessTexture绘制到 _CameraColorTexture上
+}
 

@@ -174,8 +174,12 @@ namespace UnityEngine.Rendering.Universal.Internal
 
         public void SetupFinalPass(in RenderTargetHandle source)
         {
+            //为最后一个pass
+            //当前相机开启了后效，source为m_AfterPostProcessColor，否则为 m_ActiveCameraColorAttachment
             m_Source = source;
-            m_Destination = RenderTargetHandle.CameraTarget;
+            
+            //目标对象为帧缓冲
+            m_Destination = RenderTargetHandle.CameraTarget; 
             m_IsFinalPass = true;
             m_HasFinalPass = false;
             m_EnableSRGBConversionIfNeeded = true;
@@ -315,6 +319,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             }
             else
             {
+                //一般走这
                 cmd.Blit(source, destination, material, passIndex);
             }
         }
@@ -368,7 +373,8 @@ namespace UnityEngine.Rendering.Universal.Internal
 
                 return destination;
             }
-
+            
+            //这里做了一个交换，意味着source也可以作为最后的渲染目标
             void Swap() => CoreUtils.Swap(ref source, ref destination);
 
             // Setup projection matrix for cmd.DrawMesh()
@@ -380,6 +386,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             // stopNaN may be null on Adreno 3xx. It doesn't support full shader level 3.5, but SystemInfo.graphicsShaderLevel is 35.
             if (cameraData.isStopNaNEnabled && m_Materials.stopNaN != null)
             {
+                //这里一般不走
                 using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.StopNaNs)))
                 {
                     RenderingUtils.Blit(
@@ -391,7 +398,7 @@ namespace UnityEngine.Rendering.Universal.Internal
                 }
             }
 
-            // Anti-aliasing 抗锯齿
+            // Anti-aliasing 相机抗锯齿 SMAA
             if (cameraData.antialiasing == AntialiasingMode.SubpixelMorphologicalAntiAliasing && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLES2)
             {
 
@@ -415,6 +422,9 @@ namespace UnityEngine.Rendering.Universal.Internal
                 ColorAdjustments ;
                 Tonemapping ;
                 FilmGrain ;
+                
+                
+                ColorLookup/ColorAdjustments/Tonemapping 这三个统一用ColorGrading处理了
              */
 
             // Depth of Field
@@ -455,6 +465,10 @@ namespace UnityEngine.Rendering.Universal.Internal
             // Combined post-processing stack
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.UberPostProcess)))
             {
+                //合并后效效果 PostProcessPass最终输出都是m_Destination
+                //Bloom LensDistortion ChromaticAberration Vignette ColorGrading
+                
+                
                 // Reset uber keywords
                 m_Materials.uber.shaderKeywords = null;
 
@@ -488,8 +502,13 @@ namespace UnityEngine.Rendering.Universal.Internal
 
                 // Note: We rendering to "camera target" we need to get the cameraData.targetTexture as this will get the targetTexture of the camera stack.
                 // Overlay cameras need to output to the target described in the base camera while doing camera stack.
+                
+                //使用camera上的targetexture，或者帧缓冲
                 RenderTargetHandle cameraTargetHandle = RenderTargetHandle.GetCameraTarget(cameraData.xr);
                 RenderTargetIdentifier cameraTarget = (cameraData.targetTexture != null && !cameraData.xr.enabled) ? new RenderTargetIdentifier(cameraData.targetTexture) : cameraTargetHandle.Identifier();
+                
+                //使用外部变量m_Destination再次判断下cameraTarget
+                //如果m_Destination为默认帧缓冲，cameraTarget保持不变，否则替换为m_Destination代表目标
                 cameraTarget = (m_Destination == RenderTargetHandle.CameraTarget) ? cameraTarget : m_Destination.Identifier();
 
                 // With camera stacking we not always resolve post to final screen as we might run post-processing in the middle of the stack.
@@ -547,7 +566,10 @@ namespace UnityEngine.Rendering.Universal.Internal
                     // in the pipeline to avoid this extra blit.
                     if (!finishPostProcessOnScreen)
                     {
+                        //如果不是最后一个后期pass，设置cameraTarget为 shader的_SourceTex
                         cmd.SetGlobalTexture(ShaderPropertyId.sourceTex, cameraTarget);
+                        
+                        //最后设置渲染目标为m_Source，进行最后一次绘制命令
                         cmd.SetRenderTarget(m_Source.id, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.Store, RenderBufferLoadAction.DontCare, RenderBufferStoreAction.DontCare);
                         cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_BlitMaterial);
                     }
