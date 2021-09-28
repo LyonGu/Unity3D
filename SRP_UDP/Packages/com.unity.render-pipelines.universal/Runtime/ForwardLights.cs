@@ -10,12 +10,12 @@ namespace UnityEngine.Rendering.Universal.Internal
     {
         static class LightConstantBuffer
         {
-            //Ö÷¹âÐÅÏ¢
+            //ä¸»å…‰ä¿¡æ¯
             public static int _MainLightPosition;   // DeferredLights.LightConstantBuffer also refers to the same ShaderPropertyID - TODO: move this definition to a common location shared by other UniversalRP classes
             public static int _MainLightColor;      // DeferredLights.LightConstantBuffer also refers to the same ShaderPropertyID - TODO: move this definition to a common location shared by other UniversalRP classes
             public static int _MainLightOcclusionProbesChannel;    // Deferred?
 
-            //¸½¼Ó¹âÐÅÏ¢
+            //é™„åŠ å…‰ä¿¡æ¯
             public static int _AdditionalLightsCount;
             public static int _AdditionalLightsPosition;
             public static int _AdditionalLightsColor;
@@ -43,8 +43,8 @@ namespace UnityEngine.Rendering.Universal.Internal
         {
             m_UseStructuredBuffer = RenderingUtils.useStructuredBuffer;
 
-            //CBuffer: SRP BattchµÄÓÅ»¯µã£¬GPU»º´æÁËÕâÐ©ÐÅÏ¢±ä»¯ÁË¸üÐÂ
-            //shaderÖÐÖ±½ÓÊ¹ÓÃµÄ_MainLightPosition ¡£¡£¡£
+            //CBuffer: SRP Battchçš„ä¼˜åŒ–ç‚¹ï¼ŒGPUç¼“å­˜äº†è¿™äº›ä¿¡æ¯å˜åŒ–äº†æ›´æ–°
+            //shaderä¸­ç›´æŽ¥ä½¿ç”¨çš„_MainLightPosition ã€‚ã€‚ã€‚
             LightConstantBuffer._MainLightPosition = Shader.PropertyToID("_MainLightPosition");
             LightConstantBuffer._MainLightColor = Shader.PropertyToID("_MainLightColor");
             LightConstantBuffer._MainLightOcclusionProbesChannel = Shader.PropertyToID("_MainLightOcclusionProbes");
@@ -72,7 +72,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             }
         }
 
-        //ÉèÖÃ¹âÕÕÐÅÏ¢µ½shaderÀï
+        //è®¾ç½®å…‰ç…§ä¿¡æ¯åˆ°shaderé‡Œ
         public void Setup(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             int additionalLightsCount = renderingData.lightData.additionalLightsCount;
@@ -82,7 +82,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             {
                 SetupShaderLightConstants(cmd, ref renderingData);
 
-                //ÉèÖÃshaderÖÐµÄKeyWords
+                //è®¾ç½®shaderä¸­çš„KeyWords
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.AdditionalLightsVertex,
                     additionalLightsCount > 0 && additionalLightsPerVertex);
                 CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.AdditionalLightsPixel,

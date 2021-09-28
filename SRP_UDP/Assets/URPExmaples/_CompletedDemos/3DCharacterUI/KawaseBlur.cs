@@ -99,9 +99,13 @@ public class KawaseBlur : ScriptableRendererFeature
             CommandBufferPool.Release(cmd);
         }
 
-        public override void FrameCleanup(CommandBuffer cmd)
+        public override void OnCameraCleanup(CommandBuffer cmd)
         {
+            cmd.ReleaseTemporaryRT(tmpId1);
+            cmd.ReleaseTemporaryRT(tmpId2);
+            
         }
+        
     }
 
     CustomRenderPass scriptablePass;
