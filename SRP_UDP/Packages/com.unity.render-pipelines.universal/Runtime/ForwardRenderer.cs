@@ -999,15 +999,19 @@ namespace UnityEngine.Rendering.Universal
             if (cameraData.renderType == CameraRenderType.Base && !cameraData.resolveFinalTarget)
                 return true;
 
-            
-                //overlayer相机满足一个就返回true
+            //能走到这里，要么是overlay相机要么是（base相机并且stack里为空或者没有激活相
+            ////满足以下一个就返回true
             /*
              *  场景相机
 			    渲染配置文件上开了MSAA抗锯齿
 			    渲染配置文件renderScale不为1
-			    cameraTargetDescriptor.dimension == TextureDimension.Tex2D ==》 这个默认就满足
+			    !cameraTargetDescriptor.dimension == TextureDimension.Tex2D ==》 默认格式就是TextureDimension.Tex2D，一般返回false
 			    cameraData.targetTexture != null && !isSceneViewCamera
 			    cameraData.captureActions != null
+			    
+			    当前相机开启了后效
+			    当前的相机视口不是全屏的
+			    设置文件上勾选了OpaqueTexture
              */
             // Always force rendering into intermediate color texture if deferred rendering mode is selected.
             // Reason: without intermediate color texture, the target camera texture is y-flipped.
@@ -1031,7 +1035,9 @@ namespace UnityEngine.Rendering.Universal
             if (cameraData.xr.enabled)
                 isCompatibleBackbufferTextureDimension = cameraData.xr.renderTargetDesc.dimension == cameraTargetDescriptor.dimension;
 #endif
-
+            
+            //cameraData.postProcessEnabled 当前相机开启了后效
+            //cameraData.isDefaultViewport 当前的相机视口是否是全屏的
             bool requiresBlitForOffscreenCamera = cameraData.postProcessEnabled || cameraData.requiresOpaqueTexture || requiresExplicitMsaaResolve || !cameraData.isDefaultViewport;
             if (isOffscreenRender)
                 return requiresBlitForOffscreenCamera;
