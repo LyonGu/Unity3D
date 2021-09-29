@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Fire
+  - Portal Camera
   layers:
   - Default
   - TransparentFX
@@ -11,8 +13,17 @@ TagManager:
   - 
   - Water
   - UI
-  - Test
-  - BlurUI
+  - 
+  - 
+  - Character
+  - Postprocessing
+  - First Person Objects
+  - IgnoreRefelctions
+  - ShopCamera
+  - ShopCharacter
+  - Cockpit
+  - First Person Objects P2
+  - Skybox
   - 
   - 
   - 
@@ -23,20 +34,11 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - portal
+  - p1cam
+  - p2cam
+  - p3cam
+  - p4cam
   m_SortingLayers:
   - name: Default
     uniqueID: 0
