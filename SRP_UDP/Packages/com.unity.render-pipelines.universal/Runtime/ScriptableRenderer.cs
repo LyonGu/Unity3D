@@ -715,7 +715,8 @@ namespace UnityEngine.Rendering.Universal
                     continue;
                 }
                 //每个自定义的Feature需要自己实现AddRenderPasses
-                rendererFeatures[i].AddRenderPasses(this, ref renderingData);
+                var feature = rendererFeatures[i];
+                feature.AddRenderPasses(this, ref renderingData);
             }
 
             // Remove any null render pass that might have been added by user by mistake

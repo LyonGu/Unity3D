@@ -26,6 +26,7 @@ namespace UnityEngine.Rendering.Universal
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
             RenderTextureDescriptor blitTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
+            //不绘制深度
             blitTargetDescriptor.depthBufferBits = 0;
 
             isSourceAndDestinationSameTarget = settings.sourceType == settings.destinationType &&
@@ -36,7 +37,7 @@ namespace UnityEngine.Rendering.Universal
             if (settings.sourceType == BufferType.CameraColor)
             {
                 sourceId = -1;
-                source = renderer.cameraColorTarget;
+                source = renderer.cameraColorTarget;  //这里只要一个base相机，其实就是_CameraColorTexture
             }
             else
             {
@@ -54,7 +55,7 @@ namespace UnityEngine.Rendering.Universal
             else if (settings.destinationType == BufferType.CameraColor)
             {
                 destinationId = -1;
-                destination = renderer.cameraColorTarget;
+                destination = renderer.cameraColorTarget; //这里只要一个base相机，其实就是_CameraColorTexture
             }
             else
             {
