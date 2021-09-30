@@ -190,8 +190,7 @@ namespace UnityEngine.Rendering.Universal
             cmd.SetGlobalVectorArray(UNITY_STEREO_VECTOR_CAMPOS, stereoConstants.worldSpaceCameraPos);
         }
 #endif
-
-        internal static void Blit(CommandBuffer cmd,
+        public static void Blit(CommandBuffer cmd,
             RenderTargetIdentifier source,
             RenderTargetIdentifier destination,
             Material material,

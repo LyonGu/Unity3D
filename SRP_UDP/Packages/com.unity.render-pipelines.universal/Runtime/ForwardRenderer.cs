@@ -109,13 +109,13 @@ namespace UnityEngine.Rendering.Universal
             UniversalRenderPipeline.m_XRSystem.InitializeXRSystemData(data.xrSystemData);
 #endif
             //创建一堆材质信息
-            m_BlitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS); //"Shaders/Utils/Blit.shader"  
-            m_CopyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS); //"Shaders/Utils/CopyDepth.shader"
-            m_SamplingMaterial = CoreUtils.CreateEngineMaterial(data.shaders.samplingPS); //"Shaders/Utils/Sampling.shader" 降采样
-            m_ScreenspaceShadowsMaterial = CoreUtils.CreateEngineMaterial(data.shaders.screenSpaceShadowPS); //"Shaders/Utils/ScreenSpaceShadows.shader")
+            m_BlitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS); //"Hidden/Universal Render Pipeline/Blit"  
+            m_CopyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS); //"Hidden/Universal Render Pipeline/CopyDepth"
+            m_SamplingMaterial = CoreUtils.CreateEngineMaterial(data.shaders.samplingPS); //"Hidden/Universal Render Pipeline/Sampling" 降采样
+            m_ScreenspaceShadowsMaterial = CoreUtils.CreateEngineMaterial(data.shaders.screenSpaceShadowPS); //"Hidden/Universal Render Pipeline/ScreenSpaceShadows")
             //m_TileDepthInfoMaterial = CoreUtils.CreateEngineMaterial(data.shaders.tileDepthInfoPS);
             //m_TileDeferredMaterial = CoreUtils.CreateEngineMaterial(data.shaders.tileDeferredPS);
-            m_StencilDeferredMaterial = CoreUtils.CreateEngineMaterial(data.shaders.stencilDeferredPS);
+            m_StencilDeferredMaterial = CoreUtils.CreateEngineMaterial(data.shaders.stencilDeferredPS); //"Hidden/Universal Render Pipeline/StencilDeferred"
             
             //是否重载模板测试信息
             StencilStateData stencilData = data.defaultStencilState;
