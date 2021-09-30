@@ -84,19 +84,21 @@ class HUDTitleBase
         UISpriteInfo sp = CAtlasMng.instance.GetSafeSpriteByID(nSpriteID);
         if (sp == null)
             return;
+        //过滤下fBloodPos 范围 0~1
         if (fBloodPos < 0.0)
             fBloodPos = 0.0f;
         if (fBloodPos > 1.0f)
             fBloodPos = 1.0f;
-       int nBloodWidth = (int)(nWidth * fBloodPos + 0.5f); //为什么要加0.5？几乎没什么影响
+       int nBloodWidth = (int)(nWidth * fBloodPos + 0.5f); //为什么要加0.5？处理border用的，没什么太大影响
 
         int nAtlasID = sp.m_nAtlasID;
-        Rect mOuterUV = sp.outer;
+        Rect mOuterUV = sp.outer; //(图集中的起点x偏移，图集中的起点y偏移，宽，高)
         Rect mInnerUV = sp.inner;
         int nOuterW = (int)(mOuterUV.width + 0.5f);
         int nOuterH = (int)(mOuterUV.height + 0.5f);
         //int nInnerW = (int)(mInnerUV.width + 0.5f);
         //int nInnerH = (int)(mInnerUV.height + 0.5f);
+        //计算border的范围，xMin,yMin,xMax,yMax, 因为要用九宫
         int nW1 = (int)(mInnerUV.xMin - mOuterUV.xMin + 0.5f);
         int nH1 = (int)(mInnerUV.yMin - mOuterUV.yMin + 0.5f);
         int nW2 = (int)(mOuterUV.xMax - mInnerUV.xMax + 0.5f);
@@ -104,9 +106,12 @@ class HUDTitleBase
         UITexAtlas texAtlas = CAtlasMng.instance.GetAtlasByID(sp.m_nAtlasID);
         if (texAtlas != null && texAtlas.coordinates == UITexAtlas.Coordinates.Pixels)
         {
+            //逻辑都会走这 ，换算成图集中的UV坐标, 返回(xMin, yMin, xMax-xMin, yMax-yMin)
             mOuterUV = HUDVertex.ConvertToTexCoords(mOuterUV, texAtlas.texWidth, texAtlas.texHeight);
             mInnerUV = HUDVertex.ConvertToTexCoords(mInnerUV, texAtlas.texWidth, texAtlas.texHeight);
         }
+        
+        //border长宽的预防
         if (nOuterW > 0 && nW1 + nW2 > nBloodWidth)
         {
             nW1 = nBloodWidth * nW1 / nOuterW;
@@ -131,6 +136,7 @@ class HUDTitleBase
         int nMW = nBloodWidth - nW1 - nW2;
         int nMH = nHeight - nH1 - nH2;
 
+        //前面使用的九宫格，获取最近添加的9个HUDVertex对象，每个HUDVertex对象绘制一个矩形
         HUDVertex v0 = m_aSprite[nStart];
         HUDVertex v1 = m_aSprite[nStart + 1];
         HUDVertex v2 = m_aSprite[nStart + 2];
@@ -190,7 +196,7 @@ class HUDTitleBase
         node.WorldPos = m_vPos;
         node.ScreenPos = m_vScreenPos;
         node.SpriteID = nSpriteID;
-        node.Offset.Set(fx, fy);  //这个没看懂？？TODO
+        node.Offset.Set(fx, fy);  //本地偏移
         node.Move.Set(0f, 0f);
         node.InitSprite(nWidth, nHeight); //初始化Sprite信息
         node.Scale = m_fScale;

@@ -492,6 +492,7 @@ class CSerialzieTextStream
     }
     public void ReadValue(string szName, ref Rect tValue)
     {
+        //设置Rect的xMin yMin xMax yMax属性，会自动算出Rect的width和height
         string szHeader = readHeadstring();
         string szValue = readString();
         tValue.xMin = float_parse(szValue);

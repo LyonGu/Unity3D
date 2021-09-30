@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
         float fOffsetY = GetHeadNameOffsetY();
 
+        //从缓存中拿titleInfo
         HUDTitleInfo  title = HUDTitleInfo.HUDTitleRender.Instance.GetTitle(m_nTitleIns);
         title.Clear();
 

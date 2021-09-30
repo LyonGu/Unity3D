@@ -171,8 +171,19 @@ class HUDVertex
         uvLU = chInfo.uvBottomLeft;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rect">图集中sprite的信息 (图集中的位置x偏移，图集中的位置y偏移，sprite宽，sprite高)</param>
+    /// <param name="width">图集texture宽</param>
+    /// <param name="height">图集texture高</param>
+    /// <returns>(uvxMin,uvxMax,uvyMin,uvyMax)</returns>
     static public Rect ConvertToTexCoords(Rect rect, int width, int height)
     {
+        //(xMin，yMin，sprite宽，sprite高)
+        //xMax = xMin + sprite宽
+        //yMax = yMin + sprite高
+        
         Rect final = rect;
 
         if (width != 0f && height != 0f)
@@ -180,8 +191,11 @@ class HUDVertex
             final.xMin = rect.xMin / width;
             final.xMax = rect.xMax / width;
             final.yMin = 1f - rect.yMax / height;  //这里没看懂为什么要1-
-            final.yMax = 1f - rect.yMin / height;
+            final.yMax = 1f - rect.yMin / height;    
+            
+            //rect只会返回(x,y,w,h) ==> 设置xMin xMax yMin yMax属性后，rect会自动变成(xMin, yMin, xMax-xMin, yMax-yMin)
         }
+        //(xMin, yMin, xMax-xMin, yMax-yMin)
         return final;
     }
 
@@ -194,7 +208,7 @@ class HUDVertex
             return;
 
         AtlasID = sp.m_nAtlasID; //图集ID
-        width = nWidth <= 0 ? (short)(sp.outer.width + 0.5f) : (short)nWidth;
+        width = nWidth <= 0 ? (short)(sp.outer.width + 0.5f) : (short)nWidth; //0.5f什么的都是为了处理边框的距离
         height = nHeight <= 0 ? (short)(sp.outer.height + 0.5f) : (short)nHeight;
         Scale = 1.0f;
 
@@ -203,6 +217,8 @@ class HUDVertex
         if (texAtlas != null && texAtlas.coordinates == UITexAtlas.Coordinates.Pixels)
         {
             //换算出在图集中的UV坐标
+            //mOuterUV(x,y,width,heiht)
+            //返回 (xMin, yMin, xMax-xMin, yMax-yMin)
             mOuterUV = HUDVertex.ConvertToTexCoords(mOuterUV, texAtlas.texWidth, texAtlas.texHeight);
         }
         float fL = 0.0f;
@@ -211,6 +227,11 @@ class HUDVertex
         float fT = height;
         
         //设置顶点 最后会赋给mesh
+        /*
+         *   3 == 0
+         *   ||  ||
+         *   2 == 1
+         */
         vecRU.Set(fR, fT);  // 右上角
         vecRD.Set(fR, fB);  // 右下角
         vecLD.Set(fL, fB);  // 左下角
@@ -229,11 +250,23 @@ class HUDVertex
         //设置顶点颜色 最后会赋给mesh
         clrLD = clrLU = clrRD = clrRU = Color.white;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nWidth">宽</param>
+    /// <param name="nHeight">长</param>
+    /// <param name="fOffsetX">起点x</param>
+    /// <param name="fOffsetY">起点y</param>
+    /// <param name="uvL">uv Minx</param>
+    /// <param name="uvT">uv MaxY</param>
+    /// <param name="uvR">uv MaxX</param>
+    /// <param name="uvB">uv MinY</param>
     public void SlicedFill(int nWidth, int nHeight, float fOffsetX, float fOffsetY, float uvL, float uvT, float uvR, float uvB)
     {
         ch = '\0';
         Scale = 1.0f;
         
+        //4个顶点位置，
         float fL = fOffsetX;
         float fB = fOffsetY;
         float fR = fOffsetX + nWidth;
@@ -251,7 +284,7 @@ class HUDVertex
 
         clrLD = clrLU = clrRD = clrRU = Color.white;
         if (hudMesh != null)
-            hudMesh.VertexDirty();
+            hudMesh.VertexDirty(); //标记下需要更新
     }
 }
 

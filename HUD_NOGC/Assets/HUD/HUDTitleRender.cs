@@ -668,6 +668,15 @@ class HUDTitleInfo : HUDTitleBase
         m_fLineOffsetY += m_fCurLineHeight + nLineGap;
         m_nStartLineIndex = m_nTitleNumb;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nSpriteID"></param>
+    /// <param name="nWidth"> 血条宽</param>
+    /// <param name="nHeight">血条高</param>
+    /// <param name="fx"></param>
+    /// <param name="fy"></param>
+    /// <param name="fBloodPos"></param>
     void PushSliceTitle(int nSpriteID, int nWidth, int nHeight, float fx, float fy, float fBloodPos)
     {
         UISpriteInfo sp = CAtlasMng.instance.GetSafeSpriteByID(nSpriteID);
@@ -681,7 +690,7 @@ class HUDTitleInfo : HUDTitleBase
             HUDVertex node = HUDVertex.QueryVertex(); //复用对象
             node.WorldPos = m_vPos;
             node.ScreenPos = m_vScreenPos;
-            node.SpriteID = nSpriteID;
+            node.SpriteID = nSpriteID; //每个node存储的spriteId，猜测后面通过spriteId拿到需要的HUDVertex
             node.AtlasID  = nAtlasID;
             node.Scale = m_fScale;
             node.Offset.Set(fx, fy);

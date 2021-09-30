@@ -272,7 +272,10 @@ public class UISpriteInfo  // 兼容NGUI的Sprite对象，将Sprite成员放到�
     //读取对应的字段
     public void SerializeToTxt(ref SerializeText ar)
     {
-        ar.ReadWriteValue("name", ref name);
+        ar.ReadWriteValue("name", ref name); 
+        
+        //(xmin,ymin, xMax, yMax)
+        //设置Rect的xMin yMin xMax yMax属性，会自动算出Rect的width和height
         ar.ReadWriteValue("outer", ref outer);
         ar.ReadWriteValue("inner", ref inner);
         ar.ReadWriteValue("rotated", ref rotated);

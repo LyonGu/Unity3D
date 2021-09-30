@@ -68,8 +68,18 @@ UISpriteInfo.SerializeToTxt ==> 读取对应的字段
 
 		//代码里的使用的配置都在HUDSetting里
 
+
 	}
+
+	AtlasMng_Editor中 SaveAltasCfg配置信息保存
+
+	UISpriteInfo.SerializeToTxt==> 序列化sprite信息
+
+
+	SlicedFill==》 这个方法需要理解下
 }
+
+
 
 
 怎样渲染
