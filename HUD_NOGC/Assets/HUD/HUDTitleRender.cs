@@ -690,7 +690,7 @@ class HUDTitleInfo : HUDTitleBase
             node.height = (short)nHeight;
             m_aSprite.Add(node);
         }
-        SlicedFill(nSpriteID, nWidth, nHeight, nStart, 0.5f);
+        SlicedFill(nSpriteID, nWidth, nHeight, nStart, fBloodPos);
     }   
 
     // 头顶批处理
