@@ -414,29 +414,29 @@ namespace GameLog
             return string.Format(" ThreadID:{0}", Thread.CurrentThread.ManagedThreadId);
         }
 
-        //private static string GetLogTrace()
-        //{
-        //    StringBuilder sb = new StringBuilder(20);
-        //    StackTrace st = new StackTrace(3, true);//跳跃3帧
-        //    for (int i = 0; i < st.FrameCount; i++)
-        //    {
-        //        StackFrame sf = st.GetFrame(i);
-        //        sb.Append(string.Format("\n    {0}::{1} Line:{2}", sf.GetFileName(), sf.GetMethod(), sf.GetFileLineNumber()));
-        //    }
-        //    return sb.ToString();
-        //}
-
         private static string GetLogTrace()
         {
+            StringBuilder sb = new StringBuilder(20);
             StackTrace st = new StackTrace(3, true);//跳跃3帧
-            string traceInfo = "";
             for (int i = 0; i < st.FrameCount; i++)
             {
                 StackFrame sf = st.GetFrame(i);
-                traceInfo += string.Format("\n    {0}::{1} Line:{2}", sf.GetFileName(), sf.GetMethod(), sf.GetFileLineNumber());
+                sb.Append(string.Format("\n    {0}::{1} Line:{2}", sf.GetFileName(), sf.GetMethod(), sf.GetFileLineNumber()));
             }
-            return traceInfo;
+            return sb.ToString();
         }
+
+        //private static string GetLogTrace()
+        //{
+        //    StackTrace st = new StackTrace(3, true);//跳跃3帧
+        //    string traceInfo = "";
+        //    for (int i = 0; i < st.FrameCount; i++)
+        //    {
+        //        StackFrame sf = st.GetFrame(i);
+        //        traceInfo += string.Format("\n    {0}::{1} Line:{2}", sf.GetFileName(), sf.GetMethod(), sf.GetFileLineNumber());
+        //    }
+        //    return traceInfo;
+        //}
 
         private static void WriteToFile(string msg)
         {
