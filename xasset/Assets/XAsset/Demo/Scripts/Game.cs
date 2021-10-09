@@ -9,6 +9,7 @@ using libx;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using GameLog;
 
 public class Game : MonoBehaviour
 {
@@ -219,7 +220,9 @@ public class Game : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		dropdown.ClearOptions ();
+        LogUtils.InitSettings();
+
+        dropdown.ClearOptions ();
 		_assets = Assets.GetAllAssetPaths ();
 		foreach (var item in _assets) {
 			var ext = Path.GetExtension(item);
@@ -230,6 +233,10 @@ public class Game : MonoBehaviour
 
 
         Test();
+
+        LogUtils.ColorLog(LogColor.Green,$"assts==========={_assets.Length}  {Application.persistentDataPath}");
+        LogUtils.Warn($"assts==========={_assets.Length}  {Application.persistentDataPath}");
+        LogUtils.Error($"assts==========={_assets.Length}  {Application.persistentDataPath}");
 
     }
     #region 测试下一些常用接口
