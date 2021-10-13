@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace UnityEngine.Rendering
+namespace HxpGame
 {
     /// <summary>
-    /// On List Changed Event Args.
+    /// On List Changed Event Args. 传递事件参数类型，包了一层
     /// </summary>
     /// <typeparam name="T">List type.</typeparam>
     public sealed class ListChangedEventArgs<T> : EventArgs
@@ -40,7 +40,7 @@ namespace UnityEngine.Rendering
     public delegate void ListChangedEventHandler<T>(ObservableList<T> sender, ListChangedEventArgs<T> e);
 
     /// <summary>
-    /// Observable list.
+    /// Observable list.  添加和删除有通知的list结构
     /// </summary>
     /// <typeparam name="T">Type of the list.</typeparam>
     public class ObservableList<T> : IList<T>
@@ -48,11 +48,11 @@ namespace UnityEngine.Rendering
         IList<T> m_List;
 
         /// <summary>
-        /// Added item event.
+        /// Added item event. 添加事件
         /// </summary>
         public event ListChangedEventHandler<T> ItemAdded;
         /// <summary>
-        /// Removed item event.
+        /// Removed item event. 移除事件
         /// </summary>
         public event ListChangedEventHandler<T> ItemRemoved;
 
