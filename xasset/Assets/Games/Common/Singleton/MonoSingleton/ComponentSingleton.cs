@@ -1,4 +1,6 @@
-namespace UnityEngine.Rendering
+using UnityEngine;
+
+namespace HxpGame
 {
     using UnityObject = UnityEngine.Object;
     // Use this class to get a static instance of a component
