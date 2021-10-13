@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace UnityEngine.Rendering
+namespace HxpGame
 {
     //
     // Unity can't serialize Dictionary so here's a custom wrapper that does. Note that you have to
