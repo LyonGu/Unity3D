@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 
-namespace UnityEngine.Rendering
+namespace HxpGame
 {
     /// <summary>
     /// Static class with unsafe utility functions.

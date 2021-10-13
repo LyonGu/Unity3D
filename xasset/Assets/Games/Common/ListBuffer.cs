@@ -1,14 +1,18 @@
 using System;
 using Unity.Collections.LowLevel.Unsafe;
 
-namespace UnityEngine.Rendering
+namespace HxpGame
 {
     /// <summary>
     /// A list that stores value on a provided memory buffer.
     ///
-    /// Usually use this to have a list on stack allocated memory.
+    /// Usually use this to have a list on stack allocated memory. 通常使用这个来在栈上分配一个列表内存
     /// </summary>
-    /// <typeparam name="T">The type of the data stored in the list.</typeparam>
+    /// <typeparam name="T">The type of the data stored in the list. T必须是struct</typeparam>
+    /// 
+    /// unmanaged 约束将类型参数限制为名为“非托管类型”的类型。
+    /// unmanaged 约束使得在 C# 中编写低级别的互操作代码变得更容易。 此约束支持跨所有非托管类型的可重用例程。
+    /// unmanaged 约束不能与 class 或 struct 约束结合使用。 unmanaged 约束强制该类型必须为 struct：
     public unsafe struct ListBuffer<T>
         where T: unmanaged
     {
