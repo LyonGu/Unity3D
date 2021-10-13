@@ -164,7 +164,7 @@ namespace UnityAsyncAwaitUtil
             Debug.Log("Downloading asset bundle using WWW");
             var bytes = (await new WWW(AssetBundleSampleUrl)).bytes;
             Debug.Log("Downloaded " + (bytes.Length / 1024) + " kb");
-            throw new Exception("foo");
+   
         }
 
         async Task RunOpenNotepadTestAsync()
