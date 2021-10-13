@@ -1,9 +1,9 @@
 using System;
 
-namespace UnityEngine.Rendering
+namespace HxpGame
 {
     /// <summary>
-    /// Generic growable array.
+    /// Generic growable array.  动态数组
     /// </summary>
     /// <typeparam name="T">Type of the array.</typeparam>
     public class DynamicArray<T> where T: new()
@@ -57,7 +57,7 @@ namespace UnityEngine.Rendering
         {
             int index = size;
 
-            // Grow array if needed;
+            // Grow array if needed; 扩容
             if (index >= m_Array.Length)
             {
                 var newArray = new T[m_Array.Length * 2];
@@ -82,6 +82,7 @@ namespace UnityEngine.Rendering
             {
                 if (keepContent)
                 {
+                    //保留之前的内容需要把数据复制到新的数组里
                     var newArray = new T[newSize];
                     Array.Copy(m_Array, newArray, m_Array.Length);
                     m_Array = newArray;
