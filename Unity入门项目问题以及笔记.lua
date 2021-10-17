@@ -21,7 +21,17 @@
 		方法1：四元素插值, 推荐这个
 		{
 			Quaternion dir = Quaternion.LookRotation(player.position - transform.position);
-        	transform.rotation = Quaternion.Lerp(transform.                                                                           , dir, Time.deltaTime);
+        	transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.deltaTime);
+
+			// Calculate the rotation 另一种旋转方式，超向目标
+            float3 displacement = targetPosition - transform.Position;
+            float3 upReference = new float3(0, 1, 0);
+            quaternion lookRotation =
+                quaternion.LookRotationSafe(displacement, upReference);
+
+            orientation.Value =
+                math.slerp(orientation.Value, lookRotation, deltaTime);
+
 		}
 
 		方法2：lookat
@@ -57,7 +67,16 @@
 		{
 			e.Transform.rotation *= Quaternion.AngleAxis(e.Rotator.Speed * deltaTime, Vector3.up);
 		}
-		
+
+		方法6
+		Quaternion.FromToRotation 将物体从 fromDirection 旋转到 toDirection
+		通常情况下，您使用该方法对变换进行旋转，使其的一个轴（例如 Y 轴）跟随世界空间中的目标方向 /toDirection/。
+		transform.rotation = Quaternion.FromToRotation(Vector3.up, transform.forward);
+
+
+		向量绕Y轴旋转45度
+		Vector3 dir = new Vector3(x,x,x)
+		Quaternion.Euler(0,45,0) * dir
 
 	}
 	
@@ -197,6 +216,13 @@
 
 	        // 把vec赋值给刚体的速度，就可以让刚体运动起来了
 	        myRigidbody.velocity = vec;
+		}
+
+		方法五：
+		{
+			float3 targetDir = math.normalize(targetInfo.pos - translation.Value);
+            float moveSpeed = 5f;
+            translation.Value += targetDir * moveSpeed * DeltaTime;
 		}
 
 
@@ -419,6 +445,41 @@
             //
         }
 	}
+
+	17 计算向量夹角
+	{
+		http://www.skcircle.com/?id=1360
+
+		Vector3.Angle()方法只能返回0到180度的向量夹角，比如返回一个30度，你无法知道是30度还是330度，需要用叉乘判断
+
+
+		float SignedAngle(Vector2 from, Vector2 to) 带上正负方向的角度
+
+		{
+			float angle = Vector3.Angle(v1, v2);
+			angle *= Mathf.Sign(Vector3.Cross(v1, v2).y);
+		}
+
+		{
+			在游戏中经常用到的，已知两向量A, B ，求出A->B的旋转角。但U3D给出的Vector3.Angle()方法只能返回0到180度的向量夹角。如果想得到0到360度的旋转角，需要自己做一些逻辑运算。方法如下：
+
+			参数 a：起始向量; b：目标向量; n：旋转方向
+
+			复制代码
+			public static float SignedAngleBetween(Vector3 a, Vector3 b, Vector3 n)
+			    {
+			        float angle = Vector3.Angle(a,b);
+			        float sign = Mathf.Sign(Vector3.Dot(n,Vector3.Cross(a,b)));
+			        float signed_angle = angle * sign;
+			        return (signed_angle <= 0) ? 360 + signed_angle : signed_angle;
+			    }
+			复制代码
+			例子：已知向量a=(1, 0, 1), b=(-1, 0, 1) ，求a顺时针转到b的旋转角，则n应该为(0, 1, 0)，结果为270度。若n=(0, -1, 0)，则逆时针，结果为90度。
+		}
+
+	}
+
+
 	
             
             
