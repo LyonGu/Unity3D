@@ -5,7 +5,7 @@
 	拉方块
 
 	1 手臂伸长 使用 localScale， 锚点设置在哪，不是两端同时scale
-
+  
 	2  [SerializeField] 把私有字段和保护字段也显示在属性面板上
 ]====]
 
@@ -69,7 +69,9 @@
 		}
 
 		方法6
-		Quaternion.FromToRotation 将物体从 fromDirection 旋转到 toDirection
+		Quaternion.FromToRotation 创建一个从 fromDirection 旋转到 toDirection 的旋转。
+			将物体从 fromDirection 旋转到 toDirection
+
 		通常情况下，您使用该方法对变换进行旋转，使其的一个轴（例如 Y 轴）跟随世界空间中的目标方向 /toDirection/。
 		transform.rotation = Quaternion.FromToRotation(Vector3.up, transform.forward);
 

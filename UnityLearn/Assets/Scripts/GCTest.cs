@@ -25,6 +25,17 @@ public class GCTest : MonoBehaviour
 
     public Transform testTransform;
 
+    public Action testAction;
+
+
+    private void Test1()
+    {
+        UnityEngine.Debug.Log($"{GetType().Name} ====test1");
+    }
+    private void Test2()
+    {
+        UnityEngine.Debug.Log($"{GetType().Name} ====test2");
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +59,16 @@ public class GCTest : MonoBehaviour
         //GetChild(testTransform);
 
 
+        //testAction += Test1;
+        //testAction += Test2;
 
+        //testAction.Invoke();
+
+        //var invocationList = testAction.GetInvocationList();
+        //for (int i = 0; i < invocationList.Length; i++)
+        //{
+        //    invocationList[i].DynamicInvoke();
+        //}
 
     }
     private static void GetChild(Transform trans)
