@@ -1,0 +1,20 @@
+HUD 无GC版本 TODO（3天） ==》 找个时间再看看
+	{
+		//Unity shader图集Atlas下的UV坐标归一化转换
+		https://blog.csdn.net/yinfourever/article/details/116452618
+
+		在Unity3D中实现高效的战斗飘字
+		https://blog.csdn.net/kakashi8841/article/details/50596000
+
+		用shader制作血条
+		https://zhuanlan.zhihu.com/p/420335424
+
+		UNITY UGUI 等宽血条分隔符的制作(使用SHADER)
+		https://www.freesion.com/article/586812791/
+
+		使用Shader实现LOL血条分割线效果
+		https://zhuanlan.zhihu.com/p/386528412
+		
+		//透视相机下UI血条发生偏移的解决方案
+		//https://zhuanlan.zhihu.com/p/103851470
+	}
