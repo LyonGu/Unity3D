@@ -419,3 +419,8 @@ HUD/Logs/
 UnityNet/.idea/
 UnityNet/.vs/
 UnityNet/obj/
+CanvasRebuildDebug/Library/
+CanvasRebuildDebug/Temp/
+CanvasRebuildDebug/.vs/
+CanvasRebuildDebug/obj/
+CanvasRebuildDebug/Logs/
