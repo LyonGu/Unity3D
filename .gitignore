@@ -424,3 +424,5 @@ CanvasRebuildDebug/Temp/
 CanvasRebuildDebug/.vs/
 CanvasRebuildDebug/obj/
 CanvasRebuildDebug/Logs/
+Protobuf-net/Library/
+Protobuf-net/Logs/
