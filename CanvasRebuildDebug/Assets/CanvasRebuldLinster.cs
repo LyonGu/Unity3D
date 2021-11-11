@@ -45,7 +45,7 @@ public class CanvasRebuldLinster : MonoBehaviour {
             {
                 var rtransform = rebuild.transform;
                 var prefabUIName = GetResPrefabName(rtransform);
-                Debug.LogFormat("m_LayoutRebuildQueue中 <{0}> 引起 <{1}> 网格重建 UI资源是 <{2}>", rtransform.name, rtransform.GetComponent<Graphic>().canvas.name, prefabUIName);
+                Debug.LogFormat("m_LayoutRebuildQueue中 <{0}> 引起 <{1}> 网格重建 UI资源是 <{2}>", rtransform.name, rtransform.GetComponent<Graphic>()?.canvas.name, prefabUIName);
             }
         }
 
@@ -57,7 +57,7 @@ public class CanvasRebuldLinster : MonoBehaviour {
             {
                 var etransform = element.transform;
                 var prefabUIName = GetResPrefabName(etransform);
-                Debug.LogFormat("m_GraphicRebuildQueue中<{0}> 引起 <{1}> 网格重建 UI资源是 <{2}>", etransform.name, etransform.GetComponent<Graphic>().canvas.name, prefabUIName);
+                Debug.LogFormat("m_GraphicRebuildQueue中<{0}> 引起 <{1}> 网格重建 UI资源是 <{2}>", etransform.name, etransform.GetComponent<Graphic>()?.canvas.name, prefabUIName);
             }
         }
     }
