@@ -110,6 +110,12 @@ namespace TMPro
                 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                 m_mesh.name = "TextMeshPro UI Mesh";
                 #endif
+                
+                /*
+                 *
+                 * 当使用 Instantiate(tmp) 时，实例化完成后，TMP_TextInfo() 会执行一次，预创建对应的数组，
+                 * 而在Awake()方法中，会再执行 m_textInfo = new TMP_TextInfo(this); 即创建一个tmp的过程中会触发两次构造函数，创建了两次数组变量
+                 */
                 // Create new TextInfo for the text object.
                 m_textInfo = new TMP_TextInfo(this);
             }

@@ -318,6 +318,8 @@ namespace TMPro
             meshInfo = new TMP_CustomMeshInfo(InfoType.Mesh);
 
 #else
+ 
+            meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);
             characterInfo = new TMP_CharacterInfo[8];
             wordInfo = new TMP_WordInfo[4];
             linkInfo = new TMP_LinkInfo[0];

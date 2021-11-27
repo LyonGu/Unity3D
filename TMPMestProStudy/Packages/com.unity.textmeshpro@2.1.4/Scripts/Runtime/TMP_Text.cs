@@ -108,6 +108,123 @@ namespace TMPro
     /// </summary>
     public abstract class TMP_Text : MaskableGraphic
     {
+        
+        protected static MaterialReference[] m_materialReferences = new MaterialReference[4];
+        protected static TMP_TextProcessingStack<MaterialReference> m_materialReferenceStack = new TMP_TextProcessingStack<MaterialReference>(new MaterialReference[16]);
+        private static char[] m_htmlTag = new char[128]; // Maximum length of rich text tag. This is pre-allocated to avoid GC.
+        private static RichTextTagAttribute[] m_xmlAttribute = new RichTextTagAttribute[8];
+        private static float[] m_attributeParameterValues = new float[16];
+        private static decimal[] k_Power = { 5e-1m, 5e-2m, 5e-3m, 5e-4m, 5e-5m, 5e-6m, 5e-7m, 5e-8m, 5e-9m, 5e-10m }; // Used by FormatText to enable rounding and avoid using Mathf.Pow. 
+        
+        protected TMP_TextProcessingStack<HorizontalAlignmentOptions> m_lineJustificationStack;
+        protected Vector3[] m_textContainerLocalCorners;
+        protected TMP_TextProcessingStack<float> m_indentStack;
+        protected TMP_TextProcessingStack<Color32> m_colorStack;
+        protected TMP_TextProcessingStack<Color32> m_underlineColorStack;
+        protected TMP_TextProcessingStack<Color32> m_strikethroughColorStack;
+        protected TMP_TextProcessingStack<HighlightState> m_HighlightStateStack;
+        protected TMP_TextProcessingStack<TMP_ColorGradient> m_colorGradientStack;
+        protected TMP_TextProcessingStack<int> m_actionStack;
+        protected TMP_TextProcessingStack<float> m_baselineOffsetStack;
+        
+        
+        
+        /// <summary>
+        /// Array containing the Unicode characters to be parsed.
+        /// </summary>
+        internal UnicodeChar[] m_TextProcessingArray;
+        
+        private TMP_CharacterInfo[] m_internalCharacterInfo; // Used by functions to calculate preferred values.
+        
+        // STYLE TAGS
+        protected TMP_TextProcessingStack<int>[] m_TextStyleStacks = new TMP_TextProcessingStack<int>[8];
+        protected int m_TextStyleStackDepth = 0;
+
+        protected TMP_TextProcessingStack<int> m_ItalicAngleStack;
+        protected int m_ItalicAngle;
+        
+        public TMP_Text()
+        {
+#if OPTIMIZE_TMP
+            
+            TMP_ArrayPool<HorizontalAlignmentOptions>.Release(m_lineJustificationStack.itemStack);
+            m_lineJustificationStack = new TMP_TextProcessingStack<HorizontalAlignmentOptions>(TMP_ArrayPool<HorizontalAlignmentOptions>.Get(16));
+            
+            TMP_ArrayPool<Vector3>.Release(m_textContainerLocalCorners);
+            m_textContainerLocalCorners = TMP_ArrayPool<Vector3>.Get(4);
+            
+            TMP_ArrayPool<float>.Release(m_indentStack.itemStack);
+            m_indentStack = new TMP_TextProcessingStack<float>(TMP_ArrayPool<float>.Get(16));
+            
+            TMP_ArrayPool<Color32>.Release(m_colorStack.itemStack);
+            m_colorStack = new TMP_TextProcessingStack<Color32>(TMP_ArrayPool<Color32>.Get(16));
+
+            TMP_ArrayPool<Color32>.Release(m_underlineColorStack.itemStack);
+            m_underlineColorStack = new TMP_TextProcessingStack<Color32>(TMP_ArrayPool<Color32>.Get(16));
+
+            TMP_ArrayPool<Color32>.Release(m_strikethroughColorStack.itemStack);
+            m_strikethroughColorStack = new TMP_TextProcessingStack<Color32>(TMP_ArrayPool<Color32>.Get(16));
+
+            TMP_ArrayPool<HighlightState>.Release(m_HighlightStateStack.itemStack);
+            m_HighlightStateStack = new TMP_TextProcessingStack<HighlightState>(TMP_ArrayPool<HighlightState>.Get(16));
+
+            TMP_ArrayPool<TMP_ColorGradient>.Release(m_colorGradientStack.itemStack);
+            m_colorGradientStack = new TMP_TextProcessingStack<TMP_ColorGradient>(TMP_ArrayPool<TMP_ColorGradient>.Get(16));
+            
+            TMP_ArrayPool<int>.Release(m_actionStack.itemStack);
+            m_actionStack = new TMP_TextProcessingStack<int>(TMP_ArrayPool<int>.Get(16));
+
+            TMP_ArrayPool<float>.Release(m_baselineOffsetStack.itemStack);
+            m_baselineOffsetStack = new TMP_TextProcessingStack<float>(TMP_ArrayPool<float>.Get(16));
+            
+            TMP_ArrayPool<UnicodeChar>.Release(m_TextProcessingArray);
+            m_TextProcessingArray = TMP_ArrayPool<UnicodeChar>.Get(8);
+            
+            TMP_ArrayPool<TMP_TextProcessingStack<int>>.Release(m_TextStyleStacks);
+            m_TextStyleStacks = TMP_ArrayPool<TMP_TextProcessingStack<int>>.Get(8);
+            
+            TMP_ArrayPool<int>.Release(m_ItalicAngleStack.itemStack);
+            m_ItalicAngleStack = new TMP_TextProcessingStack<int>(TMP_ArrayPool<int>.Get(16));
+            
+#else
+            m_lineJustificationStack = new TMP_TextProcessingStack<HorizontalAlignmentOptions>(new HorizontalAlignmentOptions[16]);
+            m_textContainerLocalCorners = new Vector3[4];
+            m_indentStack = new TMP_TextProcessingStack<float>(new float[16]);
+            m_colorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
+            m_underlineColorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
+            m_strikethroughColorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
+            m_HighlightStateStack = new TMP_TextProcessingStack<HighlightState>(new HighlightState[16]);
+            m_colorGradientStack = new TMP_TextProcessingStack<TMP_ColorGradient>(new TMP_ColorGradient[16]);
+            m_actionStack = new TMP_TextProcessingStack<int>(new int[16]);
+            m_baselineOffsetStack = new TMP_TextProcessingStack<float>(new float[16]);
+            m_TextProcessingArray = new UnicodeChar[8]
+            m_ItalicAngleStack = new TMP_TextProcessingStack<int>(new int[16])
+            
+#endif 
+        }
+
+        protected virtual void Release()
+        {
+#if OPTIMIZE_TMP
+            
+            TMP_ArrayPool<HorizontalAlignmentOptions>.Release(m_lineJustificationStack.itemStack);
+            TMP_ArrayPool<Vector3>.Release(m_textContainerLocalCorners);
+            TMP_ArrayPool<float>.Release(m_indentStack.itemStack);
+            TMP_ArrayPool<Color32>.Release(m_colorStack.itemStack);
+            TMP_ArrayPool<Color32>.Release(m_underlineColorStack.itemStack);
+            TMP_ArrayPool<Color32>.Release(m_strikethroughColorStack.itemStack);
+            TMP_ArrayPool<HighlightState>.Release(m_HighlightStateStack.itemStack);
+            TMP_ArrayPool<TMP_ColorGradient>.Release(m_colorGradientStack.itemStack);
+            TMP_ArrayPool<int>.Release(m_actionStack.itemStack);
+            TMP_ArrayPool<float>.Release(m_baselineOffsetStack.itemStack);
+            TMP_ArrayPool<UnicodeChar>.Release(m_TextProcessingArray);
+            TMP_ArrayPool<TMP_CharacterInfo>.Release(m_internalCharacterInfo);
+            TMP_ArrayPool<int>.Release(m_ItalicAngleStack.itemStack);
+            TMP_ArrayPool<TMP_TextProcessingStack<int>>.Release(m_TextStyleStacks);
+            
+#endif
+        }
+
         /// <summary>
         /// A string containing the text to be displayed.
         /// </summary>
@@ -190,10 +307,10 @@ namespace TMPro
         [SerializeField]
         protected Material m_sharedMaterial;
         protected Material m_currentMaterial;
-        protected static MaterialReference[] m_materialReferences = new MaterialReference[4];
+        
         protected static Dictionary<int, int> m_materialReferenceIndexLookup = new Dictionary<int, int>();
 
-        protected static TMP_TextProcessingStack<MaterialReference> m_materialReferenceStack = new TMP_TextProcessingStack<MaterialReference>(new MaterialReference[16]);
+        
         protected int m_currentMaterialIndex;
 
 
@@ -620,8 +737,8 @@ namespace TMPro
         protected TextAlignmentOptions m_textAlignment = TextAlignmentOptions.Converted;
 
         protected HorizontalAlignmentOptions m_lineJustification;
-        protected TMP_TextProcessingStack<HorizontalAlignmentOptions> m_lineJustificationStack = new TMP_TextProcessingStack<HorizontalAlignmentOptions>(new HorizontalAlignmentOptions[16]);
-        protected Vector3[] m_textContainerLocalCorners = new Vector3[4];
+        
+        
 
         /// <summary>
         /// Use the extents of the text geometry for alignment instead of font metrics.
@@ -1439,13 +1556,13 @@ namespace TMPro
 
         protected float m_fontScaleMultiplier; // Used for handling of superscript and subscript.
 
-        private static char[] m_htmlTag = new char[128]; // Maximum length of rich text tag. This is pre-allocated to avoid GC.
-        private static RichTextTagAttribute[] m_xmlAttribute = new RichTextTagAttribute[8];
-        private static float[] m_attributeParameterValues = new float[16];
+        
+        
+        
 
         protected float tag_LineIndent = 0;
         protected float tag_Indent = 0;
-        protected TMP_TextProcessingStack<float> m_indentStack = new TMP_TextProcessingStack<float>(new float[16]);
+        
         protected bool tag_NoParsing;
         //protected TMP_LinkInfo tag_LinkInfo = new TMP_LinkInfo();
 
@@ -1453,10 +1570,7 @@ namespace TMPro
         protected Matrix4x4 m_FXMatrix;
         protected bool m_isFXMatrixSet;
 
-        /// <summary>
-        /// Array containing the Unicode characters to be parsed.
-        /// </summary>
-        internal UnicodeChar[] m_TextProcessingArray = new UnicodeChar[8];
+       
 
         /// <summary>
         /// The number of Unicode characters that have been parsed and contained in the m_InternalParsingBuffer
@@ -1487,7 +1601,7 @@ namespace TMPro
             }
         }
 
-        private TMP_CharacterInfo[] m_internalCharacterInfo; // Used by functions to calculate preferred values.
+        
         protected int m_totalCharacterCount;
 
         // Structures used to save the state of the text layout in conjunction with line breaking / word wrapping.
@@ -1527,30 +1641,19 @@ namespace TMPro
 
         // Fields used for vertex colors
         protected Color32 m_htmlColor = new Color(255, 255, 255, 128);
-        protected TMP_TextProcessingStack<Color32> m_colorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
-        protected TMP_TextProcessingStack<Color32> m_underlineColorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
-        protected TMP_TextProcessingStack<Color32> m_strikethroughColorStack = new TMP_TextProcessingStack<Color32>(new Color32[16]);
-        protected TMP_TextProcessingStack<HighlightState> m_HighlightStateStack = new TMP_TextProcessingStack<HighlightState>(new HighlightState[16]);
-
+        
+       
         protected TMP_ColorGradient m_colorGradientPreset;
-        protected TMP_TextProcessingStack<TMP_ColorGradient> m_colorGradientStack = new TMP_TextProcessingStack<TMP_ColorGradient>(new TMP_ColorGradient[16]);
+        
         protected bool m_colorGradientPresetIsTinted;
 
         protected float m_tabSpacing = 0;
         protected float m_spacing = 0;
-
-        // STYLE TAGS
-        protected TMP_TextProcessingStack<int>[] m_TextStyleStacks = new TMP_TextProcessingStack<int>[8];
-        protected int m_TextStyleStackDepth = 0;
-
-        protected TMP_TextProcessingStack<int> m_ItalicAngleStack = new TMP_TextProcessingStack<int>(new int[16]);
-        protected int m_ItalicAngle;
-
-        protected TMP_TextProcessingStack<int> m_actionStack = new TMP_TextProcessingStack<int>(new int[16]);
+        
 
         protected float m_padding = 0;
         protected float m_baselineOffset; // Used for superscript and subscript.
-        protected TMP_TextProcessingStack<float> m_baselineOffsetStack = new TMP_TextProcessingStack<float>(new float[16]);
+        
         protected float m_xAdvance; // Tracks x advancement from character to character.
 
         protected TMP_TextElementType m_textElementType;
@@ -3569,7 +3672,7 @@ namespace TMPro
         }
 
 
-        private readonly decimal[] k_Power = { 5e-1m, 5e-2m, 5e-3m, 5e-4m, 5e-5m, 5e-6m, 5e-7m, 5e-8m, 5e-9m, 5e-10m }; // Used by FormatText to enable rounding and avoid using Mathf.Pow.
+        
 
 
         void AddFloatToInternalTextBackingArray(float value, int padding, int precision, ref int writeIndex)
@@ -4002,7 +4105,17 @@ namespace TMPro
             int totalCharacterCount = m_totalCharacterCount; // m_VisibleCharacters.Count;
 
             if (m_internalCharacterInfo == null || totalCharacterCount > m_internalCharacterInfo.Length)
-                m_internalCharacterInfo = new TMP_CharacterInfo[totalCharacterCount > 1024 ? totalCharacterCount + 256 : Mathf.NextPowerOfTwo(totalCharacterCount)];
+            {
+                int tSize = totalCharacterCount > 1024
+                    ? totalCharacterCount + 256
+                    : Mathf.NextPowerOfTwo(totalCharacterCount);
+                #if OPTIMIZE_TMP
+                    m_internalCharacterInfo = TMP_ArrayPool<TMP_CharacterInfo>.Get(tSize);
+                #else
+                    m_internalCharacterInfo = new TMP_CharacterInfo[tSize];
+                #endif
+                
+            }
 
             // Calculate the scale of the font based on selected font size and sampling point size.
             // baseScale is calculated using the font asset assigned to the text object.
@@ -4966,7 +5079,7 @@ namespace TMPro
         {
             size = size > 1024 ? size + 256 : Mathf.NextPowerOfTwo(size + 1);
 
-            TMP_LineInfo[] temp_lineInfo = new TMP_LineInfo[size];
+            TMP_LineInfo[] temp_lineInfo = new TMP_LineInfo[size]; // TODO by hxp
             for (int i = 0; i < size; i++)
             {
                 if (i < m_textInfo.lineInfo.Length)

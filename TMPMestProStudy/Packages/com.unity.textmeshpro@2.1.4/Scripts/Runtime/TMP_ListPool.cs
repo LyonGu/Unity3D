@@ -18,4 +18,23 @@ namespace TMPro
             s_ListPool.Release(toRelease);
         }
     }
+    
+    internal static class TMP_ArrayPool<T>
+    {
+        private static readonly TMP_ArrayObjectPool<T> s_ArrayPool = new TMP_ArrayObjectPool<T>(null, arr => System.Array.Clear(arr, 0, arr.Length));
+
+        public static T[] Get(int count)
+        {
+            return s_ArrayPool.Get(count);
+        }
+
+        public static void Release(T[] toRelease)
+        {
+            if (toRelease == null)
+            {
+                return;
+            }
+            s_ArrayPool.Release(toRelease.Length, toRelease);
+        }
+    }
 }
