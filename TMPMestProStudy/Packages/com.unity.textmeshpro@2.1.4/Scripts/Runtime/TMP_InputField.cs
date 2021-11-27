@@ -3350,11 +3350,7 @@ namespace TMPro
             TMP_TextInfo textInfo = m_TextComponent.textInfo;
 
             // Check to make sure we have valid data and lines to query.
-#if OPTIMIZE_TMP
-            if (textInfo == null || textInfo.lineInfo.tMP_LineInfos == null || textInfo.lineCount == 0 || textInfo.lineCount > textInfo.lineInfo.Length) return;
-#else
             if (textInfo == null || textInfo.lineInfo == null || textInfo.lineCount == 0 || textInfo.lineCount > textInfo.lineInfo.Length) return;
-#endif
 
 
             float verticalAlignmentOffset = 0;

@@ -15,6 +15,28 @@ namespace TMPro
 
     public partial class TextMeshPro
     {
+        private TMP_SubMesh[] m_subTextObjects;
+        // Text Container / RectTransform Component
+        private Vector3[] m_RectTransformCorners;
+
+        public TextMeshPro()
+        {
+#if OPTIMIZE_TMP
+
+            TMP_ArrayPool<TMP_SubMesh>.Release(m_subTextObjects);
+            m_subTextObjects = TMP_ArrayPool<TMP_SubMesh>.Get(8);
+
+            TMP_ArrayPool<Vector3>.Release(m_RectTransformCorners);
+            m_RectTransformCorners = TMP_ArrayPool<Vector3>.Get(4);
+
+#else
+
+            m_subTextObjects = new TMP_SubMesh[8];
+
+            m_RectTransformCorners = new Vector3[4];
+#endif
+        }
+        
         [SerializeField]
         private bool m_hasFontAssetChanged = false; // Used to track when font properties have changed.
 
@@ -29,8 +51,7 @@ namespace TMPro
         private int m_max_characters = 8; // Determines the initial allocation and size of the character array / buffer.
         private int m_max_numberOfLines = 4; // Determines the initial allocation and maximum number of lines of text.
 
-        private TMP_SubMesh[] m_subTextObjects = new TMP_SubMesh[8];
-
+        
         // MASKING RELATED PROPERTIES
 
         [SerializeField]
@@ -39,8 +60,7 @@ namespace TMPro
         // Matrix used to animated Env Map
         private Matrix4x4 m_EnvMapMatrix = new Matrix4x4();
 
-        // Text Container / RectTransform Component
-        private Vector3[] m_RectTransformCorners = new Vector3[4];
+       
 
         [NonSerialized]
         private bool m_isRegisteredForEvents;
@@ -111,6 +131,14 @@ namespace TMPro
                 m_meshFilter.sharedMesh = m_mesh;
 
                 // Create new TextInfo for the text object.
+#if OPTIMIZE_TMP
+                if (m_textInfo != null)
+                {
+                    // Clone实例化后会触发执行构造函数，m_textInfo如果不为空则需要先释放再重新创建
+                    m_textInfo.Release();
+                    m_textInfo = null;
+                }
+#endif
                 m_textInfo = new TMP_TextInfo(this);
             }
             m_meshFilter.hideFlags = HideFlags.HideInInspector | HideFlags.HideAndDontSave;
@@ -735,7 +763,14 @@ namespace TMPro
             int materialCount = m_textInfo.materialCount;
 
             if (m_fontMaterials == null)
+            {
+#if OPTIMIZE_TMP
+                TMP_ArrayPool<Material>.Release(m_fontMaterials);
+                m_fontMaterials = TMP_ArrayPool<Material>.Get(materialCount);
+#else
                 m_fontMaterials = new Material[materialCount];
+#endif
+            }
             else if (m_fontMaterials.Length != materialCount)
                 TMP_TextInfo.Resize(ref m_fontMaterials, materialCount, false);
 
@@ -779,7 +814,14 @@ namespace TMPro
             int materialCount = m_textInfo.materialCount;
 
             if (m_fontSharedMaterials == null)
+            {
+#if OPTIMIZE_TMP
+                TMP_ArrayPool<Material>.Release(m_fontSharedMaterials);
+                m_fontSharedMaterials = TMP_ArrayPool<Material>.Get(materialCount);
+#else
                 m_fontSharedMaterials = new Material[materialCount];
+#endif
+            }
             else if (m_fontSharedMaterials.Length != materialCount)
                 TMP_TextInfo.Resize(ref m_fontSharedMaterials, materialCount, false);
 
@@ -804,7 +846,14 @@ namespace TMPro
 
             // Check allocation of the fontSharedMaterials array.
             if (m_fontSharedMaterials == null)
+            {
+#if OPTIMIZE_TMP
+                TMP_ArrayPool<Material>.Release(m_fontSharedMaterials);
+                m_fontSharedMaterials = TMP_ArrayPool<Material>.Get(materialCount);
+#else
                 m_fontSharedMaterials = new Material[materialCount];
+#endif
+            }
             else if (m_fontSharedMaterials.Length != materialCount)
                 TMP_TextInfo.Resize(ref m_fontSharedMaterials, materialCount, false);
 
@@ -991,11 +1040,7 @@ namespace TMPro
             }
             else if (m_textInfo.characterInfo.Length < m_InternalTextProcessingArraySize)
             {
-#if OPTIMIZE_TMP
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_InternalTextProcessingArraySize, false);
-#else
                 TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_InternalTextProcessingArraySize, false);
-#endif
             }
 
 
@@ -1060,13 +1105,9 @@ namespace TMPro
             for (int i = 0; i < unicodeChars.Length && unicodeChars[i].unicode != 0; i++)
             {
                 //Make sure the characterInfo array can hold the next text element.
-                if (m_textInfo.characterInfo.tMP_CharacterInfos == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
+                if (m_textInfo.characterInfo == null || m_totalCharacterCount >= m_textInfo.characterInfo.Length)
                 {
-#if OPTIMIZE_TMP
-                    TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, m_totalCharacterCount + 1, true);
-#else
                     TMP_TextInfo.Resize(ref m_textInfo.characterInfo, m_totalCharacterCount + 1, true);
-#endif
                 }
 
 
@@ -1326,11 +1367,7 @@ namespace TMPro
             // Check if we need to resize the MeshInfo array for handling different materials.
             if (materialCount > m_textInfo.meshInfo.Length)
             {
-#if OPTIMIZE_TMP
-                TMP_TextInfo.Resize(ref m_textInfo.meshInfo.tMP_MeshInfos, materialCount, false);
-#else
                 TMP_TextInfo.Resize(ref m_textInfo.meshInfo, materialCount, false);
-#endif
             }
 
 
@@ -1341,11 +1378,7 @@ namespace TMPro
             // Resize CharacterInfo[] if allocations are excessive
             if (m_VertexBufferAutoSizeReduction && m_textInfo.characterInfo.Length - m_totalCharacterCount > 256)
             {
-#if OPTIMIZE_TMP
-                TMP_TextInfo.Resize(ref m_textInfo.characterInfo.tMP_CharacterInfos, Mathf.Max(m_totalCharacterCount + 1, 256), true);
-#else
                 TMP_TextInfo.Resize(ref m_textInfo.characterInfo, Mathf.Max(m_totalCharacterCount + 1, 256), true);
-#endif
             }
 
 
@@ -3336,11 +3369,7 @@ namespace TMPro
                     // Check if we need to increase allocations for the pageInfo array.
                     if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
                     {
-#if OPTIMIZE_TMP
-                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo.tMP_PageInfos, m_pageNumber + 1, true);
-#else
                         TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, true);
-#endif
                     }
 
 
@@ -3576,11 +3605,7 @@ namespace TMPro
             float strikethroughPointSize = 0;
             float strikethroughScale = 0;
             float strikethroughBaseline = 0;
-#if OPTIMIZE_TMP
-            TMP_CharacterInfo[] characterInfos = m_textInfo.characterInfo.tMP_CharacterInfos;
-#else
             TMP_CharacterInfo[] characterInfos = m_textInfo.characterInfo;
-#endif
 
             #region Handle Line Justification & UV Mapping & Character Visibility & More
             for (int i = 0; i < m_characterCount; i++)
@@ -3964,11 +3989,7 @@ namespace TMPro
 
                         if (m_textInfo.wordCount + 1 > size)
                         {
-#if OPTIMIZE_TMP
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo.tMP_WordInfos, size + 1);
-#else
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo , size + 1);
-#endif
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
                         }
 
 
@@ -4000,11 +4021,7 @@ namespace TMPro
 
                         if (m_textInfo.wordCount + 1 > size)
                         {
-#if OPTIMIZE_TMP
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo.tMP_WordInfos, size + 1);
-#else
                             TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
-#endif
                         }
 
 
@@ -4613,6 +4630,18 @@ namespace TMPro
                     m_subTextObjects[i].mesh.uv2 = m_textInfo.meshInfo[i].uvs2;
             }
         }
+        protected override void Release()
+        {
+#if OPTIMIZE_TMP
 
+            TMP_ArrayPool<TMP_SubMesh>.Release(m_subTextObjects);
+
+            TMP_ArrayPool<Vector3>.Release(m_RectTransformCorners);
+
+#else
+
+#endif
+            base.Release();
+        }
     }
 }

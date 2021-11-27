@@ -1,4 +1,4 @@
-﻿#define OPTIMIZE_TMP 
+﻿#define OPTIMIZE_TMP
 using UnityEngine;
 using System;
 using System.Collections;
@@ -28,306 +28,113 @@ namespace TMPro
 
         public int materialCount;
 
-#if OPTIMIZE_TMP
-        public TMP_CustomCharacterInfo characterInfo;
-        public TMP_CustomLinkInfo linkInfo;
-        public TMP_CustomWordInfo wordInfo;
-        public TMP_CustomLineInfo lineInfo;
-        public TMP_CustomPageInfo pageInfo;
-        public TMP_CustomMeshInfo meshInfo;
-#else
         public TMP_CharacterInfo[] characterInfo;
         public TMP_WordInfo[] wordInfo;
         public TMP_LinkInfo[] linkInfo;
         public TMP_LineInfo[] lineInfo;
         public TMP_PageInfo[] pageInfo;
         public TMP_MeshInfo[] meshInfo;
-#endif
 
         private TMP_MeshInfo[] m_CachedMeshInfo;
 
 
-#if OPTIMIZE_TMP
-        public enum InfoType : byte
-        {
-            Character = 0,
-            Word = 1,
-            Link = 2,
-            Line = 3,
-            Page = 4,
-            Mesh = 5,
 
-        }
-        public struct TMP_CustomLinkInfo
-        {
-
-            public TMP_LinkInfo[] tMP_LinkInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomLinkInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_LinkInfos = new TMP_LinkInfo[0];
-            }
-
-            public ref TMP_LinkInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_LinkInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_LinkInfos, index + 1);
-                    return ref tMP_LinkInfos[index];
-                }
-            }
-
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_LinkInfos.Length;
-                }
-
-            }
-
-        }
-
-        public struct TMP_CustomWordInfo
-        {
-
-            public TMP_WordInfo[] tMP_WordInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomWordInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_WordInfos = new TMP_WordInfo[0];
-            }
-
-            public ref TMP_WordInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_WordInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_WordInfos, index + 1);
-                    return ref tMP_WordInfos[index];
-                }
-
-            }
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_WordInfos.Length;
-                }
-
-            }
-
-        }
-
-
-        public struct TMP_CustomCharacterInfo
-        {
-
-            public TMP_CharacterInfo[] tMP_CharacterInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomCharacterInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_CharacterInfos = new TMP_CharacterInfo[0];
-            }
-
-            public ref TMP_CharacterInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_CharacterInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_CharacterInfos, index + 1);
-                    return ref tMP_CharacterInfos[index];
-                }
-            }
-
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_CharacterInfos.Length;
-                }
-
-            }
-
-        }
-        public struct TMP_CustomLineInfo
-        {
-
-            public TMP_LineInfo[] tMP_LineInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomLineInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_LineInfos = new TMP_LineInfo[0];
-            }
-
-            public ref TMP_LineInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_LineInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_LineInfos, index + 1);
-                    return ref tMP_LineInfos[index];
-                }
-
-            }
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_LineInfos.Length;
-                }
-
-            }
-
-        }
-        public struct TMP_CustomPageInfo
-        {
-
-            public TMP_PageInfo[] tMP_PageInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomPageInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_PageInfos = new TMP_PageInfo[0];
-            }
-
-            public ref TMP_PageInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_PageInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_PageInfos, index + 1);
-                    return ref tMP_PageInfos[index];
-                }
-
-            }
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_PageInfos.Length;
-                }
-
-            }
-
-        }
-        public struct TMP_CustomMeshInfo
-        {
-
-            public TMP_MeshInfo[] tMP_MeshInfos;
-
-            private InfoType _infoType;
-            public TMP_CustomMeshInfo(InfoType infoType)
-            {
-                _infoType = infoType;
-                tMP_MeshInfos = new TMP_MeshInfo[0];
-            }
-
-            public ref TMP_MeshInfo this[int index]
-            {
-                get
-                {
-                    if (index + 1 > tMP_MeshInfos.Length)
-                        TMP_TextInfo.Resize(ref tMP_MeshInfos, index + 1);
-                    return ref tMP_MeshInfos[index];
-                }
-
-            }
-
-            public int Length
-            {
-                get
-                {
-                    return tMP_MeshInfos.Length;
-                }
-
-            }
-
-        }
-
-#endif
         // Default Constructor
 
         public TMP_TextInfo()
         {
-#if OPTIMIZE_TMP
-            characterInfo = new TMP_CustomCharacterInfo(InfoType.Character);
-            wordInfo = new TMP_CustomWordInfo(InfoType.Word);
-            linkInfo = new TMP_CustomLinkInfo(InfoType.Link);
-            lineInfo = new TMP_CustomLineInfo(InfoType.Line);
-            pageInfo = new TMP_CustomPageInfo(InfoType.Page);
-            meshInfo = new TMP_CustomMeshInfo(InfoType.Mesh);
-#else
-            characterInfo = new TMP_CharacterInfo[8];
-            wordInfo = new TMP_WordInfo[16];
-            linkInfo = new TMP_LinkInfo[0];
-            lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
-            meshInfo = new TMP_MeshInfo[1];
-#endif
+            #if OPTIMIZE_TMP
+                TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
+                characterInfo = TMP_ArrayPool<TMP_CharacterInfo>.Get(8);
 
+                TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+                wordInfo = TMP_ArrayPool<TMP_WordInfo>.Get(16);
 
+                TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
+                linkInfo = TMP_ArrayPool<TMP_LinkInfo>.Get(0);
 
+                TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                lineInfo = TMP_ArrayPool<TMP_LineInfo>.Get(2);
+
+                TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+                pageInfo = TMP_ArrayPool<TMP_PageInfo>.Get(4);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
+                meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);                            
+            #else
+                characterInfo = new TMP_CharacterInfo[8];
+                wordInfo = new TMP_WordInfo[16];
+                linkInfo = new TMP_LinkInfo[0];
+                lineInfo = new TMP_LineInfo[2];
+                pageInfo = new TMP_PageInfo[4];
+                meshInfo = new TMP_MeshInfo[1];
+            #endif
+            
+            
         }
 
         internal TMP_TextInfo(int characterCount)
         {
-#if OPTIMIZE_TMP
-            characterInfo = new TMP_CustomCharacterInfo(InfoType.Character);
-            wordInfo = new TMP_CustomWordInfo(InfoType.Word);
-            linkInfo = new TMP_CustomLinkInfo(InfoType.Link);
-            lineInfo = new TMP_CustomLineInfo(InfoType.Line);
-            pageInfo = new TMP_CustomPageInfo(InfoType.Page);
-            meshInfo = new TMP_CustomMeshInfo(InfoType.Mesh);
+            #if OPTIMIZE_TMP
+                TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
+                characterInfo = TMP_ArrayPool<TMP_CharacterInfo>.Get(characterCount);
 
-#else
-            characterInfo = new TMP_CharacterInfo[characterCount];
-            wordInfo = new TMP_WordInfo[16];
-            linkInfo = new TMP_LinkInfo[0];
-            lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
-            meshInfo = new TMP_MeshInfo[1];
-#endif
+                TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+                wordInfo = TMP_ArrayPool<TMP_WordInfo>.Get(16);
+
+                TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
+                linkInfo = TMP_ArrayPool<TMP_LinkInfo>.Get(0);
+
+                TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                lineInfo = TMP_ArrayPool<TMP_LineInfo>.Get(2);
+
+                TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+                pageInfo = TMP_ArrayPool<TMP_PageInfo>.Get(4);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
+                meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);   
+
+            #else
+                characterInfo = new TMP_CharacterInfo[characterCount];
+                wordInfo = new TMP_WordInfo[16];
+                linkInfo = new TMP_LinkInfo[0];
+                lineInfo = new TMP_LineInfo[2];
+                pageInfo = new TMP_PageInfo[4];
+                meshInfo = new TMP_MeshInfo[1];
+            #endif
         }
 
         public TMP_TextInfo(TMP_Text textComponent)
         {
             this.textComponent = textComponent;
+            #if OPTIMIZE_TMP
+                TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
+                characterInfo = TMP_ArrayPool<TMP_CharacterInfo>.Get(characterCount);
 
-#if OPTIMIZE_TMP
-            characterInfo = new TMP_CustomCharacterInfo(InfoType.Character);
-            wordInfo = new TMP_CustomWordInfo(InfoType.Word);
-            linkInfo = new TMP_CustomLinkInfo(InfoType.Link);
-            lineInfo = new TMP_CustomLineInfo(InfoType.Line);
-            pageInfo = new TMP_CustomPageInfo(InfoType.Page);
-            meshInfo = new TMP_CustomMeshInfo(InfoType.Mesh);
+                TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+                wordInfo = TMP_ArrayPool<TMP_WordInfo>.Get(16);
 
-#else
- 
-            meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);
-            characterInfo = new TMP_CharacterInfo[8];
-            wordInfo = new TMP_WordInfo[4];
-            linkInfo = new TMP_LinkInfo[0];
-            lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
-            meshInfo = new TMP_MeshInfo[1];
-#endif
+                TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
+                linkInfo = TMP_ArrayPool<TMP_LinkInfo>.Get(0);
 
+                TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                lineInfo = TMP_ArrayPool<TMP_LineInfo>.Get(2);
+
+                TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+                pageInfo = TMP_ArrayPool<TMP_PageInfo>.Get(4);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
+                meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);   
+
+            #else
+                characterInfo = new TMP_CharacterInfo[8];
+                wordInfo = new TMP_WordInfo[4];
+                linkInfo = new TMP_LinkInfo[0];
+                lineInfo = new TMP_LineInfo[2];
+                pageInfo = new TMP_PageInfo[4];
+                meshInfo = new TMP_MeshInfo[1];
+            #endif
+            
             meshInfo[0].mesh = textComponent.mesh;
             materialCount = 1;
         }
@@ -366,21 +173,36 @@ namespace TMPro
             pageCount = 0;
             spriteCount = 0;
 
-            //this.characterInfo = new TMP_CharacterInfo[4];
-            this.characterInfo = new TMP_CustomCharacterInfo(InfoType.Character);
-            //this.wordInfo = new TMP_WordInfo[1];
-            this.wordInfo = new TMP_CustomWordInfo(InfoType.Word);
-            //this.lineInfo = new TMP_LineInfo[1];
-            this.lineInfo = new TMP_CustomLineInfo(InfoType.Line);
-            //this.pageInfo = new TMP_PageInfo[1];
-            this.pageInfo = new TMP_CustomPageInfo(InfoType.Page);
-            //this.linkInfo = new TMP_LinkInfo[0];
-            this.linkInfo = new TMP_CustomLinkInfo(InfoType.Link);
+            
+            #if OPTIMIZE_TMP
+                TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
+                characterInfo = TMP_ArrayPool<TMP_CharacterInfo>.Get(characterCount);
 
-            materialCount = 0;
+                TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+                wordInfo = TMP_ArrayPool<TMP_WordInfo>.Get(16);
 
-            //this.meshInfo = new TMP_MeshInfo[1];
-            this.meshInfo = new TMP_CustomMeshInfo(InfoType.Mesh);
+                TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
+                linkInfo = TMP_ArrayPool<TMP_LinkInfo>.Get(0);
+
+                TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                lineInfo = TMP_ArrayPool<TMP_LineInfo>.Get(2);
+
+                TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+                pageInfo = TMP_ArrayPool<TMP_PageInfo>.Get(4);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
+                materialCount = 0;
+                meshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(1);
+            #else
+                this.characterInfo = new TMP_CharacterInfo[4];
+                this.wordInfo = new TMP_WordInfo[1];
+                this.lineInfo = new TMP_LineInfo[1];
+                this.pageInfo = new TMP_PageInfo[1];
+                this.linkInfo = new TMP_LinkInfo[0];
+                materialCount = 0;
+                this.meshInfo = new TMP_MeshInfo[1];
+            #endif
+            
         }
 
 
@@ -433,18 +255,19 @@ namespace TMPro
         /// </summary>
         public void ClearLineInfo()
         {
-#if OPTIMIZE_TMP
-            if (this.lineInfo.tMP_LineInfos == null)
-            {
-                this.lineInfo = new TMP_CustomLineInfo(InfoType.Line);
-            }
+            #if OPTIMIZE_TMP
+                if (this.lineInfo == null)
+                {
+                    TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                    this.lineInfo = TMP_ArrayPool<TMP_LineInfo>.Get(2);
+                }
 
-#else
-            if (this.lineInfo == null)
-            {
-                this.lineInfo = new TMP_LineInfo[2];
-            }
-#endif
+            #else
+                if (this.lineInfo == null)
+                {
+                    this.lineInfo = new TMP_LineInfo[2];
+                }
+            #endif
 
             int length = this.lineInfo.Length;
 
@@ -473,13 +296,17 @@ namespace TMPro
         internal void ClearPageInfo()
         {
 
-#if OPTIMIZE_TMP
-            if (this.pageInfo.tMP_PageInfos == null)
-                this.pageInfo = new TMP_CustomPageInfo(InfoType.Page);
-#else
-            if (this.pageInfo == null)
-               this.pageInfo = new TMP_PageInfo[2];
-#endif
+            #if OPTIMIZE_TMP
+                if (this.pageInfo == null)
+                {
+                    TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+                    this.pageInfo = TMP_ArrayPool<TMP_PageInfo>.Get(2);
+                }
+                        
+            #else
+                if (this.pageInfo == null)
+                   this.pageInfo = new TMP_PageInfo[2];
+            #endif
 
 
             int length = this.pageInfo.Length;
@@ -503,7 +330,13 @@ namespace TMPro
         {
             if (m_CachedMeshInfo == null || m_CachedMeshInfo.Length != meshInfo.Length)
             {
-                m_CachedMeshInfo = new TMP_MeshInfo[meshInfo.Length];
+                #if OPTIMIZE_TMP
+                    TMP_ArrayPool<TMP_MeshInfo>.Release(m_CachedMeshInfo);
+                    m_CachedMeshInfo = TMP_ArrayPool<TMP_MeshInfo>.Get(meshInfo.Length);
+                #else
+                    m_CachedMeshInfo = new TMP_MeshInfo[meshInfo.Length];
+                #endif
+   
 
                 // Initialize all the vertex data arrays
                 for (int i = 0; i < m_CachedMeshInfo.Length; i++)
@@ -565,7 +398,14 @@ namespace TMPro
             // Allocated to the next power of two
             int newSize = size > 1024 ? size + 256 : Mathf.NextPowerOfTwo(size);
 
-            Array.Resize(ref array, newSize);
+            #if OPTIMIZE_TMP
+                T[] newArray = TMP_ArrayPool<T>.Get(newSize);
+                Array.Copy(array, 0, newArray, 0, array.Length > newSize? newSize : array.Length);
+                TMP_ArrayPool<T>.Release(array);
+                array = newArray;
+            #else
+                Array.Resize(ref array, newSize);
+            #endif
         }
 
 
@@ -584,7 +424,31 @@ namespace TMPro
 
             //Debug.Log("Resizing TextInfo from [" + array.Length + "] to [" + size + "]");
 
+        #if OPTIMIZE_TMP
+            T[] newArray = TMP_ArrayPool<T>.Get(size);
+            Array.Copy(array, 0, newArray, 0, array.Length > size ? size : array.Length);
+            TMP_ArrayPool<T>.Release(array);
+            array = newArray;
+        #else
             Array.Resize(ref array, size);
+        #endif
+        }
+        
+        public void Release()
+        {
+            #if OPTIMIZE_TMP
+                TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
+                TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+                TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
+                TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
+                TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
+
+                TMP_ArrayPool<TMP_MeshInfo>.Release(m_CachedMeshInfo);
+            #else
+
+            #endif
         }
 
     }
