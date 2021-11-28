@@ -433,18 +433,48 @@ namespace TMPro
             Array.Resize(ref array, size);
         #endif
         }
+
+        private void ReleaseLinkInfo()
+        {
+            int len = linkInfo.Length;
+            for (int i = 0; i < len; i++)
+            {
+                linkInfo[i].Release();
+            }
+        }
         
+        private void ReleaseMeshInfo()
+        {
+            int len = meshInfo.Length;
+            for (int i = 0; i < len; i++)
+            {
+                meshInfo[i].Release();
+            }
+
+            if (m_CachedMeshInfo != null)
+            {
+                len = m_CachedMeshInfo.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    m_CachedMeshInfo[i].Release();
+                }
+            }
+
+           
+        }
+
         public void Release()
         {
             #if OPTIMIZE_TMP
                 TMP_ArrayPool<TMP_CharacterInfo>.Release(characterInfo);
                 TMP_ArrayPool<TMP_WordInfo>.Release(wordInfo);
+
+                ReleaseLinkInfo();
                 TMP_ArrayPool<TMP_LinkInfo>.Release(linkInfo);
                 TMP_ArrayPool<TMP_LineInfo>.Release(lineInfo);
                 TMP_ArrayPool<TMP_PageInfo>.Release(pageInfo);
-
+                ReleaseMeshInfo();
                 TMP_ArrayPool<TMP_MeshInfo>.Release(meshInfo);
-
                 TMP_ArrayPool<TMP_MeshInfo>.Release(m_CachedMeshInfo);
             #else
 

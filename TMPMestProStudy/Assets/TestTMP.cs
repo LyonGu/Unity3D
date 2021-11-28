@@ -22,6 +22,11 @@ public class TestTMP : MonoBehaviour
         GameObject gameObject = Resources.Load<GameObject>("TMPGameObject");
         var targetObj = GameObject.Instantiate<GameObject>(gameObject);
         targetObj.transform.SetParent(parentTrans, false);
+        
+        yield return new WaitForSeconds(3);
+        GameObject gameObject1 = Resources.Load<GameObject>("TMPGameObject");
+        var targetObj1 = GameObject.Instantiate<GameObject>(gameObject);
+        targetObj1.transform.SetParent(parentTrans, false);
     }
 
     // Update is called once per frame

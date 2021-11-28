@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define OPTIMIZE_TMP
+using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections;
@@ -61,17 +62,27 @@ namespace TMPro
             int sizeX6 = size * 6;
 
             this.vertexCount = 0;
+            #if OPTIMIZE_TMP
+                this.vertices = TMP_ArrayPool<Vector3>.Get(sizeX4);
+                this.uvs0 = TMP_ArrayPool<Vector2>.Get(sizeX4);
+                this.uvs2 = TMP_ArrayPool<Vector2>.Get(sizeX4);
+                this.colors32 = TMP_ArrayPool<Color32>.Get(sizeX4);
+                this.normals = TMP_ArrayPool<Vector3>.Get(sizeX4);
+                this.tangents = TMP_ArrayPool<Vector4>.Get(sizeX4);
+                this.triangles = TMP_ArrayPool<int>.Get(sizeX6);
+            #else
+                this.vertices = new Vector3[sizeX4];
+                this.uvs0 = new Vector2[sizeX4];
+                this.uvs2 = new Vector2[sizeX4];
+                //this.uvs4 = new Vector2[sizeX4]; // SDF scale data
+                this.colors32 = new Color32[sizeX4];
 
-            this.vertices = new Vector3[sizeX4];
-            this.uvs0 = new Vector2[sizeX4];
-            this.uvs2 = new Vector2[sizeX4];
-            //this.uvs4 = new Vector2[sizeX4]; // SDF scale data
-            this.colors32 = new Color32[sizeX4];
+                this.normals = new Vector3[sizeX4];
+                this.tangents = new Vector4[sizeX4];
 
-            this.normals = new Vector3[sizeX4];
-            this.tangents = new Vector4[sizeX4];
-
-            this.triangles = new int[sizeX6];
+                this.triangles = new int[sizeX6];
+            #endif
+            
 
             int index_X6 = 0;
             int index_X4 = 0;
@@ -138,18 +149,28 @@ namespace TMPro
             int size_x_s1 = size * s1;
 
             this.vertexCount = 0;
+            
+            #if OPTIMIZE_TMP
+                this.vertices = TMP_ArrayPool<Vector3>.Get(size_x_s0);
+                this.uvs0 = TMP_ArrayPool<Vector2>.Get(size_x_s0);
+                this.uvs2 = TMP_ArrayPool<Vector2>.Get(size_x_s0);
+                this.colors32 = TMP_ArrayPool<Color32>.Get(size_x_s0);
+                this.normals = TMP_ArrayPool<Vector3>.Get(size_x_s0);
+                this.tangents = TMP_ArrayPool<Vector4>.Get(size_x_s0);
+                this.triangles = TMP_ArrayPool<int>.Get(size_x_s1);
+            #else
+                this.vertices = new Vector3[size_x_s0];
+                this.uvs0 = new Vector2[size_x_s0];
+                this.uvs2 = new Vector2[size_x_s0];
+                //this.uvs4 = new Vector2[sizeX8]; // SDF scale data
+                this.colors32 = new Color32[size_x_s0];
 
-            this.vertices = new Vector3[size_x_s0];
-            this.uvs0 = new Vector2[size_x_s0];
-            this.uvs2 = new Vector2[size_x_s0];
-            //this.uvs4 = new Vector2[sizeX8]; // SDF scale data
-            this.colors32 = new Color32[size_x_s0];
+                this.normals = new Vector3[size_x_s0];
+                this.tangents = new Vector4[size_x_s0];
 
-            this.normals = new Vector3[size_x_s0];
-            this.tangents = new Vector4[size_x_s0];
-
-            this.triangles = new int[size_x_s1];
-
+                this.triangles = new int[size_x_s1];
+            #endif
+            
             int index_x_s0 = 0;
             int index_x_s1 = 0;
             while (index_x_s0 / s0 < size)
@@ -229,7 +250,19 @@ namespace TMPro
             this.material = null;
         }
 
+        public static void Resize<T> (ref T[] array, int size)
+        {
+            int newSize = size;
 
+            #if OPTIMIZE_TMP
+                T[] newArray = TMP_ArrayPool<T>.Get(newSize);
+                Array.Copy(array, 0, newArray, 0, array.Length > newSize? newSize : array.Length);
+                TMP_ArrayPool<T>.Release(array);
+                array = newArray;
+            #else
+                Array.Resize(ref array, newSize);
+            #endif
+        }
         /// <summary>
         /// Function to resized the content of MeshData and re-assign normals, tangents and triangles.
         /// </summary>
@@ -247,17 +280,18 @@ namespace TMPro
 
             int previousSize = this.vertices.Length / 4;
 
-            Array.Resize(ref this.vertices, size_X4);
-            Array.Resize(ref this.normals, size_X4);
-            Array.Resize(ref this.tangents, size_X4);
+            Resize(ref this.vertices, size_X4);
+            Resize(ref this.vertices, size_X4);
+            Resize(ref this.normals, size_X4);
+            Resize(ref this.tangents, size_X4);
 
-            Array.Resize(ref this.uvs0, size_X4);
-            Array.Resize(ref this.uvs2, size_X4);
+            Resize(ref this.uvs0, size_X4);
+            Resize(ref this.uvs2, size_X4);
             //Array.Resize(ref this.uvs4, size_X4);
 
-            Array.Resize(ref this.colors32, size_X4);
+            Resize(ref this.colors32, size_X4);
 
-            Array.Resize(ref this.triangles, size_X6);
+            Resize(ref this.triangles, size_X6);
 
 
             // Re-assign Normals, Tangents and Triangles
@@ -320,17 +354,17 @@ namespace TMPro
 
             int previousSize = this.vertices.Length / s0;
 
-            Array.Resize(ref this.vertices, size_X4);
-            Array.Resize(ref this.normals, size_X4);
-            Array.Resize(ref this.tangents, size_X4);
+            Resize(ref this.vertices, size_X4);
+            Resize(ref this.normals, size_X4);
+            Resize(ref this.tangents, size_X4);
 
-            Array.Resize(ref this.uvs0, size_X4);
-            Array.Resize(ref this.uvs2, size_X4);
+            Resize(ref this.uvs0, size_X4);
+            Resize(ref this.uvs2, size_X4);
             //Array.Resize(ref this.uvs4, size_X4);
 
-            Array.Resize(ref this.colors32, size_X4);
+            Resize(ref this.colors32, size_X4);
 
-            Array.Resize(ref this.triangles, size_X6);
+            Resize(ref this.triangles, size_X6);
 
 
             // Re-assign Normals, Tangents and Triangles
@@ -670,6 +704,19 @@ namespace TMPro
         //    a = b;
         //    b = a;
         //}
+
+        public void Release()
+        {
+            #if  OPTIMIZE_TMP
+                TMP_ArrayPool<Vector3>.Release(this.vertices);
+                TMP_ArrayPool<Vector2>.Release(this.uvs0);
+                TMP_ArrayPool<Vector2>.Release(this.uvs2);
+                TMP_ArrayPool<Color32>.Release(this.colors32);
+                TMP_ArrayPool<Vector3>.Release(this.normals);
+                TMP_ArrayPool<Vector4>.Release(this.tangents);
+                TMP_ArrayPool<int>.Release(this.triangles);
+            #endif
+        }
 
     }
 }

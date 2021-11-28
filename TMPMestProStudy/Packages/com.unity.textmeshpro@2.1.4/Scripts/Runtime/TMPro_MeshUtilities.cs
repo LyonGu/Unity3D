@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define OPTIMIZE_TMP
+using UnityEngine;
 using UnityEngine.TextCore;
 using System;
 
@@ -127,14 +128,26 @@ namespace TMPro
         public int linkTextLength;
 
         internal char[] linkID;
-
-
+        
         internal void SetLinkID(char[] text, int startIndex, int length)
         {
-            if (linkID == null || linkID.Length < length) linkID = new char[length];
+            if (linkID == null || linkID.Length < length)
+            {
+                #if OPTIMIZE_TMP
+                    linkID = TMP_ArrayPool<char>.Get(length);
+                #else
+                    linkID = new char[length];
+                #endif
+                
+            }
 
             for (int i = 0; i < length; i++)
                 linkID[i] = text[startIndex + i];
+        }
+
+        public void Release()
+        {
+            TMP_ArrayPool<char>.Release(linkID);
         }
 
         /// <summary>
