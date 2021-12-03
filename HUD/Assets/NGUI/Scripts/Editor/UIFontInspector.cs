@@ -67,16 +67,16 @@ public class UIFontInspector : Editor
 
 	void MarkAsChanged ()
 	{
-		List<UILabel> labels = NGUIEditorTools.FindAll<UILabel>();
+		//List<UILabel> labels = NGUIEditorTools.FindAll<UILabel>();
 
-		foreach (UILabel lbl in labels)
-		{
-			if (UIFont.CheckIfRelated(lbl.bitmapFont, mFont))
-			{
-				lbl.bitmapFont = null;
-				lbl.bitmapFont = mFont;
-			}
-		}
+		//foreach (UILabel lbl in labels)
+		//{
+		//	if (UIFont.CheckIfRelated(lbl.bitmapFont, mFont))
+		//	{
+		//		lbl.bitmapFont = null;
+		//		lbl.bitmapFont = mFont;
+		//	}
+		//}
 	}
 
 	public override void OnInspectorGUI ()

@@ -409,61 +409,61 @@ public class UIAtlas : MonoBehaviour
 
 	public void MarkAsChanged ()
 	{
-#if UNITY_EDITOR
-		NGUITools.SetDirty(gameObject);
-#endif
-		if (mReplacement != null) mReplacement.MarkAsChanged();
+//#if UNITY_EDITOR
+//		NGUITools.SetDirty(gameObject);
+//#endif
+//		if (mReplacement != null) mReplacement.MarkAsChanged();
 
-		UISprite[] list = NGUITools.FindActive<UISprite>();
+//		UISprite[] list = NGUITools.FindActive<UISprite>();
 
-		for (int i = 0, imax = list.Length; i < imax; ++i)
-		{
-			UISprite sp = list[i];
+//		for (int i = 0, imax = list.Length; i < imax; ++i)
+//		{
+//			UISprite sp = list[i];
 
-			if (CheckIfRelated(this, sp.atlas))
-			{
-				UIAtlas atl = sp.atlas;
-				sp.atlas = null;
-				sp.atlas = atl;
-#if UNITY_EDITOR
-				NGUITools.SetDirty(sp);
-#endif
-			}
-		}
+//			if (CheckIfRelated(this, sp.atlas))
+//			{
+//				UIAtlas atl = sp.atlas;
+//				sp.atlas = null;
+//				sp.atlas = atl;
+//#if UNITY_EDITOR
+//				NGUITools.SetDirty(sp);
+//#endif
+//			}
+//		}
 
-		UIFont[] fonts = Resources.FindObjectsOfTypeAll(typeof(UIFont)) as UIFont[];
+//		UIFont[] fonts = Resources.FindObjectsOfTypeAll(typeof(UIFont)) as UIFont[];
 
-		for (int i = 0, imax = fonts.Length; i < imax; ++i)
-		{
-			UIFont font = fonts[i];
+//		for (int i = 0, imax = fonts.Length; i < imax; ++i)
+//		{
+//			UIFont font = fonts[i];
 
-			if (CheckIfRelated(this, font.atlas))
-			{
-				UIAtlas atl = font.atlas;
-				font.atlas = null;
-				font.atlas = atl;
-#if UNITY_EDITOR
-				NGUITools.SetDirty(font);
-#endif
-			}
-		}
+//			if (CheckIfRelated(this, font.atlas))
+//			{
+//				UIAtlas atl = font.atlas;
+//				font.atlas = null;
+//				font.atlas = atl;
+//#if UNITY_EDITOR
+//				NGUITools.SetDirty(font);
+//#endif
+//			}
+//		}
 
-		UILabel[] labels = NGUITools.FindActive<UILabel>();
+//		UILabel[] labels = NGUITools.FindActive<UILabel>();
 
-		for (int i = 0, imax = labels.Length; i < imax; ++i)
-		{
-			UILabel lbl = labels[i];
+//		for (int i = 0, imax = labels.Length; i < imax; ++i)
+//		{
+//			UILabel lbl = labels[i];
 
-			if (lbl.bitmapFont != null && CheckIfRelated(this, lbl.bitmapFont.atlas))
-			{
-				UIFont font = lbl.bitmapFont;
-				lbl.bitmapFont = null;
-				lbl.bitmapFont = font;
-#if UNITY_EDITOR
-				NGUITools.SetDirty(lbl);
-#endif
-			}
-		}
+//			if (lbl.bitmapFont != null && CheckIfRelated(this, lbl.bitmapFont.atlas))
+//			{
+//				UIFont font = lbl.bitmapFont;
+//				lbl.bitmapFont = null;
+//				lbl.bitmapFont = font;
+//#if UNITY_EDITOR
+//				NGUITools.SetDirty(lbl);
+//#endif
+//			}
+//		}
 	}
 
 	/// <summary>

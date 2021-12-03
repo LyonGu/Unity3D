@@ -176,7 +176,7 @@ public abstract class UIRect : MonoBehaviour
 	[System.NonSerialized] bool mUpdateAnchors = true;
 	[System.NonSerialized] int mUpdateFrame = -1;
 	[System.NonSerialized] bool mAnchorsCached = false;
-	[System.NonSerialized] UIRoot mRoot;
+	//[System.NonSerialized] UIRoot mRoot;
 	[System.NonSerialized] UIRect mParent;
 	[System.NonSerialized] bool mRootSet = false;
 	[System.NonSerialized] protected Camera mCam;
@@ -250,20 +250,20 @@ public abstract class UIRect : MonoBehaviour
 	/// Get the root object, if any.
 	/// </summary>
 
-	public UIRoot root
-	{
-		get
-		{
-			if (parent != null) return mParent.root;
+	//public UIRoot root
+	//{
+	//	get
+	//	{
+	//		if (parent != null) return mParent.root;
 
-			if (!mRootSet)
-			{
-				mRootSet = true;
-				mRoot = NGUITools.FindInParents<UIRoot>(cachedTransform);
-			}
-			return mRoot;
-		}
-	}
+	//		if (!mRootSet)
+	//		{
+	//			mRootSet = true;
+	//			mRoot = NGUITools.FindInParents<UIRoot>(cachedTransform);
+	//		}
+	//		return mRoot;
+	//	}
+	//}
 
 	/// <summary>
 	/// Returns 'true' if the widget is currently anchored on any side.
@@ -430,7 +430,7 @@ public abstract class UIRect : MonoBehaviour
 #endif
 		if (mParent) mParent.mChildren.Remove(this);
 		mParent = null;
-		mRoot = null;
+		//mRoot = null;
 		mRootSet = false;
 		mParentFound = false;
 	}

@@ -502,29 +502,29 @@ public class UIFont : MonoBehaviour
 
 	public void MarkAsChanged ()
 	{
-#if UNITY_EDITOR
-		NGUITools.SetDirty(gameObject);
-#endif
-		if (mReplacement != null) mReplacement.MarkAsChanged();
+//#if UNITY_EDITOR
+//		NGUITools.SetDirty(gameObject);
+//#endif
+//		if (mReplacement != null) mReplacement.MarkAsChanged();
 
-		mSprite = null;
-		UILabel[] labels = NGUITools.FindActive<UILabel>();
+//		mSprite = null;
+//		UILabel[] labels = NGUITools.FindActive<UILabel>();
 
-		for (int i = 0, imax = labels.Length; i < imax; ++i)
-		{
-			UILabel lbl = labels[i];
+//		for (int i = 0, imax = labels.Length; i < imax; ++i)
+//		{
+//			UILabel lbl = labels[i];
 
-			if (lbl.enabled && NGUITools.GetActive(lbl.gameObject) && CheckIfRelated(this, lbl.bitmapFont))
-			{
-				UIFont fnt = lbl.bitmapFont;
-				lbl.bitmapFont = null;
-				lbl.bitmapFont = fnt;
-			}
-		}
+//			if (lbl.enabled && NGUITools.GetActive(lbl.gameObject) && CheckIfRelated(this, lbl.bitmapFont))
+//			{
+//				UIFont fnt = lbl.bitmapFont;
+//				lbl.bitmapFont = null;
+//				lbl.bitmapFont = fnt;
+//			}
+//		}
 
-		// Clear all symbols
-		for (int i = 0, imax = symbols.Count; i < imax; ++i)
-			symbols[i].MarkAsChanged();
+//		// Clear all symbols
+//		for (int i = 0, imax = symbols.Count; i < imax; ++i)
+//			symbols[i].MarkAsChanged();
 	}
 
 	/// <summary>

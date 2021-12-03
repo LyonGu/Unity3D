@@ -521,23 +521,23 @@ static public class NGUITools
 	/// Calculate the game object's depth based on the widgets within, and also taking panel depth into consideration.
 	/// </summary>
 
-	static public int CalculateRaycastDepth (GameObject go)
-	{
-		UIWidget w = go.GetComponent<UIWidget>();
-		if (w != null) return w.raycastDepth;
+	//static public int CalculateRaycastDepth (GameObject go)
+	//{
+	//	UIWidget w = go.GetComponent<UIWidget>();
+	//	if (w != null) return w.raycastDepth;
 
-		UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
-		if (widgets.Length == 0) return 0;
+	//	UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
+	//	if (widgets.Length == 0) return 0;
 
-		int depth = int.MaxValue;
+	//	int depth = int.MaxValue;
 		
-		for (int i = 0, imax = widgets.Length; i < imax; ++i)
-		{
-			if (widgets[i].enabled)
-				depth = Mathf.Min(depth, widgets[i].raycastDepth);
-		}
-		return depth;
-	}
+	//	for (int i = 0, imax = widgets.Length; i < imax; ++i)
+	//	{
+	//		if (widgets[i].enabled)
+	//			depth = Mathf.Min(depth, widgets[i].raycastDepth);
+	//	}
+	//	return depth;
+	//}
 
 	/// <summary>
 	/// Gathers all widgets and calculates the depth for the next widget.
@@ -583,79 +583,79 @@ static public class NGUITools
 	/// Returns '0' if nothing was adjusted, '1' if panels were adjusted, and '2' if widgets were adjusted.
 	/// </summary>
 
-	static public int AdjustDepth (GameObject go, int adjustment)
-	{
-		if (go != null)
-		{
-			UIPanel panel = go.GetComponent<UIPanel>();
+//	static public int AdjustDepth (GameObject go, int adjustment)
+//	{
+//		if (go != null)
+//		{
+//			UIPanel panel = go.GetComponent<UIPanel>();
 
-			if (panel != null)
-			{
-				UIPanel[] panels = go.GetComponentsInChildren<UIPanel>(true);
+//			if (panel != null)
+//			{
+//				UIPanel[] panels = go.GetComponentsInChildren<UIPanel>(true);
 				
-				for (int i = 0; i < panels.Length; ++i)
-				{
-					UIPanel p = panels[i];
-#if UNITY_EDITOR
-					RegisterUndo(p, "Depth Change");
-#endif
-					p.depth = p.depth + adjustment;
-				}
-				return 1;
-			}
-			else
-			{
-				panel = FindInParents<UIPanel>(go);
-				if (panel == null) return 0;
+//				for (int i = 0; i < panels.Length; ++i)
+//				{
+//					UIPanel p = panels[i];
+//#if UNITY_EDITOR
+//					RegisterUndo(p, "Depth Change");
+//#endif
+//					p.depth = p.depth + adjustment;
+//				}
+//				return 1;
+//			}
+//			else
+//			{
+//				panel = FindInParents<UIPanel>(go);
+//				if (panel == null) return 0;
 
-				UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>(true);
+//				UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>(true);
 
-				for (int i = 0, imax = widgets.Length; i < imax; ++i)
-				{
-					UIWidget w = widgets[i];
-					if (w.panel != panel) continue;
-#if UNITY_EDITOR
-					RegisterUndo(w, "Depth Change");
-#endif
-					w.depth = w.depth + adjustment;
-				}
-				return 2;
-			}
-		}
-		return 0;
-	}
+//				for (int i = 0, imax = widgets.Length; i < imax; ++i)
+//				{
+//					UIWidget w = widgets[i];
+//					if (w.panel != panel) continue;
+//#if UNITY_EDITOR
+//					RegisterUndo(w, "Depth Change");
+//#endif
+//					w.depth = w.depth + adjustment;
+//				}
+//				return 2;
+//			}
+//		}
+//		return 0;
+//	}
 
 	/// <summary>
 	/// Bring all of the widgets on the specified object forward.
 	/// </summary>
 
-	static public void BringForward (GameObject go)
-	{
-		int val = AdjustDepth(go, 1000);
-		if (val == 1) NormalizePanelDepths();
-		else if (val == 2) NormalizeWidgetDepths();
-	}
+	//static public void BringForward (GameObject go)
+	//{
+	//	int val = AdjustDepth(go, 1000);
+	//	if (val == 1) NormalizePanelDepths();
+	//	else if (val == 2) NormalizeWidgetDepths();
+	//}
 
 	/// <summary>
 	/// Push all of the widgets on the specified object back, making them appear behind everything else.
 	/// </summary>
 
-	static public void PushBack (GameObject go)
-	{
-		int val = AdjustDepth(go, -1000);
-		if (val == 1) NormalizePanelDepths();
-		else if (val == 2) NormalizeWidgetDepths();
-	}
+	//static public void PushBack (GameObject go)
+	//{
+	//	int val = AdjustDepth(go, -1000);
+	//	if (val == 1) NormalizePanelDepths();
+	//	else if (val == 2) NormalizeWidgetDepths();
+	//}
 
 	/// <summary>
 	/// Normalize the depths of all the widgets and panels in the scene, making them start from 0 and remain in order.
 	/// </summary>
 
-	static public void NormalizeDepths ()
-	{
-		NormalizeWidgetDepths();
-		NormalizePanelDepths();
-	}
+	//static public void NormalizeDepths ()
+	//{
+	//	NormalizeWidgetDepths();
+	//	NormalizePanelDepths();
+	//}
 
 	/// <summary>
 	/// Normalize the depths of all the widgets in the scene, making them start from 0 and remain in order.
@@ -685,7 +685,7 @@ static public class NGUITools
 
 		if (size > 0)
 		{
-			Array.Sort(list, UIWidget.FullCompareFunc);
+			//Array.Sort(list, UIWidget.FullCompareFunc);
 
 			int start = 0;
 			int current = list[0].depth;
@@ -711,34 +711,34 @@ static public class NGUITools
 	/// Normalize the depths of all the panels in the scene, making them start from 0 and remain in order.
 	/// </summary>
 
-	static public void NormalizePanelDepths ()
-	{
-		UIPanel[] list = FindActive<UIPanel>();
-		int size = list.Length;
+	//static public void NormalizePanelDepths ()
+	//{
+	//	UIPanel[] list = FindActive<UIPanel>();
+	//	int size = list.Length;
 
-		if (size > 0)
-		{
-			Array.Sort(list, UIPanel.CompareFunc);
+	//	if (size > 0)
+	//	{
+	//		Array.Sort(list, UIPanel.CompareFunc);
 
-			int start = 0;
-			int current = list[0].depth;
+	//		int start = 0;
+	//		int current = list[0].depth;
 
-			for (int i = 0; i < size; ++i)
-			{
-				UIPanel p = list[i];
+	//		for (int i = 0; i < size; ++i)
+	//		{
+	//			UIPanel p = list[i];
 
-				if (p.depth == current)
-				{
-					p.depth = start;
-				}
-				else
-				{
-					current = p.depth;
-					p.depth = ++start;
-				}
-			}
-		}
-	}
+	//			if (p.depth == current)
+	//			{
+	//				p.depth = start;
+	//			}
+	//			else
+	//			{
+	//				current = p.depth;
+	//				p.depth = ++start;
+	//			}
+	//		}
+	//	}
+	//}
 
 	/// <summary>
 	/// Create a new UI.
@@ -1209,10 +1209,10 @@ static public class NGUITools
 			if (state)
 			{
 				Activate(go.transform, compatibilityMode);
-#if UNITY_EDITOR
-				if (Application.isPlaying)
-#endif
-					CallCreatePanel(go.transform);
+//#if UNITY_EDITOR
+//				if (Application.isPlaying)
+//#endif
+//					CallCreatePanel(go.transform);
 			}
 			else Deactivate(go.transform);
 		}
@@ -1222,15 +1222,15 @@ static public class NGUITools
 	/// Ensure that all widgets have had their panels created, forcing the update right away rather than on the following frame.
 	/// </summary>
 
-	[System.Diagnostics.DebuggerHidden]
-	[System.Diagnostics.DebuggerStepThrough]
-	static void CallCreatePanel (Transform t)
-	{
-		UIWidget w = t.GetComponent<UIWidget>();
-		if (w != null) w.CreatePanel();
-		for (int i = 0, imax = t.childCount; i < imax; ++i)
-			CallCreatePanel(t.GetChild(i));
-	}
+	//[System.Diagnostics.DebuggerHidden]
+	//[System.Diagnostics.DebuggerStepThrough]
+	//static void CallCreatePanel (Transform t)
+	//{
+	//	UIWidget w = t.GetComponent<UIWidget>();
+	//	if (w != null) w.CreatePanel();
+	//	for (int i = 0, imax = t.childCount; i < imax; ++i)
+	//		CallCreatePanel(t.GetChild(i));
+	//}
 
 	/// <summary>
 	/// Activate or deactivate children of the specified game object without changing the active state of the object itself.
@@ -1714,10 +1714,10 @@ static public class NGUITools
 	static public void ImmediatelyCreateDrawCalls (GameObject root)
 	{
 		ExecuteAll<UIWidget>(root, "Start");
-		ExecuteAll<UIPanel>(root, "Start");
+		//ExecuteAll<UIPanel>(root, "Start");
 		ExecuteAll<UIWidget>(root, "Update");
-		ExecuteAll<UIPanel>(root, "Update");
-		ExecuteAll<UIPanel>(root, "LateUpdate");
+		//ExecuteAll<UIPanel>(root, "Update");
+		//ExecuteAll<UIPanel>(root, "LateUpdate");
 	}
 #endif
 

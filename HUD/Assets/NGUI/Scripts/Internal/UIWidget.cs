@@ -55,36 +55,36 @@ public class UIWidget : UIRect
 	/// In most cases you will want to use UIWidget.onRender instead.
 	/// </summary>
 
-	public UIDrawCall.OnRenderCallback mOnRender;
+	//public UIDrawCall.OnRenderCallback mOnRender;
 
 	/// <summary>
 	/// Set the callback that will be triggered when the widget is being rendered (OnWillRenderObject).
 	/// This is where you would set material properties and shader values.
 	/// </summary>
 
-	public UIDrawCall.OnRenderCallback onRender
-	{
-		get
-		{
-			return mOnRender;
-		}
-		set
-		{
-#if UNITY_FLASH
-			if (!(mOnRender == value))
-#else
-			if (mOnRender != value)
-#endif
-			{
-#if !UNITY_FLASH
-				if (drawCall != null && drawCall.onRender != null && mOnRender != null)
-					drawCall.onRender -= mOnRender;
-#endif
-				mOnRender = value;
-				if (drawCall != null) drawCall.onRender += value;
-			}
-		}
-	}
+//	public UIDrawCall.OnRenderCallback onRender
+//	{
+//		get
+//		{
+//			return mOnRender;
+//		}
+//		set
+//		{
+//#if UNITY_FLASH
+//			if (!(mOnRender == value))
+//#else
+//			if (mOnRender != value)
+//#endif
+//			{
+//#if !UNITY_FLASH
+//				if (drawCall != null && drawCall.onRender != null && mOnRender != null)
+//					drawCall.onRender -= mOnRender;
+//#endif
+//				mOnRender = value;
+//				if (drawCall != null) drawCall.onRender += value;
+//			}
+//		}
+//	}
 
 	/// <summary>
 	/// If set to 'true', the box collider's dimensions will be adjusted to always match the widget whenever it resizes.
@@ -130,7 +130,7 @@ public class UIWidget : UIRect
 	/// Panel that's managing this widget.
 	/// </summary>
 
-	[System.NonSerialized] public UIPanel panel;
+	//[System.NonSerialized] public UIPanel panel;
 
 	/// <summary>
 	/// Widget's generated geometry.
@@ -156,7 +156,7 @@ public class UIWidget : UIRect
 	/// Internal usage -- draw call that's drawing the widget.
 	/// </summary>
 
-	[System.NonSerialized] public UIDrawCall drawCall;
+	//[System.NonSerialized] public UIDrawCall drawCall;
 	[System.NonSerialized] protected Vector3[] mCorners = new Vector3[4];
 
 	/// <summary>
@@ -416,24 +416,24 @@ public class UIWidget : UIRect
 		{
 			if (mDepth != value)
 			{
-				if (panel != null) panel.RemoveWidget(this);
+				//if (panel != null) panel.RemoveWidget(this);
 				mDepth = value;
-				
-				if (panel != null)
-				{
-					panel.AddWidget(this);
 
-					if (!Application.isPlaying)
-					{
-						panel.SortWidgets();
-						panel.RebuildAllDrawCalls();
-					}
-				}
+                //if (panel != null)
+                //{
+                //    panel.AddWidget(this);
+
+                //    if (!Application.isPlaying)
+                //    {
+                //        panel.SortWidgets();
+                //        panel.RebuildAllDrawCalls();
+                //    }
+                //}
 #if UNITY_EDITOR
-				NGUITools.SetDirty(this);
+                NGUITools.SetDirty(this);
 #endif
-			}
-		}
+            }
+        }
 	}
 
 	/// <summary>
@@ -441,14 +441,14 @@ public class UIWidget : UIRect
 	/// This functionality is used to determine the "final" depth of the widget for drawing and raycasts.
 	/// </summary>
 
-	public int raycastDepth
-	{
-		get
-		{
-			if (panel == null) CreatePanel();
-			return (panel != null) ? mDepth + panel.depth * 1000 : mDepth;
-		}
-	}
+	//public int raycastDepth
+	//{
+	//	get
+	//	{
+	//		if (panel == null) CreatePanel();
+	//		return (panel != null) ? mDepth + panel.depth * 1000 : mDepth;
+	//	}
+	//}
 
 	/// <summary>
 	/// Local space corners of the widget. The order is bottom-left, top-left, top-right, bottom-right.
@@ -731,13 +731,13 @@ public class UIWidget : UIRect
 		mChanged = true;
 		mAlphaFrameID = -1;
 
-		if (panel != null)
-		{
-			bool vis = (hideIfOffScreen || panel.hasCumulativeClipping) ? panel.IsVisible(this) : true;
-			UpdateVisibility(CalculateCumulativeAlpha(Time.frameCount) > 0.001f, vis);
-			UpdateFinalAlpha(Time.frameCount);
-			if (includeChildren) base.Invalidate(true);
-		}
+		//if (panel != null)
+		//{
+		//	bool vis = (hideIfOffScreen || panel.hasCumulativeClipping) ? panel.IsVisible(this) : true;
+		//	UpdateVisibility(CalculateCumulativeAlpha(Time.frameCount) > 0.001f, vis);
+		//	UpdateFinalAlpha(Time.frameCount);
+		//	if (includeChildren) base.Invalidate(true);
+		//}
 	}
 
 	/// <summary>
@@ -803,19 +803,19 @@ public class UIWidget : UIRect
 	/// Static widget comparison function used for depth sorting.
 	/// </summary>
 
-	[System.Diagnostics.DebuggerHidden]
-	[System.Diagnostics.DebuggerStepThrough]
-	static public int FullCompareFunc (UIWidget left, UIWidget right)
-	{
-		int val = UIPanel.CompareFunc(left.panel, right.panel);
-		return (val == 0) ? PanelCompareFunc(left, right) : val;
-	}
+	//[System.Diagnostics.DebuggerHidden]
+	//[System.Diagnostics.DebuggerStepThrough]
+    //static public int FullCompareFunc(UIWidget left, UIWidget right)
+    //{
+    //    int val = UIPanel.CompareFunc(left.panel, right.panel);
+    //    return (val == 0) ? PanelCompareFunc(left, right) : val;
+    //}
 
-	/// <summary>
-	/// Static widget comparison function used for inter-panel depth sorting.
-	/// </summary>
+    /// <summary>
+    /// Static widget comparison function used for inter-panel depth sorting.
+    /// </summary>
 
-	[System.Diagnostics.DebuggerHidden]
+    [System.Diagnostics.DebuggerHidden]
 	[System.Diagnostics.DebuggerStepThrough]
 	static public int PanelCompareFunc (UIWidget left, UIWidget right)
 	{
@@ -867,14 +867,14 @@ public class UIWidget : UIRect
 
 	public void SetDirty ()
 	{
-		if (drawCall != null)
-		{
-			drawCall.isDirty = true;
-		}
-		else if (isVisible && hasVertices)
-		{
-			CreatePanel();
-		}
+		//if (drawCall != null)
+		//{
+		//	drawCall.isDirty = true;
+		//}
+		//else if (isVisible && hasVertices)
+		//{
+		//	CreatePanel();
+		//}
 	}
 
 	/// <summary>
@@ -883,16 +883,16 @@ public class UIWidget : UIRect
 
 	public void RemoveFromPanel ()
 	{
-		if (panel != null)
-		{
-			panel.RemoveWidget(this);
-			panel = null;
-		}
-		drawCall = null;
-#if UNITY_EDITOR
-		mOldTex = null;
-		mOldShader = null;
-#endif
+//		if (panel != null)
+//		{
+//			panel.RemoveWidget(this);
+//			panel = null;
+//		}
+//		drawCall = null;
+//#if UNITY_EDITOR
+//		mOldTex = null;
+//		mOldShader = null;
+//#endif
 	}
 
 #if UNITY_EDITOR
@@ -940,15 +940,15 @@ public class UIWidget : UIRect
 				mHeight = Mathf.RoundToInt(mWidth / aspectRatio);
 			}
 
-			if (!Application.isPlaying)
-			{
-				if (panel != null)
-				{
-					panel.RemoveWidget(this);
-					panel = null;
-				}
-				CreatePanel();
-			}
+			//if (!Application.isPlaying)
+			//{
+			//	//if (panel != null)
+			//	//{
+			//	//	panel.RemoveWidget(this);
+			//	//	panel = null;
+			//	//}
+			//	//CreatePanel();
+			//}
 		}
 		else
 		{
@@ -964,59 +964,59 @@ public class UIWidget : UIRect
 
 	public virtual void MarkAsChanged ()
 	{
-		if (NGUITools.GetActive(this))
-		{
-			mChanged = true;
-#if UNITY_EDITOR
-			NGUITools.SetDirty(this);
-#endif
-			// If we're in the editor, update the panel right away so its geometry gets updated.
-			if (panel != null && enabled && NGUITools.GetActive(gameObject) && !mPlayMode)
-			{
-				SetDirty();
-				CheckLayer();
-#if UNITY_EDITOR
-				// Mark the panel as dirty so it gets updated
-				if (material != null) NGUITools.SetDirty(panel.gameObject);
-#endif
-			}
-		}
+//		if (NGUITools.GetActive(this))
+//		{
+//			mChanged = true;
+//#if UNITY_EDITOR
+//			NGUITools.SetDirty(this);
+//#endif
+//			// If we're in the editor, update the panel right away so its geometry gets updated.
+//			if (panel != null && enabled && NGUITools.GetActive(gameObject) && !mPlayMode)
+//			{
+//				SetDirty();
+//				CheckLayer();
+//#if UNITY_EDITOR
+//				// Mark the panel as dirty so it gets updated
+//				if (material != null) NGUITools.SetDirty(panel.gameObject);
+//#endif
+//			}
+//		}
 	}
 
 	/// <summary>
 	/// Ensure we have a panel referencing this widget.
 	/// </summary>
 
-	public UIPanel CreatePanel ()
-	{
-		if (mStarted && panel == null && enabled && NGUITools.GetActive(gameObject))
-		{
-			panel = UIPanel.Find(cachedTransform, true, cachedGameObject.layer);
+	//public UIPanel CreatePanel ()
+	//{
+	//	if (mStarted && panel == null && enabled && NGUITools.GetActive(gameObject))
+	//	{
+	//		panel = UIPanel.Find(cachedTransform, true, cachedGameObject.layer);
 
-			if (panel != null)
-			{
-				mParentFound = false;
-				panel.AddWidget(this);
-				CheckLayer();
-				Invalidate(true);
-			}
-		}
-		return panel;
-	}
+	//		if (panel != null)
+	//		{
+	//			mParentFound = false;
+	//			panel.AddWidget(this);
+	//			CheckLayer();
+	//			Invalidate(true);
+	//		}
+	//	}
+	//	return panel;
+	//}
 
 	/// <summary>
 	/// Check to ensure that the widget resides on the same layer as its panel.
 	/// </summary>
 
-	public void CheckLayer ()
-	{
-		if (panel != null && panel.gameObject.layer != gameObject.layer)
-		{
-			Debug.LogWarning("You can't place widgets on a layer different than the UIPanel that manages them.\n" +
-				"If you want to move widgets to a different layer, parent them to a new panel instead.", this);
-			gameObject.layer = panel.gameObject.layer;
-		}
-	}
+	//public void CheckLayer ()
+	//{
+	//	if (panel != null && panel.gameObject.layer != gameObject.layer)
+	//	{
+	//		Debug.LogWarning("You can't place widgets on a layer different than the UIPanel that manages them.\n" +
+	//			"If you want to move widgets to a different layer, parent them to a new panel instead.", this);
+	//		gameObject.layer = panel.gameObject.layer;
+	//	}
+	//}
 
 	/// <summary>
 	/// Checks to ensure that the widget is still parented to the right panel.
@@ -1024,18 +1024,18 @@ public class UIWidget : UIRect
 
 	public override void ParentHasChanged ()
 	{
-		base.ParentHasChanged();
+		//base.ParentHasChanged();
 
-		if (panel != null)
-		{
-			UIPanel p = UIPanel.Find(cachedTransform, true, cachedGameObject.layer);
+		//if (panel != null)
+		//{
+		//	UIPanel p = UIPanel.Find(cachedTransform, true, cachedGameObject.layer);
 
-			if (panel != p)
-			{
-				RemoveFromPanel();
-				CreatePanel();
-			}
-		}
+		//	if (panel != p)
+		//	{
+		//		RemoveFromPanel();
+		//		CreatePanel();
+		//	}
+		//}
 	}
 
 	/// <summary>
@@ -1088,17 +1088,17 @@ public class UIWidget : UIRect
 
 	protected override void OnStart ()
 	{
-#if UNITY_EDITOR
-		if (GetComponent<UIPanel>() != null)
-		{
-			Debug.LogError("Widgets and panels should not be on the same object! Widget must be a child of the panel.", this);
-		}
-		else if (!Application.isPlaying && GetComponents<UIWidget>().Length > 1)
-		{
-			Debug.LogError("You should not place more than one widget on the same object. Weird stuff will happen!", this);
-		}
-#endif
-		CreatePanel();
+//#if UNITY_EDITOR
+//		if (GetComponent<UIPanel>() != null)
+//		{
+//			Debug.LogError("Widgets and panels should not be on the same object! Widget must be a child of the panel.", this);
+//		}
+//		else if (!Application.isPlaying && GetComponents<UIWidget>().Length > 1)
+//		{
+//			Debug.LogError("You should not place more than one widget on the same object. Weird stuff will happen!", this);
+//		}
+//#endif
+//		CreatePanel();
 	}
 
 	/// <summary>
@@ -1251,13 +1251,13 @@ public class UIWidget : UIRect
 	/// Ensure we have a panel to work with.
 	/// </summary>
 
-	protected override void OnUpdate ()
-	{
-		if (panel == null) CreatePanel();
-#if UNITY_EDITOR
-		else if (!mPlayMode) ParentHasChanged();
-#endif
-	}
+//	protected override void OnUpdate ()
+//	{
+//		if (panel == null) CreatePanel();
+//#if UNITY_EDITOR
+//		else if (!mPlayMode) ParentHasChanged();
+//#endif
+//	}
 
 #if !UNITY_EDITOR
 	/// <summary>
@@ -1344,7 +1344,7 @@ public class UIWidget : UIRect
 
 			Color outline = new Color(1f, 1f, 1f, 0.2f);
 
-			float adjustment = (root != null) ? 0.05f : 0.001f;
+			float adjustment = 0.001f;
 			Vector2 offset = pivotOffset;
 			Vector3 center = new Vector3(mWidth * (0.5f - offset.x), mHeight * (0.5f - offset.y), -mDepth * adjustment);
 			Vector3 size = new Vector3(mWidth, mHeight, 1f);
@@ -1386,54 +1386,54 @@ public class UIWidget : UIRect
 	/// Check to see if the widget has moved relative to the panel that manages it
 	/// </summary>
 
-	public bool UpdateTransform (int frame)
-	{
-#if UNITY_EDITOR
-		if (!mMoved && !panel.widgetsAreStatic || !mPlayMode)
-#else
-		if (!mMoved && !panel.widgetsAreStatic)
-#endif
-		{
-#if UNITY_3_5 || UNITY_4_0
-			if (HasTransformChanged())
-			{
-#else
-			if (cachedTransform.hasChanged)
-			{
-				mTrans.hasChanged = false;
-#endif
-				mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
-				mMatrixFrame = frame;
+//	public bool UpdateTransform (int frame)
+//	{
+//#if UNITY_EDITOR
+//		//if (!mMoved && !panel.widgetsAreStatic || !mPlayMode)
+//#else
+//		if (!mMoved && !panel.widgetsAreStatic)
+//#endif
+//		{
+//#if UNITY_3_5 || UNITY_4_0
+//			if (HasTransformChanged())
+//			{
+//#else
+//			if (cachedTransform.hasChanged)
+//			{
+//				mTrans.hasChanged = false;
+//#endif
+//				mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
+//				mMatrixFrame = frame;
 
-				Vector2 offset = pivotOffset;
+//				Vector2 offset = pivotOffset;
 
-				float x0 = -offset.x * mWidth;
-				float y0 = -offset.y * mHeight;
-				float x1 = x0 + mWidth;
-				float y1 = y0 + mHeight;
+//				float x0 = -offset.x * mWidth;
+//				float y0 = -offset.y * mHeight;
+//				float x1 = x0 + mWidth;
+//				float y1 = y0 + mHeight;
 
-				Transform wt = cachedTransform;
+//				Transform wt = cachedTransform;
 
-				Vector3 v0 = wt.TransformPoint(x0, y0, 0f);
-				Vector3 v1 = wt.TransformPoint(x1, y1, 0f);
+//				Vector3 v0 = wt.TransformPoint(x0, y0, 0f);
+//				Vector3 v1 = wt.TransformPoint(x1, y1, 0f);
 
-				v0 = panel.worldToLocal.MultiplyPoint3x4(v0);
-				v1 = panel.worldToLocal.MultiplyPoint3x4(v1);
+//				v0 = panel.worldToLocal.MultiplyPoint3x4(v0);
+//				v1 = panel.worldToLocal.MultiplyPoint3x4(v1);
 
-				if (Vector3.SqrMagnitude(mOldV0 - v0) > 0.000001f ||
-					Vector3.SqrMagnitude(mOldV1 - v1) > 0.000001f)
-				{
-					mMoved = true;
-					mOldV0 = v0;
-					mOldV1 = v1;
-				}
-			}
-		}
+//				if (Vector3.SqrMagnitude(mOldV0 - v0) > 0.000001f ||
+//					Vector3.SqrMagnitude(mOldV1 - v1) > 0.000001f)
+//				{
+//					mMoved = true;
+//					mOldV0 = v0;
+//					mOldV1 = v1;
+//				}
+//			}
+//		}
 
-		// Notify the listeners
-		if (mMoved && onChange != null) onChange();
-		return mMoved || mChanged;
-	}
+//		// Notify the listeners
+//		if (mMoved && onChange != null) onChange();
+//		return mMoved || mChanged;
+//	}
 
 #if UNITY_3_5 || UNITY_4_0
 	[System.NonSerialized] Vector3 mOldPos;

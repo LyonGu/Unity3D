@@ -1241,21 +1241,21 @@ public static class NGUIEditorTools
 	/// Fix uniform scaling of the specified object.
 	/// </summary>
 
-	static public void FixUniform (GameObject go)
-	{
-		Transform t = go.transform;
+	//static public void FixUniform (GameObject go)
+	//{
+	//	Transform t = go.transform;
 
-		while (t != null && t.gameObject.GetComponent<UIRoot>() == null)
-		{
-			if (!NGUIEditorTools.IsUniform(t.localScale))
-			{
-				NGUIEditorTools.RegisterUndo("Uniform scaling fix", t);
-				t.localScale = Vector3.one;
-				EditorUtility.SetDirty(t);
-			}
-			t = t.parent;
-		}
-	}
+	//	while (t != null && t.gameObject.GetComponent<UIRoot>() == null)
+	//	{
+	//		if (!NGUIEditorTools.IsUniform(t.localScale))
+	//		{
+	//			NGUIEditorTools.RegisterUndo("Uniform scaling fix", t);
+	//			t.localScale = Vector3.one;
+	//			EditorUtility.SetDirty(t);
+	//		}
+	//		t = t.parent;
+	//	}
+	//}
 
 	/// <summary>
 	/// Draw a distinctly different looking header label
@@ -1590,88 +1590,88 @@ public static class NGUIEditorTools
 	/// Just like NGUIMath.Raycast, but doesn't rely on having a camera.
 	/// </summary>
 
-	static public List<UIWidget> SceneViewRaycast (Vector2 mousePos)
-	{
-		List<UIWidget> list = new List<UIWidget>();
+	//static public List<UIWidget> SceneViewRaycast (Vector2 mousePos)
+	//{
+	//	List<UIWidget> list = new List<UIWidget>();
 
-		for (int i = 0; i < UIPanel.list.Count; ++i)
-		{
-			UIPanel p = UIPanel.list[i];
+	//	for (int i = 0; i < UIPanel.list.Count; ++i)
+	//	{
+	//		UIPanel p = UIPanel.list[i];
 
-			for (int b = 0; b < p.widgets.Count; ++b)
-			{
-				UIWidget w = p.widgets[b];
-				if (!w.isVisible) continue;
-				Vector3[] corners = w.worldCorners;
-				if (SceneViewDistanceToRectangle(corners, mousePos) == 0f)
-					list.Add(w);
-			}
-		}
-		list.Sort(UIWidget.FullCompareFunc);
-		return list;
-	}
+	//		for (int b = 0; b < p.widgets.Count; ++b)
+	//		{
+	//			UIWidget w = p.widgets[b];
+	//			if (!w.isVisible) continue;
+	//			Vector3[] corners = w.worldCorners;
+	//			if (SceneViewDistanceToRectangle(corners, mousePos) == 0f)
+	//				list.Add(w);
+	//		}
+	//	}
+	//	//list.Sort(UIWidget.FullCompareFunc);
+	//	return list;
+	//}
 
 	/// <summary>
 	/// Select the topmost widget underneath the specified screen coordinate.
 	/// </summary>
 
-	static public bool SelectWidget (Vector2 pos) { return SelectWidget(null, pos, true); }
+	//static public bool SelectWidget (Vector2 pos) { return SelectWidget(null, pos, true); }
 
 	/// <summary>
 	/// Select the next widget in line.
 	/// </summary>
 
-	static public bool SelectWidget (GameObject start, Vector2 pos, bool inFront)
-	{
-		GameObject go = null;
-		List<UIWidget> widgets = SceneViewRaycast(pos);
-		if (widgets == null || widgets.Count == 0) return false;
-		bool found = false;
+	//static public bool SelectWidget (GameObject start, Vector2 pos, bool inFront)
+	//{
+	//	GameObject go = null;
+	//	List<UIWidget> widgets = SceneViewRaycast(pos);
+	//	if (widgets == null || widgets.Count == 0) return false;
+	//	bool found = false;
 
-		if (!inFront)
-		{
-			if (start != null)
-			{
-				for (int i = 0; i < widgets.Count; ++i)
-				{
-					UIWidget w = widgets[i];
+	//	if (!inFront)
+	//	{
+	//		if (start != null)
+	//		{
+	//			for (int i = 0; i < widgets.Count; ++i)
+	//			{
+	//				UIWidget w = widgets[i];
 
-					if (w.cachedGameObject == start)
-					{
-						found = true;
-						break;
-					}
-					go = w.cachedGameObject;
-				}
-			}
-			if (!found) go = widgets[0].cachedGameObject;
-		}
-		else
-		{
-			if (start != null)
-			{
-				for (int i = widgets.Count; i > 0; )
-				{
-					UIWidget w = widgets[--i];
+	//				if (w.cachedGameObject == start)
+	//				{
+	//					found = true;
+	//					break;
+	//				}
+	//				go = w.cachedGameObject;
+	//			}
+	//		}
+	//		if (!found) go = widgets[0].cachedGameObject;
+	//	}
+	//	else
+	//	{
+	//		if (start != null)
+	//		{
+	//			for (int i = widgets.Count; i > 0; )
+	//			{
+	//				UIWidget w = widgets[--i];
 
-					if (w.cachedGameObject == start)
-					{
-						found = true;
-						break;
-					}
-					go = w.cachedGameObject;
-				}
-			}
-			if (!found) go = widgets[widgets.Count - 1].cachedGameObject;
-		}
+	//				if (w.cachedGameObject == start)
+	//				{
+	//					found = true;
+	//					break;
+	//				}
+	//				go = w.cachedGameObject;
+	//			}
+	//		}
+	//		if (!found) go = widgets[widgets.Count - 1].cachedGameObject;
+	//	}
 
-		if (go != null && go != start)
-		{
-			Selection.activeGameObject = go;
-			return true;
-		}
-		return false;
-	}
+	//	if (go != null && go != start)
+	//	{
+	//		Selection.activeGameObject = go;
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
 	/// <summary>
 	/// Unity 4.3 changed the way LookLikeControls works.

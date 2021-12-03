@@ -457,65 +457,65 @@ static public class NGUIMath
 	static void CalculateRelativeWidgetBounds (Transform content, bool considerInactive, bool isRoot,
 		ref Matrix4x4 toLocal, ref Vector3 vMin, ref Vector3 vMax, ref bool isSet, bool considerParents)
 	{
-		if (content == null) return;
-		if (!considerInactive && !NGUITools.GetActive(content.gameObject)) return;
+		//if (content == null) return;
+		//if (!considerInactive && !NGUITools.GetActive(content.gameObject)) return;
 
-		// If this isn't a root node, check to see if there is a panel present
-		UIPanel p = isRoot ? null : content.GetComponent<UIPanel>();
+		//// If this isn't a root node, check to see if there is a panel present
+		//UIPanel p = isRoot ? null : content.GetComponent<UIPanel>();
 
-		// Ignore disabled panels as a disabled panel means invisible children
-		if (p != null && !p.enabled) return;
+		//// Ignore disabled panels as a disabled panel means invisible children
+		//if (p != null && !p.enabled) return;
 
-		// If there is a clipped panel present simply include its dimensions
-		if (p != null && p.clipping != UIDrawCall.Clipping.None)
-		{
-			Vector3[] corners = p.worldCorners;
+		//// If there is a clipped panel present simply include its dimensions
+		//if (p != null && p.clipping != UIDrawCall.Clipping.None)
+		//{
+		//	Vector3[] corners = p.worldCorners;
 
-			for (int j = 0; j < 4; ++j)
-			{
-				Vector3 v = toLocal.MultiplyPoint3x4(corners[j]);
+		//	for (int j = 0; j < 4; ++j)
+		//	{
+		//		Vector3 v = toLocal.MultiplyPoint3x4(corners[j]);
 
-				if (v.x > vMax.x) vMax.x = v.x;
- 				if (v.y > vMax.y) vMax.y = v.y;
- 				if (v.z > vMax.z) vMax.z = v.z;
+		//		if (v.x > vMax.x) vMax.x = v.x;
+ 	//			if (v.y > vMax.y) vMax.y = v.y;
+ 	//			if (v.z > vMax.z) vMax.z = v.z;
  
- 				if (v.x < vMin.x) vMin.x = v.x;
- 				if (v.y < vMin.y) vMin.y = v.y;
- 				if (v.z < vMin.z) vMin.z = v.z;
+ 	//			if (v.x < vMin.x) vMin.x = v.x;
+ 	//			if (v.y < vMin.y) vMin.y = v.y;
+ 	//			if (v.z < vMin.z) vMin.z = v.z;
 
-				isSet = true;
-			}
-		}
-		else // No panel present
-		{
-			// If there is a widget present, include its bounds
-			UIWidget w = content.GetComponent<UIWidget>();
+		//		isSet = true;
+		//	}
+		//}
+		//else // No panel present
+		//{
+		//	// If there is a widget present, include its bounds
+		//	UIWidget w = content.GetComponent<UIWidget>();
 
-			if (w != null && w.enabled)
-			{
-				Vector3[] corners = w.worldCorners;
+		//	if (w != null && w.enabled)
+		//	{
+		//		Vector3[] corners = w.worldCorners;
 
-				for (int j = 0; j < 4; ++j)
-				{
-					Vector3 v = toLocal.MultiplyPoint3x4(corners[j]);
+		//		for (int j = 0; j < 4; ++j)
+		//		{
+		//			Vector3 v = toLocal.MultiplyPoint3x4(corners[j]);
 
-					if (v.x > vMax.x) vMax.x = v.x;
-					if (v.y > vMax.y) vMax.y = v.y;
-					if (v.z > vMax.z) vMax.z = v.z;
+		//			if (v.x > vMax.x) vMax.x = v.x;
+		//			if (v.y > vMax.y) vMax.y = v.y;
+		//			if (v.z > vMax.z) vMax.z = v.z;
 
-					if (v.x < vMin.x) vMin.x = v.x;
-					if (v.y < vMin.y) vMin.y = v.y;
-					if (v.z < vMin.z) vMin.z = v.z;
+		//			if (v.x < vMin.x) vMin.x = v.x;
+		//			if (v.y < vMin.y) vMin.y = v.y;
+		//			if (v.z < vMin.z) vMin.z = v.z;
 
-					isSet = true;
-				}
+		//			isSet = true;
+		//		}
 
-				if (!considerParents) return;
-			}
+		//		if (!considerParents) return;
+		//	}
 			
-			for (int i = 0, imax = content.childCount; i < imax; ++i)
-				CalculateRelativeWidgetBounds(content.GetChild(i), considerInactive, false, ref toLocal, ref vMin, ref vMax, ref isSet, true);
-		}
+		//	for (int i = 0, imax = content.childCount; i < imax; ++i)
+		//		CalculateRelativeWidgetBounds(content.GetChild(i), considerInactive, false, ref toLocal, ref vMin, ref vMax, ref isSet, true);
+		//}
 	}
 
 	/// <summary>

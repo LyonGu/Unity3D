@@ -57,21 +57,21 @@ public class UIFontMaker : EditorWindow
 
 	void MarkAsChanged ()
 	{
-		Object obj = (Object)NGUISettings.FMFont ?? (Object)NGUISettings.BMFont;
+		//Object obj = (Object)NGUISettings.FMFont ?? (Object)NGUISettings.BMFont;
 
-		if (obj != null)
-		{
-			List<UILabel> labels = NGUIEditorTools.FindAll<UILabel>();
+		//if (obj != null)
+		//{
+		//	List<UILabel> labels = NGUIEditorTools.FindAll<UILabel>();
 
-			foreach (UILabel lbl in labels)
-			{
-				if (lbl.ambigiousFont == obj)
-				{
-					lbl.ambigiousFont = null;
-					lbl.ambigiousFont = obj;
-				}
-			}
-		}
+		//	foreach (UILabel lbl in labels)
+		//	{
+		//		if (lbl.ambigiousFont == obj)
+		//		{
+		//			lbl.ambigiousFont = null;
+		//			lbl.ambigiousFont = obj;
+		//		}
+		//	}
+		//}
 	}
 
 	/// <summary>

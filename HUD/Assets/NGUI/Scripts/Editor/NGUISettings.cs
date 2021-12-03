@@ -340,11 +340,11 @@ public class NGUISettings
 		set { Set("NGUI BM Font", value); }
 	}
 
-	static public UILabel.Overflow overflowStyle
-	{
-		get { return GetEnum("NGUI Overflow", UILabel.Overflow.ShrinkContent); }
-		set { SetEnum("NGUI Overflow", value); }
-	}
+	//static public UILabel.Overflow overflowStyle
+	//{
+	//	get { return GetEnum("NGUI Overflow", UILabel.Overflow.ShrinkContent); }
+	//	set { SetEnum("NGUI Overflow", value); }
+	//}
 
 	static public string partialSprite
 	{
@@ -530,71 +530,71 @@ public class NGUISettings
 	/// Convenience method -- add a label with default parameters.
 	/// </summary>
 
-	static public UILabel AddLabel (GameObject go)
-	{
-		UILabel w = NGUITools.AddWidget<UILabel>(go);
-		w.name = "Label";
-		w.ambigiousFont = ambigiousFont;
-		w.text = "New Label";
-		w.pivot = pivot;
-		w.width = 120;
-		w.height = Mathf.Max(20, GetInt("NGUI Font Height", 16));
-		w.fontStyle = fontStyle;
-		w.fontSize = fontSize;
-		w.applyGradient = true;
-		w.gradientBottom = new Color(0.7f, 0.7f, 0.7f);
-		w.AssumeNaturalSize();
-		return w;
-	}
+	//static public UILabel AddLabel (GameObject go)
+	//{
+	//	UILabel w = NGUITools.AddWidget<UILabel>(go);
+	//	w.name = "Label";
+	//	w.ambigiousFont = ambigiousFont;
+	//	w.text = "New Label";
+	//	w.pivot = pivot;
+	//	w.width = 120;
+	//	w.height = Mathf.Max(20, GetInt("NGUI Font Height", 16));
+	//	w.fontStyle = fontStyle;
+	//	w.fontSize = fontSize;
+	//	w.applyGradient = true;
+	//	w.gradientBottom = new Color(0.7f, 0.7f, 0.7f);
+	//	w.AssumeNaturalSize();
+	//	return w;
+	//}
 
 	/// <summary>
 	/// Convenience method -- add a new panel.
 	/// </summary>
 
-	static public UIPanel AddPanel (GameObject go)
-	{
-		if (go == null) return null;
-		int depth = UIPanel.nextUnusedDepth;
-		UIPanel panel = NGUITools.AddChild<UIPanel>(go);
-		panel.depth = depth;
-		return panel;
-	}
+	//static public UIPanel AddPanel (GameObject go)
+	//{
+	//	if (go == null) return null;
+	//	int depth = UIPanel.nextUnusedDepth;
+	//	UIPanel panel = NGUITools.AddChild<UIPanel>(go);
+	//	panel.depth = depth;
+	//	return panel;
+	//}
 
 	/// <summary>
 	/// Copy the specified widget's parameters.
 	/// </summary>
 
-	static public void CopyWidget (UIWidget widget)
-	{
-		SetInt("Width", widget.width);
-		SetInt("Height", widget.height);
-		SetInt("Depth", widget.depth);
-		SetColor("Widget Color", widget.color);
-		SetEnum("Widget Pivot", widget.pivot);
+	//static public void CopyWidget (UIWidget widget)
+	//{
+	//	SetInt("Width", widget.width);
+	//	SetInt("Height", widget.height);
+	//	SetInt("Depth", widget.depth);
+	//	SetColor("Widget Color", widget.color);
+	//	SetEnum("Widget Pivot", widget.pivot);
 
-		if (widget is UISprite) CopySprite(widget as UISprite);
-		else if (widget is UILabel) CopyLabel(widget as UILabel);
-	}
+	//	if (widget is UISprite) CopySprite(widget as UISprite);
+	//	else if (widget is UILabel) CopyLabel(widget as UILabel);
+	//}
 
 	/// <summary>
 	/// Paste the specified widget's style.
 	/// </summary>
 
-	static public void PasteWidget (UIWidget widget, bool fully)
-	{
-		widget.color = GetColor("Widget Color", widget.color);
-		widget.pivot = GetEnum<UIWidget.Pivot>("Widget Pivot", widget.pivot);
+	//static public void PasteWidget (UIWidget widget, bool fully)
+	//{
+	//	widget.color = GetColor("Widget Color", widget.color);
+	//	widget.pivot = GetEnum<UIWidget.Pivot>("Widget Pivot", widget.pivot);
 
-		if (fully)
-		{
-			widget.width = GetInt("Width", widget.width);
-			widget.height = GetInt("Height", widget.height);
-			widget.depth = GetInt("Depth", widget.depth);
-		}
+	//	if (fully)
+	//	{
+	//		widget.width = GetInt("Width", widget.width);
+	//		widget.height = GetInt("Height", widget.height);
+	//		widget.depth = GetInt("Depth", widget.depth);
+	//	}
 
-		if (widget is UISprite) PasteSprite(widget as UISprite, fully);
-		else if (widget is UILabel) PasteLabel(widget as UILabel, fully);
-	}
+	//	if (widget is UISprite) PasteSprite(widget as UISprite, fully);
+	//	else if (widget is UILabel) PasteLabel(widget as UILabel, fully);
+	//}
 
 	/// <summary>
 	/// Copy the specified sprite's style.
@@ -618,27 +618,27 @@ public class NGUISettings
 	/// Copy the specified label's style.
 	/// </summary>
 
-	static void CopyLabel (UILabel lbl)
-	{
-		SetString("Font", NGUIEditorTools.ObjectToGUID(lbl.ambigiousFont));
-		SetInt("Font Size", lbl.fontSize);
-		SetEnum("Font Style", lbl.fontStyle);
-		SetEnum("Overflow", lbl.overflowMethod);
-		SetBool("UseFloatSpacing", lbl.useFloatSpacing);
-		SetFloat("FloatSpacingX", lbl.floatSpacingX);
-		SetFloat("FloatSpacingY", lbl.floatSpacingY);
-		SetInt("SpacingX", lbl.spacingX);
-		SetInt("SpacingY", lbl.spacingY);
-		SetInt("MaxLines", lbl.maxLineCount);
-		SetBool("Encoding", lbl.supportEncoding);
-		SetBool("Gradient", lbl.applyGradient);
-		SetColor("Gradient B", lbl.gradientBottom);
-		SetColor("Gradient T", lbl.gradientTop);
-		SetEnum("Effect", lbl.effectStyle);
-		SetColor("Effect C", lbl.effectColor);
-		SetFloat("Effect X", lbl.effectDistance.x);
-		SetFloat("Effect Y", lbl.effectDistance.y);
-	}
+	//static void CopyLabel (UILabel lbl)
+	//{
+	//	SetString("Font", NGUIEditorTools.ObjectToGUID(lbl.ambigiousFont));
+	//	SetInt("Font Size", lbl.fontSize);
+	//	SetEnum("Font Style", lbl.fontStyle);
+	//	SetEnum("Overflow", lbl.overflowMethod);
+	//	SetBool("UseFloatSpacing", lbl.useFloatSpacing);
+	//	SetFloat("FloatSpacingX", lbl.floatSpacingX);
+	//	SetFloat("FloatSpacingY", lbl.floatSpacingY);
+	//	SetInt("SpacingX", lbl.spacingX);
+	//	SetInt("SpacingY", lbl.spacingY);
+	//	SetInt("MaxLines", lbl.maxLineCount);
+	//	SetBool("Encoding", lbl.supportEncoding);
+	//	SetBool("Gradient", lbl.applyGradient);
+	//	SetColor("Gradient B", lbl.gradientBottom);
+	//	SetColor("Gradient T", lbl.gradientTop);
+	//	SetEnum("Effect", lbl.effectStyle);
+	//	SetColor("Effect C", lbl.effectColor);
+	//	SetFloat("Effect X", lbl.effectDistance.x);
+	//	SetFloat("Effect Y", lbl.effectDistance.y);
+	//}
 
 	/// <summary>
 	/// Paste the specified sprite's style.
@@ -663,44 +663,44 @@ public class NGUISettings
 	/// Paste the specified label's style.
 	/// </summary>
 
-	static void PasteLabel (UILabel lbl, bool fully)
-	{
-		if (fully)
-		{
-			Object obj = NGUIEditorTools.GUIDToObject(GetString("Font", null));
+	//static void PasteLabel (UILabel lbl, bool fully)
+	//{
+	//	if (fully)
+	//	{
+	//		Object obj = NGUIEditorTools.GUIDToObject(GetString("Font", null));
 
-			if (obj != null)
-			{
-				if (obj.GetType() == typeof(Font))
-				{
-					lbl.ambigiousFont = obj as Font;
-				}
-				else if (obj.GetType() == typeof(GameObject))
-				{
-					lbl.ambigiousFont = (obj as GameObject).GetComponent<UIFont>();
-				}
-			}
-			lbl.fontSize = GetInt("Font Size", lbl.fontSize);
-			lbl.fontStyle = GetEnum<FontStyle>("Font Style", lbl.fontStyle);
-		}
+	//		if (obj != null)
+	//		{
+	//			if (obj.GetType() == typeof(Font))
+	//			{
+	//				lbl.ambigiousFont = obj as Font;
+	//			}
+	//			else if (obj.GetType() == typeof(GameObject))
+	//			{
+	//				lbl.ambigiousFont = (obj as GameObject).GetComponent<UIFont>();
+	//			}
+	//		}
+	//		lbl.fontSize = GetInt("Font Size", lbl.fontSize);
+	//		lbl.fontStyle = GetEnum<FontStyle>("Font Style", lbl.fontStyle);
+	//	}
 
-		lbl.overflowMethod = GetEnum<UILabel.Overflow>("Overflow", lbl.overflowMethod);
-		lbl.useFloatSpacing = GetBool("UseFloatSpacing", lbl.useFloatSpacing);
-		lbl.floatSpacingX = GetFloat("FloatSpacingX", lbl.floatSpacingX);
-		lbl.floatSpacingY = GetFloat("FloatSpacingY", lbl.floatSpacingY);
-		lbl.spacingX = GetInt("SpacingX", lbl.spacingX);
-		lbl.spacingY = GetInt("SpacingY", lbl.spacingY);
-		lbl.maxLineCount = GetInt("MaxLines", lbl.maxLineCount);
-		lbl.supportEncoding = GetBool("Encoding", lbl.supportEncoding);
-		lbl.applyGradient = GetBool("Gradient", lbl.applyGradient);
-		lbl.gradientBottom = GetColor("Gradient B", lbl.gradientBottom);
-		lbl.gradientTop = GetColor("Gradient T", lbl.gradientTop);
-		lbl.effectStyle = GetEnum<UILabel.Effect>("Effect", lbl.effectStyle);
-		lbl.effectColor = GetColor("Effect C", lbl.effectColor);
+	//	lbl.overflowMethod = GetEnum<UILabel.Overflow>("Overflow", lbl.overflowMethod);
+	//	lbl.useFloatSpacing = GetBool("UseFloatSpacing", lbl.useFloatSpacing);
+	//	lbl.floatSpacingX = GetFloat("FloatSpacingX", lbl.floatSpacingX);
+	//	lbl.floatSpacingY = GetFloat("FloatSpacingY", lbl.floatSpacingY);
+	//	lbl.spacingX = GetInt("SpacingX", lbl.spacingX);
+	//	lbl.spacingY = GetInt("SpacingY", lbl.spacingY);
+	//	lbl.maxLineCount = GetInt("MaxLines", lbl.maxLineCount);
+	//	lbl.supportEncoding = GetBool("Encoding", lbl.supportEncoding);
+	//	lbl.applyGradient = GetBool("Gradient", lbl.applyGradient);
+	//	lbl.gradientBottom = GetColor("Gradient B", lbl.gradientBottom);
+	//	lbl.gradientTop = GetColor("Gradient T", lbl.gradientTop);
+	//	lbl.effectStyle = GetEnum<UILabel.Effect>("Effect", lbl.effectStyle);
+	//	lbl.effectColor = GetColor("Effect C", lbl.effectColor);
 
-		float x = GetFloat("Effect X", lbl.effectDistance.x);
-		float y = GetFloat("Effect Y", lbl.effectDistance.y);
-		lbl.effectDistance = new Vector2(x, y);
-		NGUITools.SetDirty(lbl);
-	}
+	//	float x = GetFloat("Effect X", lbl.effectDistance.x);
+	//	float y = GetFloat("Effect Y", lbl.effectDistance.y);
+	//	lbl.effectDistance = new Vector2(x, y);
+	//	NGUITools.SetDirty(lbl);
+	//}
 }

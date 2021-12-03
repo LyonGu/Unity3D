@@ -52,18 +52,18 @@ public class UIAtlasInspector : Editor
 			}
 		}
 
-		UILabel[] labels = NGUITools.FindActive<UILabel>();
+		//UILabel[] labels = NGUITools.FindActive<UILabel>();
 
-		foreach (UILabel lbl in labels)
-		{
-			if (lbl.bitmapFont != null && UIAtlas.CheckIfRelated(lbl.bitmapFont.atlas, mAtlas) && lbl.bitmapFont.UsesSprite(sprite.name))
-			{
-				UIFont font = lbl.bitmapFont;
-				lbl.bitmapFont = null;
-				lbl.bitmapFont = font;
-				EditorUtility.SetDirty(lbl);
-			}
-		}
+		//foreach (UILabel lbl in labels)
+		//{
+		//	if (lbl.bitmapFont != null && UIAtlas.CheckIfRelated(lbl.bitmapFont.atlas, mAtlas) && lbl.bitmapFont.UsesSprite(sprite.name))
+		//	{
+		//		UIFont font = lbl.bitmapFont;
+		//		lbl.bitmapFont = null;
+		//		lbl.bitmapFont = font;
+		//		EditorUtility.SetDirty(lbl);
+		//	}
+		//}
 	}
 
 	/// <summary>

@@ -478,23 +478,23 @@ public class UIWidgetInspector : UIRectEditor
 		resizable[6] = canResize;	// right
 		resizable[7] = canResize;	// bottom
 
-		UILabel lbl = mWidget as UILabel;
+		//UILabel lbl = mWidget as UILabel;
 		
-		if (lbl != null)
-		{
-			if (lbl.overflowMethod == UILabel.Overflow.ResizeFreely)
-			{
-				resizable[4] = false;	// left
-				resizable[5] = false;	// top
-				resizable[6] = false;	// right
-				resizable[7] = false;	// bottom
-			}
-			else if (lbl.overflowMethod == UILabel.Overflow.ResizeHeight)
-			{
-				resizable[5] = false;	// top
-				resizable[7] = false;	// bottom
-			}
-		}
+		//if (lbl != null)
+		//{
+		//	if (lbl.overflowMethod == UILabel.Overflow.ResizeFreely)
+		//	{
+		//		resizable[4] = false;	// left
+		//		resizable[5] = false;	// top
+		//		resizable[6] = false;	// right
+		//		resizable[7] = false;	// bottom
+		//	}
+		//	else if (lbl.overflowMethod == UILabel.Overflow.ResizeHeight)
+		//	{
+		//		resizable[5] = false;	// top
+		//		resizable[7] = false;	// bottom
+		//	}
+		//}
 
 		if (mWidget.keepAspectRatio == UIWidget.AspectRatioSource.BasedOnHeight)
 		{
@@ -745,7 +745,7 @@ public class UIWidgetInspector : UIRectEditor
 							if (mAllowSelection)
 							{
 								// Left-click: Select the topmost widget
-								NGUIEditorTools.SelectWidget(e.mousePosition);
+								//NGUIEditorTools.SelectWidget(e.mousePosition);
 								handled = true;
 							}
 						}
@@ -769,8 +769,8 @@ public class UIWidgetInspector : UIRectEditor
 				}
 				else if (mAllowSelection)
 				{
-					List<UIWidget> widgets = NGUIEditorTools.SceneViewRaycast(e.mousePosition);
-					if (widgets.Count > 0) Selection.activeGameObject = widgets[0].gameObject;
+					//List<UIWidget> widgets = NGUIEditorTools.SceneViewRaycast(e.mousePosition);
+					//if (widgets.Count > 0) Selection.activeGameObject = widgets[0].gameObject;
 				}
 				mAllowSelection = true;
 			}
@@ -948,9 +948,9 @@ public class UIWidgetInspector : UIRectEditor
 		{
 			bool freezeSize = so.isEditingMultipleObjects;
 
-			UILabel lbl = w as UILabel;
+			//UILabel lbl = w as UILabel;
 
-			if (!freezeSize && lbl) freezeSize = (lbl.overflowMethod == UILabel.Overflow.ResizeFreely);
+			//if (!freezeSize && lbl) freezeSize = (lbl.overflowMethod == UILabel.Overflow.ResizeFreely);
 
 			if (freezeSize)
 			{
@@ -970,11 +970,11 @@ public class UIWidgetInspector : UIRectEditor
 				}
 			}
 
-			if (!freezeSize && lbl)
-			{
-				UILabel.Overflow ov = lbl.overflowMethod;
-				freezeSize = (ov == UILabel.Overflow.ResizeFreely || ov == UILabel.Overflow.ResizeHeight);
-			}
+			//if (!freezeSize && lbl)
+			//{
+			//	UILabel.Overflow ov = lbl.overflowMethod;
+			//	freezeSize = (ov == UILabel.Overflow.ResizeFreely || ov == UILabel.Overflow.ResizeHeight);
+			//}
 
 			NGUIEditorTools.SetLabelWidth(12f);
 
@@ -1063,17 +1063,17 @@ public class UIWidgetInspector : UIRectEditor
 
 		int matchingDepths = 1;
 
-		UIPanel p = w.panel;
+		//UIPanel p = w.panel;
 
-		if (p != null)
-		{
-			for (int i = 0, imax = p.widgets.Count; i < imax; ++i)
-			{
-				UIWidget pw = p.widgets[i];
-				if (pw != w && pw.depth == w.depth)
-					++matchingDepths;
-			}
-		}
+		//if (p != null)
+		//{
+		//	for (int i = 0, imax = p.widgets.Count; i < imax; ++i)
+		//	{
+		//		UIWidget pw = p.widgets[i];
+		//		if (pw != w && pw.depth == w.depth)
+		//			++matchingDepths;
+		//	}
+		//}
 
 		if (matchingDepths > 1)
 		{
