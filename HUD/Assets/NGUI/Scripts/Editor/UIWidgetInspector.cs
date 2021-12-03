@@ -470,7 +470,7 @@ public class UIWidgetInspector : UIRectEditor
 		}
 
 		// Presence of the legacy stretch component prevents resizing
-		bool canResize = (mWidget.GetComponent<UIStretch>() == null);
+		bool canResize = false;
 		bool[] resizable = new bool[8];
 
 		resizable[4] = canResize;	// left
@@ -618,7 +618,7 @@ public class UIWidgetInspector : UIRectEditor
 								{
 									if (mActionUnderMouse == Action.Move)
 									{
-										NGUISnap.Recalculate(mWidget);
+										//NGUISnap.Recalculate(mWidget);
 									}
 									else if (mActionUnderMouse == Action.Rotate)
 									{
@@ -649,72 +649,72 @@ public class UIWidgetInspector : UIRectEditor
 								mWidget.bottomAnchor.Set(mStartBottom.x, mStartBottom.y);
 								mWidget.topAnchor.Set(mStartTop.x, mStartTop.y);
 
-								if (mAction == Action.Move)
-								{
-									// Move the widget
-									t.position = mWorldPos + (pos - mStartDrag);
-									Vector3 after = t.localPosition;
+								//if (mAction == Action.Move)
+								//{
+								//	// Move the widget
+								//	t.position = mWorldPos + (pos - mStartDrag);
+								//	Vector3 after = t.localPosition;
 
-									bool snapped = false;
-									Transform parent = t.parent;
+								//	bool snapped = false;
+								//	Transform parent = t.parent;
 
-									if (parent != null)
-									{
-										//UIGrid grid = parent.GetComponent<UIGrid>();
+								//	if (parent != null)
+								//	{
+								//		//UIGrid grid = parent.GetComponent<UIGrid>();
 
-										//if (grid != null && grid.arrangement == UIGrid.Arrangement.CellSnap)
-										//{
-										//	snapped = true;
-										//	if (grid.cellWidth > 0) after.x = Mathf.Round(after.x / grid.cellWidth) * grid.cellWidth;
-										//	if (grid.cellHeight > 0) after.y = Mathf.Round(after.y / grid.cellHeight) * grid.cellHeight;
-										//}
-									}
+								//		//if (grid != null && grid.arrangement == UIGrid.Arrangement.CellSnap)
+								//		//{
+								//		//	snapped = true;
+								//		//	if (grid.cellWidth > 0) after.x = Mathf.Round(after.x / grid.cellWidth) * grid.cellWidth;
+								//		//	if (grid.cellHeight > 0) after.y = Mathf.Round(after.y / grid.cellHeight) * grid.cellHeight;
+								//		//}
+								//	}
 
-									if (!snapped)
-									{
-										// Snap the widget
-										after = NGUISnap.Snap(after, mWidget.localCorners, e.modifiers != EventModifiers.Control);
-									}
+								//	if (!snapped)
+								//	{
+								//		// Snap the widget
+								//		after = NGUISnap.Snap(after, mWidget.localCorners, e.modifiers != EventModifiers.Control);
+								//	}
 
-									// Calculate the final delta
-									Vector3 localDelta = (after - mLocalPos);
+								//	// Calculate the final delta
+								//	Vector3 localDelta = (after - mLocalPos);
 
-									// Restore the position
-									t.position = mWorldPos;
+								//	// Restore the position
+								//	t.position = mWorldPos;
 
-									// Adjust the widget by the delta
-									NGUIMath.MoveRect(mWidget, localDelta.x, localDelta.y);
-								}
-								else if (mAction == Action.Rotate)
-								{
-									Vector3 dir = pos - t.position;
-									float angle = Vector3.Angle(mStartDir, dir);
+								//	// Adjust the widget by the delta
+								//	NGUIMath.MoveRect(mWidget, localDelta.x, localDelta.y);
+								//}
+								//else if (mAction == Action.Rotate)
+								//{
+								//	Vector3 dir = pos - t.position;
+								//	float angle = Vector3.Angle(mStartDir, dir);
 
-									if (angle > 0f)
-									{
-										float dot = Vector3.Dot(Vector3.Cross(mStartDir, dir), t.forward);
-										if (dot < 0f) angle = -angle;
-										angle = mStartRot.z + angle;
-										angle = (NGUISnap.allow && e.modifiers != EventModifiers.Control) ?
-											Mathf.Round(angle / 15f) * 15f : Mathf.Round(angle);
-										t.localRotation = Quaternion.Euler(mStartRot.x, mStartRot.y, angle);
-									}
-								}
-								else if (mAction == Action.Scale)
-								{
-									// Move the widget
-									t.position = mWorldPos + (pos - mStartDrag);
+								//	if (angle > 0f)
+								//	{
+								//		float dot = Vector3.Dot(Vector3.Cross(mStartDir, dir), t.forward);
+								//		if (dot < 0f) angle = -angle;
+								//		angle = mStartRot.z + angle;
+								//		angle = (NGUISnap.allow && e.modifiers != EventModifiers.Control) ?
+								//			Mathf.Round(angle / 15f) * 15f : Mathf.Round(angle);
+								//		t.localRotation = Quaternion.Euler(mStartRot.x, mStartRot.y, angle);
+								//	}
+								//}
+								//else if (mAction == Action.Scale)
+								//{
+								//	// Move the widget
+								//	t.position = mWorldPos + (pos - mStartDrag);
 
-									// Calculate the final delta
-									Vector3 localDelta = (t.localPosition - mLocalPos);
+								//	// Calculate the final delta
+								//	Vector3 localDelta = (t.localPosition - mLocalPos);
 
-									// Restore the position
-									t.position = mWorldPos;
+								//	// Restore the position
+								//	t.position = mWorldPos;
 
-									// Adjust the widget's position and scale based on the delta, restricted by the pivot
-									NGUIMath.ResizeWidget(mWidget, mDragPivot, localDelta.x, localDelta.y, 2, 2);
-									ReEvaluateAnchorType();
-								}
+								//	// Adjust the widget's position and scale based on the delta, restricted by the pivot
+								//	NGUIMath.ResizeWidget(mWidget, mDragPivot, localDelta.x, localDelta.y, 2, 2);
+								//	ReEvaluateAnchorType();
+								//}
 							}
 						}
 					}

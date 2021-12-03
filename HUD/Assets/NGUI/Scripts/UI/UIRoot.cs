@@ -245,16 +245,16 @@ public class UIRoot : MonoBehaviour
 
 	protected virtual void Start ()
 	{
-		UIOrthoCamera oc = GetComponentInChildren<UIOrthoCamera>();
+		//UIOrthoCamera oc = GetComponentInChildren<UIOrthoCamera>();
 
-		if (oc != null)
-		{
-			Debug.LogWarning("UIRoot should not be active at the same time as UIOrthoCamera. Disabling UIOrthoCamera.", oc);
-			Camera cam = oc.gameObject.GetComponent<Camera>();
-			oc.enabled = false;
-			if (cam != null) cam.orthographicSize = 1f;
-		}
-		else UpdateScale(false);
+		//if (oc != null)
+		//{
+		//	Debug.LogWarning("UIRoot should not be active at the same time as UIOrthoCamera. Disabling UIOrthoCamera.", oc);
+		//	Camera cam = oc.gameObject.GetComponent<Camera>();
+		//	oc.enabled = false;
+		//	if (cam != null) cam.orthographicSize = 1f;
+		//}
+		//else UpdateScale(false);
 	}
 
 	void Update ()

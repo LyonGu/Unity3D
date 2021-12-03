@@ -184,145 +184,145 @@ public class UIFontMaker : EditorWindow
 			GUILayout.EndHorizontal();
 
 			// Choose the font style if there are multiple faces present
-			if (mType == FontType.GeneratedBitmap)
-			{
-				if (!FreeType.isPresent)
-				{
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType.dll" : "FreeType.dylib";
-#else
-					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType64.dll" : "FreeType64.dylib";
-#endif
-					EditorGUILayout.HelpBox("Assets/NGUI/Editor/" + filename + " is missing", MessageType.Error);
+//			if (mType == FontType.GeneratedBitmap)
+//			{
+//				if (!FreeType.isPresent)
+//				{
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType.dll" : "FreeType.dylib";
+//#else
+//					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType64.dll" : "FreeType64.dylib";
+//#endif
+//					EditorGUILayout.HelpBox("Assets/NGUI/Editor/" + filename + " is missing", MessageType.Error);
 
-					GUILayout.BeginHorizontal();
-					GUILayout.Space(20f);
+//					GUILayout.BeginHorizontal();
+//					GUILayout.Space(20f);
 
-					if (GUILayout.Button("Find " + filename))
-					{
-						string path = EditorUtility.OpenFilePanel("Find " + filename, NGUISettings.currentPath,
-							(Application.platform == RuntimePlatform.WindowsEditor) ? "dll" : "dylib");
+//					if (GUILayout.Button("Find " + filename))
+//					{
+//						string path = EditorUtility.OpenFilePanel("Find " + filename, NGUISettings.currentPath,
+//							(Application.platform == RuntimePlatform.WindowsEditor) ? "dll" : "dylib");
 
-						if (!string.IsNullOrEmpty(path))
-						{
-							if (System.IO.Path.GetFileName(path) == filename)
-							{
-								NGUISettings.currentPath = System.IO.Path.GetDirectoryName(path);
-								NGUISettings.pathToFreeType = path;
-							}
-							else Debug.LogError("The library must be named '" + filename + "'");
-						}
-					}
-					GUILayout.Space(20f);
-					GUILayout.EndHorizontal();
-				}
-				else if (ttf != null)
-				{
-					string[] faces = FreeType.GetFaces(ttf);
+//						if (!string.IsNullOrEmpty(path))
+//						{
+//							if (System.IO.Path.GetFileName(path) == filename)
+//							{
+//								NGUISettings.currentPath = System.IO.Path.GetDirectoryName(path);
+//								NGUISettings.pathToFreeType = path;
+//							}
+//							else Debug.LogError("The library must be named '" + filename + "'");
+//						}
+//					}
+//					GUILayout.Space(20f);
+//					GUILayout.EndHorizontal();
+//				}
+//				else if (ttf != null)
+//				{
+//					string[] faces = FreeType.GetFaces(ttf);
 
-					if (faces != null)
-					{
-						if (mFaceIndex >= faces.Length) mFaceIndex = 0;
+//					if (faces != null)
+//					{
+//						if (mFaceIndex >= faces.Length) mFaceIndex = 0;
 
-						if (faces.Length > 1)
-						{
-							GUILayout.Label("Style", EditorStyles.boldLabel);
-							for (int i = 0; i < faces.Length; ++i)
-							{
-								GUILayout.BeginHorizontal();
-								GUILayout.Space(10f);
-								if (DrawOption(i == mFaceIndex, " " + faces[i]))
-									mFaceIndex = i;
-								GUILayout.EndHorizontal();
-							}
-						}
-					}
+//						if (faces.Length > 1)
+//						{
+//							GUILayout.Label("Style", EditorStyles.boldLabel);
+//							for (int i = 0; i < faces.Length; ++i)
+//							{
+//								GUILayout.BeginHorizontal();
+//								GUILayout.Space(10f);
+//								if (DrawOption(i == mFaceIndex, " " + faces[i]))
+//									mFaceIndex = i;
+//								GUILayout.EndHorizontal();
+//							}
+//						}
+//					}
 
-					NGUISettings.fontKerning = EditorGUILayout.Toggle("Kerning", NGUISettings.fontKerning);
+//					NGUISettings.fontKerning = EditorGUILayout.Toggle("Kerning", NGUISettings.fontKerning);
 
-					GUILayout.Label("Characters", EditorStyles.boldLabel);
+//					GUILayout.Label("Characters", EditorStyles.boldLabel);
 
-					CharacterMap cm = characterMap;
+//					CharacterMap cm = characterMap;
 
-					GUILayout.BeginHorizontal(GUILayout.Width(100f));
-					GUILayout.BeginVertical();
-					GUI.changed = false;
-					if (DrawOption(cm == CharacterMap.Numeric, " Numeric")) cm = CharacterMap.Numeric;
-					if (DrawOption(cm == CharacterMap.Ascii, " ASCII")) cm = CharacterMap.Ascii;
-					if (DrawOption(cm == CharacterMap.Latin, " Latin")) cm = CharacterMap.Latin;
-					if (DrawOption(cm == CharacterMap.Custom, " Custom")) cm = CharacterMap.Custom;
-					if (GUI.changed) characterMap = cm;
-					GUILayout.EndVertical();
+//					GUILayout.BeginHorizontal(GUILayout.Width(100f));
+//					GUILayout.BeginVertical();
+//					GUI.changed = false;
+//					if (DrawOption(cm == CharacterMap.Numeric, " Numeric")) cm = CharacterMap.Numeric;
+//					if (DrawOption(cm == CharacterMap.Ascii, " ASCII")) cm = CharacterMap.Ascii;
+//					if (DrawOption(cm == CharacterMap.Latin, " Latin")) cm = CharacterMap.Latin;
+//					if (DrawOption(cm == CharacterMap.Custom, " Custom")) cm = CharacterMap.Custom;
+//					if (GUI.changed) characterMap = cm;
+//					GUILayout.EndVertical();
 
-					EditorGUI.BeginDisabledGroup(cm != CharacterMap.Custom);
-					{
-						if (cm != CharacterMap.Custom)
-						{
-							string chars = "";
+//					EditorGUI.BeginDisabledGroup(cm != CharacterMap.Custom);
+//					{
+//						if (cm != CharacterMap.Custom)
+//						{
+//							string chars = "";
 
-							if (cm == CharacterMap.Ascii)
-							{
-								for (int i = 33; i < 127; ++i)
-									chars += System.Convert.ToChar(i);
-							}
-							else if (cm == CharacterMap.Numeric)
-							{
-								chars = "0123456789";
-							}
-							else if (cm == CharacterMap.Latin)
-							{
-								for (int i = 33; i < 127; ++i)
-									chars += System.Convert.ToChar(i);
+//							if (cm == CharacterMap.Ascii)
+//							{
+//								for (int i = 33; i < 127; ++i)
+//									chars += System.Convert.ToChar(i);
+//							}
+//							else if (cm == CharacterMap.Numeric)
+//							{
+//								chars = "0123456789";
+//							}
+//							else if (cm == CharacterMap.Latin)
+//							{
+//								for (int i = 33; i < 127; ++i)
+//									chars += System.Convert.ToChar(i);
 
-								for (int i = 161; i < 256; ++i)
-									chars += System.Convert.ToChar(i);
-							}
+//								for (int i = 161; i < 256; ++i)
+//									chars += System.Convert.ToChar(i);
+//							}
 
-							NGUISettings.charsToInclude = chars;
-						}
+//							NGUISettings.charsToInclude = chars;
+//						}
 
-						GUI.changed = false;
+//						GUI.changed = false;
 
-						string text = NGUISettings.charsToInclude;
+//						string text = NGUISettings.charsToInclude;
 
-						if (cm == CharacterMap.Custom)
-						{
-							text = EditorGUILayout.TextArea(text, GUI.skin.textArea,
-								GUILayout.Height(80f), GUILayout.Width(Screen.width - 100f));
-						}
-						else
-						{
-							GUILayout.Label(text, GUI.skin.textArea,
-								GUILayout.Height(80f), GUILayout.Width(Screen.width - 100f));
-						}
+//						if (cm == CharacterMap.Custom)
+//						{
+//							text = EditorGUILayout.TextArea(text, GUI.skin.textArea,
+//								GUILayout.Height(80f), GUILayout.Width(Screen.width - 100f));
+//						}
+//						else
+//						{
+//							GUILayout.Label(text, GUI.skin.textArea,
+//								GUILayout.Height(80f), GUILayout.Width(Screen.width - 100f));
+//						}
 
-						if (GUI.changed)
-						{
-							string final = "";
+//						if (GUI.changed)
+//						{
+//							string final = "";
 
-							for (int i = 0; i < text.Length; ++i)
-							{
-								char c = text[i];
-								if (c < 33) continue;
-								string s = c.ToString();
-								if (!final.Contains(s)) final += s;
-							}
+//							for (int i = 0; i < text.Length; ++i)
+//							{
+//								char c = text[i];
+//								if (c < 33) continue;
+//								string s = c.ToString();
+//								if (!final.Contains(s)) final += s;
+//							}
 
-							if (final.Length > 0)
-							{
-								char[] chars = final.ToCharArray();
-								System.Array.Sort(chars);
-								final = new string(chars);
-							}
-							else final = "";
+//							if (final.Length > 0)
+//							{
+//								char[] chars = final.ToCharArray();
+//								System.Array.Sort(chars);
+//								final = new string(chars);
+//							}
+//							else final = "";
 
-							NGUISettings.charsToInclude = final;
-						}
-					}
-					EditorGUI.EndDisabledGroup();
-					GUILayout.EndHorizontal();
-				}
-			}
+//							NGUISettings.charsToInclude = final;
+//						}
+//					}
+//					EditorGUI.EndDisabledGroup();
+//					GUILayout.EndHorizontal();
+//				}
+//			}
 			NGUIEditorTools.EndContents();
 
 			if (mType == FontType.Dynamic)
@@ -350,7 +350,7 @@ public class UIFontMaker : EditorWindow
 				bool isBuiltIn = (ttf != null) && string.IsNullOrEmpty(UnityEditor.AssetDatabase.GetAssetPath(ttf));
 
 				// Draw the atlas selection only if we have the font data and texture specified, just to make it easier
-				EditorGUI.BeginDisabledGroup(ttf == null || isBuiltIn || !FreeType.isPresent);
+				EditorGUI.BeginDisabledGroup(ttf == null || isBuiltIn);
 				{
 					NGUIEditorTools.DrawHeader("Output", true);
 					NGUIEditorTools.BeginContents(false);
@@ -458,7 +458,7 @@ public class UIFontMaker : EditorWindow
 			}
 
 			uiFont.dynamicFont = null;
-			BMFontReader.Load(uiFont.bmFont, NGUITools.GetHierarchy(uiFont.gameObject), NGUISettings.fontData.bytes);
+			//BMFontReader.Load(uiFont.bmFont, NGUITools.GetHierarchy(uiFont.gameObject), NGUISettings.fontData.bytes);
 
 			if (NGUISettings.atlas == null)
 			{
@@ -478,66 +478,66 @@ public class UIFontMaker : EditorWindow
 			BMFont bmFont;
 			Texture2D tex;
 
-			if (FreeType.CreateFont(
-				NGUISettings.FMFont,
-				NGUISettings.FMSize, mFaceIndex,
-				NGUISettings.fontKerning,
-				NGUISettings.charsToInclude, 1, out bmFont, out tex))
-			{
-				uiFont.bmFont = bmFont;
-				tex.name = fontName;
+			//if (FreeType.CreateFont(
+			//	NGUISettings.FMFont,
+			//	NGUISettings.FMSize, mFaceIndex,
+			//	NGUISettings.fontKerning,
+			//	NGUISettings.charsToInclude, 1, out bmFont, out tex))
+			//{
+			//	uiFont.bmFont = bmFont;
+			//	tex.name = fontName;
 
-				if (NGUISettings.atlas != null)
-				{
-					// Add this texture to the atlas and destroy it
-					UIAtlasMaker.AddOrUpdate(NGUISettings.atlas, tex);
-					NGUITools.DestroyImmediate(tex);
-					NGUISettings.fontTexture = null;
-					tex = null;
+			//	if (NGUISettings.atlas != null)
+			//	{
+			//		// Add this texture to the atlas and destroy it
+			//		UIAtlasMaker.AddOrUpdate(NGUISettings.atlas, tex);
+			//		NGUITools.DestroyImmediate(tex);
+			//		NGUISettings.fontTexture = null;
+			//		tex = null;
 
-					uiFont.atlas = NGUISettings.atlas;
-					uiFont.spriteName = fontName;
-				}
-				else
-				{
-					string texPath = prefabPath.Replace(".prefab", ".png");
-					string matPath = prefabPath.Replace(".prefab", ".mat");
+			//		uiFont.atlas = NGUISettings.atlas;
+			//		uiFont.spriteName = fontName;
+			//	}
+			//	else
+			//	{
+			//		string texPath = prefabPath.Replace(".prefab", ".png");
+			//		string matPath = prefabPath.Replace(".prefab", ".mat");
 
-					byte[] png = tex.EncodeToPNG();
-					FileStream fs = File.OpenWrite(texPath);
-					fs.Write(png, 0, png.Length);
-					fs.Close();
+			//		byte[] png = tex.EncodeToPNG();
+			//		FileStream fs = File.OpenWrite(texPath);
+			//		fs.Write(png, 0, png.Length);
+			//		fs.Close();
 
-					// See if the material already exists
-					Material mat = AssetDatabase.LoadAssetAtPath(matPath, typeof(Material)) as Material;
+			//		// See if the material already exists
+			//		Material mat = AssetDatabase.LoadAssetAtPath(matPath, typeof(Material)) as Material;
 
-					// If the material doesn't exist, create it
-					if (mat == null)
-					{
-						Shader shader = Shader.Find("Unlit/Transparent Colored");
-						mat = new Material(shader);
+			//		// If the material doesn't exist, create it
+			//		if (mat == null)
+			//		{
+			//			Shader shader = Shader.Find("Unlit/Transparent Colored");
+			//			mat = new Material(shader);
 
-						// Save the material
-						AssetDatabase.CreateAsset(mat, matPath);
-						AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+			//			// Save the material
+			//			AssetDatabase.CreateAsset(mat, matPath);
+			//			AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 
-						// Load the material so it's usable
-						mat = AssetDatabase.LoadAssetAtPath(matPath, typeof(Material)) as Material;
-					}
-					else AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+			//			// Load the material so it's usable
+			//			mat = AssetDatabase.LoadAssetAtPath(matPath, typeof(Material)) as Material;
+			//		}
+			//		else AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 
-					// Re-load the texture
-					tex = AssetDatabase.LoadAssetAtPath(texPath, typeof(Texture2D)) as Texture2D;
+			//		// Re-load the texture
+			//		tex = AssetDatabase.LoadAssetAtPath(texPath, typeof(Texture2D)) as Texture2D;
 
-					// Assign the texture
-					mat.mainTexture = tex;
-					NGUISettings.fontTexture = tex;
+			//		// Assign the texture
+			//		mat.mainTexture = tex;
+			//		NGUISettings.fontTexture = tex;
 
-					uiFont.atlas = null;
-					uiFont.material = mat;
-				}
-			}
-			else return;
+			//		uiFont.atlas = null;
+			//		uiFont.material = mat;
+			//	}
+			//}
+			//else return;
 		}
 
 		if (prefab != null)
@@ -578,22 +578,22 @@ public class UIFontMaker : EditorWindow
 	/// Create the specified font.
 	/// </summary>
 
-	static void ImportFont (UIFont font, Create create, Material mat)
-	{
-		// New bitmap font
-		font.dynamicFont = null;
-		BMFontReader.Load(font.bmFont, NGUITools.GetHierarchy(font.gameObject), NGUISettings.fontData.bytes);
+	//static void ImportFont (UIFont font, Create create, Material mat)
+	//{
+	//	// New bitmap font
+	//	font.dynamicFont = null;
+	//	BMFontReader.Load(font.bmFont, NGUITools.GetHierarchy(font.gameObject), NGUISettings.fontData.bytes);
 
-		if (NGUISettings.atlas == null)
-		{
-			font.atlas = null;
-			font.material = mat;
-		}
-		else
-		{
-			font.spriteName = NGUISettings.fontTexture.name;
-			font.atlas = NGUISettings.atlas;
-		}
-		NGUISettings.FMSize = font.defaultSize;
-	}
+	//	if (NGUISettings.atlas == null)
+	//	{
+	//		font.atlas = null;
+	//		font.material = mat;
+	//	}
+	//	else
+	//	{
+	//		font.spriteName = NGUISettings.fontTexture.name;
+	//		font.atlas = NGUISettings.atlas;
+	//	}
+	//	NGUISettings.FMSize = font.defaultSize;
+	//}
 }

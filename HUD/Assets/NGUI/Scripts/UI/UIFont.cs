@@ -42,28 +42,28 @@ public class UIFont : MonoBehaviour
 	int mPMA = -1;
 	int mPacked = -1;
 
-	/// <summary>
-	/// Access to the BMFont class directly.
-	/// </summary>
+    /// <summary>
+    /// Access to the BMFont class directly.
+    /// </summary>
 
-	public BMFont bmFont
-	{
-		get
-		{
-			return (mReplacement != null) ? mReplacement.bmFont : mFont;
-		}
-		set
-		{
-			if (mReplacement != null) mReplacement.bmFont = value;
-			else mFont = value;
-		}
-	}
+    public BMFont bmFont
+    {
+        get
+        {
+            return (mReplacement != null) ? mReplacement.bmFont : mFont;
+        }
+        set
+        {
+            if (mReplacement != null) mReplacement.bmFont = value;
+            else mFont = value;
+        }
+    }
 
-	/// <summary>
-	/// Original width of the font's texture in pixels.
-	/// </summary>
+    /// <summary>
+    /// Original width of the font's texture in pixels.
+    /// </summary>
 
-	public int texWidth
+    public int texWidth
 	{
 		get
 		{

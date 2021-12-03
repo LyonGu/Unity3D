@@ -1665,55 +1665,55 @@ public class UILabel : UIWidget
 	/// Fill the specified geometry buffer with vertices that would highlight the current selection.
 	/// </summary>
 
-	public void PrintOverlay (int start, int end, UIGeometry caret, UIGeometry highlight, Color caretColor, Color highlightColor)
-	{
-		if (caret != null) caret.Clear();
-		if (highlight != null) highlight.Clear();
-		if (!isValid) return;
+//	public void PrintOverlay (int start, int end, UIGeometry caret, UIGeometry highlight, Color caretColor, Color highlightColor)
+//	{
+//		if (caret != null) caret.Clear();
+//		if (highlight != null) highlight.Clear();
+//		if (!isValid) return;
 
-		string text = processedText;
-		UpdateNGUIText();
+//		string text = processedText;
+//		UpdateNGUIText();
 
-		int startingCaretVerts = caret.verts.size;
-		Vector2 center = new Vector2(0.5f, 0.5f);
-		float alpha = finalAlpha;
+//		int startingCaretVerts = caret.verts.size;
+//		Vector2 center = new Vector2(0.5f, 0.5f);
+//		float alpha = finalAlpha;
 
-		// If we have a highlight to work with, fill the buffer
-		if (highlight != null && start != end)
-		{
-			int startingVertices = highlight.verts.size;
-			NGUIText.PrintCaretAndSelection(text, start, end, caret.verts, highlight.verts);
+//		// If we have a highlight to work with, fill the buffer
+//		if (highlight != null && start != end)
+//		{
+//			int startingVertices = highlight.verts.size;
+//			NGUIText.PrintCaretAndSelection(text, start, end, caret.verts, highlight.verts);
 
-			if (highlight.verts.size > startingVertices)
-			{
-				ApplyOffset(highlight.verts, startingVertices);
+//			if (highlight.verts.size > startingVertices)
+//			{
+//				ApplyOffset(highlight.verts, startingVertices);
 
-				Color32 c = new Color(highlightColor.r, highlightColor.g, highlightColor.b, highlightColor.a * alpha);
+//				Color32 c = new Color(highlightColor.r, highlightColor.g, highlightColor.b, highlightColor.a * alpha);
 
-				for (int i = startingVertices; i < highlight.verts.size; ++i)
-				{
-					highlight.uvs.Add(center);
-					highlight.cols.Add(c);
-				}
-			}
-		}
-		else NGUIText.PrintCaretAndSelection(text, start, end, caret.verts, null);
+//				for (int i = startingVertices; i < highlight.verts.size; ++i)
+//				{
+//					highlight.uvs.Add(center);
+//					highlight.cols.Add(c);
+//				}
+//			}
+//		}
+//		else NGUIText.PrintCaretAndSelection(text, start, end, caret.verts, null);
 
-		// Fill the caret UVs and colors
-		ApplyOffset(caret.verts, startingCaretVerts);
-		Color32 cc = new Color(caretColor.r, caretColor.g, caretColor.b, caretColor.a * alpha);
+//		// Fill the caret UVs and colors
+//		ApplyOffset(caret.verts, startingCaretVerts);
+//		Color32 cc = new Color(caretColor.r, caretColor.g, caretColor.b, caretColor.a * alpha);
 
-		for (int i = startingCaretVerts; i < caret.verts.size; ++i)
-		{
-			caret.uvs.Add(center);
-			caret.cols.Add(cc);
-		}
+//		for (int i = startingCaretVerts; i < caret.verts.size; ++i)
+//		{
+//			caret.uvs.Add(center);
+//			caret.cols.Add(cc);
+//		}
 
-		NGUIText.bitmapFont = null;
-#if DYNAMIC_FONT
-		NGUIText.dynamicFont = null;
-#endif
-	}
+//		NGUIText.bitmapFont = null;
+//#if DYNAMIC_FONT
+//		NGUIText.dynamicFont = null;
+//#endif
+//	}
 
 	/// <summary>
 	/// Draw the label.

@@ -475,31 +475,31 @@ public class NGUISettings
 	/// Convenience method -- add a texture.
 	/// </summary>
 
-	static public UITexture AddTexture (GameObject go)
-	{
-		UITexture w = NGUITools.AddWidget<UITexture>(go);
-		w.name = "Texture";
-		w.pivot = pivot;
-		w.mainTexture = texture;
-		w.width = 100;
-		w.height = 100;
-		return w;
-	}
+	//static public UITexture AddTexture (GameObject go)
+	//{
+	//	UITexture w = NGUITools.AddWidget<UITexture>(go);
+	//	w.name = "Texture";
+	//	w.pivot = pivot;
+	//	w.mainTexture = texture;
+	//	w.width = 100;
+	//	w.height = 100;
+	//	return w;
+	//}
 
 	/// <summary>
 	/// Convenience method -- add a UnityEngine.Sprite.
 	/// </summary>
 
-	static public UI2DSprite Add2DSprite (GameObject go)
-	{
-		UI2DSprite w = NGUITools.AddWidget<UI2DSprite>(go);
-		w.name = "2D Sprite";
-		w.pivot = pivot;
-		w.sprite2D = sprite2D;
-		w.width = 100;
-		w.height = 100;
-		return w;
-	}
+	//static public UI2DSprite Add2DSprite (GameObject go)
+	//{
+	//	UI2DSprite w = NGUITools.AddWidget<UI2DSprite>(go);
+	//	w.name = "2D Sprite";
+	//	w.pivot = pivot;
+	//	w.sprite2D = sprite2D;
+	//	w.width = 100;
+	//	w.height = 100;
+	//	return w;
+	//}
 
 	/// <summary>
 	/// Convenience method -- add a sprite.

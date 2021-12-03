@@ -429,16 +429,16 @@ public class UIPanel : UIRect
 
 	void InvalidateClipping ()
 	{
-		mResized = true;
-		mMatrixFrame = -1;
-		mCullTime = (mCullTime == 0f) ? 0.001f : RealTime.time + 0.15f;
+		//mResized = true;
+		//mMatrixFrame = -1;
+		//mCullTime = (mCullTime == 0f) ? 0.001f : RealTime.time + 0.15f;
 
-		for (int i = 0, imax = list.Count; i < imax; ++i)
-		{
-			UIPanel p = list[i];
-			if (p != this && p.parentPanel == this)
-				p.InvalidateClipping();
-		}
+		//for (int i = 0, imax = list.Count; i < imax; ++i)
+		//{
+		//	UIPanel p = list[i];
+		//	if (p != this && p.parentPanel == this)
+		//		p.InvalidateClipping();
+		//}
 	}
 
 	/// <summary>
@@ -499,10 +499,10 @@ public class UIPanel : UIRect
 				Mathf.Abs(mClipRange.z - value.z) > 0.001f ||
 				Mathf.Abs(mClipRange.w - value.w) > 0.001f)
 			{
-				mResized = true;
-				mCullTime = (mCullTime == 0f) ? 0.001f : RealTime.time + 0.15f;
-				mClipRange = value;
-				mMatrixFrame = -1;
+				//mResized = true;
+				//mCullTime = (mCullTime == 0f) ? 0.001f : RealTime.time + 0.15f;
+				//mClipRange = value;
+				//mMatrixFrame = -1;
 
 //				UIScrollView sv = GetComponent<UIScrollView>();
 //				if (sv != null) sv.UpdatePosition();
@@ -1594,23 +1594,23 @@ public class UIPanel : UIRect
 				}
 				
 				// Update the widget's geometry if necessary
-				if (w.UpdateGeometry(frame))
-				{
-					changed = true;
+				//if (w.UpdateGeometry(frame))
+				//{
+				//	changed = true;
 
-					if (!mRebuild)
-					{
-						if (w.drawCall != null)
-						{
-							w.drawCall.isDirty = true;
-						}
-						else
-						{
-							// Find an existing draw call, if possible
-							FindDrawCall(w);
-						}
-					}
-				}
+				//	if (!mRebuild)
+				//	{
+				//		if (w.drawCall != null)
+				//		{
+				//			w.drawCall.isDirty = true;
+				//		}
+				//		else
+				//		{
+				//			// Find an existing draw call, if possible
+				//			FindDrawCall(w);
+				//		}
+				//	}
+				//}
 			}
 		}
 

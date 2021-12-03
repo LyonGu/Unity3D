@@ -1375,42 +1375,42 @@ public static class NGUIEditorTools
 	/// Draw a list of fields for the specified list of delegates.
 	/// </summary>
 
-	static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list)
-	{
-		DrawEvents(text, undoObject, list, null, null, false);
-	}
+	//static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list)
+	//{
+	//	DrawEvents(text, undoObject, list, null, null, false);
+	//}
 
 	/// <summary>
 	/// Draw a list of fields for the specified list of delegates.
 	/// </summary>
 
-	static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list, bool minimalistic)
-	{
-		DrawEvents(text, undoObject, list, null, null, minimalistic);
-	}
+	//static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list, bool minimalistic)
+	//{
+	//	DrawEvents(text, undoObject, list, null, null, minimalistic);
+	//}
 
 	/// <summary>
 	/// Draw a list of fields for the specified list of delegates.
 	/// </summary>
 
-	static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list, string noTarget, string notValid, bool minimalistic)
-	{
-		if (!NGUIEditorTools.DrawHeader(text, text, false, minimalistic)) return;
+	//static public void DrawEvents (string text, Object undoObject, List<EventDelegate> list, string noTarget, string notValid, bool minimalistic)
+	//{
+	//	if (!NGUIEditorTools.DrawHeader(text, text, false, minimalistic)) return;
 
-		if (!minimalistic)
-		{
-			NGUIEditorTools.BeginContents(minimalistic);
-			GUILayout.BeginHorizontal();
-			GUILayout.BeginVertical();
+	//	if (!minimalistic)
+	//	{
+	//		NGUIEditorTools.BeginContents(minimalistic);
+	//		GUILayout.BeginHorizontal();
+	//		GUILayout.BeginVertical();
 
-			EventDelegateEditor.Field(undoObject, list, notValid, notValid, minimalistic);
+	//		//EventDelegateEditor.Field(undoObject, list, notValid, notValid, minimalistic);
 
-			GUILayout.EndVertical();
-			GUILayout.EndHorizontal();
-			NGUIEditorTools.EndContents();
-		}
-		else EventDelegateEditor.Field(undoObject, list, notValid, notValid, minimalistic);
-	}
+	//		GUILayout.EndVertical();
+	//		GUILayout.EndHorizontal();
+	//		NGUIEditorTools.EndContents();
+	//	}
+	//	//else EventDelegateEditor.Field(undoObject, list, notValid, notValid, minimalistic);
+	//}
 
 	/// <summary>
 	/// Helper function that draws a serialized property.
@@ -1800,44 +1800,44 @@ public static class NGUIEditorTools
 
 	static public void UpgradeTexturesToSprites (UIAtlas atlas)
 	{
-		if (atlas == null) return;
-		List<UITexture> uits = FindAll<UITexture>();
+		//if (atlas == null) return;
+		//List<UITexture> uits = FindAll<UITexture>();
 
-		if (uits.Count > 0)
-		{
-			UIWidget selectedTex = (UIWidgetInspector.instance != null && UIWidgetInspector.instance.target != null) ?
-				UIWidgetInspector.instance.target as UITexture : null;
+		//if (uits.Count > 0)
+		//{
+		//	UIWidget selectedTex = (UIWidgetInspector.instance != null && UIWidgetInspector.instance.target != null) ?
+		//		UIWidgetInspector.instance.target as UITexture : null;
 
-			// Determine the object instance ID of the UISprite class
-			int spriteID = GetClassID<UISprite>();
+		//	// Determine the object instance ID of the UISprite class
+		//	int spriteID = GetClassID<UISprite>();
 
-			// Run through all the UI textures and change them to sprites
-			for (int i = 0; i < uits.Count; ++i)
-			{
-				UIWidget uiTexture = uits[i];
+		//	// Run through all the UI textures and change them to sprites
+		//	for (int i = 0; i < uits.Count; ++i)
+		//	{
+		//		UIWidget uiTexture = uits[i];
 
-				if (uiTexture != null && uiTexture.mainTexture != null)
-				{
-					UISpriteData atlasSprite = atlas.GetSprite(uiTexture.mainTexture.name);
+		//		if (uiTexture != null && uiTexture.mainTexture != null)
+		//		{
+		//			UISpriteData atlasSprite = atlas.GetSprite(uiTexture.mainTexture.name);
 
-					if (atlasSprite != null)
-					{
-						SerializedObject ob = ReplaceClass(uiTexture, spriteID);
-						ob.FindProperty("mSpriteName").stringValue = uiTexture.mainTexture.name;
-						ob.FindProperty("mAtlas").objectReferenceValue = NGUISettings.atlas;
-						ob.ApplyModifiedProperties();
-					}
-				}
-			}
+		//			if (atlasSprite != null)
+		//			{
+		//				SerializedObject ob = ReplaceClass(uiTexture, spriteID);
+		//				ob.FindProperty("mSpriteName").stringValue = uiTexture.mainTexture.name;
+		//				ob.FindProperty("mAtlas").objectReferenceValue = NGUISettings.atlas;
+		//				ob.ApplyModifiedProperties();
+		//			}
+		//		}
+		//	}
 
-			if (selectedTex != null)
-			{
-				// Repaint() doesn't work in this case because Unity doesn't realize that the underlying
-				// script type has changed and that a new editor script needs to be chosen.
-				//UIWidgetInspector.instance.Repaint();
-				Selection.activeGameObject = null;
-			}
-		}
+		//	if (selectedTex != null)
+		//	{
+		//		// Repaint() doesn't work in this case because Unity doesn't realize that the underlying
+		//		// script type has changed and that a new editor script needs to be chosen.
+		//		//UIWidgetInspector.instance.Repaint();
+		//		Selection.activeGameObject = null;
+		//	}
+		//}
 	}
 
 	class MenuEntry

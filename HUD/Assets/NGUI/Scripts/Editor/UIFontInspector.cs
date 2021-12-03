@@ -204,14 +204,14 @@ public class UIFontInspector : Editor
 			{
 				TextAsset data = EditorGUILayout.ObjectField("Import Data", null, typeof(TextAsset), false) as TextAsset;
 
-				if (data != null)
-				{
-					NGUIEditorTools.RegisterUndo("Import Font Data", mFont);
-					BMFontReader.Load(mFont.bmFont, NGUITools.GetHierarchy(mFont.gameObject), data.bytes);
-					mFont.MarkAsChanged();
-					resetWidthHeight = true;
-					Debug.Log("Imported " + mFont.bmFont.glyphCount + " characters");
-				}
+				//if (data != null)
+				//{
+				//	NGUIEditorTools.RegisterUndo("Import Font Data", mFont);
+				//	BMFontReader.Load(mFont.bmFont, NGUITools.GetHierarchy(mFont.gameObject), data.bytes);
+				//	mFont.MarkAsChanged();
+				//	resetWidthHeight = true;
+				//	Debug.Log("Imported " + mFont.bmFont.glyphCount + " characters");
+				//}
 			}
 
 			if (mFont.bmFont.isValid)

@@ -136,7 +136,7 @@ public class UIWidget : UIRect
 	/// Widget's generated geometry.
 	/// </summary>
 
-	[System.NonSerialized] public UIGeometry geometry = new UIGeometry();
+	//[System.NonSerialized] public UIGeometry geometry = new UIGeometry();
 
 	/// <summary>
 	/// If set to 'false', the widget's OnFill function will not be called, letting you define custom geometry at will.
@@ -334,7 +334,7 @@ public class UIWidget : UIRect
 	/// Whether the widget has vertices to draw.
 	/// </summary>
 
-	public bool hasVertices { get { return geometry != null && geometry.hasVertices; } }
+	public bool hasVertices { get { return false; } }
 
 	/// <summary>
 	/// Change the pivot point and do not attempt to keep the widget in the same place by adjusting its transform.
@@ -1463,64 +1463,64 @@ public class UIWidget : UIRect
 	/// Update the widget and fill its geometry if necessary. Returns whether something was changed.
 	/// </summary>
 
-	public bool UpdateGeometry (int frame)
-	{
-		// Has the alpha changed?
-		float finalAlpha = CalculateFinalAlpha(frame);
-		if (mIsVisibleByAlpha && mLastAlpha != finalAlpha) mChanged = true;
-		mLastAlpha = finalAlpha;
+	//public bool UpdateGeometry (int frame)
+	//{
+	//	// Has the alpha changed?
+	//	float finalAlpha = CalculateFinalAlpha(frame);
+	//	if (mIsVisibleByAlpha && mLastAlpha != finalAlpha) mChanged = true;
+	//	mLastAlpha = finalAlpha;
 
-		if (mChanged)
-		{
-			mChanged = false;
+	//	if (mChanged)
+	//	{
+	//		mChanged = false;
 
-			if (mIsVisibleByAlpha && finalAlpha > 0.001f && shader != null)
-			{
-				bool hadVertices = geometry.hasVertices;
+	//		if (mIsVisibleByAlpha && finalAlpha > 0.001f && shader != null)
+	//		{
+	//			bool hadVertices = geometry.hasVertices;
 
-				if (fillGeometry)
-				{
-					geometry.Clear();
-					OnFill(geometry.verts, geometry.uvs, geometry.cols);
-				}
+	//			if (fillGeometry)
+	//			{
+	//				geometry.Clear();
+	//				OnFill(geometry.verts, geometry.uvs, geometry.cols);
+	//			}
 
-				if (geometry.hasVertices)
-				{
-					// Want to see what's being filled? Uncomment this line.
-					//Debug.Log("Fill " + name + " (" + Time.frameCount + ")");
+	//			if (geometry.hasVertices)
+	//			{
+	//				// Want to see what's being filled? Uncomment this line.
+	//				//Debug.Log("Fill " + name + " (" + Time.frameCount + ")");
 
-					if (mMatrixFrame != frame)
-					{
-						mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
-						mMatrixFrame = frame;
-					}
-					geometry.ApplyTransform(mLocalToPanel);
-					mMoved = false;
-					return true;
-				}
-				return hadVertices;
-			}
-			else if (geometry.hasVertices)
-			{
-				if (fillGeometry) geometry.Clear();
-				mMoved = false;
-				return true;
-			}
-		}
-		else if (mMoved && geometry.hasVertices)
-		{
-			if (mMatrixFrame != frame)
-			{
-				mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
-				mMatrixFrame = frame;
-			}
-			geometry.ApplyTransform(mLocalToPanel);
-			mMoved = false;
-			return true;
-		}
-		mMoved = false;
-		return false;
-	}
+	//				if (mMatrixFrame != frame)
+	//				{
+	//					mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
+	//					mMatrixFrame = frame;
+	//				}
+	//				geometry.ApplyTransform(mLocalToPanel);
+	//				mMoved = false;
+	//				return true;
+	//			}
+	//			return hadVertices;
+	//		}
+	//		else if (geometry.hasVertices)
+	//		{
+	//			if (fillGeometry) geometry.Clear();
+	//			mMoved = false;
+	//			return true;
+	//		}
+	//	}
+	//	else if (mMoved && geometry.hasVertices)
+	//	{
+	//		if (mMatrixFrame != frame)
+	//		{
+	//			mLocalToPanel = panel.worldToLocal * cachedTransform.localToWorldMatrix;
+	//			mMatrixFrame = frame;
+	//		}
+	//		geometry.ApplyTransform(mLocalToPanel);
+	//		mMoved = false;
+	//		return true;
+	//	}
+	//	mMoved = false;
+	//	return false;
+	//}
 
 	/// <summary>
 	/// Append the local geometry buffers to the specified ones.
@@ -1528,7 +1528,7 @@ public class UIWidget : UIRect
 
 	public void WriteToBuffers (BetterList<Vector3> v, BetterList<Vector2> u, BetterList<Color32> c, BetterList<Vector3> n, BetterList<Vector4> t)
 	{
-		geometry.WriteToBuffers(v, u, c, n, t);
+		//geometry.WriteToBuffers(v, u, c, n, t);
 	}
 
 	/// <summary>
