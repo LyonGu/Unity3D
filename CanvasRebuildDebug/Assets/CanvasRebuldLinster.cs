@@ -25,9 +25,18 @@ public class CanvasRebuldLinster : MonoBehaviour {
         var testScript = t.GetComponent<Test>();
         while (testScript == null)
         {
-            t = t.parent;
-            if(t!=null)
-                testScript = t.GetComponent<Test>();
+            if (t != null)
+            {
+                t = t.parent;
+                if (t != null)
+                    testScript = t.GetComponent<Test>();
+            }
+            else
+            {
+                break;
+            }
+                
+            
         }
         if (testScript != null)
             return testScript.gameObject.name;
