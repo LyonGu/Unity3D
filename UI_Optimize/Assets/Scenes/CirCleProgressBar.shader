@@ -58,6 +58,7 @@
                             fixed4 color : COLOR;
                             half2 texcoord  : TEXCOORD0;
                             float2 texcoord1 : TEXCOORD1;
+                            float4 posCenter : TEXCOORD2;
                         };
 
                         fixed4 _Color;
@@ -78,12 +79,14 @@
                             float2 tc = IN.texcoord1;
                             OUT.texcoord1 = IN.texcoord1;
                             OUT.color = IN.color * _Color;
+                            OUT.posCenter = IN.vertex;
                             return OUT;
                         }
 
 
                         fixed4 frag(v2f IN) : SV_Target
                         {
+                            return half4(IN.posCenter.xyz, 1);
                             // float2 tc = IN.texcoord1;
                             // tc.x = _UvRect.x + (_UvRect.z - _UvRect.x) * tc.x;
 				            // tc.y = _UvRect.y + (_UvRect.w - _UvRect.y) * tc.y;
@@ -96,16 +99,16 @@
 
                             //IN.texcoord1 = tc;
 
-                            // float2 center = (_UVRect.zw + _UVRect.xy) / 2;
+                            float2 center = (_UVRect.zw + _UVRect.xy) / 2;
                             // float2 texcoord = IN.texcoord;
                             // texcoord = texcoord - _UVRect.xy - center;
                             // texcoord *= _UVScale;
                             // texcoord += center;
                             // texcoord = texcoord / (_UVRect.zw - _UVRect.xy);
 
-                            // float2 texcoord = IN.texcoord;
-                            // texcoord.x =  (_UVRect.z - _UVRect.x)*texcoord.x + _UVRect.x;
-                            // texcoord.y =  (_UVRect.w - _UVRect.y)*texcoord.y + _UVRect.y;
+                             //float2 texcoord = IN.texcoord;
+                             //texcoord.x =  (_UVRect.z - _UVRect.x)*texcoord.x + _UVRect.x;
+                             //texcoord.y =  (_UVRect.w - _UVRect.y)*texcoord.y + _UVRect.y;
 
                             // float2 tc = IN.texcoord1;
 			                // tc.x = _UVRect.x + (_UVRect.z - _UVRect.x) * tc.x;
@@ -115,8 +118,11 @@
 
                             // float uvCenterX = (_UVRect.x + _UVRect.z) * 0.5f;
                             // float uvCenterY = (_UVRect.y + _UVRect.w) * 0.5f;
-                            float2 pos =  IN.texcoord1 -_Center;
-                            // float2 pos =  texcoord-_Center;
+                            //float2 pos =  IN.texcoord1 - _Center;
+
+                            float2 pos = normalize(IN.posCenter);
+                            //float2 pos = IN.texcoord - _Center;
+                            //float2 pos = IN.texcoord - center;
 
                             float ang = degrees(atan2(pos.x, -pos.y)) + 180;
 

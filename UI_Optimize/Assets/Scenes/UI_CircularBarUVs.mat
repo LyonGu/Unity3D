@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_CirCleProgressBar
-  m_Shader: {fileID: 4800000, guid: 80476a433f58cd24397f0fd6f0877e2e, type: 3}
-  m_ShaderKeywords: 
+  m_Name: UI_CircularBarUVs
+  m_Shader: {fileID: 4800000, guid: 9cdefb73a1d6cc94485378741f329165, type: 3}
+  m_ShaderKeywords: NO_ANTI_ALIASING
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -19,26 +19,18 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BGTex:
+    - _AlphaTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f2cc9736302ab024caf5253c4d400788, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Angle: 228
-    - _ColorMask: -2.9
-    - _MaskDetail: 0
-    - _Width: 0.01
+    - _Frac: 1
+    - _NoAntiAliasing: 1
+    - _Progress: 0.887
     m_Colors:
-    - _Center: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _UVRect: {r: 0.4375, g: 0, b: 0.6640625, a: 0.453125}
-    - _UVScale: {r: 0, g: 0, b: 0, a: 0}
-    - _UvRect: {r: 0, g: 0, b: 0.421875, a: 0.84375}
+    - _BackColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FillColor: {r: 1, g: 1, b: 1, a: 1}

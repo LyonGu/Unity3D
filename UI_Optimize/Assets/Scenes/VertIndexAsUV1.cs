@@ -14,6 +14,7 @@ public class VertIndexAsUV1 : BaseMeshEffect
             vh.PopulateUIVertex(ref vert, i);
             vert.uv1.x = (i >> 1);
             vert.uv1.y = ((i >> 1) ^ (i & 1));
+            Debug.Log($"vert.uv1====={vert.uv1.x} {vert.uv1.y}");
             vh.SetUIVertex(vert, i);
         }
     }
