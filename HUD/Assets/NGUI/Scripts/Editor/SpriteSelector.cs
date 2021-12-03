@@ -108,9 +108,9 @@ public class SpriteSelector : ScriptableWizard
 								{
 									if (mSprite != null)
 									{
-										NGUIEditorTools.RegisterUndo("Atlas Selection", mSprite);
-										mSprite.MakePixelPerfect();
-										EditorUtility.SetDirty(mSprite.gameObject);
+										//NGUIEditorTools.RegisterUndo("Atlas Selection", mSprite);
+										//mSprite.MakePixelPerfect();
+										//EditorUtility.SetDirty(mSprite.gameObject);
 									}
 
 									NGUISettings.selectedSprite = sprite.name;

@@ -311,107 +311,107 @@ static public class NGUITools
 	/// Adjust the widget's collider based on the depth of the widgets, as well as the widget's dimensions.
 	/// </summary>
 
-	static public void UpdateWidgetCollider (GameObject go)
-	{
-		UpdateWidgetCollider(go, false);
-	}
+	//static public void UpdateWidgetCollider (GameObject go)
+	//{
+	//	UpdateWidgetCollider(go, false);
+	//}
 
 	/// <summary>
 	/// Adjust the widget's collider based on the depth of the widgets, as well as the widget's dimensions.
 	/// </summary>
 
-	static public void UpdateWidgetCollider (GameObject go, bool considerInactive)
-	{
-		if (go != null)
-		{
-			BoxCollider bc = go.GetComponent<BoxCollider>();
+	//static public void UpdateWidgetCollider (GameObject go, bool considerInactive)
+	//{
+	//	if (go != null)
+	//	{
+	//		BoxCollider bc = go.GetComponent<BoxCollider>();
 
-			if (bc != null)
-			{
-				UpdateWidgetCollider(bc, considerInactive);
-				return;
-			}
-			BoxCollider2D box2 = go.GetComponent<BoxCollider2D>();
-			if (box2 != null) UpdateWidgetCollider(box2, considerInactive);
-		}
-	}
-
-	/// <summary>
-	/// Adjust the widget's collider based on the depth of the widgets, as well as the widget's dimensions.
-	/// </summary>
-
-	static public void UpdateWidgetCollider (BoxCollider box, bool considerInactive)
-	{
-		if (box != null)
-		{
-			GameObject go = box.gameObject;
-			UIWidget w = go.GetComponent<UIWidget>();
-
-			if (w != null)
-			{
-				Vector4 dr = w.drawRegion;
-
-				if (dr.x != 0f || dr.y != 0f || dr.z != 1f || dr.w != 1f)
-				{
-					Vector4 region = w.drawingDimensions;
-					box.center = new Vector3((region.x + region.z) * 0.5f, (region.y + region.w) * 0.5f);
-					box.size = new Vector3(region.z - region.x, region.w - region.y);
-				}
-				else
-				{
-					Vector3[] corners = w.localCorners;
-					box.center = Vector3.Lerp(corners[0], corners[2], 0.5f);
-					box.size = corners[2] - corners[0];
-				}
-			}
-			else
-			{
-				Bounds b = NGUIMath.CalculateRelativeWidgetBounds(go.transform, considerInactive);
-				box.center = b.center;
-				box.size = new Vector3(b.size.x, b.size.y, 0f);
-			}
-#if UNITY_EDITOR
-			NGUITools.SetDirty(box);
-#endif
-		}
-	}
+	//		if (bc != null)
+	//		{
+	//			UpdateWidgetCollider(bc, considerInactive);
+	//			return;
+	//		}
+	//		//BoxCollider2D box2 = go.GetComponent<BoxCollider2D>();
+	//		//if (box2 != null) UpdateWidgetCollider(box2, considerInactive);
+	//	}
+	//}
 
 	/// <summary>
 	/// Adjust the widget's collider based on the depth of the widgets, as well as the widget's dimensions.
 	/// </summary>
 
-	static public void UpdateWidgetCollider (BoxCollider2D box, bool considerInactive)
-	{
-		if (box != null)
-		{
-			GameObject go = box.gameObject;
-			UIWidget w = go.GetComponent<UIWidget>();
+//	static public void UpdateWidgetCollider (BoxCollider box, bool considerInactive)
+//	{
+//		if (box != null)
+//		{
+//			GameObject go = box.gameObject;
+//			UIWidget w = go.GetComponent<UIWidget>();
 
-			if (w != null)
-			{
-				Vector3[] corners = w.localCorners;
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-				box.center = Vector3.Lerp(corners[0], corners[2], 0.5f);
-#else
-				box.offset = Vector3.Lerp(corners[0], corners[2], 0.5f);
-#endif
-				box.size = corners[2] - corners[0];
-			}
-			else
-			{
-				Bounds b = NGUIMath.CalculateRelativeWidgetBounds(go.transform, considerInactive);
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-				box.center = b.center;
-#else
-				box.offset = b.center;
-#endif
-				box.size = new Vector2(b.size.x, b.size.y);
-			}
-#if UNITY_EDITOR
-			NGUITools.SetDirty(box);
-#endif
-		}
-	}
+//			if (w != null)
+//			{
+//				Vector4 dr = w.drawRegion;
+
+//				if (dr.x != 0f || dr.y != 0f || dr.z != 1f || dr.w != 1f)
+//				{
+//					Vector4 region = w.drawingDimensions;
+//					box.center = new Vector3((region.x + region.z) * 0.5f, (region.y + region.w) * 0.5f);
+//					box.size = new Vector3(region.z - region.x, region.w - region.y);
+//				}
+//				else
+//				{
+//					//Vector3[] corners = w.localCorners;
+//					//box.center = Vector3.Lerp(corners[0], corners[2], 0.5f);
+//					//box.size = corners[2] - corners[0];
+//				}
+//			}
+//			else
+//			{
+//				Bounds b = NGUIMath.CalculateRelativeWidgetBounds(go.transform, considerInactive);
+//				box.center = b.center;
+//				box.size = new Vector3(b.size.x, b.size.y, 0f);
+//			}
+//#if UNITY_EDITOR
+//			NGUITools.SetDirty(box);
+//#endif
+//		}
+//	}
+
+	/// <summary>
+	/// Adjust the widget's collider based on the depth of the widgets, as well as the widget's dimensions.
+	/// </summary>
+
+//	static public void UpdateWidgetCollider (BoxCollider2D box, bool considerInactive)
+//	{
+//		if (box != null)
+//		{
+//			GameObject go = box.gameObject;
+//			UIWidget w = go.GetComponent<UIWidget>();
+
+//			if (w != null)
+//			{
+//				Vector3[] corners = w.localCorners;
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//				box.center = Vector3.Lerp(corners[0], corners[2], 0.5f);
+//#else
+//				box.offset = Vector3.Lerp(corners[0], corners[2], 0.5f);
+//#endif
+//				box.size = corners[2] - corners[0];
+//			}
+//			else
+//			{
+//				Bounds b = NGUIMath.CalculateRelativeWidgetBounds(go.transform, considerInactive);
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//				box.center = b.center;
+//#else
+//				box.offset = b.center;
+//#endif
+//				box.size = new Vector2(b.size.x, b.size.y);
+//			}
+//#if UNITY_EDITOR
+//			NGUITools.SetDirty(box);
+//#endif
+//		}
+//	}
 
 	/// <summary>
 	/// Helper function that returns the string name of the type.
@@ -543,40 +543,40 @@ static public class NGUITools
 	/// Gathers all widgets and calculates the depth for the next widget.
 	/// </summary>
 
-	static public int CalculateNextDepth (GameObject go)
-	{
-		int depth = -1;
-		UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
-		for (int i = 0, imax = widgets.Length; i < imax; ++i)
-			depth = Mathf.Max(depth, widgets[i].depth);
-		return depth + 1;
-	}
+	//static public int CalculateNextDepth (GameObject go)
+	//{
+	//	int depth = -1;
+	//	UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
+	//	for (int i = 0, imax = widgets.Length; i < imax; ++i)
+	//		depth = Mathf.Max(depth, widgets[i].depth);
+	//	return depth + 1;
+	//}
 
 	/// <summary>
 	/// Gathers all widgets and calculates the depth for the next widget.
 	/// </summary>
 
-	static public int CalculateNextDepth (GameObject go, bool ignoreChildrenWithColliders)
-	{
-		if (ignoreChildrenWithColliders)
-		{
-			int depth = -1;
-			UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
+//	static public int CalculateNextDepth (GameObject go, bool ignoreChildrenWithColliders)
+//	{
+//		if (ignoreChildrenWithColliders)
+//		{
+//			int depth = -1;
+//			UIWidget[] widgets = go.GetComponentsInChildren<UIWidget>();
 
-			for (int i = 0, imax = widgets.Length; i < imax; ++i)
-			{
-				UIWidget w = widgets[i];
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-				if (w.cachedGameObject != go && (w.collider != null || w.GetComponent<Collider2D>() != null)) continue;
-#else
-				if (w.cachedGameObject != go && (w.GetComponent<Collider>() != null || w.GetComponent<Collider2D>() != null)) continue;
-#endif
-				depth = Mathf.Max(depth, w.depth);
-			}
-			return depth + 1;
-		}
-		return CalculateNextDepth(go);
-	}
+//			for (int i = 0, imax = widgets.Length; i < imax; ++i)
+//			{
+//				UIWidget w = widgets[i];
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//				if (w.cachedGameObject != go && (w.collider != null || w.GetComponent<Collider2D>() != null)) continue;
+//#else
+//				if (w.cachedGameObject != go && (w.GetComponent<Collider>() != null || w.GetComponent<Collider2D>() != null)) continue;
+//#endif
+//				depth = Mathf.Max(depth, w.depth);
+//			}
+//			return depth + 1;
+//		}
+//		return CalculateNextDepth(go);
+//	}
 
 	/// <summary>
 	/// Adjust the widgets' depth by the specified value.
@@ -661,51 +661,51 @@ static public class NGUITools
 	/// Normalize the depths of all the widgets in the scene, making them start from 0 and remain in order.
 	/// </summary>
 
-	static public void NormalizeWidgetDepths ()
-	{
-		NormalizeWidgetDepths(FindActive<UIWidget>());
-	}
+	//static public void NormalizeWidgetDepths ()
+	//{
+	//	NormalizeWidgetDepths(FindActive<UIWidget>());
+	//}
 
 	/// <summary>
 	/// Normalize the depths of all the widgets in the scene, making them start from 0 and remain in order.
 	/// </summary>
 
-	static public void NormalizeWidgetDepths (GameObject go)
-	{
-		NormalizeWidgetDepths(go.GetComponentsInChildren<UIWidget>());
-	}
+	//static public void NormalizeWidgetDepths (GameObject go)
+	//{
+	//	NormalizeWidgetDepths(go.GetComponentsInChildren<UIWidget>());
+	//}
 
 	/// <summary>
 	/// Normalize the depths of all the widgets in the scene, making them start from 0 and remain in order.
 	/// </summary>
 
-	static public void NormalizeWidgetDepths (UIWidget[] list)
-	{
-		int size = list.Length;
+	//static public void NormalizeWidgetDepths (UIWidget[] list)
+	//{
+	//	int size = list.Length;
 
-		if (size > 0)
-		{
-			//Array.Sort(list, UIWidget.FullCompareFunc);
+	//	if (size > 0)
+	//	{
+	//		//Array.Sort(list, UIWidget.FullCompareFunc);
 
-			int start = 0;
-			int current = list[0].depth;
+	//		int start = 0;
+	//		int current = list[0].depth;
 
-			for (int i = 0; i < size; ++i)
-			{
-				UIWidget w = list[i];
+	//		for (int i = 0; i < size; ++i)
+	//		{
+	//			UIWidget w = list[i];
 
-				if (w.depth == current)
-				{
-					w.depth = start;
-				}
-				else
-				{
-					current = w.depth;
-					w.depth = ++start;
-				}
-			}
-		}
-	}
+	//			if (w.depth == current)
+	//			{
+	//				w.depth = start;
+	//			}
+	//			else
+	//			{
+	//				current = w.depth;
+	//				w.depth = ++start;
+	//			}
+	//		}
+	//	}
+	//}
 
 	/// <summary>
 	/// Normalize the depths of all the panels in the scene, making them start from 0 and remain in order.
@@ -953,46 +953,46 @@ static public class NGUITools
 	/// Add a new widget of specified type.
 	/// </summary>
 
-	static public T AddWidget<T> (GameObject go) where T : UIWidget
-	{
-		int depth = CalculateNextDepth(go);
+	//static public T AddWidget<T> (GameObject go) where T : UIWidget
+	//{
+	//	int depth = CalculateNextDepth(go);
 
-		// Create the widget and place it above other widgets
-		T widget = AddChild<T>(go);
-		widget.width = 100;
-		widget.height = 100;
-		widget.depth = depth;
-		return widget;
-	}
+	//	// Create the widget and place it above other widgets
+	//	T widget = AddChild<T>(go);
+	//	widget.width = 100;
+	//	widget.height = 100;
+	//	widget.depth = depth;
+	//	return widget;
+	//}
 
 	/// <summary>
 	/// Add a new widget of specified type.
 	/// </summary>
 
-	static public T AddWidget<T> (GameObject go, int depth) where T : UIWidget
-	{
-		// Create the widget and place it above other widgets
-		T widget = AddChild<T>(go);
-		widget.width = 100;
-		widget.height = 100;
-		widget.depth = depth;
-		return widget;
-	}
+	//static public T AddWidget<T> (GameObject go, int depth) where T : UIWidget
+	//{
+	//	// Create the widget and place it above other widgets
+	//	T widget = AddChild<T>(go);
+	//	widget.width = 100;
+	//	widget.height = 100;
+	//	widget.depth = depth;
+	//	return widget;
+	//}
 
 	/// <summary>
 	/// Add a sprite appropriate for the specified atlas sprite.
 	/// It will be sliced if the sprite has an inner rect, and a regular sprite otherwise.
 	/// </summary>
 
-	static public UISprite AddSprite (GameObject go, UIAtlas atlas, string spriteName)
-	{
-		UISpriteData sp = (atlas != null) ? atlas.GetSprite(spriteName) : null;
-		UISprite sprite = AddWidget<UISprite>(go);
-		sprite.type = (sp == null || !sp.hasBorder) ? UISprite.Type.Simple : UISprite.Type.Sliced;
-		sprite.atlas = atlas;
-		sprite.spriteName = spriteName;
-		return sprite;
-	}
+	//static public UISprite AddSprite (GameObject go, UIAtlas atlas, string spriteName)
+	//{
+	//	UISpriteData sp = (atlas != null) ? atlas.GetSprite(spriteName) : null;
+	//	UISprite sprite = AddWidget<UISprite>(go);
+	//	sprite.type = (sp == null || !sp.hasBorder) ? UISprite.Type.Simple : UISprite.Type.Sliced;
+	//	sprite.atlas = atlas;
+	//	sprite.spriteName = spriteName;
+	//	return sprite;
+	//}
 
 	/// <summary>
 	/// Get the rootmost object of the specified game object.
@@ -1430,12 +1430,12 @@ static public class NGUITools
 	/// Inform all widgets underneath the specified object that the parent has changed.
 	/// </summary>
 
-	static public void MarkParentAsChanged (GameObject go)
-	{
-		UIRect[] rects = go.GetComponentsInChildren<UIRect>();
-		for (int i = 0, imax = rects.Length; i < imax; ++i)
-			rects[i].ParentHasChanged();
-	}
+	//static public void MarkParentAsChanged (GameObject go)
+	//{
+	//	UIRect[] rects = go.GetComponentsInChildren<UIRect>();
+	//	for (int i = 0, imax = rects.Length; i < imax; ++i)
+	//		rects[i].ParentHasChanged();
+	//}
 
 	/// <summary>
 	/// Access to the clipboard via undocumented APIs.
@@ -1458,14 +1458,14 @@ static public class NGUITools
 		}
 	}
 
-	[System.Obsolete("Use NGUIText.EncodeColor instead")]
-	static public string EncodeColor (Color c) { return NGUIText.EncodeColor24(c); }
+	//[System.Obsolete("Use NGUIText.EncodeColor instead")]
+	//static public string EncodeColor (Color c) { return NGUIText.EncodeColor24(c); }
 
-	[System.Obsolete("Use NGUIText.ParseColor instead")]
-	static public Color ParseColor (string text, int offset) { return NGUIText.ParseColor24(text, offset); }
+	//[System.Obsolete("Use NGUIText.ParseColor instead")]
+	//static public Color ParseColor (string text, int offset) { return NGUIText.ParseColor24(text, offset); }
 
-	[System.Obsolete("Use NGUIText.StripSymbols instead")]
-	static public string StripSymbols (string text) { return NGUIText.StripSymbols(text); }
+	//[System.Obsolete("Use NGUIText.StripSymbols instead")]
+	//static public string StripSymbols (string text) { return NGUIText.StripSymbols(text); }
 
 	/// <summary>
 	/// Extension for the game object that checks to see if the component already exists before adding a new one.
@@ -1711,14 +1711,14 @@ static public class NGUITools
 	/// This is useful if you plan on doing something like immediately taking a screenshot then destroying the UI.
 	/// </summary>
 
-	static public void ImmediatelyCreateDrawCalls (GameObject root)
-	{
-		ExecuteAll<UIWidget>(root, "Start");
-		//ExecuteAll<UIPanel>(root, "Start");
-		ExecuteAll<UIWidget>(root, "Update");
-		//ExecuteAll<UIPanel>(root, "Update");
-		//ExecuteAll<UIPanel>(root, "LateUpdate");
-	}
+	//static public void ImmediatelyCreateDrawCalls (GameObject root)
+	//{
+	//	ExecuteAll<UIWidget>(root, "Start");
+	//	//ExecuteAll<UIPanel>(root, "Start");
+	//	ExecuteAll<UIWidget>(root, "Update");
+	//	//ExecuteAll<UIPanel>(root, "Update");
+	//	//ExecuteAll<UIPanel>(root, "LateUpdate");
+	//}
 #endif
 
 #if UNITY_EDITOR

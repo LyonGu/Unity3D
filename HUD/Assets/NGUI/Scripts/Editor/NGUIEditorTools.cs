@@ -1097,18 +1097,18 @@ public static class NGUIEditorTools
 							NGUIEditorTools.RegisterUndo("Edit Sprite Name", atlas);
 							sprite.name = newName;
 
-							List<UISprite> sprites = FindAll<UISprite>();
+							//List<UISprite> sprites = FindAll<UISprite>();
 
-							for (int i = 0; i < sprites.Count; ++i)
-							{
-								UISprite sp = sprites[i];
+							//for (int i = 0; i < sprites.Count; ++i)
+							//{
+							//	UISprite sp = sprites[i];
 
-								if (sp.atlas == atlas && sp.spriteName == spriteName)
-								{
-									NGUIEditorTools.RegisterUndo("Edit Sprite Name", sp);
-									sp.spriteName = newName;
-								}
-							}
+							//	if (sp.atlas == atlas && sp.spriteName == spriteName)
+							//	{
+							//		NGUIEditorTools.RegisterUndo("Edit Sprite Name", sp);
+							//		sp.spriteName = newName;
+							//	}
+							//}
 
 							mLastSprite = newName;
 							spriteName = newName;
@@ -1225,17 +1225,17 @@ public static class NGUIEditorTools
 	/// Check to see if the specified game object has a uniform scale.
 	/// </summary>
 
-	static public bool IsUniform (GameObject go)
-	{
-		if (go == null) return true;
+	//static public bool IsUniform (GameObject go)
+	//{
+	//	if (go == null) return true;
 
-		if (go.GetComponent<UIWidget>() != null)
-		{
-			Transform parent = go.transform.parent;
-			return parent == null || IsUniform(parent.gameObject);
-		}
-		return IsUniform(go.transform.lossyScale);
-	}
+	//	if (go.GetComponent<UIWidget>() != null)
+	//	{
+	//		Transform parent = go.transform.parent;
+	//		return parent == null || IsUniform(parent.gameObject);
+	//	}
+	//	return IsUniform(go.transform.lossyScale);
+	//}
 
 	/// <summary>
 	/// Fix uniform scaling of the specified object.
@@ -1704,18 +1704,18 @@ public static class NGUIEditorTools
 	/// Unity 4.5+ makes it possible to hide the move tool.
 	/// </summary>
 
-	static public void HideMoveTool (bool hide)
-	{
-#if !UNITY_4_3
-		UnityEditor.Tools.hidden = hide &&
- #if !UNITY_4_5
-			(UnityEditor.Tools.current == UnityEditor.Tool.Rect) &&
- #else
-			(UnityEditor.Tools.current == UnityEditor.Tool.Move) &&
- #endif
-			UIWidget.showHandlesWithMoveTool && !NGUISettings.showTransformHandles;
-#endif
-	}
+//	static public void HideMoveTool (bool hide)
+//	{
+//#if !UNITY_4_3
+//		UnityEditor.Tools.hidden = hide &&
+// #if !UNITY_4_5
+//			(UnityEditor.Tools.current == UnityEditor.Tool.Rect) &&
+// #else
+//			(UnityEditor.Tools.current == UnityEditor.Tool.Move) &&
+// #endif
+//			UIWidget.showHandlesWithMoveTool && !NGUISettings.showTransformHandles;
+//#endif
+//	}
 
 	/// <summary>
 	/// Gets the internal class ID of the specified type.

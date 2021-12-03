@@ -192,15 +192,7 @@ public class ComponentSelector : ScriptableWizard
 			GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
 
-			if (mType == typeof(UIFont))
-			{
-				if (GUILayout.Button("Open the Font Maker", GUILayout.Width(150f)))
-				{
-					EditorWindow.GetWindow<UIFontMaker>(false, "Font Maker", true).Show();
-					isDone = true;
-				}
-			}
-			else if (mType == typeof(UIAtlas))
+			 if (mType == typeof(UIAtlas))
 			{
 				if (GUILayout.Button("Open the Atlas Maker", GUILayout.Width(150f)))
 				{

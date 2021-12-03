@@ -34,37 +34,37 @@ public class UIAtlasInspector : Editor
 	/// Convenience function -- mark all widgets using the sprite as changed.
 	/// </summary>
 
-	void MarkSpriteAsDirty ()
-	{
-		UISpriteData sprite = (mAtlas != null) ? mAtlas.GetSprite(NGUISettings.selectedSprite) : null;
-		if (sprite == null) return;
+	//void MarkSpriteAsDirty ()
+	//{
+	//	UISpriteData sprite = (mAtlas != null) ? mAtlas.GetSprite(NGUISettings.selectedSprite) : null;
+	//	if (sprite == null) return;
 
-		UISprite[] sprites = NGUITools.FindActive<UISprite>();
+	//	UISprite[] sprites = NGUITools.FindActive<UISprite>();
 
-		foreach (UISprite sp in sprites)
-		{
-			if (UIAtlas.CheckIfRelated(sp.atlas, mAtlas) && sp.spriteName == sprite.name)
-			{
-				UIAtlas atl = sp.atlas;
-				sp.atlas = null;
-				sp.atlas = atl;
-				EditorUtility.SetDirty(sp);
-			}
-		}
+	//	foreach (UISprite sp in sprites)
+	//	{
+	//		if (UIAtlas.CheckIfRelated(sp.atlas, mAtlas) && sp.spriteName == sprite.name)
+	//		{
+	//			UIAtlas atl = sp.atlas;
+	//			sp.atlas = null;
+	//			sp.atlas = atl;
+	//			EditorUtility.SetDirty(sp);
+	//		}
+	//	}
 
-		//UILabel[] labels = NGUITools.FindActive<UILabel>();
+	//	//UILabel[] labels = NGUITools.FindActive<UILabel>();
 
-		//foreach (UILabel lbl in labels)
-		//{
-		//	if (lbl.bitmapFont != null && UIAtlas.CheckIfRelated(lbl.bitmapFont.atlas, mAtlas) && lbl.bitmapFont.UsesSprite(sprite.name))
-		//	{
-		//		UIFont font = lbl.bitmapFont;
-		//		lbl.bitmapFont = null;
-		//		lbl.bitmapFont = font;
-		//		EditorUtility.SetDirty(lbl);
-		//	}
-		//}
-	}
+	//	//foreach (UILabel lbl in labels)
+	//	//{
+	//	//	if (lbl.bitmapFont != null && UIAtlas.CheckIfRelated(lbl.bitmapFont.atlas, mAtlas) && lbl.bitmapFont.UsesSprite(sprite.name))
+	//	//	{
+	//	//		UIFont font = lbl.bitmapFont;
+	//	//		lbl.bitmapFont = null;
+	//	//		lbl.bitmapFont = font;
+	//	//		EditorUtility.SetDirty(lbl);
+	//	//	}
+	//	//}
+	//}
 
 	/// <summary>
 	/// Replacement atlas selection callback.
@@ -246,7 +246,7 @@ public class UIAtlasInspector : Editor
 						sprite.borderBottom = borderB.x;
 						sprite.borderTop = borderB.y;
 
-						MarkSpriteAsDirty();
+						//MarkSpriteAsDirty();
 					}
 
 					GUILayout.Space(3f);

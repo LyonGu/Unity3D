@@ -213,33 +213,33 @@ public class NGUISettings
 		set { SetEnum("NGUI Color Mode", value); }
 	}
 
-	static public Object ambigiousFont
-	{
-		get
-		{
-			Font fnt = Get<Font>("NGUI Dynamic Font", null);
-			if (fnt != null) return fnt;
-			return Get<UIFont>("NGUI Bitmap Font", null);
-		}
-		set
-		{
-			if (value == null)
-			{
-				Set("NGUI Bitmap Font", null);
-				Set("NGUI Dynamic Font", null);
-			}
-			else if (value is Font)
-			{
-				Set("NGUI Bitmap Font", null);
-				Set("NGUI Dynamic Font", value as Font);
-			}
-			else if (value is UIFont)
-			{
-				Set("NGUI Bitmap Font", value as UIFont);
-				Set("NGUI Dynamic Font", null);
-			}
-		}
-	}
+	//static public Object ambigiousFont
+	//{
+	//	get
+	//	{
+	//		Font fnt = Get<Font>("NGUI Dynamic Font", null);
+	//		if (fnt != null) return fnt;
+	//		return Get<UIFont>("NGUI Bitmap Font", null);
+	//	}
+	//	set
+	//	{
+	//		if (value == null)
+	//		{
+	//			Set("NGUI Bitmap Font", null);
+	//			Set("NGUI Dynamic Font", null);
+	//		}
+	//		else if (value is Font)
+	//		{
+	//			Set("NGUI Bitmap Font", null);
+	//			Set("NGUI Dynamic Font", value as Font);
+	//		}
+	//		else if (value is UIFont)
+	//		{
+	//			Set("NGUI Bitmap Font", value as UIFont);
+	//			Set("NGUI Dynamic Font", null);
+	//		}
+	//	}
+	//}
 
 	static public UIAtlas atlas
 	{
@@ -265,80 +265,80 @@ public class NGUISettings
 		set { SetString("NGUI Sprite", value); }
 	}
 
-	static public UIWidget.Pivot pivot
-	{
-		get { return GetEnum("NGUI Pivot", UIWidget.Pivot.Center); }
-		set { SetEnum("NGUI Pivot", value); }
-	}
+	//static public UIWidget.Pivot pivot
+	//{
+	//	get { return GetEnum("NGUI Pivot", UIWidget.Pivot.Center); }
+	//	set { SetEnum("NGUI Pivot", value); }
+	//}
 
-	static public int layer
-	{
-		get
-		{
-			int layer = GetInt("NGUI Layer", -1);
-			if (layer == -1) layer = LayerMask.NameToLayer("UI");
-			if (layer == -1) layer = LayerMask.NameToLayer("2D UI");
-			return (layer == -1) ? 9 : layer;
-		}
-		set
-		{
-			SetInt("NGUI Layer", value);
-		}
-	}
+	//static public int layer
+	//{
+	//	get
+	//	{
+	//		int layer = GetInt("NGUI Layer", -1);
+	//		if (layer == -1) layer = LayerMask.NameToLayer("UI");
+	//		if (layer == -1) layer = LayerMask.NameToLayer("2D UI");
+	//		return (layer == -1) ? 9 : layer;
+	//	}
+	//	set
+	//	{
+	//		SetInt("NGUI Layer", value);
+	//	}
+	//}
 
-	static public TextAsset fontData
-	{
-		get { return Get<TextAsset>("NGUI Font Data", null); }
-		set { Set("NGUI Font Data", value); }
-	}
+	//static public TextAsset fontData
+	//{
+	//	get { return Get<TextAsset>("NGUI Font Data", null); }
+	//	set { Set("NGUI Font Data", value); }
+	//}
 
-	static public Texture2D fontTexture
-	{
-		get { return Get<Texture2D>("NGUI Font Texture", null); }
-		set { Set("NGUI Font Texture", value); }
-	}
+	//static public Texture2D fontTexture
+	//{
+	//	get { return Get<Texture2D>("NGUI Font Texture", null); }
+	//	set { Set("NGUI Font Texture", value); }
+	//}
 
-	static public int fontSize
-	{
-		get { return GetInt("NGUI Font Size", 16); }
-		set { SetInt("NGUI Font Size", value); }
-	}
+	//static public int fontSize
+	//{
+	//	get { return GetInt("NGUI Font Size", 16); }
+	//	set { SetInt("NGUI Font Size", value); }
+	//}
 
-	static public int FMSize
-	{
-		get { return GetInt("NGUI FM Size", 16); }
-		set { SetInt("NGUI FM Size", value); }
-	}
+	//static public int FMSize
+	//{
+	//	get { return GetInt("NGUI FM Size", 16); }
+	//	set { SetInt("NGUI FM Size", value); }
+	//}
 
-	static public bool fontKerning
-	{
-		get { return GetBool("NGUI Font Kerning", true); }
-		set { SetBool("NGUI Font Kerning", value); }
-	}
+	//static public bool fontKerning
+	//{
+	//	get { return GetBool("NGUI Font Kerning", true); }
+	//	set { SetBool("NGUI Font Kerning", value); }
+	//}
 
-	static public FontStyle fontStyle
-	{
-		get { return GetEnum("NGUI Font Style", FontStyle.Normal); }
-		set { SetEnum("NGUI Font Style", value); }
-	}
+	//static public FontStyle fontStyle
+	//{
+	//	get { return GetEnum("NGUI Font Style", FontStyle.Normal); }
+	//	set { SetEnum("NGUI Font Style", value); }
+	//}
 
-	static public Font dynamicFont
-	{
-		get { return Get<Font>("NGUI Dynamic Font", null); }
-		set { Set("NGUI Dynamic Font", value); }
-	}
+	//static public Font dynamicFont
+	//{
+	//	get { return Get<Font>("NGUI Dynamic Font", null); }
+	//	set { Set("NGUI Dynamic Font", value); }
+	//}
 
-	static public Font FMFont
-	{
-		get { return Get<Font>("NGUI FM Font", null); }
-		set { Set("NGUI FM Font", value); }
-	}
+	//static public Font FMFont
+	//{
+	//	get { return Get<Font>("NGUI FM Font", null); }
+	//	set { Set("NGUI FM Font", value); }
+	//}
 
-	static public UIFont BMFont
-	{
-		get { return Get<UIFont>("NGUI BM Font", null); }
-		set { Set("NGUI BM Font", value); }
-	}
+	//static public UIFont BMFont
+	//{
+	//	get { return Get<UIFont>("NGUI BM Font", null); }
+	//	set { Set("NGUI BM Font", value); }
+	//}
 
 	//static public UILabel.Overflow overflowStyle
 	//{
@@ -461,15 +461,15 @@ public class NGUISettings
 	/// Convenience method -- add a widget.
 	/// </summary>
 
-	static public UIWidget AddWidget (GameObject go)
-	{
-		UIWidget w = NGUITools.AddWidget<UIWidget>(go);
-		w.name = "Container";
-		w.pivot = pivot;
-		w.width = 100;
-		w.height = 100;
-		return w;
-	}
+	//static public UIWidget AddWidget (GameObject go)
+	//{
+	//	UIWidget w = NGUITools.AddWidget<UIWidget>(go);
+	//	w.name = "Container";
+	//	w.pivot = pivot;
+	//	w.width = 100;
+	//	w.height = 100;
+	//	return w;
+	//}
 
 	/// <summary>
 	/// Convenience method -- add a texture.
@@ -505,26 +505,26 @@ public class NGUISettings
 	/// Convenience method -- add a sprite.
 	/// </summary>
 
-	static public UISprite AddSprite (GameObject go)
-	{
-		UISprite w = NGUITools.AddWidget<UISprite>(go);
-		w.name = "Sprite";
-		w.atlas = atlas;
-		w.spriteName = selectedSprite;
+	//static public UISprite AddSprite (GameObject go)
+	//{
+	//	UISprite w = NGUITools.AddWidget<UISprite>(go);
+	//	w.name = "Sprite";
+	//	w.atlas = atlas;
+	//	w.spriteName = selectedSprite;
 
-		if (w.atlas != null && !string.IsNullOrEmpty(w.spriteName))
-		{
-			UISpriteData sp = w.atlas.GetSprite(w.spriteName);
-			if (sp != null && sp.hasBorder)
-				w.type = UISprite.Type.Sliced;
-		}
+	//	if (w.atlas != null && !string.IsNullOrEmpty(w.spriteName))
+	//	{
+	//		UISpriteData sp = w.atlas.GetSprite(w.spriteName);
+	//		if (sp != null && sp.hasBorder)
+	//			w.type = UISprite.Type.Sliced;
+	//	}
 
-		w.pivot = pivot;
-		w.width = 100;
-		w.height = 100;
-		w.MakePixelPerfect();
-		return w;
-	}
+	//	w.pivot = pivot;
+	//	w.width = 100;
+	//	w.height = 100;
+	//	w.MakePixelPerfect();
+	//	return w;
+	//}
 
 	/// <summary>
 	/// Convenience method -- add a label with default parameters.
@@ -604,14 +604,14 @@ public class NGUISettings
 	{
 		SetString("Atlas", NGUIEditorTools.ObjectToGUID(sp.atlas));
 		SetString("Sprite", sp.spriteName);
-		SetEnum("Sprite Type", sp.type);
-		SetEnum("Left Type", sp.leftType);
-		SetEnum("Right Type", sp.rightType);
-		SetEnum("Top Type", sp.topType);
-		SetEnum("Bottom Type", sp.bottomType);
-		SetEnum("Center Type", sp.centerType);
-		SetFloat("Fill", sp.fillAmount);
-		SetEnum("FDir", sp.fillDirection);
+		//SetEnum("Sprite Type", sp.type);
+		//SetEnum("Left Type", sp.leftType);
+		//SetEnum("Right Type", sp.rightType);
+		//SetEnum("Top Type", sp.topType);
+		//SetEnum("Bottom Type", sp.bottomType);
+		//SetEnum("Center Type", sp.centerType);
+		//SetFloat("Fill", sp.fillAmount);
+		//SetEnum("FDir", sp.fillDirection);
 	}
 
 	/// <summary>
@@ -644,20 +644,20 @@ public class NGUISettings
 	/// Paste the specified sprite's style.
 	/// </summary>
 
-	static void PasteSprite (UISprite sp, bool fully)
-	{
-		if (fully) sp.atlas = NGUIEditorTools.GUIDToObject<UIAtlas>(GetString("Atlas", null));
-		sp.spriteName = GetString("Sprite", sp.spriteName);
-		sp.type = GetEnum<UISprite.Type>("Sprite Type", sp.type);
-		sp.leftType = GetEnum<UISprite.AdvancedType>("Left Type", UISprite.AdvancedType.Sliced);
-		sp.rightType = GetEnum<UISprite.AdvancedType>("Right Type", UISprite.AdvancedType.Sliced);
-		sp.topType = GetEnum<UISprite.AdvancedType>("Top Type", UISprite.AdvancedType.Sliced);
-		sp.bottomType = GetEnum<UISprite.AdvancedType>("Bottom Type", UISprite.AdvancedType.Sliced);
-		sp.centerType = GetEnum<UISprite.AdvancedType>("Center Type", UISprite.AdvancedType.Sliced);
-		sp.fillAmount = GetFloat("Fill", sp.fillAmount);
-		sp.fillDirection = GetEnum<UISprite.FillDirection>("FDir", sp.fillDirection);
-		NGUITools.SetDirty(sp);
-	}
+	//static void PasteSprite (UISprite sp, bool fully)
+	//{
+	//	if (fully) sp.atlas = NGUIEditorTools.GUIDToObject<UIAtlas>(GetString("Atlas", null));
+	//	sp.spriteName = GetString("Sprite", sp.spriteName);
+	//	sp.type = GetEnum<UISprite.Type>("Sprite Type", sp.type);
+	//	sp.leftType = GetEnum<UISprite.AdvancedType>("Left Type", UISprite.AdvancedType.Sliced);
+	//	sp.rightType = GetEnum<UISprite.AdvancedType>("Right Type", UISprite.AdvancedType.Sliced);
+	//	sp.topType = GetEnum<UISprite.AdvancedType>("Top Type", UISprite.AdvancedType.Sliced);
+	//	sp.bottomType = GetEnum<UISprite.AdvancedType>("Bottom Type", UISprite.AdvancedType.Sliced);
+	//	sp.centerType = GetEnum<UISprite.AdvancedType>("Center Type", UISprite.AdvancedType.Sliced);
+	//	sp.fillAmount = GetFloat("Fill", sp.fillAmount);
+	//	sp.fillDirection = GetEnum<UISprite.FillDirection>("FDir", sp.fillDirection);
+	//	//NGUITools.SetDirty(sp);
+	//}
 
 	/// <summary>
 	/// Paste the specified label's style.
