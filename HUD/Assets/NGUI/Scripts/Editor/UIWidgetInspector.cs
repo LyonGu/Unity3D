@@ -660,14 +660,14 @@ public class UIWidgetInspector : UIRectEditor
 
 									if (parent != null)
 									{
-										UIGrid grid = parent.GetComponent<UIGrid>();
+										//UIGrid grid = parent.GetComponent<UIGrid>();
 
-										if (grid != null && grid.arrangement == UIGrid.Arrangement.CellSnap)
-										{
-											snapped = true;
-											if (grid.cellWidth > 0) after.x = Mathf.Round(after.x / grid.cellWidth) * grid.cellWidth;
-											if (grid.cellHeight > 0) after.y = Mathf.Round(after.y / grid.cellHeight) * grid.cellHeight;
-										}
+										//if (grid != null && grid.arrangement == UIGrid.Arrangement.CellSnap)
+										//{
+										//	snapped = true;
+										//	if (grid.cellWidth > 0) after.x = Mathf.Round(after.x / grid.cellWidth) * grid.cellWidth;
+										//	if (grid.cellHeight > 0) after.y = Mathf.Round(after.y / grid.cellHeight) * grid.cellHeight;
+										//}
 									}
 
 									if (!snapped)

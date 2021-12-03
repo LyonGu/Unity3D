@@ -121,9 +121,9 @@ public class SpriteSelector : ScriptableWizard
 							}
 							else
 							{
-								NGUIContextMenu.AddItem("Edit", false, EditSprite, sprite);
-								NGUIContextMenu.AddItem("Delete", false, DeleteSprite, sprite);
-								NGUIContextMenu.Show();
+								//NGUIContextMenu.AddItem("Edit", false, EditSprite, sprite);
+								//NGUIContextMenu.AddItem("Delete", false, DeleteSprite, sprite);
+								//NGUIContextMenu.Show();
 							}
 						}
 

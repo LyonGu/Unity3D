@@ -429,9 +429,4 @@ Protobuf-net/Logs/
 CanvasRebuildDebug/.idea/
 Protobuf-net/Temp/
 TMPMestProStudy/.idea/
-UI_Optimize/.idea/
-UI_Optimize/.vs/
-UI_Optimize/Library/
-UI_Optimize/Temp/
-UI_Optimize/obj/
-UI_Optimize/Logs/
+HUD/Temp/

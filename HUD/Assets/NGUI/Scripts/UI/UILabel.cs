@@ -1901,8 +1901,8 @@ public class UILabel : UIWidget
 
 	public void SetCurrentProgress ()
 	{
-		if (UIProgressBar.current != null)
-			text = UIProgressBar.current.value.ToString("F");
+		//if (UIProgressBar.current != null)
+		//	text = UIProgressBar.current.value.ToString("F");
 	}
 
 	/// <summary>
@@ -1912,8 +1912,8 @@ public class UILabel : UIWidget
 
 	public void SetCurrentPercent ()
 	{
-		if (UIProgressBar.current != null)
-			text = Mathf.RoundToInt(UIProgressBar.current.value * 100f) + "%";
+		//if (UIProgressBar.current != null)
+		//	text = Mathf.RoundToInt(UIProgressBar.current.value * 100f) + "%";
 	}
 
 	/// <summary>
@@ -1923,12 +1923,12 @@ public class UILabel : UIWidget
 
 	public void SetCurrentSelection ()
 	{
-		if (UIPopupList.current != null)
-		{
-			text = UIPopupList.current.isLocalized ?
-				Localization.Get(UIPopupList.current.value) :
-				UIPopupList.current.value;
-		}
+		//if (UIPopupList.current != null)
+		//{
+		//	text = UIPopupList.current.isLocalized ?
+		//		Localization.Get(UIPopupList.current.value) :
+		//		UIPopupList.current.value;
+		//}
 	}
 
 	/// <summary>

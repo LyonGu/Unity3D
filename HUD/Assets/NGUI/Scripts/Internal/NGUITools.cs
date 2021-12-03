@@ -215,12 +215,12 @@ static public class NGUITools
 
 		Camera cam;
 
-		for (int i = 0; i < UICamera.list.size; ++i)
-		{
-			cam = UICamera.list.buffer[i].cachedCamera;
-			if (cam && (cam.cullingMask & layerMask) != 0)
-				return cam;
-		}
+		//for (int i = 0; i < UICamera.list.size; ++i)
+		//{
+		//	cam = UICamera.list.buffer[i].cachedCamera;
+		//	if (cam && (cam.cullingMask & layerMask) != 0)
+		//		return cam;
+		//}
 
 		cam = Camera.main;
 		if (cam && (cam.cullingMask & layerMask) != 0) return cam;
@@ -253,57 +253,57 @@ static public class NGUITools
 
 	static public void AddWidgetCollider (GameObject go, bool considerInactive)
 	{
-		if (go != null)
-		{
-			// 3D collider
-			Collider col = go.GetComponent<Collider>();
-			BoxCollider box = col as BoxCollider;
+//		if (go != null)
+//		{
+//			// 3D collider
+//			Collider col = go.GetComponent<Collider>();
+//			BoxCollider box = col as BoxCollider;
 
-			if (box != null)
-			{
-				UpdateWidgetCollider(box, considerInactive);
-				return;
-			}
+//			if (box != null)
+//			{
+//				UpdateWidgetCollider(box, considerInactive);
+//				return;
+//			}
 
-			// Is there already another collider present? If so, do nothing.
-			if (col != null) return;
+//			// Is there already another collider present? If so, do nothing.
+//			if (col != null) return;
 
-			// 2D collider
-			BoxCollider2D box2 = go.GetComponent<BoxCollider2D>();
+//			// 2D collider
+//			BoxCollider2D box2 = go.GetComponent<BoxCollider2D>();
 
-			if (box2 != null)
-			{
-				UpdateWidgetCollider(box2, considerInactive);
-				return;
-			}
+//			if (box2 != null)
+//			{
+//				UpdateWidgetCollider(box2, considerInactive);
+//				return;
+//			}
 
-			UICamera ui = UICamera.FindCameraForLayer(go.layer);
+//			UICamera ui = UICamera.FindCameraForLayer(go.layer);
 
-			if (ui != null && (ui.eventType == UICamera.EventType.World_2D || ui.eventType == UICamera.EventType.UI_2D))
-			{
-				box2 = go.AddComponent<BoxCollider2D>();
-				box2.isTrigger = true;
-#if UNITY_EDITOR
-				UnityEditor.Undo.RegisterCreatedObjectUndo(box2, "Add Collider");
-#endif
-				UIWidget widget = go.GetComponent<UIWidget>();
-				if (widget != null) widget.autoResizeBoxCollider = true;
-				UpdateWidgetCollider(box2, considerInactive);
-				return;
-			}
-			else
-			{
-				box = go.AddComponent<BoxCollider>();
-#if UNITY_EDITOR
-				UnityEditor.Undo.RegisterCreatedObjectUndo(box, "Add Collider");
-#endif
-				box.isTrigger = true;
+//			if (ui != null && (ui.eventType == UICamera.EventType.World_2D || ui.eventType == UICamera.EventType.UI_2D))
+//			{
+//				box2 = go.AddComponent<BoxCollider2D>();
+//				box2.isTrigger = true;
+//#if UNITY_EDITOR
+//				UnityEditor.Undo.RegisterCreatedObjectUndo(box2, "Add Collider");
+//#endif
+//				UIWidget widget = go.GetComponent<UIWidget>();
+//				if (widget != null) widget.autoResizeBoxCollider = true;
+//				UpdateWidgetCollider(box2, considerInactive);
+//				return;
+//			}
+//			else
+//			{
+//				box = go.AddComponent<BoxCollider>();
+//#if UNITY_EDITOR
+//				UnityEditor.Undo.RegisterCreatedObjectUndo(box, "Add Collider");
+//#endif
+//				box.isTrigger = true;
 
-				UIWidget widget = go.GetComponent<UIWidget>();
-				if (widget != null) widget.autoResizeBoxCollider = true;
-				UpdateWidgetCollider(box, considerInactive);
-			}
-		}
+//				UIWidget widget = go.GetComponent<UIWidget>();
+//				if (widget != null) widget.autoResizeBoxCollider = true;
+//				UpdateWidgetCollider(box, considerInactive);
+//			}
+//		}
 		return;
 	}
 
@@ -744,174 +744,174 @@ static public class NGUITools
 	/// Create a new UI.
 	/// </summary>
 
-	static public UIPanel CreateUI (bool advanced3D) { return CreateUI(null, advanced3D, -1); }
+	//static public UIPanel CreateUI (bool advanced3D) { return CreateUI(null, advanced3D, -1); }
+
+	///// <summary>
+	///// Create a new UI.
+	///// </summary>
+
+	//static public UIPanel CreateUI (bool advanced3D, int layer) { return CreateUI(null, advanced3D, layer); }
 
 	/// <summary>
 	/// Create a new UI.
 	/// </summary>
 
-	static public UIPanel CreateUI (bool advanced3D, int layer) { return CreateUI(null, advanced3D, layer); }
+//	static public UIPanel CreateUI (Transform trans, bool advanced3D, int layer)
+//	{
+//		// Find the existing UI Root
+//		UIRoot root = (trans != null) ? NGUITools.FindInParents<UIRoot>(trans.gameObject) : null;
 
-	/// <summary>
-	/// Create a new UI.
-	/// </summary>
+//		if (root == null && UIRoot.list.Count > 0)
+//		{
+//			foreach (UIRoot r in UIRoot.list)
+//			{
+//				if (r.gameObject.layer == layer)
+//				{
+//					root = r;
+//					break;
+//				}
+//			}
+//		}
 
-	static public UIPanel CreateUI (Transform trans, bool advanced3D, int layer)
-	{
-		// Find the existing UI Root
-		UIRoot root = (trans != null) ? NGUITools.FindInParents<UIRoot>(trans.gameObject) : null;
+//		// Try to find an existing panel
+//		if (root == null)
+//		{
+//			for (int i = 0, imax = UIPanel.list.Count; i < imax; ++i)
+//			{
+//				UIPanel p = UIPanel.list[i];
+//				GameObject go = p.gameObject;
 
-		if (root == null && UIRoot.list.Count > 0)
-		{
-			foreach (UIRoot r in UIRoot.list)
-			{
-				if (r.gameObject.layer == layer)
-				{
-					root = r;
-					break;
-				}
-			}
-		}
+//				if (go.hideFlags == HideFlags.None && go.layer == layer)
+//				{
+//					trans.parent = p.transform;
+//					trans.localScale = Vector3.one;
+//					return p;
+//				}
+//			}
+//		}
 
-		// Try to find an existing panel
-		if (root == null)
-		{
-			for (int i = 0, imax = UIPanel.list.Count; i < imax; ++i)
-			{
-				UIPanel p = UIPanel.list[i];
-				GameObject go = p.gameObject;
+//		// If we are working with a different UI type, we need to treat it as a brand-new one instead
+//		if (root != null)
+//		{
+//			UICamera cam = root.GetComponentInChildren<UICamera>();
 
-				if (go.hideFlags == HideFlags.None && go.layer == layer)
-				{
-					trans.parent = p.transform;
-					trans.localScale = Vector3.one;
-					return p;
-				}
-			}
-		}
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//			if (cam != null && cam.camera.isOrthoGraphic == advanced3D)
+//#else
+//			if (cam != null && cam.GetComponent<Camera>().orthographic == advanced3D)
+//#endif
+//			{
+//				trans = null;
+//				root = null;
+//			}
+//		}
 
-		// If we are working with a different UI type, we need to treat it as a brand-new one instead
-		if (root != null)
-		{
-			UICamera cam = root.GetComponentInChildren<UICamera>();
+//		// If no root found, create one
+//		if (root == null)
+//		{
+//			GameObject go = NGUITools.AddChild(null, false);
+//			root = go.AddComponent<UIRoot>();
 
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-			if (cam != null && cam.camera.isOrthoGraphic == advanced3D)
-#else
-			if (cam != null && cam.GetComponent<Camera>().orthographic == advanced3D)
-#endif
-			{
-				trans = null;
-				root = null;
-			}
-		}
+//			// Automatically find the layers if none were specified
+//			if (layer == -1) layer = LayerMask.NameToLayer("UI");
+//			if (layer == -1) layer = LayerMask.NameToLayer("2D UI");
+//			go.layer = layer;
 
-		// If no root found, create one
-		if (root == null)
-		{
-			GameObject go = NGUITools.AddChild(null, false);
-			root = go.AddComponent<UIRoot>();
+//			if (advanced3D)
+//			{
+//				go.name = "UI Root (3D)";
+//				root.scalingStyle = UIRoot.Scaling.Constrained;
+//			}
+//			else
+//			{
+//				go.name = "UI Root";
+//				root.scalingStyle = UIRoot.Scaling.Flexible;
+//			}
+//		}
 
-			// Automatically find the layers if none were specified
-			if (layer == -1) layer = LayerMask.NameToLayer("UI");
-			if (layer == -1) layer = LayerMask.NameToLayer("2D UI");
-			go.layer = layer;
+//		// Find the first panel
+//		UIPanel panel = root.GetComponentInChildren<UIPanel>();
 
-			if (advanced3D)
-			{
-				go.name = "UI Root (3D)";
-				root.scalingStyle = UIRoot.Scaling.Constrained;
-			}
-			else
-			{
-				go.name = "UI Root";
-				root.scalingStyle = UIRoot.Scaling.Flexible;
-			}
-		}
+//		if (panel == null)
+//		{
+//			// Find other active cameras in the scene
+//			Camera[] cameras = NGUITools.FindActive<Camera>();
 
-		// Find the first panel
-		UIPanel panel = root.GetComponentInChildren<UIPanel>();
+//			float depth = -1f;
+//			bool colorCleared = false;
+//			int mask = (1 << root.gameObject.layer);
 
-		if (panel == null)
-		{
-			// Find other active cameras in the scene
-			Camera[] cameras = NGUITools.FindActive<Camera>();
+//			for (int i = 0; i < cameras.Length; ++i)
+//			{
+//				Camera c = cameras[i];
 
-			float depth = -1f;
-			bool colorCleared = false;
-			int mask = (1 << root.gameObject.layer);
+//				// If the color is being cleared, we won't need to
+//				if (c.clearFlags == CameraClearFlags.Color ||
+//					c.clearFlags == CameraClearFlags.Skybox)
+//					colorCleared = true;
 
-			for (int i = 0; i < cameras.Length; ++i)
-			{
-				Camera c = cameras[i];
+//				// Choose the maximum depth
+//				depth = Mathf.Max(depth, c.depth);
 
-				// If the color is being cleared, we won't need to
-				if (c.clearFlags == CameraClearFlags.Color ||
-					c.clearFlags == CameraClearFlags.Skybox)
-					colorCleared = true;
+//				// Make sure this camera can't see the UI
+//				c.cullingMask = (c.cullingMask & (~mask));
+//			}
 
-				// Choose the maximum depth
-				depth = Mathf.Max(depth, c.depth);
+//			// Create a camera that will draw the UI
+//			Camera cam = NGUITools.AddChild<Camera>(root.gameObject, false);
+//			cam.gameObject.AddComponent<UICamera>();
+//			cam.clearFlags = colorCleared ? CameraClearFlags.Depth : CameraClearFlags.Color;
+//			cam.backgroundColor = Color.grey;
+//			cam.cullingMask = mask;
+//			cam.depth = depth + 1f;
 
-				// Make sure this camera can't see the UI
-				c.cullingMask = (c.cullingMask & (~mask));
-			}
+//			if (advanced3D)
+//			{
+//				cam.nearClipPlane = 0.1f;
+//				cam.farClipPlane = 4f;
+//				cam.transform.localPosition = new Vector3(0f, 0f, -700f);
+//			}
+//			else
+//			{
+//				cam.orthographic = true;
+//				cam.orthographicSize = 1;
+//				cam.nearClipPlane = -10;
+//				cam.farClipPlane = 10;
+//			}
 
-			// Create a camera that will draw the UI
-			Camera cam = NGUITools.AddChild<Camera>(root.gameObject, false);
-			cam.gameObject.AddComponent<UICamera>();
-			cam.clearFlags = colorCleared ? CameraClearFlags.Depth : CameraClearFlags.Color;
-			cam.backgroundColor = Color.grey;
-			cam.cullingMask = mask;
-			cam.depth = depth + 1f;
+//			// Make sure there is an audio listener present
+//			AudioListener[] listeners = NGUITools.FindActive<AudioListener>();
+//			if (listeners == null || listeners.Length == 0)
+//				cam.gameObject.AddComponent<AudioListener>();
 
-			if (advanced3D)
-			{
-				cam.nearClipPlane = 0.1f;
-				cam.farClipPlane = 4f;
-				cam.transform.localPosition = new Vector3(0f, 0f, -700f);
-			}
-			else
-			{
-				cam.orthographic = true;
-				cam.orthographicSize = 1;
-				cam.nearClipPlane = -10;
-				cam.farClipPlane = 10;
-			}
+//			// Add a panel to the root
+//			panel = root.gameObject.AddComponent<UIPanel>();
+//#if UNITY_EDITOR
+//			UnityEditor.Selection.activeGameObject = panel.gameObject;
+//#endif
+//		}
 
-			// Make sure there is an audio listener present
-			AudioListener[] listeners = NGUITools.FindActive<AudioListener>();
-			if (listeners == null || listeners.Length == 0)
-				cam.gameObject.AddComponent<AudioListener>();
+//		if (trans != null)
+//		{
+//			// Find the root object
+//			while (trans.parent != null) trans = trans.parent;
 
-			// Add a panel to the root
-			panel = root.gameObject.AddComponent<UIPanel>();
-#if UNITY_EDITOR
-			UnityEditor.Selection.activeGameObject = panel.gameObject;
-#endif
-		}
-
-		if (trans != null)
-		{
-			// Find the root object
-			while (trans.parent != null) trans = trans.parent;
-
-			if (NGUITools.IsChild(trans, panel.transform))
-			{
-				// Odd hierarchy -- can't reparent
-				panel = trans.gameObject.AddComponent<UIPanel>();
-			}
-			else
-			{
-				// Reparent this root object to be a child of the panel
-				trans.parent = panel.transform;
-				trans.localScale = Vector3.one;
-				trans.localPosition = Vector3.zero;
-				SetChildLayer(panel.cachedTransform, panel.cachedGameObject.layer);
-			}
-		}
-		return panel;
-	}
+//			if (NGUITools.IsChild(trans, panel.transform))
+//			{
+//				// Odd hierarchy -- can't reparent
+//				panel = trans.gameObject.AddComponent<UIPanel>();
+//			}
+//			else
+//			{
+//				// Reparent this root object to be a child of the panel
+//				trans.parent = panel.transform;
+//				trans.localScale = Vector3.one;
+//				trans.localPosition = Vector3.zero;
+//				SetChildLayer(panel.cachedTransform, panel.cachedGameObject.layer);
+//			}
+//		}
+//		return panel;
+//	}
 
 	/// <summary>
 	/// Helper function that recursively sets all children with widgets' game objects layers to the specified value.
@@ -1336,21 +1336,21 @@ static public class NGUITools
 
 	static public void MakePixelPerfect (Transform t)
 	{
-		UIWidget w = t.GetComponent<UIWidget>();
-		if (w != null) w.MakePixelPerfect();
+//		UIWidget w = t.GetComponent<UIWidget>();
+//		if (w != null) w.MakePixelPerfect();
 
-		if (t.GetComponent<UIAnchor>() == null && t.GetComponent<UIRoot>() == null)
-		{
-#if UNITY_EDITOR
-			RegisterUndo(t, "Make Pixel-Perfect");
-#endif
-			t.localPosition = Round(t.localPosition);
-			t.localScale = Round(t.localScale);
-		}
+//		if (t.GetComponent<UIAnchor>() == null && t.GetComponent<UIRoot>() == null)
+//		{
+//#if UNITY_EDITOR
+//			RegisterUndo(t, "Make Pixel-Perfect");
+//#endif
+//			t.localPosition = Round(t.localPosition);
+//			t.localScale = Round(t.localScale);
+//		}
 
-		// Recurse into children
-		for (int i = 0, imax = t.childCount; i < imax; ++i)
-			MakePixelPerfect(t.GetChild(i));
+//		// Recurse into children
+//		for (int i = 0, imax = t.childCount; i < imax; ++i)
+//			MakePixelPerfect(t.GetChild(i));
 	}
 
 	/// <summary>

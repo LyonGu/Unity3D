@@ -504,12 +504,12 @@ public class UIPanel : UIRect
 				mClipRange = value;
 				mMatrixFrame = -1;
 
-				UIScrollView sv = GetComponent<UIScrollView>();
-				if (sv != null) sv.UpdatePosition();
-				if (onClipMove != null) onClipMove(this);
-#if UNITY_EDITOR
-				if (!Application.isPlaying) UpdateDrawCalls();
-#endif
+//				UIScrollView sv = GetComponent<UIScrollView>();
+//				if (sv != null) sv.UpdatePosition();
+//				if (onClipMove != null) onClipMove(this);
+//#if UNITY_EDITOR
+//				if (!Application.isPlaying) UpdateDrawCalls();
+//#endif
 			}
 		}
 	}
@@ -959,46 +959,46 @@ public class UIPanel : UIRect
 	/// Mark all widgets as having been changed so the draw calls get re-created.
 	/// </summary>
 
-	protected override void OnInit ()
-	{
-		if (list.Contains(this)) return;
-		base.OnInit();
-		FindParent();
+//	protected override void OnInit ()
+//	{
+//		if (list.Contains(this)) return;
+//		base.OnInit();
+//		FindParent();
 
-		// Apparently having a rigidbody helps
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
-		if (rigidbody == null && mParentPanel == null)
-#else
-		if (GetComponent<Rigidbody>() == null && mParentPanel == null)
-#endif
-		{
-			UICamera uic = (anchorCamera != null) ? mCam.GetComponent<UICamera>() : null;
+//		// Apparently having a rigidbody helps
+//#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+//		if (rigidbody == null && mParentPanel == null)
+//#else
+//		if (GetComponent<Rigidbody>() == null && mParentPanel == null)
+//#endif
+//		{
+//			UICamera uic = (anchorCamera != null) ? mCam.GetComponent<UICamera>() : null;
 
-			if (uic != null)
-			{
-				if (uic.eventType == UICamera.EventType.UI_3D || uic.eventType == UICamera.EventType.World_3D)
-				{
-					Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-					rb.isKinematic = true;
-					rb.useGravity = false;
-				}
-				// It's unclear if this helps 2D physics or not, so leaving it disabled for now.
-				// Note that when enabling this, the 'if (rigidbody == null)' statement above should be adjusted as well.
-				//else
-				//{
-				//    Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-				//    rb.isKinematic = true;
-				//}
-			}
-		}
+//			if (uic != null)
+//			{
+//				if (uic.eventType == UICamera.EventType.UI_3D || uic.eventType == UICamera.EventType.World_3D)
+//				{
+//					Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+//					rb.isKinematic = true;
+//					rb.useGravity = false;
+//				}
+//				// It's unclear if this helps 2D physics or not, so leaving it disabled for now.
+//				// Note that when enabling this, the 'if (rigidbody == null)' statement above should be adjusted as well.
+//				//else
+//				//{
+//				//    Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
+//				//    rb.isKinematic = true;
+//				//}
+//			}
+//		}
 
-		mRebuild = true;
-		mAlphaFrameID = -1;
-		mMatrixFrame = -1;
+//		mRebuild = true;
+//		mAlphaFrameID = -1;
+//		mMatrixFrame = -1;
 
-		list.Add(this);
-		list.Sort(CompareFunc);
-	}
+//		list.Add(this);
+//		list.Sort(CompareFunc);
+//	}
 
 	/// <summary>
 	/// Destroy all draw calls we've created when this script gets disabled.
@@ -1236,39 +1236,39 @@ public class UIPanel : UIRect
 
 	void UpdateSelf ()
 	{
-		mUpdateTime = RealTime.time;
+		//mUpdateTime = RealTime.time;
 
-		UpdateTransformMatrix();
-		UpdateLayers();
-		UpdateWidgets();
+		//UpdateTransformMatrix();
+		//UpdateLayers();
+		//UpdateWidgets();
 
-		if (mRebuild)
-		{
-			mRebuild = false;
-			FillAllDrawCalls();
-		}
-		else
-		{
-			for (int i = 0; i < drawCalls.Count; )
-			{
-				UIDrawCall dc = drawCalls[i];
+		//if (mRebuild)
+		//{
+		//	mRebuild = false;
+		//	FillAllDrawCalls();
+		//}
+		//else
+		//{
+		//	for (int i = 0; i < drawCalls.Count; )
+		//	{
+		//		UIDrawCall dc = drawCalls[i];
 
-				if (dc.isDirty && !FillDrawCall(dc))
-				{
-					UIDrawCall.Destroy(dc);
-					drawCalls.RemoveAt(i);
-					continue;
-				}
-				++i;
-			}
-		}
+		//		if (dc.isDirty && !FillDrawCall(dc))
+		//		{
+		//			UIDrawCall.Destroy(dc);
+		//			drawCalls.RemoveAt(i);
+		//			continue;
+		//		}
+		//		++i;
+		//	}
+		//}
 
-		if (mUpdateScroll)
-		{
-			mUpdateScroll = false;
-			UIScrollView sv = GetComponent<UIScrollView>();
-			if (sv != null) sv.UpdateScrollbars();
-		}
+		//if (mUpdateScroll)
+		//{
+		//	mUpdateScroll = false;
+		//	UIScrollView sv = GetComponent<UIScrollView>();
+		//	if (sv != null) sv.UpdateScrollbars();
+		//}
 	}
 
 	/// <summary>
@@ -1751,42 +1751,42 @@ public class UIPanel : UIRect
 
 	public bool ConstrainTargetToBounds (Transform target, ref Bounds targetBounds, bool immediate)
 	{
-		Vector3 min = targetBounds.min;
-		Vector3 max = targetBounds.max;
+		//Vector3 min = targetBounds.min;
+		//Vector3 max = targetBounds.max;
 
-		float ps = 1f;
+		//float ps = 1f;
 
-		if (mClipping == UIDrawCall.Clipping.None)
-		{
-			UIRoot rt = root;
-			if (rt != null) ps = rt.pixelSizeAdjustment;
-		}
+		//if (mClipping == UIDrawCall.Clipping.None)
+		//{
+		//	UIRoot rt = root;
+		//	if (rt != null) ps = rt.pixelSizeAdjustment;
+		//}
 
-		if (ps != 1f)
-		{
-			min /= ps;
-			max /= ps;
-		}
+		//if (ps != 1f)
+		//{
+		//	min /= ps;
+		//	max /= ps;
+		//}
 
-		Vector3 offset = CalculateConstrainOffset(min, max) * ps;
+		//Vector3 offset = CalculateConstrainOffset(min, max) * ps;
 
-		if (offset.sqrMagnitude > 0f)
-		{
-			if (immediate)
-			{
-				target.localPosition += offset;
-				targetBounds.center += offset;
-				SpringPosition sp = target.GetComponent<SpringPosition>();
-				if (sp != null) sp.enabled = false;
-			}
-			else
-			{
-				SpringPosition sp = SpringPosition.Begin(target.gameObject, target.localPosition + offset, 13f);
-				sp.ignoreTimeScale = true;
-				sp.worldSpace = false;
-			}
-			return true;
-		}
+		//if (offset.sqrMagnitude > 0f)
+		//{
+		//	if (immediate)
+		//	{
+		//		target.localPosition += offset;
+		//		targetBounds.center += offset;
+		//		SpringPosition sp = target.GetComponent<SpringPosition>();
+		//		if (sp != null) sp.enabled = false;
+		//	}
+		//	else
+		//	{
+		//		SpringPosition sp = SpringPosition.Begin(target.gameObject, target.localPosition + offset, 13f);
+		//		sp.ignoreTimeScale = true;
+		//		sp.worldSpace = false;
+		//	}
+		//	return true;
+		//}
 		return false;
 	}
 
@@ -1818,10 +1818,11 @@ public class UIPanel : UIRect
 
 	static public UIPanel Find (Transform trans, bool createIfMissing, int layer)
 	{
-		UIPanel panel = NGUITools.FindInParents<UIPanel>(trans);
-		if (panel != null) return panel;
-		while (trans.parent != null) trans = trans.parent;
-		return createIfMissing ? NGUITools.CreateUI(trans, false, layer) : null;
+		//UIPanel panel = NGUITools.FindInParents<UIPanel>(trans);
+		//if (panel != null) return panel;
+		//while (trans.parent != null) trans = trans.parent;
+		//return createIfMissing ? NGUITools.CreateUI(trans, false, layer) : null;
+		return null;
 	}
 
 	/// <summary>

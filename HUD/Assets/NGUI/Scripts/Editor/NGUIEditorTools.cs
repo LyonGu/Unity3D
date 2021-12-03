@@ -375,34 +375,35 @@ public static class NGUIEditorTools
 
 	static public GameObject SelectedRoot (bool createIfMissing)
 	{
-		GameObject go = Selection.activeGameObject;
+		//GameObject go = Selection.activeGameObject;
 
-		// Only use active objects
-		if (go != null && !NGUITools.GetActive(go)) go = null;
+		//// Only use active objects
+		//if (go != null && !NGUITools.GetActive(go)) go = null;
 
-		// Try to find a panel
-		UIPanel p = (go != null) ? NGUITools.FindInParents<UIPanel>(go) : null;
+		//// Try to find a panel
+		//UIPanel p = (go != null) ? NGUITools.FindInParents<UIPanel>(go) : null;
 
-		// No selection? Try to find the root automatically
-		if (p == null)
-		{
-			UIPanel[] panels = NGUITools.FindActive<UIPanel>();
-			if (panels.Length > 0) go = panels[0].gameObject;
-		}
+		//// No selection? Try to find the root automatically
+		//if (p == null)
+		//{
+		//	UIPanel[] panels = NGUITools.FindActive<UIPanel>();
+		//	if (panels.Length > 0) go = panels[0].gameObject;
+		//}
 
-		if (createIfMissing && go == null)
-		{
-			// No object specified -- find the first panel
-			if (go == null)
-			{
-				UIPanel panel = GameObject.FindObjectOfType(typeof(UIPanel)) as UIPanel;
-				if (panel != null) go = panel.gameObject;
-			}
+		//if (createIfMissing && go == null)
+		//{
+		//	// No object specified -- find the first panel
+		//	if (go == null)
+		//	{
+		//		UIPanel panel = GameObject.FindObjectOfType(typeof(UIPanel)) as UIPanel;
+		//		if (panel != null) go = panel.gameObject;
+		//	}
 
-			// No UI present -- create a new one
-			if (go == null) go = UICreateNewUIWizard.CreateNewUI(UICreateNewUIWizard.CameraType.Simple2D);
-		}
-		return go;
+		//	// No UI present -- create a new one
+		//	if (go == null) go = UICreateNewUIWizard.CreateNewUI(UICreateNewUIWizard.CameraType.Simple2D);
+		//}
+		//return go;
+		return null;
 	}
 
 	/// <summary>
@@ -1852,80 +1853,80 @@ public static class NGUIEditorTools
 
 	static public void ShowSpriteSelectionMenu (Vector2 screenPos)
 	{
-		List<UIWidget> widgets = NGUIEditorTools.SceneViewRaycast(screenPos);
-		List<UIWidgetContainer> containers = new List<UIWidgetContainer>();
-		List<MenuEntry> entries = new List<MenuEntry>();
-		List<UIPanel> panels = new List<UIPanel>();
+		//List<UIWidget> widgets = NGUIEditorTools.SceneViewRaycast(screenPos);
+		//List<UIWidgetContainer> containers = new List<UIWidgetContainer>();
+		//List<MenuEntry> entries = new List<MenuEntry>();
+		//List<UIPanel> panels = new List<UIPanel>();
 
-		bool divider = false;
-		UIWidget topWidget = null;
-		UIPanel topPanel = null;
+		//bool divider = false;
+		//UIWidget topWidget = null;
+		//UIPanel topPanel = null;
 
-		// Process widgets and their containers in the raycast order
-		for (int i = 0; i < widgets.Count; ++i)
-		{
-			UIWidget w = widgets[i];
-			if (topWidget == null) topWidget = w;
+		//// Process widgets and their containers in the raycast order
+		//for (int i = 0; i < widgets.Count; ++i)
+		//{
+		//	UIWidget w = widgets[i];
+		//	if (topWidget == null) topWidget = w;
 
-			UIPanel panel = w.panel;
-			if (topPanel == null) topPanel = panel;
+		//	UIPanel panel = w.panel;
+		//	if (topPanel == null) topPanel = panel;
 
-			if (panel != null && !panels.Contains(panel))
-			{
-				panels.Add(panel);
+		//	if (panel != null && !panels.Contains(panel))
+		//	{
+		//		panels.Add(panel);
 
-				if (!divider)
-				{
-					entries.Add(null);
-					divider = true;
-				}
-				entries.Add(new MenuEntry(panel.name + " (panel)", panel.gameObject));
-			}
+		//		if (!divider)
+		//		{
+		//			entries.Add(null);
+		//			divider = true;
+		//		}
+		//		entries.Add(new MenuEntry(panel.name + " (panel)", panel.gameObject));
+		//	}
 
-			UIWidgetContainer wc = NGUITools.FindInParents<UIWidgetContainer>(w.cachedGameObject);
+		//	UIWidgetContainer wc = NGUITools.FindInParents<UIWidgetContainer>(w.cachedGameObject);
 
-			// If we get a new container, we should add it to the list
-			if (wc != null && !containers.Contains(wc))
-			{
-				containers.Add(wc);
+		//	// If we get a new container, we should add it to the list
+		//	if (wc != null && !containers.Contains(wc))
+		//	{
+		//		containers.Add(wc);
 
-				// Only proceed if there is no widget on the container
-				if (wc.gameObject != w.cachedGameObject)
-				{
-					if (!divider)
-					{
-						entries.Add(null);
-						divider = true;
-					}
-					entries.Add(new MenuEntry(wc.name + " (container)", wc.gameObject));
-				}
-			}
+		//		// Only proceed if there is no widget on the container
+		//		if (wc.gameObject != w.cachedGameObject)
+		//		{
+		//			if (!divider)
+		//			{
+		//				entries.Add(null);
+		//				divider = true;
+		//			}
+		//			entries.Add(new MenuEntry(wc.name + " (container)", wc.gameObject));
+		//		}
+		//	}
 
-			string name = (i + 1 == widgets.Count) ? (w.name + " (top-most)") : w.name;
-			entries.Add(new MenuEntry(name, w.gameObject));
-			divider = false;
-		}
+		//	string name = (i + 1 == widgets.Count) ? (w.name + " (top-most)") : w.name;
+		//	entries.Add(new MenuEntry(name, w.gameObject));
+		//	divider = false;
+		//}
 
-		// Common items used by NGUI
-		NGUIContextMenu.AddCommonItems(Selection.activeGameObject);
+		//// Common items used by NGUI
+		//NGUIContextMenu.AddCommonItems(Selection.activeGameObject);
 
-		// Add widgets to the menu in the reverse order so that they are shown with the top-most widget first (on top)
-		for (int i = entries.Count; i > 0; )
-		{
-			MenuEntry ent = entries[--i];
+		//// Add widgets to the menu in the reverse order so that they are shown with the top-most widget first (on top)
+		//for (int i = entries.Count; i > 0; )
+		//{
+		//	MenuEntry ent = entries[--i];
 
-			if (ent != null)
-			{
-				NGUIContextMenu.AddItem("Select/" + ent.name, Selection.activeGameObject == ent.go,
-					delegate(object go) { Selection.activeGameObject = (GameObject)go; }, ent.go);
-			}
-			else if (!divider)
-			{
-				NGUIContextMenu.AddSeparator("Select/");
-			}
-		}
-		NGUIContextMenu.AddHelp(Selection.activeGameObject, true);
-		NGUIContextMenu.Show();
+		//	if (ent != null)
+		//	{
+		//		NGUIContextMenu.AddItem("Select/" + ent.name, Selection.activeGameObject == ent.go,
+		//			delegate(object go) { Selection.activeGameObject = (GameObject)go; }, ent.go);
+		//	}
+		//	else if (!divider)
+		//	{
+		//		NGUIContextMenu.AddSeparator("Select/");
+		//	}
+		//}
+		//NGUIContextMenu.AddHelp(Selection.activeGameObject, true);
+		//NGUIContextMenu.Show();
 	}
 	/// <summary>
 	/// Load the asset at the specified path.

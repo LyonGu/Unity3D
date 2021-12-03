@@ -478,9 +478,9 @@ public static class Localization
 		string val;
 		string[] vals;
 
-#if !UNITY_IPHONE && !UNITY_ANDROID && !UNITY_WP8 && !UNITY_BLACKBERRY
-		if (UICamera.currentScheme == UICamera.ControlScheme.Touch)
-#endif
+//#if !UNITY_IPHONE && !UNITY_ANDROID && !UNITY_WP8 && !UNITY_BLACKBERRY
+//		if (UICamera.currentScheme == UICamera.ControlScheme.Touch)
+//#endif
 		{
 			string mobKey = key + " Mobile";
 
