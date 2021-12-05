@@ -5,30 +5,25 @@ using UnityEngine.UI;
 
 public class UIProgressHelp : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
+    public Material mat;
+    public Image img;
+    [Range(0,361)]
+    public float angle = 361;
 
-    private void Start()
+    private Material targetMat;
+    private void Awake()
     {
-        //Image img = GetComponent<Image>();
-        //if (img)
-        //{
-
-        //    Vector4 uvRect = UnityEngine.Sprites.DataUtility.GetOuterUV(img.sprite);
-        //    Debug.Log($"uvRect========={uvRect.x} {uvRect.y} {uvRect.z} {uvRect.w}");
-        //    Rect originRect = img.sprite.rect;
-        //    Rect textureRect = img.sprite.textureRect;
-        //    float scaleX = textureRect.width / originRect.width;
-        //    float scaleY = textureRect.height / originRect.height;
-        //    img.material.SetVector("_UVRect", uvRect);
-        //    img.material.SetVector("_UVScale", new Vector4(scaleX, scaleY, 0, 0));
-
-
-
-        //    //img.material.SetVector("_UvRect", uvRect);
-        //}
+        targetMat = new Material(mat);
+        img.material = targetMat;
     }
 
-    public void OnEnable()
+    private void Update()
+    {
+        targetMat.SetFloat("_Angle", angle);
+    }
+
+    private void SetUVRect()
     {
         Image img = GetComponent<Image>();
         if (img)
@@ -42,10 +37,10 @@ public class UIProgressHelp : MonoBehaviour
             float scaleY = textureRect.height / originRect.height;
             img.material.SetVector("_UVRect", uvRect);
             img.material.SetVector("_UVScale", new Vector4(scaleX, scaleY, 0, 0));
-
-
-
-            //img.material.SetVector("_UvRect", uvRect);
         }
+    }
+    public void OnEnable()
+    {
+       
     }
 }
