@@ -8,8 +8,9 @@ public class UIProgressHelp : MonoBehaviour
     
     public Material mat;
     public Image img;
-    [Range(0,361)]
-    public float angle = 361;
+
+    [Range(0, 1)]
+    public float progress = 1.0f;
 
     private Material targetMat;
     private void Awake()
@@ -20,7 +21,7 @@ public class UIProgressHelp : MonoBehaviour
 
     private void Update()
     {
-        targetMat.SetFloat("_Angle", angle);
+        targetMat.SetFloat("_Angle", progress * 361.0f);
     }
 
     private void SetUVRect()

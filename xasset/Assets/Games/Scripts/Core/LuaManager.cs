@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using GameLog;
 using UnityEngine;
 using XLua;
 
@@ -66,6 +67,36 @@ namespace libx
         public static void StartLua()
         {
             _env.DoString("require 'Main'");
+        }
+
+        public static void Stop()
+        {
+            if (_env != null)
+            {
+                // GC and clear first.
+                _env.FullGc();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                _env.Tick();
+
+                // Check the unreleased reference.
+                _env.DoString(
+                    "require('util').print_func_ref_by_csharp()");
+
+                // Dispose the lua environment.
+                try
+                {
+                    _env.Dispose();
+                }
+                catch (Exception e)
+                {
+                    LogUtils.Error("Dispose the lua environment failed. " + e.ToString());
+                }
+                finally
+                {
+                    _env = null;
+                }
+            }
         }
 
 
