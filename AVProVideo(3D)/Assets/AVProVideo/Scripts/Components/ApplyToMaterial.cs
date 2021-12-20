@@ -122,7 +122,6 @@ namespace RenderHeads.Media.AVProVideo
 					if (string.IsNullOrEmpty(_texturePropertyName))
 					{
 						_material.mainTexture = texture;
-
 						if (texture != null)
 						{
 							if (requiresYFlip)

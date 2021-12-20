@@ -23,13 +23,17 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ProgressTex:
         m_Texture: {fileID: 2800000, guid: d752468072164004991fe3ce73d76d0c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ColorMask: 15
-    - _ProgressValue: 0.925
+    - _ProgressValue: 1
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0

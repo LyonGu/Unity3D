@@ -3,7 +3,8 @@
     Properties
     {
 
-        _ProgressTex("Progress Texture",2D) = "white"{}
+        [hideinInspector]
+        _MainTex ("Base (RGB)", 2D) = "white" {}
 
         _ProgressValue("Progress Value",Range(0,1)) = 0.3
 
@@ -66,7 +67,7 @@
                     float4 vertex   : POSITION;
                     float4 color    : COLOR;
                     float2 texcoord : TEXCOORD0;
-     
+
                 };
 
                 struct v2f
@@ -75,7 +76,7 @@
                     fixed4 color : COLOR;
                     float2 texcoord  : TEXCOORD0;
                     float4 worldPosition : TEXCOORD1;
-                  
+
                 };
 
                 fixed4 _Color;
@@ -96,14 +97,14 @@
                 }
 
 
-                sampler2D _ProgressTex;
+                sampler2D _MainTex;
                 half _ProgressValue;
 
                 fixed4 frag(v2f IN) : SV_Target
                 {
                     half mask = step(_ProgressValue,IN.texcoord.x);//如果IN.texcoord.x大于_ProgressValue，返回1，小于0.01返回0，用于代替if ,判断是否透明
 
-                    half4 color = (tex2D(_ProgressTex, IN.texcoord) * (1 - mask) + _TextureSampleAdd) * IN.color;
+                    half4 color = (tex2D(_MainTex, IN.texcoord) * (1 - mask) + _TextureSampleAdd) * IN.color;
 
                     #ifdef UNITY_UI_CLIP_RECT
                     color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);

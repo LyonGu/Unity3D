@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/AVProVideo/Demos/Scenes/07_Demo_Mapping3D.unity
+    guid: 18bdfcdc1227e60429aea892dfeb4354
   m_configObjects: {}

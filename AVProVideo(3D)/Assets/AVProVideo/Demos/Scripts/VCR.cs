@@ -89,16 +89,18 @@ namespace RenderHeads.Media.AVProVideo.Demos
 
 		public void OnOpenVideoFile()
  		{
-            //LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
-
-
-            var path = _videoFiles[_VideoIndex];
-            if (!path.Contains("http://"))
-            {
-                path = Application.dataPath + "/" + System.IO.Path.Combine(_folder, path);
-            }
-            LoadingPlayer.m_VideoPath = path;
+            LoadingPlayer.m_VideoPath = System.IO.Path.Combine(_folder, _videoFiles[_VideoIndex]);
             _VideoIndex = (_VideoIndex + 1) % (_videoFiles.Length);
+
+
+
+            //var path = _videoFiles[_VideoIndex];
+            //if (!path.Contains("http://"))
+            //{
+            //    path = Application.dataPath + "/" + System.IO.Path.Combine(_folder, path);
+            //}
+            //LoadingPlayer.m_VideoPath = path;
+            //_VideoIndex = (_VideoIndex + 1) % (_videoFiles.Length);
 			if (string.IsNullOrEmpty(LoadingPlayer.m_VideoPath))
 			{
 				LoadingPlayer.CloseVideo();
