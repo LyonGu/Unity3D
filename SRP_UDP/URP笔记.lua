@@ -240,6 +240,10 @@
 		总结下： DepthOnlyPass和CopyDepthPass是互斥的，
 				只要配置文件上开启了msaa，CanCopyDepth就返回false，关闭msaa就返回ture
             	所以 CopyDepthPass和 DepthOnlyPass的使用谁可以通过是否开启msaa来控制，CopyDepthPass从buffer里直接取，少了很多drawCall
+            	
+            	//开启了MSAA 这个requiresDepthCopyPass 一般返回true
+            	// 开启了MSAA ： requiresDepthPrepass 为false 、renderingData.cameraData.requiresDepthTexture 为true， createDepthTexture 为true
+            	// 会使用CopyDepthPass，设置渲染目标为RT:_CameraDepthTexture
 	}
 
 	RT应用-opaque纹理获取

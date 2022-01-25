@@ -590,6 +590,8 @@ namespace UnityEngine.Rendering.Universal
             //复制深度纹理
             // If a depth texture was created we necessarily need to copy it, otherwise we could have render it to a renderbuffer.
             // If deferred rendering path was selected, it has already made a copy.
+            //开启了MSAA 这个requiresDepthCopyPass 一般返回true 会使用CopyDepthPass 设置渲染目标为RT:_CameraDepthTexture
+            // 开启了MSAA ： requiresDepthPrepass 为false 、renderingData.cameraData.requiresDepthTexture 为true， createDepthTexture 为true
             bool requiresDepthCopyPass = !requiresDepthPrepass
                                          && renderingData.cameraData.requiresDepthTexture
                                          && createDepthTexture
