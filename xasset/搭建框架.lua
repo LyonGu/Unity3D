@@ -25,6 +25,16 @@
 	网络 (Network)
 	动作框架：使用第三方 https://kybernetik.com.au/animancer/
 
-	TODO:
+}
+
+步骤
+{
+	1 启动流程
+	2 资源管理封装
+	3 lua框架基础类
+	4 lua层ui框架
+	5 c#层ui框架
+	6 lua层场景管理
+	。。。
 
 }
