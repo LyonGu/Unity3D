@@ -186,7 +186,7 @@ namespace libx
         #endregion
     }
 
-    //主要用于加载Manifest
+    //主要用于加载Manifest.asset配置
     public class ManifestRequest : AssetRequest
     {
         private string assetName;

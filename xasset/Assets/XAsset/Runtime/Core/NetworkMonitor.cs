@@ -34,6 +34,7 @@ namespace libx
 
         private void Update()
         {
+            //0.5s检测一次
             if (_started && Time.timeSinceLevelLoad - _time >= sampleTime)
             {
                 var state = Application.internetReachability;

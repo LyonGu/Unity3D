@@ -104,8 +104,8 @@ namespace libx
         {
             //初始化downloder并绑定委托
             _downloader = gameObject.GetComponent<Downloader>();
-            _downloader.onUpdate = OnUpdate;
-            _downloader.onFinished = OnComplete;
+            _downloader.onUpdate = OnUpdate; //Downloader的Update方法里调用
+            _downloader.onFinished = OnComplete; //每个Download下载完会调用Downloader.OnFinished,所有文件都下完会调用这里OnComplete
 
             _monitor = gameObject.GetComponent<NetworkMonitor>();
             _monitor.listener = this;
@@ -116,8 +116,8 @@ namespace libx
 
             _step = Step.Wait;
 
-            Assets.baseURL = baseURL;
-            Assets.updatePath = _savePath;
+            Assets.baseURL = baseURL; //资源服务器地址
+            Assets.updatePath = _savePath; //下载后保存地址
         }
 
         //private void OnApplicationFocus(bool hasFocus)
@@ -319,9 +319,10 @@ namespace libx
                 //如果res文件存在，刷新本地文件信息
                 Versions.LoadDisk(path);
             }
-            //第一个数据是版本信息 下标从1开始是文件信息
+            //第一个数据是res 文件用于VFS的 下标从1开始是文件信息
             for (var i = 1; i < _versions.Count; i++)
             {
+                //已经是从服务器下载完成后的文件列表
                 var item = _versions[i];
                 //与本地的文件进行对比  item.name就是ab包名
                 if (Versions.IsNew(string.Format("{0}{1}", _savePath, item.name), item.len, item.hash))
@@ -371,6 +372,7 @@ namespace libx
             return string.Format("{0}{1}/{2}", baseURL, _platform, filename);
         }
 
+        
         private IEnumerator Checking()
         {
             if (!Directory.Exists(_savePath))
@@ -381,14 +383,14 @@ namespace libx
             //询问是否开启VFS
             if (_step == Step.Wait)
             {
-                yield return RequestVFS();
+                yield return RequestVFS(); //协程嵌套协程，父协程要等子协程做完才会继续往下走逻辑
                 _step = Step.Copy;
             }
 
             if (_step == Step.Copy)
             {
                 //加载本地版本信息文件，如果StreamingAssets下面有资源会询问是否复制资源
-                yield return RequestCopy();
+                yield return RequestCopy(); //协程嵌套协程，父协程要等子协程做完才会继续往下走逻辑
             }
 
             if (_step == Step.Coping)
@@ -403,7 +405,7 @@ namespace libx
             if (_step == Step.Versions)
             {
                 //请求并加载云端版本信息文件
-                yield return RequestVersions();
+                yield return RequestVersions(); //协程嵌套协程，父协程要等子协程做完才会继续往下走逻辑
                
             }
 
@@ -419,6 +421,7 @@ namespace libx
                     if (mb.isOk)
                     {
                         //开始正式下载资源，并记录当前的下载进度，用于做断点续传
+                        //所有文件下载完后，会调用 OnComplete 方法
                         _downloader.StartDownload();
                         _step = Step.Download;
                     }
@@ -435,7 +438,7 @@ namespace libx
             } 
         }
 
-        //向服务器请求版本信息
+        //向服务器请求版本信息，并记录需要下载的文件列表
         private IEnumerator RequestVersions()
         {
             OnMessage("正在获取版本信息...");
@@ -469,7 +472,7 @@ namespace libx
                 yield return mb;
                 if (mb.isOk)
                 {
-                    StartUpdate();
+                    StartUpdate();//重走一遍热更流程
                 }
                 else
                 {
@@ -479,10 +482,11 @@ namespace libx
             } 
             try
             {
+                //返回对应的版本的所有文件列表数据 ==》 ver文件里记录了所有的bundle文件的名字
                 _versions = Versions.LoadVersions(localVerPath, true); //localVerPath 已经从服务器下载完成的版本文件 版本文件里有需要下载的文件列表数据
                 if (_versions.Count > 0)
                 {
-                    PrepareDownloads();//检测是否有需要下载的
+                    PrepareDownloads();//检测是否有需要下载的，需要下载的文件会加入到待下载列表里
                     _step = Step.Prepared;
                 }
                 else
@@ -526,7 +530,11 @@ namespace libx
 
         private IEnumerator RequestCopy()
         {
+            //加载本地版本号
+            //_savePath = string.Format("{0}/DLC/", Application.persistentDataPath);
             var v1 = Versions.LoadVersion(_savePath + Versions.Filename);
+            
+            //读取StreamingAssets下版本文件，
             var basePath = GetStreamingAssetsPath() + "/";
             var request = UnityWebRequest.Get(basePath + Versions.Filename);
             var path = _savePath + Versions.Filename + ".tmp";
@@ -534,6 +542,7 @@ namespace libx
             yield return request.SendWebRequest();
             if (string.IsNullOrEmpty(request.error))
             {
+                //下载完成没有错误，远程版本号
                 var v2 = Versions.LoadVersion(path);
                 if (v2 > v1)
                 {
@@ -588,12 +597,14 @@ namespace libx
 
         private void OnComplete()
         {
+            //热更新完成或者不需要热更新
             if (enableVFS)
             {
                 var dataPath = _savePath + Versions.Dataname;
                 var downloads = _downloader.downloads;
                 if (downloads.Count > 0 && File.Exists(dataPath))
                 {
+                    //执行了热更新逻辑
                     OnMessage("更新本地版本信息");
                     var files = new List<VFile>(downloads.Count);
                     foreach (var download in downloads)
@@ -609,6 +620,7 @@ namespace libx
                     var file = files[0];
                     if (!file.name.Equals(Versions.Dataname))
                     {
+                        //TODO  ？？
                         Versions.UpdateDisk(dataPath, files);
                     }
                 }
@@ -646,8 +658,10 @@ namespace libx
                 //value：对应的bundleName
              */
             
-            var init = Assets.Initialize(); //
-            yield return init;
+            //返回ManifestRequest也是一个IEnumerator
+            //MoveNext返回false才会退出协程
+            var init = Assets.Initialize(); 
+            yield return init; //这里会等待ManifestRequest完成才会继续往下走
             if (string.IsNullOrEmpty(init.error))
             {
                 //添加搜索路径

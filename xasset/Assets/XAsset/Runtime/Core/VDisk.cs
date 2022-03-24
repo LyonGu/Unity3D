@@ -39,7 +39,8 @@ namespace libx
 		public long id { get; set; }
 
 		public long len { get; set; }
-
+		
+		//bundle文件名字
 		public string name { get; set; }
 
 		public long offset { get; set; }
@@ -123,7 +124,7 @@ namespace libx
 
 			name = path;
 			using (var reader = new BinaryReader (File.OpenRead (path))) {
-				var count = reader.ReadInt32 ();
+				var count = reader.ReadInt32 (); //文件总数
 				for (var i = 0; i < count; i++) {
 					var file = new VFile { id = i };
 					file.Deserialize (reader); //从res文件里读取每个文件的信息

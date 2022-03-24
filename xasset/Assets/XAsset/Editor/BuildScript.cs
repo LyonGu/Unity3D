@@ -189,7 +189,7 @@ namespace libx
             //使用LZ4压缩格式
             /*
              LZMA ==》对整个ab包的字节数组进行压缩
-`````````````LZ4 ==》对单独的Assets的字节进行压缩
+			 LZ4 ==》对单独的Assets的字节进行压缩
 
 
             AssetBundle.LoadFromFile==>加载LZ4的ab包，API将只加载AssetBundle的头部，并将剩余的数据留在磁盘上。
@@ -200,6 +200,7 @@ namespace libx
 
 
 			var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
+			//获取打包规则
 			var rules = GetBuildRules ();
 			var builds = rules.GetBuilds ();
             //打不同的ab包
@@ -208,7 +209,7 @@ namespace libx
 				return;
 			}
 
-            //刷新Manifest.assets文件
+            //刷新Manifest.assets文件，最后也会打成ab包
             var manifest = GetManifest();
             var dirs = new List<string>();
             var assets = new List<AssetRef>();
@@ -280,7 +281,7 @@ namespace libx
                 }
             };
 
-            //打manifest的ab包 构建AssetBundleBuild数组
+            //打manifest.asset的ab包 构建AssetBundleBuild数组
             BuildPipeline.BuildAssetBundles(outputPath, builds, options, targetPlatform);
             ArrayUtility.Add(ref bundles, manifestBundleName);
 

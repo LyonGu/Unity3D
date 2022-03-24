@@ -47,70 +47,77 @@ namespace libx
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternText);
         }
-
+        
+        //打包的时候 文件夹下每个prefab会单独打ab包
         [MenuItem("Assets/Apply Rule/Prefab", false, 1)]
         private static void ApplyRulePrefab()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternPrefab);
         }
-
+    
+        //打包的时候 文件夹下每个png会单独打ab包
         [MenuItem("Assets/Apply Rule/Png", false, 1)]
         private static void ApplyRulePng()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternPng);
         }
-
+        
+        //打包的时候 文件夹下每个Material会单独打ab包
         [MenuItem("Assets/Apply Rule/Material", false, 1)]
         private static void ApplyRuleMaterial()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternMaterial);
         }
-
+        
+        //打包的时候 文件夹下每个Controller会单独打ab包
         [MenuItem("Assets/Apply Rule/Controller", false, 1)]
         private static void ApplyRuleController()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternController);
         }
-
+        
+        //打包的时候 文件夹下每个AnimationClip会单独打ab包
         [MenuItem("Assets/Apply Rule/AnimationClip", false, 1)]
         private static void ApplyRuleAnimationClip()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternAnimationClip);
         }
-
+        
+        //打包的时候 文件夹下每个TimeLine会单独打ab包
         [MenuItem("Assets/Apply Rule/TimeLine", false, 1)]
         private static void ApplyRuleTimeLine()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternTimeLine);
         }
-
+        //打包的时候 文件夹下每个Shader会单独打ab包
         [MenuItem("Assets/Apply Rule/Shader", false, 1)]
         private static void ApplyRuleShader()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternShader);
         }
-
+        
+        //打包的时候 文件夹下每个Asset会单独打ab包
         [MenuItem("Assets/Apply Rule/Asset", false, 1)]
         private static void ApplyRuleAsset()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternAsset);
         }
-
+        //打包的时候 文件夹下每个Scene会单独打ab包
         [MenuItem("Assets/Apply Rule/Scene", false, 1)]
         private static void ApplyRuleScene()
         {
             var rules = BuildScript.GetBuildRules();
             AddRulesForSelection(rules, rules.searchPatternScene);
         }
-
+        //打包的时候 每个文件夹会单独打ab包
         [MenuItem("Assets/Apply Rule/Directory", false, 1)]
         private static void ApplyRuleDir()
         {

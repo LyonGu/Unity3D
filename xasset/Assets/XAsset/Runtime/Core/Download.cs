@@ -75,7 +75,7 @@ namespace libx
         {
             get
             { 
-                var dir = Path.GetDirectoryName(savePath);
+                var dir = Path.GetDirectoryName(savePath); //savePath是包含文件名字的
                 string tPath = string.Format("{0}/{1}", dir, hash);
                 return tPath;
             }
@@ -114,7 +114,7 @@ namespace libx
                 Complete();
                 return true;
             }
-            //每次接收到数据都往_stream里写
+            //每次接收到数据都往文件里写
             _stream.Write(buffer, 0, dataLength);
             position += dataLength;
             return _running;

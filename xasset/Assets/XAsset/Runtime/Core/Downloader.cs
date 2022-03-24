@@ -92,7 +92,7 @@ namespace libx
             _lastTime = 0;
             _started = true;
             _downloadIndex = _finishedIndex;
-            var max = Math.Min(_downloads.Count, maxDownloads);
+            var max = Math.Min(_downloads.Count, maxDownloads); //最大三个
             for (var i = _finishedIndex; i < max; i++)
             {
                 var item = _downloads[i];  //把数据从_downloads列表放入_tostart列表中 update方法里会检测_tostart列表
@@ -143,10 +143,10 @@ namespace libx
                 name = filename,
                 hash = hash,
                 len = len,
-                savePath = savePath,
-                completed = OnFinished
+                savePath = savePath, //_savePath = string.Format("{0}/DLC/", Application.persistentDataPath) + item.name
+                completed = OnFinished  //单个文件下载完回调
             };
-            _downloads.Add(download);
+            _downloads.Add(download); //加入待下载列表
             var info = new FileInfo(download.tempPath); //判断临时文件是否存在
             if (info.Exists)
             {
@@ -162,11 +162,12 @@ namespace libx
             //size 本地所有文件下载总和
         }
 
+        //单个文件下载完成后会调用到这里
         private void OnFinished(Download download)
         {
             if (_downloadIndex < _downloads.Count) 
             {
-                //为什么这里又要加进去？？ 异常了
+                //因为Restart里设置了最大下载量，每个文件下完之后继续把后续文件加入到_tostart里，Update方法里继续遍历
                 _tostart.Add(_downloads[_downloadIndex]);
                 _downloadIndex++;    
             } 
@@ -174,9 +175,11 @@ namespace libx
             Debug.Log(string.Format("OnFinished:{0}, {1}", _finishedIndex, _downloads.Count));
             if (_finishedIndex != downloads.Count)
                 return;
+            
+            //所有文件下载完毕
             if (onFinished != null)
             {
-                //所有文件下载完毕
+                //所有文件下载完毕，执行业务层回调
                 onFinished.Invoke(); //Updater.OnComplete
             } 
             _started = false;
@@ -220,25 +223,26 @@ namespace libx
                 for (var i = 0; i < Math.Min(maxDownloads, _tostart.Count); i++)
                 {
                     var item = _tostart[i]; //Download对象
-                    item.Start();  //开始每一个任务
+                    item.Start();  //开始每一个任务下载
                     _tostart.RemoveAt(i);  //从开始列表里移除，加入到正在进行中列表里
                     _progressing.Add(item);
                     i--;
                 }
             }
-
+        
             for (var index = 0; index < _progressing.Count; index++)
             {
                 var download = _progressing[index];
                 download.Update(); //检测下载中是否有异常 出现异常怎么办?
-                if (!download.finished)
+                if (!download.finished) //finished字段在下载完成后会置为true
                     continue;
-                _progressing.RemoveAt(index); //下载完从_progressing列表里删除
+                _progressing.RemoveAt(index); //下载完从_progressing列表里删除，边遍历边删除
                 index--;
             }
 
-            position = GetDownloadSize(); 
+            position = GetDownloadSize(); //获取已下载大小
             
+            //0.5秒更新一次
             var elapsed = Time.realtimeSinceStartup - _startTime;
             if (elapsed - _lastTime < sampleTime)
                 return;
@@ -247,7 +251,7 @@ namespace libx
             speed = (position - _lastSize) / deltaTime;
             if (onUpdate != null)
             {
-                //更新进度UI
+                //更新进度UI， size为总下载大小
                 onUpdate(position, size, speed);
             }
             

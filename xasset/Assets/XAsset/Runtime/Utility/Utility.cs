@@ -31,7 +31,7 @@ namespace libx
 
         public static string GetCRC32Hash(Stream input)
         {
-            var data = crc32.ComputeHash(input);
+            var data = crc32.ComputeHash(input); //返回一个byte数组
             return ToHash(data);
         }
 

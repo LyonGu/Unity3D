@@ -52,8 +52,8 @@ namespace libx
     [Serializable]
     public class RuleBundle
     {
-        public string name;
-        public string[] assets;
+        public string name; //bundleName
+        public string[] assets;//文件列表
     }
 
     [Serializable]
@@ -201,8 +201,8 @@ namespace libx
             {
                 builds.Add(new AssetBundleBuild
                 {
-                    assetNames = bundle.assets,
-                    assetBundleName = bundle.name
+                    assetNames = bundle.assets, //文件列表
+                    assetBundleName = bundle.name //bundle名字
                 });
             }
 
@@ -252,6 +252,8 @@ namespace libx
             {
                 //重复资源
                 string bundleName;
+                
+                //asset 对应的bundle名字
                 _asset2Bundles.TryGetValue(asset, out bundleName);
                 if (string.IsNullOrEmpty(bundleName))
                 {
@@ -348,7 +350,7 @@ namespace libx
                 if (assetPaths.Exists(IsScene) && !assetPaths.TrueForAll(IsScene))
                     _conflicted.Add(bundle, assetPaths.ToArray());
 
-                //AssetDatabase.GetDependencies ==> 返回文件依赖项，第二个参数为true的话连间接依赖也能获取
+                //AssetDatabase.GetDependencies ==> 返回文件依赖项列表（具体的文件列表不是bundle），第二个参数为true的话连间接依赖也能获取
                 var dependencies = AssetDatabase.GetDependencies(assetPaths.ToArray(), true);
                 if (dependencies.Length > 0)
                     foreach (var asset in dependencies)

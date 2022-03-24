@@ -109,6 +109,7 @@ namespace libx
                 runtimeMode, basePath, updatePath));
             
             //ManifestRequest 利用ManifestRequest去加载一个对应的bundle
+            //主要用于加载Manifest.asset配置
             var request = new ManifestRequest {name = ManifestAsset};
             AddAssetRequest(request);
             return request;

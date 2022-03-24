@@ -95,6 +95,7 @@ namespace libx
 			var disk = new VDisk (); 
 			foreach (var file in bundles) {
 				using (var fs = File.OpenRead (outputPath + "/" + file)) {
+					//file其实就是bundle文件的名字
 					disk.AddFile (file, fs.Length, Utility.GetCRC32Hash (fs));
 				}
 			} 
@@ -104,9 +105,11 @@ namespace libx
 
             //VFS 相关逻辑
 			using (var stream = File.OpenWrite (path)) {
+				//版本文件记录
 				var writer = new BinaryWriter (stream);
 				writer.Write (version);
 				writer.Write (disk.files.Count + 1);
+				//res文件记录，用于开启VFS下载
 				using (var fs = File.OpenRead (dataPath)) {
 					var file = new VFile { name = Dataname, len = fs.Length, hash = Utility.GetCRC32Hash (fs) };
 					file.Serialize (writer);
@@ -189,6 +192,7 @@ namespace libx
 			VFile file;
 			var key = Path.GetFileName (path);
 			if (_baseData.TryGetValue (key, out file)) {
+				//res文件，本地文件长度和哈希值都与服务器记录的相等，就不用更新
 				if (key.Equals (Dataname) ||
 				    file.len == len && file.hash.Equals (hash, StringComparison.OrdinalIgnoreCase)) {
 					return false;
