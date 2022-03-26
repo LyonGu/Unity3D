@@ -203,8 +203,9 @@ namespace libx
                 if (loadState == LoadState.Init) return 0;
 
                 if (request == null) return 1;
-
-                return request.progress;
+                
+                //这里最后调用到的时BundleRequestAsync.progress,调用的时Unity自己封装的AssetBundleCreateRequest.progress
+                return request.progress; 
             }
         }
 

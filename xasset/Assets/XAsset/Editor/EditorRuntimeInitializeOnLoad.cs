@@ -52,6 +52,9 @@ namespace libx
             } 
             foreach (var rule in rules.rules)
             {
+                //把rule文件下，所有scene文件都自动构建到Build InScene中
+                //Build InScene中的Scene列表只是会在打包的时候自动构建进去
+                //SceneManager加载场景跟是否在Build InScene中【没有关系】
                 if (rule.searchPattern.Contains("*.unity"))
                 {
                     assets.AddRange(rule.GetAssets());

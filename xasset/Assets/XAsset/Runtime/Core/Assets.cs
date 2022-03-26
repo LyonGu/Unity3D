@@ -125,6 +125,7 @@ namespace libx
 
         private static SceneAssetRequest _runningScene;
         
+        //异步加载scene
         public static SceneAssetRequest LoadSceneAsync(string path, bool additive)
         {
             if (string.IsNullOrEmpty(path))
@@ -230,8 +231,9 @@ namespace libx
                     _assetToBundles[path] = bundles[item.bundle].name;
                     
                     string flieName = string.Intern(item.name);
-                    int index = flieName.IndexOf('.');
-                    flieName = flieName.Substring(0, index); //去除后缀名
+                    // int index = flieName.IndexOf('.');
+                    // flieName = flieName.Substring(0, index); //去除后缀名
+                   flieName = Path.GetFileNameWithoutExtension(flieName);
                     if (!_assetNameToPath.ContainsKey(flieName))
                     {
                         _assetNameToPath.Add(flieName,path);
