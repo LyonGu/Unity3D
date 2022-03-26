@@ -246,7 +246,7 @@ namespace libx
             }
         }
         
-        //所有AssetRequest的dictionary
+        //所有AssetRequest的dictionary  <RequestName, AssetRequest> 其实可以用id才存
         private static Dictionary<string, AssetRequest> _assets = new Dictionary<string, AssetRequest>();
 
         private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assetsRequest

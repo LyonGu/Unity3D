@@ -605,6 +605,7 @@ namespace libx
 
             if (_request.isDone)
             {
+                //场景异步加载完毕 _request = SceneManager.LoadSceneAsync
                 loadState = LoadState.Loaded;
                 return false;
             }
