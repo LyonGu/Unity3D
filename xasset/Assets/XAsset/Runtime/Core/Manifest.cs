@@ -32,9 +32,9 @@ namespace libx
     [Serializable]
     public class AssetRef
     {
-        public string name;
-        public int bundle;
-        public int dir;
+        public string name; //文件名字
+        public int bundle;//对应bundle下标
+        public int dir;//文件位置所在文件夹下标
     }
 
     [Serializable]

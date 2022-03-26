@@ -138,6 +138,7 @@ namespace libx
             var asset = new SceneAssetRequestAsync(path, additive);
             if (! additive)
             {
+                //释放上一个场景
                 if (_runningScene != null)
                 {
                     _runningScene.Release();;
@@ -149,7 +150,7 @@ namespace libx
             asset.Load();
             //资源引用计数
             asset.Retain();
-            _scenes.Add(asset);
+            _scenes.Add(asset); //放入场景加载列表
             Log(string.Format("LoadScene:{0}", path));
             return asset;
         }
@@ -200,6 +201,8 @@ namespace libx
             _activeVariants.AddRange(manifest.activeVariants); 
             
             /*
+                bundle名字是利用md5算法把文件路径转成hash值，当做bundleName
+                
                 manifest.dirs = dirs.ToArray();  //文件对应文件夹信息
                 manifest.assets = assets.ToArray();  // //bundle下标，对应文件夹下标，文件名字
                 manifest.bundles = bundleRefs.ToArray(); //bundle的信息（名字，大小，hash值，依赖项，文件夹下标）
@@ -220,6 +223,7 @@ namespace libx
             foreach (var item in assets)
             {
                 var path = string.Format("{0}/{1}", dirs[item.dir], item.name);
+                //item.bundle只是一个下标
                 if (item.bundle >= 0 && item.bundle < bundles.Length)
                 {
 //                    Debug.Log($"_assetToBundles path==={path}  name = {bundles[item.bundle].name}");
@@ -227,7 +231,7 @@ namespace libx
                     
                     string flieName = string.Intern(item.name);
                     int index = flieName.IndexOf('.');
-                    flieName = flieName.Substring(0, index);
+                    flieName = flieName.Substring(0, index); //去除后缀名
                     if (!_assetNameToPath.ContainsKey(flieName))
                     {
                         _assetNameToPath.Add(flieName,path);
@@ -305,7 +309,7 @@ namespace libx
         {
             //放入列表里，Update不断遍历状态，并且调用不同request的load方法
             _assets.Add(request.name, request);
-            _loadingAssets.Add(request);
+            _loadingAssets.Add(request); //正在下载列表，调用requrest的Update方法
             request.Load();
         }
 
@@ -466,27 +470,27 @@ namespace libx
             assetBundleName = RemapVariantName(assetBundleName);
             
             //得到加载路径，persitantpath
-            var url = GetDataPath(assetBundleName) + assetBundleName;
+            var path = GetDataPath(assetBundleName) + assetBundleName;
 
             BundleRequest bundle;
             //判断对应的bundle是否加载过
-            if (_bundles.TryGetValue(url, out bundle))
+            if (_bundles.TryGetValue(path, out bundle))
             {
                 bundle.Retain();
                 _loadingBundles.Add(bundle); //为什么加载过的还要放进loading列表里？？防止同一帧加载多个，然后update里用状态判断
                 return bundle;
             }
-
-            if (url.StartsWith("http://", StringComparison.Ordinal) ||
-                url.StartsWith("https://", StringComparison.Ordinal) ||
-                url.StartsWith("file://", StringComparison.Ordinal) ||
-                url.StartsWith("ftp://", StringComparison.Ordinal))
+            //bundle未加载过
+            if (path.StartsWith("http://", StringComparison.Ordinal) ||
+                path.StartsWith("https://", StringComparison.Ordinal) ||
+                path.StartsWith("file://", StringComparison.Ordinal) ||
+                path.StartsWith("ftp://", StringComparison.Ordinal))
                 bundle = new WebBundleRequest(); //加载网络Bundle
             else
                 bundle = asyncMode ? new BundleRequestAsync() : new BundleRequest();
 
-            bundle.name = url;
-            _bundles.Add(url, bundle);
+            bundle.name = path;
+            _bundles.Add(path, bundle);
 
             if (MAX_BUNDLES_PERFRAME > 0 && (bundle is BundleRequestAsync || bundle is WebBundleRequest))
             {
@@ -496,7 +500,7 @@ namespace libx
             {
                 bundle.Load();
                 _loadingBundles.Add(bundle); //加入需要加载的bundle列表
-                Log("LoadBundle: " + url);
+                Log("LoadBundle: " + path);
             } 
 
             bundle.Retain();

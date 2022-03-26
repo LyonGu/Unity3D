@@ -51,7 +51,7 @@ namespace libx
         public Type assetType;
 
         public Action<AssetRequest> completed;
-        public string name;
+        public string name; //资源路径
 
         public AssetRequest()
         {
@@ -67,7 +67,7 @@ namespace libx
                 _loadState = value;
                 if (value == LoadState.Loaded)
                 {
-                    Complete(); //如果外部传入回调，会调用回调
+                    Complete(); //如果外部传入回调，会调用回调到业务层
                 }
             }
         }
@@ -210,9 +210,10 @@ namespace libx
 
         internal override void Load()
         {
-            assetName = Path.GetFileName(name);
+            assetName = Path.GetFileName(name); //name = "Assets/Manifest.asset"
             if (Assets.runtimeMode)
             {
+                //bundle的名字为manifest.unity3d
                 var assetBundleName = assetName.Replace(".asset", ".unity3d").ToLower();
                 //加载对应bundle  这个其实是一个BundleRequestAsync
                 request = Assets.LoadBundleAsync(assetBundleName);
@@ -239,20 +240,21 @@ namespace libx
 
             if (request.isDone)
             {
+                //对应的bundle加载完毕 //bundle的名字为manifest.unity3d
                 if (request.assetBundle == null)
                 {
                     error = "assetBundle == null";
                 }
                 else
                 {
-                    //ab包加载完毕，加载对应Manifest
+                    //ab包加载完毕，加载对应asset，其实就是Manifest.asset配置文件
                     var manifest = request.assetBundle.LoadAsset<Manifest>(assetName);
                     if (manifest == null)
                         error = "manifest == null";
                     else
                         Assets.OnLoadManifest(manifest); //记录bundle的依赖关系以及asset和bundle的对应关系
                 }
-                //设置加载状态为 LoadState.Loaded
+                //设置加载状态为 LoadState.Loaded,会从Assets._loadingAssets列表里删除
                 loadState = LoadState.Loaded;
                 return false;
             }
@@ -384,6 +386,7 @@ namespace libx
             {
                 //判断对应的bundle是否加载完成
                 if (!BundleRequest.isDone) return true;
+                //加载bundle出现错误直接设置加载完成，返回false会从Assets的_loadingBundles列表里移除
                 if (OnError(BundleRequest)) return false;
                 
                 //判断对应bundle的依赖项是否加载完成
@@ -465,7 +468,7 @@ namespace libx
         public SceneAssetRequest(string path, bool addictive)
         {
             name = path;
-            Assets.GetAssetBundleName(path, out assetBundleName);
+            Assets.GetAssetBundleName(path, out assetBundleName); //拿到对应的bundle名字
             sceneName = Path.GetFileNameWithoutExtension(name);
             loadSceneMode = addictive ? LoadSceneMode.Additive : LoadSceneMode.Single;
         }
@@ -568,6 +571,7 @@ namespace libx
 
         internal override bool Update()
         {
+            //调用的是顶层基类AssetRequest的Update方法
             if (!base.Update()) return false;
 
             if (loadState == LoadState.Init) return true;
@@ -627,7 +631,9 @@ namespace libx
         {
             if (!string.IsNullOrEmpty(assetBundleName))
             {
+                //加载对应bundle，会加入到Assets._loadingBundles列表里，Assets.Update里循环
                 BundleRequest = Assets.LoadBundleAsync(assetBundleName);
+                //加载依赖bundle
                 var bundles = Assets.GetAllDependencies(assetBundleName);
                 foreach (var item in bundles) children.Add(Assets.LoadBundleAsync(item));
                 loadState = LoadState.LoadAssetBundle;

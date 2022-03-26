@@ -107,14 +107,17 @@ namespace libx
 			using (var stream = File.OpenWrite (path)) {
 				//版本文件记录
 				var writer = new BinaryWriter (stream);
+				//往ver文件里写入版本号以及文件总数量
 				writer.Write (version);
 				writer.Write (disk.files.Count + 1);
 				//res文件记录，用于开启VFS下载
 				using (var fs = File.OpenRead (dataPath)) {
 					var file = new VFile { name = Dataname, len = fs.Length, hash = Utility.GetCRC32Hash (fs) };
+					//往ver文件里写入res信息{文件名字，文件长度，内容哈希值}
 					file.Serialize (writer);
 				} 
 				foreach (var file in disk.files) {
+					//往ver文件里写入单个bundle信息{文件名字，文件长度，内容哈希值}
 					file.Serialize (writer);
 				}
 			}
