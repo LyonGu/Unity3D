@@ -49,7 +49,9 @@ namespace libx
 		public const string Filename = "ver";
 		public static  readonly  VerifyBy verifyBy = VerifyBy.Hash;
 		private static readonly VDisk _disk = new VDisk ();
+		//服务器文件列表信息 LoadVersions里会处理
 		private static readonly Dictionary<string, VFile> _updateData = new Dictionary<string, VFile> ();
+		//本地文件列表信息 streamAssets文件夹
 		private static readonly Dictionary<string, VFile> _baseData = new Dictionary<string, VFile> ();
 
 		public static AssetBundle LoadAssetBundleFromFile (string url)
@@ -83,10 +85,12 @@ namespace libx
         //构建版本信息
         public static void BuildVersions (string outputPath, string[] bundles, int version)
 		{
+			//BuildScript.outputPath + "/" + "ver"
 			var path = outputPath + "/" + Filename;
 			if (File.Exists (path)) {
 				File.Delete (path);
 			} 
+			//BuildScript.outputPath + "/" + "res"
 			var dataPath = outputPath + "/" + Dataname;
 			if (File.Exists (dataPath)) {
 				File.Delete (dataPath);
@@ -101,11 +105,12 @@ namespace libx
 			} 
 
 			disk.name = dataPath;
-			disk.Save ();   
+			//把files存储的所有的VFile文件相关信息写入res文件中，并通过WriteFile把文件具体内容写到res文件中
+			disk.Save ();
 
             //VFS 相关逻辑
 			using (var stream = File.OpenWrite (path)) {
-				//版本文件记录
+				//版本记录文件
 				var writer = new BinaryWriter (stream);
 				//往ver文件里写入版本号以及文件总数量
 				writer.Write (version);
@@ -121,8 +126,35 @@ namespace libx
 					file.Serialize (writer);
 				}
 			}
+			
+			/*
+			 * 这一步后，res文件和ver文件
+			 *
+			 * res文件内容：先把文件信息存储完再存储文件内容
+			 * {
+			 * 	  文件总数量
+			 * 	  bundle1名字，bundle1文件大小，bundel1内容hash值，
+			 * 	  bundle2名字，bundle2文件大小，bundel2内容hash值，
+			 * 	  bundle3名字，bundle3文件大小，bundel3内容hash值，
+			 * 	  ......
+			 * 	  bundle1内容，bundle2内容，bundle2内容，
+			 * }
+			 *
+			 * ver文件内容
+			 * {
+			 * 		当前版本号
+			 * 		文件总数量
+			 * 		res文件名字，res文件长度，res内容hash值
+			 * 		bundle1名字，bundle1文件大小，bundel1内容hash值，
+			 * 	  	bundle2名字，bundle2文件大小，bundel2内容hash值，
+			 * 	  	bundle3名字，bundle3文件大小，bundel3内容hash值，
+			 * 		......
+			 * }
+			 * 
+			 */
 		}
-
+		
+        //加载版本号
 		public static int LoadVersion (string filename)
 		{
 			if (!File.Exists (filename))
@@ -131,7 +163,7 @@ namespace libx
 			{
 				using (var stream = File.OpenRead (filename)) {
 					var reader = new BinaryReader (stream);
-					return reader.ReadInt32 ();
+					return reader.ReadInt32 (); //ver文件里头4个字节记录的是版本号
 				}
 			}
 			catch (Exception e)
@@ -141,6 +173,12 @@ namespace libx
 			} 
 		}
         //加载版本信息 返回对应的版本的所有文件列表数据
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename">一般是ver文件</param>
+        /// <param name="update"></param>
+        /// <returns></returns>
         public static List<VFile> LoadVersions (string filename, bool update = false)
 		{
             var rootDir = Path.GetDirectoryName(filename);
@@ -150,13 +188,14 @@ namespace libx
 				var reader = new BinaryReader (stream); //二进制读取
 				var list = new List<VFile> ();
 				var ver = reader.ReadInt32 (); //第一个4个字节为版本号
-				Debug.Log ("LoadVersions:" + ver); //第二个4个字节为文件数量
-                var count = reader.ReadInt32 ();
+				Debug.Log ("LoadVersions:" + ver); 
+                var count = reader.ReadInt32 (); //第二个4个字节为文件数量,包含了res文件
 				for (var i = 0; i < count; i++) {
-                    //构建VFile信息：文件名字，文件大小，哈希值
+                    //根据ver文件信息重新构建VFile信息：文件名字，文件大小，文件内容对应哈希值
 					var version = new VFile ();
 					version.Deserialize (reader);
 					list.Add (version);
+					//<bundle名字，VFile>
 					data [version.name] = version;
                     var dir = string.Format("{0}/{1}", rootDir, Path.GetDirectoryName(version.name));
                     if (! Directory.Exists(dir))
@@ -167,12 +206,18 @@ namespace libx
 				return list;
 			}
 		} 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="savePath">res本地文件，Application.persistentDataPath</param>
+        /// <param name="newFiles">更新过的文件信息</param>
 		public static void UpdateDisk(string savePath, List<VFile> newFiles)
 		{
 			var saveFiles = new List<VFile> ();
-			var files = _disk.files;
+			var files = _disk.files; //本地文件列表信息
 			foreach (var file in files) {
 				if (_updateData.ContainsKey (file.name)) {
+					//_updateData存的是服务器记录的文件列表信息
 					saveFiles.Add (file);
 				}
 			}  
@@ -195,6 +240,7 @@ namespace libx
 			VFile file;
 			var key = Path.GetFileName (path);
 			if (_baseData.TryGetValue (key, out file)) {
+				//_baseData 判断StreamAssets本地文件是否存在
 				//res文件，本地文件长度和哈希值都与服务器记录的相等，就不用更新
 				if (key.Equals (Dataname) ||
 				    file.len == len && file.hash.Equals (hash, StringComparison.OrdinalIgnoreCase)) {

@@ -309,14 +309,16 @@ namespace libx
         {
             if (enableVFS)
             {
-                //如果开启VFS，就直接下载res文件
+                //如果开启VFS，res不存在需要下载
+                //判断本地res文件是否存在
                 var path = string.Format("{0}{1}", _savePath, Versions.Dataname);
                 if (!File.Exists(path))
                 {
                     AddDownload(_versions[0]);//只把res文件加入下载列表
                     return;
                 }
-                //如果res文件存在，刷新本地文件信息
+                //如果本地res文件存在
+                //从res文件信息存到VDisk里，VDisk的_data和files里都会有数据了
                 Versions.LoadDisk(path);
             }
             //第一个数据是res 文件用于VFS的 下标从1开始是文件信息
@@ -458,9 +460,9 @@ namespace libx
             }
 
             
-            //把服务器版本文件下载到本地，版本文件里记录的所有文件列表
+            //把服务器版本文件ver下载到本地，版本文件里记录的所有文件列表
             string remoteVerPath = GetDownloadURL(Versions.Filename); //服务器版本文件路径
-            string localVerPath = _savePath + Versions.Filename; //本地版本文件存储路径
+            string localVerPath = _savePath + Versions.Filename; //本地版本文件存储路径 Application.persistentDataPath目录下
             var request = UnityWebRequest.Get(remoteVerPath);//加载资源服务器版本文件
             request.downloadHandler = new DownloadHandlerFile(localVerPath); //设置本地版本文件存储路径
             yield return request.SendWebRequest();
@@ -482,8 +484,8 @@ namespace libx
             } 
             try
             {
-                //返回对应的版本的所有文件列表数据 ==》 ver文件里记录了所有的bundle文件的名字
-                _versions = Versions.LoadVersions(localVerPath, true); //localVerPath 已经从服务器下载完成的版本文件 版本文件里有需要下载的文件列表数据
+                //返回对应的版本的所有文件列表数据 ==》 ver文件里记录了所有的bundle文件的名字  List<VFile> ()
+                _versions = Versions.LoadVersions(localVerPath, true); //localVerPath 已经从服务器下载完成的版本文件 版本文件里有新版本对应的文件列表数据
                 if (_versions.Count > 0)
                 {
                     PrepareDownloads();//检测是否有需要下载的，需要下载的文件会加入到待下载列表里
@@ -606,6 +608,7 @@ namespace libx
                 {
                     //执行了热更新逻辑
                     OnMessage("更新本地版本信息");
+                    //把需要更新的文件信息写入到VDisk中
                     var files = new List<VFile>(downloads.Count);
                     foreach (var download in downloads)
                     {
@@ -624,7 +627,8 @@ namespace libx
                         Versions.UpdateDisk(dataPath, files);
                     }
                 }
-                //开启VFS后，需要更新本地信息
+                //开启VFS后，需要更新本地信息 
+                //从res文件信息存到VDisk里，VDisk的_data和files里都会有数据了
                 Versions.LoadDisk(dataPath);
             }
 
