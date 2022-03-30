@@ -30,6 +30,14 @@
 步骤
 {
 	1 启动流程
+	{
+		GameRoot.Awake ==> GameMain.Init ==> 回调调用GameRoot.GameStart
+
+		GameRoot.GameStart
+		{
+			启动lua路程，加载Main.lua
+		}
+	}
 	2 资源管理封装
 	3 lua框架基础类
 	4 lua层ui框架

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace HxpGame
+namespace GamePool
 {
     /// <summary>
     /// Generic object pool.

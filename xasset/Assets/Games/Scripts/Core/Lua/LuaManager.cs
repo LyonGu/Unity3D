@@ -10,12 +10,17 @@ namespace libx
 {
     public class LuaManager
     {
-        private static LuaEnv _env = null;
+        private LuaEnv _env = null;
         private static LuaManager _instance = null;
         private readonly static string rootLuaPath = string.Format("{0}/DLC/Lua", Application.persistentDataPath);
         #if UNITY_EDITOR
             public static Dictionary<string, string> luaName2Path =  new Dictionary<string, string>(200);
         #endif
+
+        public  LuaEnv Env
+        {
+            get { return _env; }
+        }
 
         public void Init()
         {
@@ -64,12 +69,12 @@ namespace libx
             _env.AddBuildin("cjson", XLua.LuaDLL.Lua.LoadcJson);
         }
 
-        public static void StartLua()
+        public void StartLua()
         {
             _env.DoString("require 'Main'");
         }
 
-        public static void Stop()
+        public void Stop()
         {
             if (_env != null)
             {

@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using GameLog;
 
-public class Game : MonoBehaviour
+public class GameAssets : MonoBehaviour
 {
 	public Dropdown dropdown;
 	public Image temp;
@@ -214,7 +214,7 @@ public class Game : MonoBehaviour
 	{
 		//启动lua
 		LuaManager.GetInstance().Init();
-		LuaManager.StartLua();
+		LuaManager.GetInstance().StartLua();
 	}
 	
 	// Use this for initialization
