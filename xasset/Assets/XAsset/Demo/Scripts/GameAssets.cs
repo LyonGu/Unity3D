@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading.Tasks;
 using Game;
 using libx;
 using UnityEngine;
@@ -27,7 +28,7 @@ public class GameAssets : MonoBehaviour
     public RawImage localRawImage;
 
     public Text localTxt;
-
+    public Transform TestRootTrsTransform;
 	public void OnLoad ()
 	{
 		StartCoroutine (LoadAsset ());
@@ -210,7 +211,15 @@ public class GameAssets : MonoBehaviour
 		_requests.Clear ();
 		yield return null; 
 	}
-	
+
+	private void Awake()
+	{
+		var gameRoot = Resources.Load<GameObject>("GameRoot");
+		var rootObj = Instantiate(gameRoot);
+		rootObj.name = "GameRoot";
+		DontDestroyOnLoad(rootObj);
+	}
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -231,15 +240,20 @@ public class GameAssets : MonoBehaviour
         LogUtils.ColorLog(LogColor.Green,$"assts==========={_assets.Length}  {Application.persistentDataPath}");
         LogUtils.Warn($"assts==========={_assets.Length}  {Application.persistentDataPath}");
         LogUtils.Error($"assts==========={_assets.Length}  {Application.persistentDataPath}");
-
-        var gameRoot = Resources.Load<GameObject>("GameRoot");
-        var rootObj = GameObject.Instantiate(gameRoot);
-        rootObj.name = "GameRoot";
-        DontDestroyOnLoad(rootObj);
-
 	}
     #region 测试下一些常用接口
 
+    async Task RunAwaitSecondsTestAsync()
+    {
+	    LogUtils.Log("RunAwaitSecondsTestAsync Waiting 1 second...");
+	    await new WaitForSeconds(1.0f);
+	    AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
+        {
+	        gObj.SetActive(true);
+	        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
+        }, TestRootTrsTransform,11);
+    }
+    
     private void Test()
     {
 		//同步加载
@@ -256,11 +270,25 @@ public class GameAssets : MonoBehaviour
 	        goSync1.name = "AssetsMgr_HotTestSync";
         });
         
-        AssetsMgr.LoadAyns<GameObject>("FootmanHP", (obj) =>
+        AssetsMgr.LoadAsyn<GameObject>("FootmanHP", (obj) =>
         {
 	        var goSync1 = Instantiate(obj);
 	        goSync1.SetActive(true);
 	        goSync1.name = "AssetsMgr_HotTestAync";
+        });
+
+
+        AssetsMgr.CreatePoolGameObject("FootmanHP", 10, () =>
+        {
+	        LogUtils.Log("AssetsMgr.CreatePoolGameObject Done=====FootmanHP");
+			
+	     
+	        RunAwaitSecondsTestAsync();
+//	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
+//	        {
+//		        gObj.SetActive(true);
+//		        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
+//	        }, TestRootTrsTransform,11);
         });
 
 
@@ -387,6 +415,7 @@ public class GameAssets : MonoBehaviour
 //
 //        }
         
+
     private void Update()
     {
         if (!_isLoadAllAsync) return;

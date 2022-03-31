@@ -7,7 +7,7 @@ public class GameRoot : MonoBehaviour
 {
 	public static GameRoot Instance { get; private set; }
 	[SerializeField] private int resolutionLimit = 1080;
-    void Start()
+    void Awake()
     {
 	    Application.runInBackground = true;
 	    Application.targetFrameRate = 30;
@@ -27,6 +27,8 @@ public class GameRoot : MonoBehaviour
 
     void GameStart()
     {
+	    //AssetsMgr
+	    AssetsMgr.Init();
 	    //启动lua
 	    LuaManager.GetInstance().Init();
 	    LuaManager.GetInstance().StartLua();

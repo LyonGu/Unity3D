@@ -6,9 +6,9 @@ namespace Game
 {
     public static partial class AssetsMgr
     {
-        public static void Init(Action complete)
+        public static void Init()
         {
-            
+            InitPool();
         }
 
         public static void Dispose()
