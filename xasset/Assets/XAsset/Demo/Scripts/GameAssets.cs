@@ -248,7 +248,7 @@ public class GameAssets : MonoBehaviour
     {
 	    LogUtils.Log("RunAwaitSecondsTestAsync Waiting 1 second...");
 	    await new WaitForSeconds(1.0f);
-	    AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
+	    AssetsMgr.PoolGetGameObject("FootmanHP", (gObj, requeseId) =>
         {
 	        gObj.SetActive(true);
 	        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
@@ -285,7 +285,7 @@ public class GameAssets : MonoBehaviour
 			
 	     
 //	        RunAwaitSecondsTestAsync();
-	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
+	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj, requestId) =>
 	        {
 		        gObj.SetActive(true);
 		        gObj.name = "AssetsMgr_HotTestAyncPoolGet";

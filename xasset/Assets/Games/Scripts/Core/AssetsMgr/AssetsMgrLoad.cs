@@ -30,7 +30,7 @@ namespace Game
                     LogUtils.Error($"【AssetsMgr.Load】 assetName is empty===========");
                     return;
                 }
-                
+                NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -55,7 +55,7 @@ namespace Game
                     LogUtils.Error($"【AssetsMgr.LoadAyns】 assetName is empty===========");
                     return;
                 }
-                
+                NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -89,7 +89,8 @@ namespace Game
                     LogUtils.Error($"【AssetsMgr.LoadAyns】 assetName is empty===========");
                     return;
                 }
-                
+
+                NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -180,10 +181,12 @@ namespace Game
                             {
                                 string assetName = requestData.assetName;
                                 var gameObject = InternelCreateGameObject(assetRequest.asset as GameObject, _poolRootTransform);
+                                int assetId = NameToId(assetName);
                                 var req = new PoolGetRequest
                                 {
                                     assetName = assetName,
-                                    obj = gameObject
+                                    obj = gameObject,
+                                    requestId = assetId
                                 };
                                 PushToGameObjectPool(assetName, ref req);
                                 requestData.instantCount--;
@@ -233,9 +236,10 @@ namespace Game
         {
             public GameObject obj;
             public string assetName;
+            public int requestId;
         }
-        
- 
+
+        private static int _AssetId = 0;
         public static Dictionary<string, StructArray<PoolGetRequest>> gameObjectPool =
             new Dictionary<string, StructArray<PoolGetRequest>>();
         
@@ -336,6 +340,33 @@ namespace Game
             });
         }
         
+        public static Dictionary<int, string> IdNameMap = new Dictionary<int, string>();
+        public static Dictionary<string, int> NameIdMap = new Dictionary<string, int>();
+        public static int NameToId(string assetName)
+        {
+            if (!NameIdMap.TryGetValue(assetName, out int assetId))
+            {
+                _AssetId++;
+                IdNameMap[_AssetId] = string.Intern(assetName);
+                NameIdMap[string.Intern(assetName)] = _AssetId;
+                return _AssetId;
+            }
+            else
+            {
+                return assetId;
+            }
+        }
+
+        public static string IdToName(int assetId)
+        {
+            if (IdNameMap.TryGetValue(assetId, out string name))
+            {
+                return name;
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// 从对象池里拿出一个GameObject
         /// </summary>
@@ -343,9 +374,10 @@ namespace Game
         /// <param name="complete">从池子里拿出来回调</param>
         /// <param name="paTransform">从池子里拿出来GameObject,需要设置的父节点</param>
         /// <param name="catchCount">池子大小</param>
-        public static void PoolGetGameObject(string assetName, Action<GameObject> complete, Transform paTransform = null, int catchCount = 0)
+        public static void PoolGetGameObject(string assetName, Action<GameObject, int> complete, Transform paTransform = null, int catchCount = 0)
         {
             if(string.IsNullOrEmpty(assetName)) return;
+            NameToId(assetName);
             if (catchCount > 0)
             {
                 CreatePoolGameObject(assetName, catchCount, () =>
@@ -360,7 +392,7 @@ namespace Game
                             {
                                 apRequest.obj.transform.SetParent(paTransform,false);
                             }
-                            complete(apRequest.obj);
+                            complete(apRequest.obj, apRequest.requestId);
                         }
                     }
                    
@@ -378,15 +410,41 @@ namespace Game
                         {
                             apRequest.obj.transform.SetParent(paTransform,false);
                         }
-                        complete(apRequest.obj);
+                        complete(apRequest.obj, apRequest.requestId);
                     }
                 }
             }
         }
 
-        public static void PoolReturnGameObject(GameObject obj)
+        public static void PoolReturnGameObject(GameObject obj, int requestId)
         {
-            
+            if (requestId == -1 || obj == null)
+                return;
+            string assetName = IdToName(requestId);
+            StructArray<PoolGetRequest> aPool;
+            var req = new PoolGetRequest
+            {
+                assetName = assetName,
+                obj = obj,
+                requestId = requestId
+            };
+            if (gameObjectPool.TryGetValue(assetName, out aPool))
+            {
+               
+                aPool.Add(ref req);
+            }
+            else
+            {
+                aPool = new StructArray<PoolGetRequest>();
+                gameObjectPool.Add(assetName, aPool);
+                aPool.Add(ref req);
+            }
+        }
+
+        public static void ClearPool()
+        {
+            //考虑下是否要调用AssetRequest的Reasle
+            gameObjectPool.Clear();
         }
 
         #endregion
