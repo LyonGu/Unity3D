@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DXGame.core;
+using DXGame.structs;
 using GameLog;
 using libx;
 using UnityEngine;
@@ -79,7 +81,40 @@ namespace Game
                     complete?.Invoke(_request.asset as T);
                 };
             }
+            
+            public static void LoadAsyn<T>(string assetName, Action<T, AssetRequest> complete) where T:UnityObject
+            {
+                if (string.IsNullOrEmpty(assetName))
+                {
+                    LogUtils.Error($"【AssetsMgr.LoadAyns】 assetName is empty===========");
+                    return;
+                }
+                
+                string path = Assets.GetAssetPathByName(assetName);
+                if (string.IsNullOrEmpty(assetName))
+                {
+                    LogUtils.Error($"【AssetsMgr.LoadAyns】 path is empty, assetName is {assetName}===========");
+                    return;
+                }
+                var request = Assets.LoadAssetAsync(path, typeof(T));
+                request.completed = (_request) =>
+                {
+                    if (_request == null)
+                        return;
+                    if (!string.IsNullOrEmpty (_request.error)) {
+                        LogUtils.Error($"【AssetsMgr.LoadAyns】 _request.error is {_request.error}===========");
+                        _request.Release ();
+                        return;
+                    }
 
+                    if (_request.asset == null)
+                    {
+                        request.Release ();
+                        return;
+                    }
+                    complete?.Invoke(_request.asset as T, _request);
+                };
+            }
             public static void LoadSprie(string assetName, Action<Sprite> complete, bool isAsyn = true)
             {
                 if (isAsyn)
@@ -94,6 +129,102 @@ namespace Game
 
         #endregion
 
+        #region GameObjectInstant
+        //单帧最大实例化数量
+        private static int INSTANTMAXCOUNT = 5; 
+        
+        //单帧最大实例化时间，单位毫秒
+        private static int INSTANTMAXTIME = 10; 
+        public static Dictionary<int, InstantDoneCallData> InstanstRequestDoneCallMap = new Dictionary<int, InstantDoneCallData>(64);
+        public static List<GameObjectInstantiateRequest> InstantiateRequestList = new List<GameObjectInstantiateRequest>(128);
+        public class InstantDoneCallData
+        {
+            public int callBackId;
+            public Action completed;
+        }
+        
+        public class GameObjectInstantiateRequest
+        {
+            public int requestId;     //实例化请求Id
+            public int callbackId;  //实例化完成回调id
+            public string assetRequestName;  //AssetRequest名字，可以通过这个拿到AssetRequest上面对应的Asset
+            public int instantCount; //实例化个数
+            public string assetName; //资源名字
+        }
+        
+        
+        private static int _PoolCallBackId = 0;
+        private static int _InstantRequestId = 0;
+        public static class GameObjectInstantQueue
+        {
+            
+            private static Stopwatch _clock = new Stopwatch();
+            public static void Update()
+            {
+                int InstantiateRequestCount = InstantiateRequestList.Count;
+                if (InstantiateRequestCount > 0)
+                {
+                    _clock.Restart();
+                    bool isTimeOut = false;  //实例化时间超时
+                    bool isCountOut = false; //实例化数量超过上限
+                    int InstantDoneCount = 0;
+                    for (var i = InstantiateRequestCount -1; i >= 0 ; i--)
+                    {
+                        var requestData = InstantiateRequestList[i];
+                        int instantCount = requestData.instantCount;
+                        for (int j = 0; j < instantCount; j++)
+                        {
+                            //先根据AssetRequest拿到对一个的Asset
+                            AssetRequest assetRequest = TryGetAssetRequest(requestData.assetRequestName);
+                            if (assetRequest != null && assetRequest.isDone)
+                            {
+                                string assetName = requestData.assetName;
+                                var gameObject = InternelCreateGameObject(assetRequest.asset as GameObject, _poolRootTransform);
+                                var req = new PoolGetRequest
+                                {
+                                    assetName = assetName,
+                                    obj = gameObject
+                                };
+                                PushToGameObjectPool(assetName, ref req);
+                                requestData.instantCount--;
+                                InstantDoneCount++;
+                                if (INSTANTMAXCOUNT > 0 && InstantDoneCount >= INSTANTMAXCOUNT)
+                                {
+                                    isCountOut = true;
+                                    break;
+                                }
+
+                                if (INSTANTMAXTIME > 0 && _clock.ElapsedMilliseconds > INSTANTMAXTIME)
+                                {
+                                    isTimeOut = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                        if (requestData.instantCount <= 0)
+                        {
+                              //所有的都实例化完成了   
+                              InstantiateRequestList.RemoveAt(i);
+                              if (InstanstRequestDoneCallMap.TryGetValue(requestData.callbackId, out var CallData))
+                              {
+                                  InstanstRequestDoneCallMap.Remove(requestData.callbackId);
+                                  CallData.completed?.Invoke();
+                                  
+                              }
+                        }
+
+                        if (isTimeOut || isCountOut)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region GameObjectGet
 
         
@@ -103,9 +234,12 @@ namespace Game
             public GameObject obj;
             public string assetName;
         }
-
+        
+ 
         public static Dictionary<string, StructArray<PoolGetRequest>> gameObjectPool =
             new Dictionary<string, StructArray<PoolGetRequest>>();
+        
+  
         private static GameObject InternelCreateGameObject(GameObject obj, Transform paTransform = null)
         {
             if(obj == null)
@@ -180,29 +314,30 @@ namespace Game
                 realyNeedCount = count - aPool.Count;
             }
             int loadDoneCount = 0;
-            LoadAsyn<GameObject>(assetName, (obj) =>
+            LoadAsyn<GameObject>(assetName, (obj, request) =>
             {
-                for (int i = 0; i < realyNeedCount; i++)
+                InstantDoneCallData callData = new InstantDoneCallData
                 {
-                    //这里不能一帧实例化这么多，会卡，放到一个实例化列表里 Update分帧处理 TODO
-                    var gameObject = InternelCreateGameObject(obj, _poolRootTransform);
-                    loadDoneCount++;
-                    var req = new PoolGetRequest
-                    {
-                        assetName = assetName,
-                        obj = gameObject
-                    };
-                    PushToGameObjectPool(assetName, ref req);
-                    if (loadDoneCount == realyNeedCount)
-                    {
-                        complete?.Invoke();
-                    }
-                }
+                    completed = complete,
+                    callBackId = _PoolCallBackId
+                };
+                InstanstRequestDoneCallMap[_PoolCallBackId] = callData;
+
+                _InstantRequestId++;
+                GameObjectInstantiateRequest InstantiateRequest = new GameObjectInstantiateRequest
+                {
+                    requestId =  _InstantRequestId,
+                    callbackId = _PoolCallBackId,
+                    assetRequestName = request.name,
+                    instantCount =  realyNeedCount,
+                    assetName = assetName
+                };
+                InstantiateRequestList.Add(InstantiateRequest);
             });
         }
         
         /// <summary>
-        /// 
+        /// 从对象池里拿出一个GameObject
         /// </summary>
         /// <param name="assetName">资源名字</param>
         /// <param name="complete">从池子里拿出来回调</param>
@@ -248,7 +383,11 @@ namespace Game
                 }
             }
         }
-        
+
+        public static void PoolReturnGameObject(GameObject obj)
+        {
+            
+        }
 
         #endregion
        

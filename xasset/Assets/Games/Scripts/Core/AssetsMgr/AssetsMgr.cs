@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameLog;
+using libx;
+using UnityEditor.VersionControl;
 using UnityEngine;
 namespace Game
 {
@@ -15,11 +18,16 @@ namespace Game
         {
             
         }
-        
+
+        public static AssetRequest TryGetAssetRequest(string assetRequestName)
+        {
+            return Assets.TryGetAssetRequest(assetRequestName);
+        }
+
 
         public static void Update()
         {
-            
+            GameObjectInstantQueue.Update();
         }
     }
 

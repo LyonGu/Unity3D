@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
@@ -34,4 +35,8 @@ public class GameRoot : MonoBehaviour
 	    LuaManager.GetInstance().StartLua();
     }
 
+    private void Update()
+    {
+	    AssetsMgr.Update();
+    }
 }

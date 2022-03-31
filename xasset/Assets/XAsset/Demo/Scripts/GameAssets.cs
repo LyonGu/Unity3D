@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using DXGame.structs;
 using Game;
 using libx;
 using UnityEngine;
@@ -283,14 +284,26 @@ public class GameAssets : MonoBehaviour
 	        LogUtils.Log("AssetsMgr.CreatePoolGameObject Done=====FootmanHP");
 			
 	     
-	        RunAwaitSecondsTestAsync();
-//	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
-//	        {
-//		        gObj.SetActive(true);
-//		        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
-//	        }, TestRootTrsTransform,11);
+//	        RunAwaitSecondsTestAsync();
+	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj) =>
+	        {
+		        gObj.SetActive(true);
+		        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
+	        }, TestRootTrsTransform,11);
         });
-
+        
+//        DXQueue<int> testQueue = new DXQueue<int>(10); 
+//        testQueue.Enqueue(1);
+//        testQueue.Enqueue(2);
+//        testQueue.Enqueue(3);
+//        testQueue.Enqueue(4);
+//
+//        for (int i = 0; i < testQueue.Count; i++)
+//        {
+//	        int value = testQueue.Dequeue();
+//	        LogUtils.Log($"DXQueue  value==========={value}");
+//	        i--;
+//        }
 
         //异步加载
         var abRequestAsync = LoadGameObjectAsync("FootmanHP");

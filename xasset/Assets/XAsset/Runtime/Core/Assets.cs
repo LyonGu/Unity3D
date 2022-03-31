@@ -315,6 +315,19 @@ namespace libx
             request.Load();
         }
 
+        public static AssetRequest TryGetAssetRequest(string requestName)
+        {
+            if (string.IsNullOrEmpty(requestName))
+                return null;
+            AssetRequest request;
+            if (!_assets.TryGetValue(requestName, out request))
+            {
+                return null;
+            }
+
+            return request;
+        }
+
         private static AssetRequest LoadAsset(string path, Type type, bool async)
         {
             if (string.IsNullOrEmpty(path))
