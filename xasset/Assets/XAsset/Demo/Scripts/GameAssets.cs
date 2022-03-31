@@ -209,13 +209,6 @@ public class GameAssets : MonoBehaviour
 		_requests.Clear ();
 		yield return null; 
 	}
-
-	private void Awake()
-	{
-		//启动lua
-		LuaManager.GetInstance().Init();
-		LuaManager.GetInstance().StartLua();
-	}
 	
 	// Use this for initialization
 	void Start ()
@@ -238,7 +231,12 @@ public class GameAssets : MonoBehaviour
         LogUtils.Warn($"assts==========={_assets.Length}  {Application.persistentDataPath}");
         LogUtils.Error($"assts==========={_assets.Length}  {Application.persistentDataPath}");
 
-    }
+        var gameRoot = Resources.Load<GameObject>("GameRoot");
+        var rootObj = GameObject.Instantiate(gameRoot);
+        rootObj.name = "GameRoot";
+        DontDestroyOnLoad(rootObj);
+
+	}
     #region 测试下一些常用接口
 
     private void Test()

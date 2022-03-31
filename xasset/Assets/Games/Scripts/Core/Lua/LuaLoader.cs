@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using libx;
 using UnityEngine;
 
-namespace libx
+namespace Game
 {
     public class LuaLoader
     {

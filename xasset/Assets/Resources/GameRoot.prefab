@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97a589936d021a42bcc4ad2e043d3cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resolutionLimit: 1334
 --- !u!1 &1844489672982816
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,7 +397,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1000
   m_TargetDisplay: 0

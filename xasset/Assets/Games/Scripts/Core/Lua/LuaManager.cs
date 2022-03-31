@@ -6,7 +6,7 @@ using GameLog;
 using UnityEngine;
 using XLua;
 
-namespace libx
+namespace Game
 {
     public class LuaManager
     {
