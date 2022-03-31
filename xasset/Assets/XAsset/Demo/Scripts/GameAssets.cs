@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Game;
 using libx;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -247,6 +248,20 @@ public class GameAssets : MonoBehaviour
         var goSync = Instantiate(abRequest.asset) as GameObject;
         goSync.SetActive(true);
         goSync.name = "HotTestSync";
+        
+        AssetsMgr.Load<GameObject>("FootmanHP", (obj) =>
+        {
+	        var goSync1 = Instantiate(obj);
+	        goSync1.SetActive(true);
+	        goSync1.name = "AssetsMgr_HotTestSync";
+        });
+        
+        AssetsMgr.LoadAyns<GameObject>("FootmanHP", (obj) =>
+        {
+	        var goSync1 = Instantiate(obj);
+	        goSync1.SetActive(true);
+	        goSync1.name = "AssetsMgr_HotTestAync";
+        });
 
 
         //异步加载

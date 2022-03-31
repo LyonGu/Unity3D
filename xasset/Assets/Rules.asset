@@ -23,7 +23,7 @@ MonoBehaviour:
   searchPatternTimeLine: '*.playable'
   searchPatternShader: '*.shader'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 105
+  version: 111
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -31,10 +31,6 @@ MonoBehaviour:
   - searchPath: Assets/XAsset/Demo/UI
     searchPattern: '*'
     nameBy: 2
-    assetBundleName: 
-  - searchPath: Assets/XAsset/Demo/Scenes
-    searchPattern: '*.unity'
-    nameBy: 1
     assetBundleName: 
   - searchPath: Assets/XAsset/Demo/Materials
     searchPattern: '*'
@@ -63,6 +59,10 @@ MonoBehaviour:
   - searchPath: Assets/XAsset/Demo/LuaRes
     searchPattern: '*.txt'
     nameBy: 2
+    assetBundleName: 
+  - searchPath: Assets/XAsset/Demo/Scenes
+    searchPattern: '*.unity'
+    nameBy: 1
     assetBundleName: 
   ruleAssets:
   - bundle: 0337788ede5dc3b319c5a78e02fccc5b.unity3d
@@ -2200,12 +2200,6 @@ MonoBehaviour:
     - Assets/XAsset/Demo/UI/Components9/Sci-fi-Mouse-cursor_b2.png
     - Assets/XAsset/Demo/UI/Components9/Sci-fi-Mouse-cursor_b3.png
     - Assets/XAsset/Demo/UI/Components9/Sci-fi-Mouse-cursor_b4.png
-  - name: b26a9bac179b4418b47a45737a4c6673.unity3d
-    assets:
-    - Assets/XAsset/Demo/Scenes/Game.unity
-  - name: 29b5b528e5e7c8e33456a5edebbfe82c.unity3d
-    assets:
-    - Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
   - name: 743a49d60961e58a2333052182097f0b.unity3d
     assets:
     - Assets/XAsset/Demo/Materials/Mat_HotTest.mat
@@ -2270,3 +2264,9 @@ MonoBehaviour:
   - name: a0fb9af80b289285ddf0f442a945d30b.unity3d
     assets:
     - Assets/XAsset/Demo/LuaRes/Login/Login.lua.txt
+  - name: b26a9bac179b4418b47a45737a4c6673.unity3d
+    assets:
+    - Assets/XAsset/Demo/Scenes/Game.unity
+  - name: 29b5b528e5e7c8e33456a5edebbfe82c.unity3d
+    assets:
+    - Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
