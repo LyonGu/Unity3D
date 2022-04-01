@@ -137,20 +137,21 @@ namespace Game
         //单帧最大实例化时间，单位毫秒
         private static int INSTANTMAXTIME = 10; 
         public static Dictionary<int, InstantDoneCallData> InstanstRequestDoneCallMap = new Dictionary<int, InstantDoneCallData>(64);
-        public static List<GameObjectInstantiateRequest> InstantiateRequestList = new List<GameObjectInstantiateRequest>(128);
-        public class InstantDoneCallData
+        public static StructArray<GameObjectInstantiateRequest> InstantiateRequestList = new StructArray<GameObjectInstantiateRequest>(128);
+        public struct InstantDoneCallData
         {
             public int callBackId;
             public Action completed;
         }
         
-        public class GameObjectInstantiateRequest
+        public struct GameObjectInstantiateRequest
         {
             public int requestId;     //实例化请求Id
             public int callbackId;  //实例化完成回调id
-            public string assetRequestName;  //AssetRequest名字，可以通过这个拿到AssetRequest上面对应的Asset
+            //public string assetRequestName;  //AssetRequest名字，可以通过这个拿到AssetRequest上面对应的Asset
+            public int assetRequestNameLogicId; //AssetRequest名字映射的id，可以通过这个拿到AssetRequest上面对应的Asset
             public int instantCount; //实例化个数
-            public string assetName; //资源名字
+            public int assetLogicId; //资源逻辑id，通过这个可以找到资源名字
         }
         
         
@@ -171,20 +172,21 @@ namespace Game
                     int InstantDoneCount = 0;
                     for (var i = InstantiateRequestCount -1; i >= 0 ; i--)
                     {
-                        var requestData = InstantiateRequestList[i];
+                        ref var requestData = ref InstantiateRequestList[i];
                         int instantCount = requestData.instantCount;
                         for (int j = 0; j < instantCount; j++)
                         {
                             //先根据AssetRequest拿到对一个的Asset
-                            AssetRequest assetRequest = TryGetAssetRequest(requestData.assetRequestName);
+
+                            AssetRequest assetRequest = TryGetAssetRequest(requestData.assetRequestNameLogicId);
                             if (assetRequest != null && assetRequest.isDone)
                             {
-                                string assetName = requestData.assetName;
+                                
+                                string assetName = IdToName(requestData.assetLogicId);
                                 var gameObject = InternelCreateGameObject(assetRequest.asset as GameObject, _poolRootTransform);
                                 int assetLogicId = NameToId(assetName);
                                 var req = new PoolGetRequest
                                 {
-                                    assetName = assetName,
                                     obj = gameObject,
                                     requestId = assetLogicId
                                 };
@@ -235,7 +237,6 @@ namespace Game
         public struct PoolGetRequest
         {
             public GameObject obj;
-            public string assetName;
             public int requestId;
         }
 
@@ -308,6 +309,7 @@ namespace Game
         {
             if(count <=0) return;
             if(string.IsNullOrEmpty(assetName)) return;
+            int assetLogicId = NameToId(assetName);
             int realyNeedCount = count;
             StructArray<PoolGetRequest> aPool;
             if (gameObjectPool.TryGetValue(assetName, out aPool))
@@ -332,15 +334,17 @@ namespace Game
                 InstanstRequestDoneCallMap[_PoolCallBackId] = callData;
 
                 _InstantRequestId++;
+                int assetRequestNameLogicId = Assets.NameToId(request.name);
                 GameObjectInstantiateRequest InstantiateRequest = new GameObjectInstantiateRequest
                 {
                     requestId =  _InstantRequestId,
                     callbackId = _PoolCallBackId,
-                    assetRequestName = request.name,
+                    assetRequestNameLogicId = assetRequestNameLogicId,
                     instantCount =  realyNeedCount,
-                    assetName = assetName
+                    assetLogicId = assetLogicId
                 };
-                InstantiateRequestList.Add(InstantiateRequest);
+                ref var value = ref InstantiateRequestList.AddRef();
+                value = InstantiateRequest;
             });
         }
         
@@ -351,8 +355,9 @@ namespace Game
             if (!NameIdMap.TryGetValue(assetName, out int assetId))
             {
                 _AssetLogicId++;
-                IdNameMap[_AssetLogicId] = string.Intern(assetName);
-                NameIdMap[string.Intern(assetName)] = _AssetLogicId;
+                string name = string.Intern(assetName);
+                IdNameMap[_AssetLogicId] = name;
+                NameIdMap[name] = _AssetLogicId;
                 return _AssetLogicId;
             }
             else
@@ -450,7 +455,6 @@ namespace Game
             StructArray<PoolGetRequest> aPool;
             var req = new PoolGetRequest
             {
-                assetName = assetName,
                 obj = obj,
                 requestId = requestId
             };

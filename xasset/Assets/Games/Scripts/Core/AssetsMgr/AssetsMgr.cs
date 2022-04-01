@@ -23,6 +23,11 @@ namespace Game
             return Assets.TryGetAssetRequest(assetRequestName);
         }
 
+        public static AssetRequest TryGetAssetRequest(int assetRequestNameId)
+        {
+            return Assets.TryGetAssetRequest(assetRequestNameId);
+        }
+
 
         public static void Update()
         {

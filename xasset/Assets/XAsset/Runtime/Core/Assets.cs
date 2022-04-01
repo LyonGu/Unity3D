@@ -111,6 +111,7 @@ namespace libx
             //ManifestRequest 利用ManifestRequest去加载一个对应的bundle
             //主要用于加载Manifest.asset配置
             var request = new ManifestRequest {name = ManifestAsset};
+            NameToId(ManifestAsset);
             AddAssetRequest(request);
             return request;
         }
@@ -248,12 +249,46 @@ namespace libx
         
         //所有AssetRequest的dictionary  <RequestName, AssetRequest> 其实可以用id才存
         private static Dictionary<string, AssetRequest> _assets = new Dictionary<string, AssetRequest>();
-
+        
+        //一个AssetRequest上name和ID的映射
+        private static Dictionary<int, string> _IdToRequestName = new Dictionary<int, string>(128);
+        private static Dictionary<string, int> _RequestNameToId = new Dictionary<string, int>(128);
+        private static int _requestNameMappingId = 0;
+        
         private static List<AssetRequest> _loadingAssets = new List<AssetRequest>(); //需要加载的assetsRequest
 
         private static List<SceneAssetRequest> _scenes = new List<SceneAssetRequest>(); //需要加载的SceneAssetRequest
 
         private static List<AssetRequest> _unusedAssets = new List<AssetRequest>(); //需要释放的assetsRequest
+
+        public static int NameToId(string name)
+        {
+            name = string.Intern(name);
+            if (_RequestNameToId.TryGetValue(name, out int id))
+            {
+                return id;
+            }
+            else
+            {
+                _requestNameMappingId++;
+                _RequestNameToId.Add(name,_requestNameMappingId);
+                _IdToRequestName.Add(_requestNameMappingId, name);
+                return _requestNameMappingId;
+            }
+        }
+        
+        public static string IdToName(int id)
+        {
+            
+            if (_IdToRequestName.TryGetValue(id, out string name))
+            {
+                return name;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
 
         private void Update()
         {
@@ -328,6 +363,12 @@ namespace libx
             return request;
         }
 
+        public static AssetRequest TryGetAssetRequest(int requestNameId)
+        {
+            string requestName = IdToName(requestNameId);
+            return TryGetAssetRequest(requestName);
+        }
+
         private static AssetRequest LoadAsset(string path, Type type, bool async)
         {
             if (string.IsNullOrEmpty(path))
@@ -372,6 +413,7 @@ namespace libx
             }
 
             request.name = path;
+            NameToId(path);
             request.assetType = type;
             //新增资产请求
             AddAssetRequest(request);
@@ -505,6 +547,7 @@ namespace libx
                 bundle = asyncMode ? new BundleRequestAsync() : new BundleRequest();
 
             bundle.name = path;
+            NameToId(path);
             _bundles.Add(path, bundle);
 
             if (MAX_BUNDLES_PERFRAME > 0 && (bundle is BundleRequestAsync || bundle is WebBundleRequest))
