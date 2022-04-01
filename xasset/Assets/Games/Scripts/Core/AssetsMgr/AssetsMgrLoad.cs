@@ -248,12 +248,14 @@ namespace Game
         {
             if(obj == null)
                 return null;
-            var gameObject = GameObject.Instantiate(obj);
-            if(gameObject == null)
-                return null;
+            GameObject gameObject = null;
             if (paTransform!=null)
             {
-                gameObject.transform.SetParent(paTransform, false);
+                gameObject = GameObject.Instantiate(obj, paTransform, false);
+            }
+            else
+            {
+                gameObject = GameObject.Instantiate(obj);
             }
 
             return gameObject;
@@ -290,13 +292,15 @@ namespace Game
             StructArray<PoolGetRequest> aPool;
             if (gameObjectPool.TryGetValue(assetName, out aPool))
             {
-                aPool.Add(ref pgRequest);
+                ref var req = ref aPool.AddRef();
+                req = pgRequest;
             }
             else
             {
                 aPool = new StructArray<PoolGetRequest>();
                 gameObjectPool.Add(assetName, aPool);
-                aPool.Add(ref pgRequest);
+                ref var req = ref aPool.AddRef();
+                req = pgRequest;
             }
         }
 
@@ -394,6 +398,14 @@ namespace Game
                             }
                             complete(apRequest.obj, apRequest.requestId);
                         }
+                        else
+                        {
+                         
+                            LoadGameObject(assetName, (obj) =>
+                            {
+                                complete(obj, assetLogicId);
+                            }, true, paTransform);
+                        }
                     }
                    
                 });
@@ -414,26 +426,18 @@ namespace Game
                     }
                     else
                     {
-                        LoadAsyn<GameObject>(assetName, (obj) =>
+                        LoadGameObject(assetName, (obj) =>
                         {
-                            if (paTransform != null)
-                            {
-                                obj.transform.SetParent(paTransform, false);
-                            }
                             complete(obj, assetLogicId);
-                        });
+                        }, true, paTransform);
                     }
                 }
                 else
                 {
-                    LoadAsyn<GameObject>(assetName, (obj) =>
+                    LoadGameObject(assetName, (obj) =>
                     {
-                        if (paTransform != null)
-                        {
-                           obj.transform.SetParent(paTransform, false);
-                        }
                         complete(obj, assetLogicId);
-                    });
+                    }, true, paTransform);
                 }
             }
         }

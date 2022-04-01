@@ -106,6 +106,7 @@ namespace DXGame.core
         }
 
         //返回末尾元素，ref，外部修改后内部同时生效
+        //不发生扩容的话没有内存copy
         public ref T AddRef()
         {
             AllocateMore();
