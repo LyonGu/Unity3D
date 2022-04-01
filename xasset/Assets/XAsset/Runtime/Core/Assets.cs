@@ -103,7 +103,6 @@ namespace libx
             }
 
             Clear();
-
             Log(string.Format(
                 "Initialize with: runtimeMode={0}\nbasePath：{1}\nupdatePath={2}",
                 runtimeMode, basePath, updatePath));

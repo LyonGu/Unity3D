@@ -23,14 +23,20 @@ namespace Game
 
         #region AssetLoad
             
-            public static void Load<T>(string assetName, Action<T> complete) where T:UnityObject
+            /// <summary>
+            ///  加载一个资源对象，加载完成回调传入assetLogicId用于卸载使用
+            /// </summary>
+            /// <param name="assetName">资源名字</param>
+            /// <param name="complete"></param>
+            /// <typeparam name="T"></typeparam>
+            public static void Load<T>(string assetName, Action<T,int> complete) where T:UnityObject
             {
                 if (string.IsNullOrEmpty(assetName))
                 {
                     LogUtils.Error($"【AssetsMgr.Load】 assetName is empty===========");
                     return;
                 }
-                NameToId(assetName);
+                int assetLogicId = NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -45,17 +51,17 @@ namespace Game
                     return;
                  
                 }
-                complete?.Invoke(request.asset as T);
+                complete?.Invoke(request.asset as T, assetLogicId);
             }
             
-            public static void LoadAsyn<T>(string assetName, Action<T> complete) where T:UnityObject
+            public static void LoadAsyn<T>(string assetName, Action<T,int> complete) where T:UnityObject
             {
                 if (string.IsNullOrEmpty(assetName))
                 {
                     LogUtils.Error($"【AssetsMgr.LoadAyns】 assetName is empty===========");
                     return;
                 }
-                NameToId(assetName);
+                int assetLogicId = NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -78,11 +84,11 @@ namespace Game
                         request.Release ();
                         return;
                     }
-                    complete?.Invoke(_request.asset as T);
+                    complete?.Invoke(_request.asset as T, assetLogicId);
                 };
             }
             
-            public static void LoadAsyn<T>(string assetName, Action<T, AssetRequest> complete) where T:UnityObject
+            public static void LoadAsyn<T>(string assetName, Action<T, AssetRequest,int> complete) where T:UnityObject
             {
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -90,7 +96,7 @@ namespace Game
                     return;
                 }
 
-                NameToId(assetName);
+                int assetLogicId = NameToId(assetName);
                 string path = Assets.GetAssetPathByName(assetName);
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -113,10 +119,10 @@ namespace Game
                         request.Release ();
                         return;
                     }
-                    complete?.Invoke(_request.asset as T, _request);
+                    complete?.Invoke(_request.asset as T, _request, assetLogicId);
                 };
             }
-            public static void LoadSprie(string assetName, Action<Sprite> complete, bool isAsyn = true)
+            public static void LoadSprie(string assetName, Action<Sprite,int> complete, bool isAsyn = true)
             {
                 if (isAsyn)
                 {
@@ -129,6 +135,39 @@ namespace Game
             }
 
         #endregion
+        
+        
+        #region UnLoad
+            
+            //卸载某个资源
+            public static void UnLoad(string assetName)
+            {
+                if (string.IsNullOrEmpty(assetName))
+                    return;
+                string assetPath = Assets.GetAssetPathByName(assetName);
+                AssetRequest request = Assets.TryGetAssetRequest(assetPath);
+                if(request!=null)
+                    request.Release(); //XAsset库里回去判断该资源是否要释放
+            }
+            
+            public static void UnLoad(int assetLogicId)
+            {
+                string assetName = IdToName(assetLogicId);
+                UnLoad(assetName);
+            }
+            
+            //卸载一个GameObject
+            public static void UnLoadGameObject(GameObject obj, int assetLogicId)
+            {
+                if (obj != null)
+                {
+                    GameObject.Destroy(obj);
+                    UnLoad(assetLogicId);
+                }
+            }
+
+
+            #endregion
 
         #region GameObjectInstant
         //单帧最大实例化数量
@@ -141,15 +180,14 @@ namespace Game
         public struct InstantDoneCallData
         {
             public int callBackId;
-            public Action completed;
+            public Action<bool> completed;
         }
         
         public struct GameObjectInstantiateRequest
         {
             public int requestId;     //实例化请求Id
             public int callbackId;  //实例化完成回调id
-            //public string assetRequestName;  //AssetRequest名字，可以通过这个拿到AssetRequest上面对应的Asset
-            public int assetRequestNameLogicId; //AssetRequest名字映射的id，可以通过这个拿到AssetRequest上面对应的Asset
+            public int assetRequestNameLogicId; //AssetRequest.Name映射的id，可以通过这个拿到AssetRequest上面对应的Asset
             public int instantCount; //实例化个数
             public int assetLogicId; //资源逻辑id，通过这个可以找到资源名字
         }
@@ -184,7 +222,7 @@ namespace Game
                                 
                                 string assetName = IdToName(requestData.assetLogicId);
                                 var gameObject = InternelCreateGameObject(assetRequest.asset as GameObject, _poolRootTransform);
-                                int assetLogicId = NameToId(assetName);
+                                int assetLogicId = requestData.assetLogicId;
                                 var req = new PoolGetRequest
                                 {
                                     obj = gameObject,
@@ -204,7 +242,15 @@ namespace Game
                                     isTimeOut = true;
                                     break;
                                 }
-
+                            }
+                            else
+                            {
+                                if (assetRequest == null || assetRequest.IsUnused())
+                                {
+                                    //被卸载了
+                                    requestData.instantCount = -1;
+                                    break;
+                                }
                             }
                         }
                         if (requestData.instantCount <= 0)
@@ -214,7 +260,8 @@ namespace Game
                               if (InstanstRequestDoneCallMap.TryGetValue(requestData.callbackId, out var CallData))
                               {
                                   InstanstRequestDoneCallMap.Remove(requestData.callbackId);
-                                  CallData.completed?.Invoke();
+                                  bool isOk = requestData.instantCount == -1 ? false : true;
+                                  CallData.completed?.Invoke(isOk);
                                   
                               }
                         }
@@ -237,7 +284,7 @@ namespace Game
         public struct PoolGetRequest
         {
             public GameObject obj;
-            public int requestId;
+            public int requestId;  //资源名字对应的逻辑ID
         }
 
         private static int _AssetLogicId = 0;
@@ -262,26 +309,26 @@ namespace Game
             return gameObject;
         }
 
-        public static void LoadGameObject(string assetName, Action<GameObject> complete, bool isAsyn = true, Transform paTransform = null)
+        public static void LoadGameObject(string assetName, Action<GameObject,int> complete, bool isAsyn = true, Transform paTransform = null)
         {
             if (isAsyn)
             {
-                LoadAsyn<GameObject>(assetName, (obj) =>
+                LoadAsyn<GameObject>(assetName, (obj, assstLogicId) =>
                 {
                     var gameObject = InternelCreateGameObject(obj, paTransform);
                     if(gameObject == null)
                         return;
-                    complete(gameObject);
+                    complete(gameObject,assstLogicId);
                 });
             }
             else
             {
-                Load<GameObject>(assetName, (obj) =>
+                Load<GameObject>(assetName, (obj, assstLogicId) =>
                 {
                     var gameObject = InternelCreateGameObject(obj, paTransform);
                     if(gameObject == null)
                         return;
-                    complete(gameObject);
+                    complete(gameObject, assstLogicId);
                 });        
             }
         }
@@ -305,7 +352,7 @@ namespace Game
             }
         }
 
-        public static void CreatePoolGameObject(string assetName, int count, Action complete =null)
+        public static void CreatePoolGameObject(string assetName, int count, Action<bool> complete =null)
         {
             if(count <=0) return;
             if(string.IsNullOrEmpty(assetName)) return;
@@ -317,14 +364,14 @@ namespace Game
                 //判断池子里是否有
                 if (aPool.Count >= count)
                 {
-                    complete?.Invoke();
+                    complete?.Invoke(true);
                     return;
                 }
                 
                 realyNeedCount = count - aPool.Count;
             }
             int loadDoneCount = 0;
-            LoadAsyn<GameObject>(assetName, (obj, request) =>
+            LoadAsyn<GameObject>(assetName, (obj, request, rassstLogicId) =>
             {
                 InstantDoneCallData callData = new InstantDoneCallData
                 {
@@ -386,33 +433,40 @@ namespace Game
         public static void PoolGetGameObject(string assetName, Action<GameObject, int> complete, Transform paTransform = null, int catchCount = 0)
         {
             if(string.IsNullOrEmpty(assetName)) return;
-            int assetLogicId = NameToId(assetName);
             if (catchCount > 0)
             {
-                CreatePoolGameObject(assetName, catchCount, () =>
+                CreatePoolGameObject(assetName, catchCount, (isCreaetOk) =>
                 {
-                    StructArray<PoolGetRequest> aPool;
-                    if (gameObjectPool.TryGetValue(assetName, out aPool))
+                    if (isCreaetOk)
                     {
-                        bool isOk = aPool.Pop(out var apRequest);
-                        if (isOk)
+                        StructArray<PoolGetRequest> aPool;
+                        if (gameObjectPool.TryGetValue(assetName, out aPool))
                         {
-                            if (paTransform != null)
+                            bool isOk = aPool.Pop(out var apRequest);
+                            if (isOk)
                             {
-                                apRequest.obj.transform.SetParent(paTransform,false);
+                                if (paTransform != null)
+                                {
+                                    apRequest.obj.transform.SetParent(paTransform,false);
+                                }
+                                //apRequest.requestId 资源名字对应的logicID
+                                complete(apRequest.obj, apRequest.requestId);
                             }
-                            complete(apRequest.obj, apRequest.requestId);
-                        }
-                        else
-                        {
-                         
-                            LoadGameObject(assetName, (obj) =>
+                            else
                             {
-                                complete(obj, assetLogicId);
-                            }, true, paTransform);
+                         
+                                LoadGameObject(assetName, (obj, assetLogicId) =>
+                                {
+                                    complete(obj, assetLogicId);
+                                }, true, paTransform);
+                            }
                         }
                     }
-                   
+                    else
+                    {
+                        LogUtils.Error("【AssetsMgr.PoolGetGameObject】CreatePoolGameObject  失败=====");
+                    }
+                    
                 });
             }
             else
@@ -431,7 +485,7 @@ namespace Game
                     }
                     else
                     {
-                        LoadGameObject(assetName, (obj) =>
+                        LoadGameObject(assetName, (obj,assetLogicId) =>
                         {
                             complete(obj, assetLogicId);
                         }, true, paTransform);
@@ -439,7 +493,7 @@ namespace Game
                 }
                 else
                 {
-                    LoadGameObject(assetName, (obj) =>
+                    LoadGameObject(assetName, (obj,assetLogicId) =>
                     {
                         complete(obj, assetLogicId);
                     }, true, paTransform);
@@ -472,6 +526,7 @@ namespace Game
         }
 
         #endregion
+
        
     }
 

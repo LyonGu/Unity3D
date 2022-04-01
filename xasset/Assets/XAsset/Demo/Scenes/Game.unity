@@ -1131,7 +1131,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2095950902}
         m_MethodName: OnLoadAllAsync
         m_Mode: 1
         m_Arguments:
@@ -1523,7 +1523,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2095950902}
         m_MethodName: OnUnload
         m_Mode: 1
         m_Arguments:
@@ -1778,7 +1778,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2095950902}
         m_MethodName: OnLoadAll
         m_Mode: 1
         m_Arguments:
@@ -1997,7 +1997,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2095950902}
         m_MethodName: OnLoad
         m_Mode: 1
         m_Arguments:
@@ -4192,7 +4192,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2095950902}
         m_MethodName: OnLoadScenelAsync
         m_Mode: 1
         m_Arguments:

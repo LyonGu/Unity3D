@@ -21,7 +21,7 @@ public class GameAssets : MonoBehaviour
     public Slider hotUpdateTestSlider;
 	private string[] _assets;
 	private int _optionIndex;
-
+	
 	List<GameObject> _gos = new List<GameObject> ();
 	List<AssetRequest> _requests = new List<AssetRequest> ();
 
@@ -173,21 +173,32 @@ public class GameAssets : MonoBehaviour
         var ext = Path.GetExtension (path);
 
         if (ext.Equals (".png", StringComparison.OrdinalIgnoreCase) && path.IndexOf("Demo/UI/")>-1) {
-            //拿着这个路径去加载精灵图片
-            var request = LoadSprite (path);
-			yield return request;
-			if (!string.IsNullOrEmpty (request.error)) {
-				request.Release ();
-				yield break;
-			}
-            //实例化
-            var go = Instantiate (temp.gameObject, temp.transform.parent);
-			go.SetActive (true);
-			go.name = request.asset.name;
-			var image = go.GetComponent<Image> ();
-            //设置从AB加载出来的精灵图片
-            image.sprite = request.asset as Sprite; 
-			_gos.Add (go);
+
+            string assetName = Path.GetFileNameWithoutExtension(path);
+            AssetsMgr.Load<Sprite>(assetName, (sprite, assetLogicId) =>
+            {
+                var go = Instantiate(temp.gameObject, temp.transform.parent);
+                go.SetActive(true);
+                go.name = assetName;
+                var image = go.GetComponent<Image>();
+                image.sprite = sprite;
+                _gos.Add(go);
+            });
+   //         //拿着这个路径去加载精灵图片
+   //         var request = LoadSprite (path);
+			//yield return request;
+			//if (!string.IsNullOrEmpty (request.error)) {
+			//	request.Release ();
+			//	yield break;
+			//}
+   //         //实例化
+   //         var go = Instantiate (temp.gameObject, temp.transform.parent);
+			//go.SetActive (true);
+			//go.name = request.asset.name;
+			//var image = go.GetComponent<Image> ();
+   //         //设置从AB加载出来的精灵图片
+   //         image.sprite = request.asset as Sprite; 
+			//_gos.Add (go);
 		}
 	}
 
@@ -199,18 +210,29 @@ public class GameAssets : MonoBehaviour
 
 	private IEnumerator UnloadAssets ()
 	{
-		foreach (var image in _gos) {
-			DestroyImmediate (image);
-		}
-		_gos.Clear ();
+		//foreach (var image in _gos) 
+		//{
+		//	DestroyImmediate (image);
+		//}
+		
+		//_gos.Clear ();
         
-		foreach (var request in _requests) {
-            //减少引用计数
-            request.Release ();
-		}
+		//foreach (var request in _requests) {
+  //          //减少引用计数
+  //          request.Release ();
+		//}
 
 		_requests.Clear ();
-		yield return null; 
+
+        //使用封装的资源管理框架
+        foreach (var image in _gos)
+        {
+
+            int assetLogicId = AssetsMgr.NameToId(image.name);
+            AssetsMgr.UnLoadGameObject(image, assetLogicId);
+        }
+        _gos.Clear();
+        yield return null; 
 	}
 
 	private void Awake()
@@ -264,14 +286,14 @@ public class GameAssets : MonoBehaviour
         goSync.SetActive(true);
         goSync.name = "HotTestSync";
         
-        AssetsMgr.Load<GameObject>("FootmanHP", (obj) =>
+        AssetsMgr.Load<GameObject>("FootmanHP", (obj,assetLogicId) =>
         {
 	        var goSync1 = Instantiate(obj);
 	        goSync1.SetActive(true);
 	        goSync1.name = "AssetsMgr_HotTestSync";
         });
         
-        AssetsMgr.LoadAsyn<GameObject>("FootmanHP", (obj) =>
+        AssetsMgr.LoadAsyn<GameObject>("FootmanHP", (obj,assetLogicId) =>
         {
 	        var goSync1 = Instantiate(obj);
 	        goSync1.SetActive(true);
@@ -279,17 +301,22 @@ public class GameAssets : MonoBehaviour
         });
 
 
-        AssetsMgr.CreatePoolGameObject("FootmanHP", 10, () =>
+        AssetsMgr.CreatePoolGameObject("FootmanHP", 10, (isOk) =>
         {
 	        LogUtils.Log("AssetsMgr.CreatePoolGameObject Done=====FootmanHP");
 			
 	     
 //	        RunAwaitSecondsTestAsync();
-	        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj, requestId) =>
+	        if (isOk)
 	        {
-		        gObj.SetActive(true);
-		        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
-	        }, TestRootTrsTransform,11);
+		        AssetsMgr.PoolGetGameObject("FootmanHP", (gObj, requestId) =>
+		        {
+			        gObj.SetActive(true);
+			        gObj.name = "AssetsMgr_HotTestAyncPoolGet";
+		        }, TestRootTrsTransform,11);
+	        }
+
+	       
         });
         
 //        DXQueue<int> testQueue = new DXQueue<int>(10); 
