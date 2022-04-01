@@ -452,23 +452,13 @@ namespace Game
             if (requestId == -1 || obj == null)
                 return;
             string assetName = IdToName(requestId);
-            StructArray<PoolGetRequest> aPool;
             var req = new PoolGetRequest
             {
                 obj = obj,
                 requestId = requestId
             };
-            if (gameObjectPool.TryGetValue(assetName, out aPool))
-            {
-               
-                aPool.Add(ref req);
-            }
-            else
-            {
-                aPool = new StructArray<PoolGetRequest>();
-                gameObjectPool.Add(assetName, aPool);
-                aPool.Add(ref req);
-            }
+            PushToGameObjectPool(assetName, ref req);
+
         }
 
         public static void ClearPool()
