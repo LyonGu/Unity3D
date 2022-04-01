@@ -31,11 +31,12 @@ namespace DXGame.core
             _buffer = new T[capacity];
         }
 
-        public void Clear()
+        public void Clear(bool isClear = false)
         {
             if (this._count <= 0) return;
             this._count = 0;
-            //Array.Clear(this._buffer, 0, this._count);
+            if(isClear)
+                Array.Clear(this._buffer, 0, this._count);
         }
 
         void AllocateMore()

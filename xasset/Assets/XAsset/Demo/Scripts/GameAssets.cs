@@ -293,7 +293,7 @@ public class GameAssets : MonoBehaviour
 	        goSync1.name = "AssetsMgr_HotTestSync";
         });
         
-        AssetsMgr.LoadAsyn<GameObject>("FootmanHP", (obj,assetLogicId) =>
+        AssetsMgr.LoadAsync<GameObject>("FootmanHP", (obj,assetLogicId) =>
         {
 	        var goSync1 = Instantiate(obj);
 	        goSync1.SetActive(true);

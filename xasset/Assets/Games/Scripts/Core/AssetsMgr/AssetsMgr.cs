@@ -15,7 +15,7 @@ namespace Game
 
         public static void Dispose()
         {
-            
+            Clear();
         }
 
         public static AssetRequest TryGetAssetRequest(string assetRequestName)

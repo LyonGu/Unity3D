@@ -4,6 +4,7 @@ using System.Diagnostics;
 using DXGame.core;
 using DXGame.structs;
 using GameLog;
+using GamePool;
 using libx;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
@@ -54,7 +55,7 @@ namespace Game
                 complete?.Invoke(request.asset as T, assetLogicId);
             }
             
-            public static void LoadAsyn<T>(string assetName, Action<T,int> complete) where T:UnityObject
+            public static void LoadAsync<T>(string assetName, Action<T,int> complete) where T:UnityObject
             {
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -88,7 +89,7 @@ namespace Game
                 };
             }
             
-            public static void LoadAsyn<T>(string assetName, Action<T, AssetRequest,int> complete) where T:UnityObject
+            public static void LoadAsync<T>(string assetName, Action<T, AssetRequest,int> complete) where T:UnityObject
             {
                 if (string.IsNullOrEmpty(assetName))
                 {
@@ -126,7 +127,7 @@ namespace Game
             {
                 if (isAsyn)
                 {
-                    LoadAsyn(assetName, complete);
+                    LoadAsync(assetName, complete);
                 }
                 else
                 {
@@ -134,13 +135,43 @@ namespace Game
                 }
             }
 
+        public static void LoadSceneAsync(string sceneName, Action complete)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                LogUtils.Error($"【AssetsMgr.LoadScene】 sceneName is empty===========");
+                return;
+            }
+            int assetLogicId = NameToId(sceneName);
+            string path = Assets.GetAssetPathByName(sceneName);
+            SceneAssetRequest request = Assets.LoadSceneAsync(path, false);
+            request.completed = (_request) =>
+            {
+                if (_request == null)
+                    return;
+                if (!string.IsNullOrEmpty(_request.error))
+                {
+                    LogUtils.Error($"【AssetsMgr.LoadScene】 _request.error is {_request.error}===========");
+                    _request.Release();
+                    return;
+                }
+
+                if (_request.asset == null)
+                {
+                    request.Release();
+                    return;
+                }
+                complete?.Invoke();
+            };
+        }
+
         #endregion
-        
-        
+
+
         #region UnLoad
-            
-            //卸载某个资源
-            public static void UnLoad(string assetName)
+
+        //卸载某个资源
+        public static void UnLoad(string assetName)
             {
                 if (string.IsNullOrEmpty(assetName))
                     return;
@@ -167,20 +198,29 @@ namespace Game
             }
 
 
-            #endregion
+        #endregion
 
         #region GameObjectInstant
+        //无效实例化数量
+        private static int INVALIDINSTANTCOUNT = -1;
         //单帧最大实例化数量
         private static int INSTANTMAXCOUNT = 5; 
         
         //单帧最大实例化时间，单位毫秒
-        private static int INSTANTMAXTIME = 10; 
+        private static int INSTANTMAXTIME = 10;
+
+        //《callBackId, InstantDoneCallData》
         public static Dictionary<int, InstantDoneCallData> InstanstRequestDoneCallMap = new Dictionary<int, InstantDoneCallData>(64);
+
         public static StructArray<GameObjectInstantiateRequest> InstantiateRequestList = new StructArray<GameObjectInstantiateRequest>(128);
+
+        //《InstantiateRequestId, GameObjectInstantiateRequest》
+        public static Dictionary<int, GameObjectInstantiateRequest> InstantiateRequestListMap = new Dictionary<int, GameObjectInstantiateRequest>(128);
         public struct InstantDoneCallData
         {
             public int callBackId;
-            public Action<bool> completed;
+            public Action<bool> completed; //实例化所有回调
+            public Action<float> progress; //实例化一个进度回调，切场景预实例化使用
         }
         
         public struct GameObjectInstantiateRequest
@@ -248,7 +288,7 @@ namespace Game
                                 if (assetRequest == null || assetRequest.IsUnused())
                                 {
                                     //被卸载了
-                                    requestData.instantCount = -1;
+                                    requestData.instantCount = INVALIDINSTANTCOUNT;
                                     break;
                                 }
                             }
@@ -260,7 +300,7 @@ namespace Game
                               if (InstanstRequestDoneCallMap.TryGetValue(requestData.callbackId, out var CallData))
                               {
                                   InstanstRequestDoneCallMap.Remove(requestData.callbackId);
-                                  bool isOk = requestData.instantCount == -1 ? false : true;
+                                  bool isOk = requestData.instantCount == INVALIDINSTANTCOUNT ? false : true;
                                   CallData.completed?.Invoke(isOk);
                                   
                               }
@@ -313,7 +353,7 @@ namespace Game
         {
             if (isAsyn)
             {
-                LoadAsyn<GameObject>(assetName, (obj, assstLogicId) =>
+                LoadAsync<GameObject>(assetName, (obj, assstLogicId) =>
                 {
                     var gameObject = InternelCreateGameObject(obj, paTransform);
                     if(gameObject == null)
@@ -352,7 +392,7 @@ namespace Game
             }
         }
 
-        public static void CreatePoolGameObject(string assetName, int count, Action<bool> complete =null)
+        public static void CreatePoolGameObject(string assetName, int count, Action<bool> complete = null, Action<float> progress = null, int preLoadGroupId = -1)
         {
             if(count <=0) return;
             if(string.IsNullOrEmpty(assetName)) return;
@@ -370,17 +410,24 @@ namespace Game
                 
                 realyNeedCount = count - aPool.Count;
             }
-            int loadDoneCount = 0;
-            LoadAsyn<GameObject>(assetName, (obj, request, rassstLogicId) =>
+
+            LoadAsync<GameObject>(assetName, (obj, request, rassstLogicId) =>
             {
                 InstantDoneCallData callData = new InstantDoneCallData
                 {
                     completed = complete,
+                    progress = progress,
                     callBackId = _PoolCallBackId
+
                 };
                 InstanstRequestDoneCallMap[_PoolCallBackId] = callData;
 
                 _InstantRequestId++;
+                if (preLoadGroupId != -1)
+                {
+                    //预加载
+                    AddGroupIdMap(preLoadGroupId, _InstantRequestId);
+                }
                 int assetRequestNameLogicId = Assets.NameToId(request.name);
                 GameObjectInstantiateRequest InstantiateRequest = new GameObjectInstantiateRequest
                 {
@@ -515,19 +562,191 @@ namespace Game
 
         }
 
-        public static void ClearPool()
+
+
+        #endregion
+
+        #region PreLoad 预加载
+
+        //预加载ID
+        private static int _preLoadGroupId = 0;
+        //当前预加载ID
+        private static int _curPreLoadGroupId = -1; 
+        //<预加载Id,List<实例化请求ID>>
+        private static Dictionary<int, Dictionary<int,bool>> _groupIdMap = new Dictionary<int, Dictionary<int, bool>>(16);
+
+
+        private static void AddGroupIdMap(int preLoadGroupId, int instantRequestId)
         {
-            
-            foreach (var item in gameObjectPool)
+            if (!_groupIdMap.TryGetValue(preLoadGroupId, out var dict))
             {
-                item.Value.Clear(); //只是把Count置为0，下次还能复用内存
+                dict = DictionaryPool<int, bool>.Get();
+                _groupIdMap.Add(_preLoadGroupId, dict);
+                dict.Add(instantRequestId,true);
             }
-            //gameObjectPool.Clear();
+            else
+            {
+                dict.Add(instantRequestId,true);
+            }
+  
+        }
+
+        public static void StopPreLoadGroupGameObject(int PreLoadGroupId)
+        {
+            //根据PreLoadGroupId ==》 找到一堆 InstanctRequestId
+            //根据InstanctRequestId 找到实例化数据
+            if (_groupIdMap.TryGetValue(PreLoadGroupId, out var idDict))
+            {
+                int InstantiateRequestCount = InstantiateRequestList.Count;
+                if (InstantiateRequestCount > 0)
+                {
+                    for (int i = 0; i < InstantiateRequestCount; i++)
+                    {
+                        ref var data = ref InstantiateRequestList[i];
+                        if (idDict.TryGetValue(data.requestId,out bool _))
+                        {
+
+                            data.instantCount = INVALIDINSTANTCOUNT; //实例化数量标志为-1， GameObjectInstantQueue.Update去判断
+
+                            //已经实例化出来进入池子里的需要卸载 TODO
+                            /*
+                                gameObjectPool 数据要清空
+                                对应的AssetRequest也要release
+                             */
+                            string assetName = IdToName(data.assetLogicId);
+                            StructArray<PoolGetRequest> aPool;
+                            if (gameObjectPool.TryGetValue(assetName, out aPool))
+                            {
+                                int poolGetRequestCount = aPool.Count;
+                                if (poolGetRequestCount > 0)
+                                {
+                                    for (int j = 0; j < poolGetRequestCount; j++)
+                                    {
+                                        ref var poolGetRequest = ref aPool[j];
+                                        UnLoadGameObject(poolGetRequest.obj, data.assetLogicId);
+                                    }
+                                }
+                                gameObjectPool.Remove(assetName);
+                            }
+                            
+                           
+                        }
+                    }
+
+                    
+                }
+                _groupIdMap.Remove(PreLoadGroupId);
+                DictionaryPool<int, bool>.Release(idDict);
+            }
+
+        }
+        //预实例化一组GameObject对象
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assetNameArray">资源名列表</param>
+        /// <param name="instantCountArray">实例化数量列表</param>
+        /// <param name="progress">预实例化进度回调</param>
+        /// <param name="complete">预实例化完成回调</param>
+        public static void PreLoadGroupGameObject(string [] assetNameArray, int[] instantCountArray, Action<float> progress, Action complete)
+        {
+            if (assetNameArray.Length != instantCountArray.Length)
+                return;
+            if (_curPreLoadGroupId != -1)
+            {
+                //当前已经在进行预加载
+                StopPreLoadGroupGameObject(_curPreLoadGroupId);
+            }
+            _preLoadGroupId++;
+            _curPreLoadGroupId = _preLoadGroupId;
+            int assetCount = assetNameArray.Length;
+            int totalInstantCount = 0;
+            int InstantDoneCount = 0;
+            for (int i = 0; i < assetCount; i++)
+            {
+                string assetName = assetNameArray[i];
+                if (string.IsNullOrEmpty(assetName))
+                    continue;
+                int instantCount = instantCountArray[i];
+                if (instantCount <= 0)
+                    instantCount = 1;
+
+                //判断资源是否已经实例化过
+                if (gameObjectPool.TryGetValue(assetName, out var aPool))
+                {
+                    //判断池子里是否有
+                    if (aPool.Count >= instantCount)
+                    {
+                        continue;
+                    }
+
+                }
+                totalInstantCount += instantCount;
+                CreatePoolGameObject(assetName, instantCount, 
+                    (isOk) =>
+                        {
+                            if (isOk)
+                            {
+                                //某个资源完成所有实例化回调
+                                if (InstantDoneCount == totalInstantCount)
+                                {
+                                    complete();
+                                }
+                            }
+               
+                        },
+
+                    (progressValue) =>
+                        {
+                            InstantDoneCount++;
+                            //某个资源完成一次实例化回调
+                            progress((float)InstantDoneCount / totalInstantCount);
+                        }
+                    );
+            }
         }
 
         #endregion
 
-       
+        #region Clear 清理 
+
+        public static void Clear()
+        {
+            ClearInstantQueue();
+            ClearGameObjectPool();
+            
+        }
+
+        //清理GameObject对象池数据
+        public static void ClearGameObjectPool()
+        {
+
+            foreach (var item in gameObjectPool)
+            {
+                StructArray<PoolGetRequest> aPool = item.Value;
+                int count = aPool.Count;
+                if (count > 0)
+                {
+                    for (int j = 0; j < count; j++)
+                    {
+                        ref var poolGetRequest = ref aPool[j];
+                        UnLoadGameObject(poolGetRequest.obj, poolGetRequest.requestId);
+                    }
+                }
+                aPool.Clear(true); //只是把Count置为0，下次还能复用内存
+            }
+            gameObjectPool.Clear();
+        }
+
+        //清理实例化队列数据
+        public static void ClearInstantQueue()
+        {
+            InstantiateRequestList.Clear(true);
+        }
+
+        #endregion
+
+
     }
 
 }
