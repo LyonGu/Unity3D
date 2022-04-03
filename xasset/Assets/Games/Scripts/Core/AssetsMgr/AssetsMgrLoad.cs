@@ -216,7 +216,7 @@ namespace Game
 
         //《InstantiateRequestId, GameObjectInstantiateRequest》
         public static Dictionary<int, GameObjectInstantiateRequest> InstantiateRequestListMap = new Dictionary<int, GameObjectInstantiateRequest>(128);
-        public struct InstantDoneCallData
+        public class InstantDoneCallData
         {
             public int callBackId;
             public Action<bool> completed; //实例化所有回调
