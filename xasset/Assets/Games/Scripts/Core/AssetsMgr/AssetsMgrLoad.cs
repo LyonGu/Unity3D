@@ -713,7 +713,7 @@ namespace Game
         {
             ClearInstantQueue();
             ClearGameObjectPool();
-            
+            ClearPreLoad();
             InstanstRequestDoneCallMap.Clear();
         }
 
@@ -743,6 +743,13 @@ namespace Game
         {
             InstantiateRequestList.Clear(true);
         }
+
+        public static void ClearPreLoad()
+        {
+            _curPreLoadGroupId = -1;
+            _groupIdMap.Clear();
+        }
+        
 
         #endregion
 
