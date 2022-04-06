@@ -214,8 +214,7 @@ namespace Game
 
         public static StructArray<GameObjectInstantiateRequest> InstantiateRequestList = new StructArray<GameObjectInstantiateRequest>(128);
 
-        //《InstantiateRequestId, GameObjectInstantiateRequest》
-        public static Dictionary<int, GameObjectInstantiateRequest> InstantiateRequestListMap = new Dictionary<int, GameObjectInstantiateRequest>(128);
+        
         public class InstantDoneCallData
         {
             public int callBackId;
@@ -715,6 +714,7 @@ namespace Game
             ClearInstantQueue();
             ClearGameObjectPool();
             
+            InstanstRequestDoneCallMap.Clear();
         }
 
         //清理GameObject对象池数据
@@ -733,7 +733,7 @@ namespace Game
                         UnLoadGameObject(poolGetRequest.obj, poolGetRequest.requestId);
                     }
                 }
-                aPool.Clear(true); //只是把Count置为0，下次还能复用内存
+                aPool.Clear(true);
             }
             gameObjectPool.Clear();
         }
