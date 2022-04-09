@@ -331,6 +331,7 @@ namespace libx
     //异步加载bundle中的Assets，会包含一个BundleRequest对象，先加载对应bundle让后加载asset
     public class BundleAssetRequestAsync : BundleAssetRequest
     {
+        //Unity自己封装的一个类
         private AssetBundleRequest _request;
 
         public BundleAssetRequestAsync(string bundle)

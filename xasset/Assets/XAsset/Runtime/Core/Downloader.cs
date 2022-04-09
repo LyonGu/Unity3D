@@ -91,7 +91,7 @@ namespace libx
             _startTime = Time.realtimeSinceStartup;
             _lastTime = 0;
             _started = true;
-            _downloadIndex = _finishedIndex;
+            _downloadIndex = _finishedIndex; //记录下当下载完成的下标
             var max = Math.Min(_downloads.Count, maxDownloads); //最大三个
             for (var i = _finishedIndex; i < max; i++)
             {
@@ -176,7 +176,7 @@ namespace libx
             if (_finishedIndex != downloads.Count)
                 return;
             
-            //所有文件下载完毕
+            //所有文件下载完毕,并且没有出错
             if (onFinished != null)
             {
                 //所有文件下载完毕，执行业务层回调
@@ -234,8 +234,15 @@ namespace libx
             {
                 var download = _progressing[index];
                 download.Update(); //检测下载中是否有异常 出现异常怎么办?
-                if (!download.finished) //finished字段在下载完成后会置为true
+                if (!download.finished) //finished字段在下载完成后或者下载出现错误会置为true
                     continue;
+                if (!string.IsNullOrEmpty(download.error))
+                {
+                    //下载出现错误,重新下载一遍
+                    download.Retry();
+                    continue;
+                }
+
                 _progressing.RemoveAt(index); //下载完从_progressing列表里删除，边遍历边删除
                 index--;
             }
