@@ -203,8 +203,8 @@ namespace libx
 			//获取打包规则
 			var rules = GetBuildRules ();
 			var builds = rules.GetBuilds ();
-            //打不同的ab包
-			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform); //先构建Manifest
+            //打不同文件对应的ab包
+			var assetBundleManifest = BuildPipeline.BuildAssetBundles (outputPath, builds, options, targetPlatform); 
 			if (assetBundleManifest == null) {
 				return;
 			}

@@ -484,7 +484,7 @@ namespace libx
             } 
             try
             {
-                //返回对应的版本的所有文件列表数据 ==》 ver文件里记录了所有的bundle文件的名字  List<VFile> ()
+                //返回对应的版本的所有文件列表数据 ==》 ver文件里记录了所有的bundle文件的名字  List<VFile> ()，还会更新Versions._updateData
                 _versions = Versions.LoadVersions(localVerPath, true); //localVerPath 已经从服务器下载完成的版本文件 版本文件里有新版本对应的文件列表数据
                 if (_versions.Count > 0)
                 {

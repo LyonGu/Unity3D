@@ -249,6 +249,8 @@ namespace libx
 			}
 
 			if (_disk.Exists ()) {
+				//开启VFS，本地文件信息存在, 进行信息对比，一般情况下单文件下载不走这，（除非是没有退出客户端前面开启了VFS后面又使用单文件下载，这种情况所有文件都一样不需要下载）
+				//远程文件不存在或者远程文件和本地文件信息不一致就继续走后面的逻辑，不会直接返回
 				var vdf = _disk.GetFile (path, hash);
 				if (vdf != null && vdf.len == len && vdf.hash.Equals (hash, StringComparison.OrdinalIgnoreCase)) {
 					return false;

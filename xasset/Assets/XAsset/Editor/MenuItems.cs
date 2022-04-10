@@ -181,6 +181,7 @@ namespace libx
         [MenuItem(KCopyBundles)]
         private static void CopyAssetBundles()
         {
+            //把ver文件和res文件copy到StreamAssets目录下
             BuildScript.CopyAssetBundlesTo(Application.streamingAssetsPath);
         } 
 
