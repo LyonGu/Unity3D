@@ -221,14 +221,55 @@ namespace Game
             public Action<bool> completed; //实例化所有回调
             public Action<float> progress; //实例化一个进度回调，切场景预实例化使用
         }
-        
-        public struct GameObjectInstantiateRequest
+
+        /*
+         对该结构MyStruct的实例调用基类Object中的方法时，都会进行装箱操作，
+            对于静态方法（Equals、ReferenceEquals）很好理解，
+            对于实例方法，在CLR调用实例方法时，实际上会把调用这个方法的对象当作第一个参数传入实例方法，
+            而基类Object中的实例方法都会将Object类型的对象作为第一个参数，
+            因此也会发生装箱，这其中的实例方法包括GetType和虚方法Equals、GetHashCode、ToString；
+         */
+        public struct GameObjectInstantiateRequest:IEquatable<GameObjectInstantiateRequest>
         {
             public int requestId;     //实例化请求Id
             public int callbackId;  //实例化完成回调id
             public int assetRequestNameLogicId; //AssetRequest.Name映射的id，可以通过这个拿到AssetRequest上面对应的Asset
             public int instantCount; //实例化个数
             public int assetLogicId; //资源逻辑id，通过这个可以找到资源名字
+
+            public bool Equals(GameObjectInstantiateRequest other)
+            {
+                return this.requestId == other.requestId;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is GameObjectInstantiateRequest))
+                {
+                    return false;
+                }
+                GameObjectInstantiateRequest other = (GameObjectInstantiateRequest)obj;
+                return this.requestId == other.requestId;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.requestId.GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return this.requestId.ToString();
+            }
+
+            public static bool operator ==(GameObjectInstantiateRequest left, GameObjectInstantiateRequest right)
+            {
+                return left.Equals(right);
+            }
+            public static bool operator !=(GameObjectInstantiateRequest left, GameObjectInstantiateRequest right)
+            {
+                return !(left == right);
+            }
         }
         
         
