@@ -1,0 +1,16 @@
+Snapshot Mode ==》 
+{
+	Creates a copy of the mesh in memory at runtime for each frame of animation.
+	感觉内存特别大
+}
+
+
+Shader Mode ==》 烘焙的是顶点位置数据到贴图
+{
+	缺点：
+	{
+		信息密度低，顶点数往往要比骨骼节点数要大得多，导致烘焙出来的纹理尺寸大
+		无法复用，导致每模型每动作均需要烘
+		最重要的，做不到动画过渡（当然强行Lerp也可以，但肯定会有穿帮）
+	}
+}
