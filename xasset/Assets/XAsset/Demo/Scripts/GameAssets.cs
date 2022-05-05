@@ -332,6 +332,9 @@ public class GameAssets : MonoBehaviour
 //	        i--;
 //        }
 
+		
+	   
+	    
         //异步加载
         var abRequestAsync = LoadGameObjectAsync("FootmanHP");
         _requests.Add(abRequestAsync);
@@ -347,7 +350,20 @@ public class GameAssets : MonoBehaviour
             go.name = "HotTestAsync";
             go.transform.position = new Vector3(2, 0, 0);
 
-        };
+        }; 
+        //测试下先异步后同步加载会不会有问题 ==》有问题 abRequest.asset为null
+        /*
+         * 对于同一个bundle只能加载一次，所以先异步后同步加载同一个bundle，对于底层来说是同一个requrest请求
+         * 根据调用顺序来说，先异步后同步就是异步请求，先同步后异步就是同步请求，
+         * 所以如果对于先异步后同步使用同一个bundle中的asset，同步那次是立即拿不到对应asset的，实例化会报错
+         * 对于先同步后异步的方式使用同一个bundle不会有问题
+         */
+//        var abRequest = LoadGameObject("FootmanHP");
+//        _requests.Add(abRequest);
+//        var goSync = Instantiate(abRequest.asset) as GameObject;
+//        goSync.SetActive(true);
+//        goSync.name = "HotTestSync";
+        
 
         //加载进度
         /*
