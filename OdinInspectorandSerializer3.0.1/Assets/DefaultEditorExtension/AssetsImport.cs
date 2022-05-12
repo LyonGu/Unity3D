@@ -17,8 +17,96 @@ OnPostprocessAllAssets：所有资源的导入，删除，移动操作都会调�
 如果有多个类重写了OnPreprocessTexture方法，会被调用多次
  */
 
+/*
+    TextureImporter
+    AudioImporter
+    ModelImporter
+    ShaderImporter
+    VideoClipImporter
+    MonoImporter
+    SketchUpImporter
+    PluginImporter
+    SpeedTreeImporter
+ */
+
+/*
+OnAssignMaterialModel	==》Feeds a source material.
+OnPostprocessAllAssets	==》This is called after importing of any number of assets is complete (when the Assets progress bar has reached the end).
+OnPostprocessAnimation	==》This function is called when an AnimationClip has finished importing.
+OnPostprocessAssetbundleNameChanged	==》Handler called when asset is assigned to a different asset bundle.
+OnPostprocessAudio	==》Add this function to a subclass to get a notification when an audio clip has completed importing.
+OnPostprocessCubemap	==》Add this function to a subclass to get a notification just before a cubemap texture has completed importing.
+OnPostprocessGameObjectWithAnimatedUserProperties	==》This function is called when the animation curves for a custom property are finished importing.
+OnPostprocessGameObjectWithUserProperties	==》Gets called for each GameObject that had at least one user property attached to it in the imported file.
+OnPostprocessMaterial	==》Add this function to a subclass to get a notification when a Material asset has completed importing.
+OnPostprocessMeshHierarchy	==》This function is called when a new transform hierarchy has finished importing.
+OnPostprocessModel	==》Add this function to a subclass to get a notification when a model has completed importing.
+OnPostprocessPrefab	==》 Gets a notification when a Prefab completes importing.
+OnPostprocessSpeedTree	==》Add this function to a subclass to get a notification when a SpeedTree asset has completed importing.
+OnPostprocessSprites	==》Add this function to a subclass to get a notification when an texture of sprite(s) has completed importing.
+OnPostprocessTexture	==》Add this function to a subclass to get a notification when a texture2D has completed importing just before Unity compresses it.
+OnPostprocessTexture2DArray	==》Add this function to a subclass to get a notification when a texture2DArray has completed importing just before Unity compresses it.
+OnPostprocessTexture3D	==》Add this function to a subclass to get a notification when a texture3D has completed importing just before Unity compresses it.
+OnPreprocessAnimation	==》Add this function to a subclass to get a notification just before animation from a model (.fbx, .mb file etc.) is imported.
+OnPreprocessAsset	==》Add this function to a subclass to get a notification just before any Asset is imported.
+OnPreprocessAudio	==》Add this function to a subclass to get a notification just before an audio clip is being imported.
+OnPreprocessCameraDescription	==》Add this function to a subclass to recieve a notification when a camera is imported from a Model Importer.
+OnPreprocessLightDescription	==》Add this function to a subclass to recieve a notification when a light is imported from a Model Importer.
+OnPreprocessMaterialDescription	==》Add this function to a subclass to recieve a notification when a material is imported from a Model Importer.
+OnPreprocessModel	==》Add this function to a subclass to get a notification just before a model (.fbx, .mb file etc.) is imported.
+OnPreprocessSpeedTree	==》Add this function to a subclass to get a notification just before a SpeedTree asset (.spm file) is imported.
+OnPreprocessTexture	==》Add this function to a subclass to get a notification just before the texture importer is run.
+ */
+
+/*
+    OnPreprocessAnimation
+    OnPostprocessAnimation
+    
+    OnPreprocessAsset==》 所有资源导入都会调用这个方法
+
+    OnPreprocessTexture
+    OnPostprocessTexture
+
+    OnPreprocessModel
+    OnPostprocessModel
+
+    OnPostprocessPrefab
+
+    OnPreprocessAudio
+    OnPostprocessAudio
+
+    OnPostprocessMaterial
+
+    OnPostprocessSprites
+    
+ */
 public class CustomAssetPostprocessor : AssetPostprocessor
 {
+
+    public void OnPreprocessAnimation()
+    {
+        Debug.Log("OnPreprocessAnimation AssetPath=" + this.assetPath);
+        ModelImporter modelImporter = assetImporter as ModelImporter;
+        modelImporter.clipAnimations = modelImporter.defaultClipAnimations;
+
+        //modelImporter.SaveAndReimport();
+    }
+
+    public void OnPostprocessAnimation(GameObject root, AnimationClip clip)
+    {
+        Debug.Log("OnPostprocessAnimation AssetPath=" + this.assetPath);
+        Debug.Log($"OnPostprocessAnimation GameObject AnimationClip {root.name} {clip.name}");
+
+    }
+    public void OnPostprocessSprites(Texture2D texture, Sprite[] sprites)
+    {
+        Debug.Log("OnPostprocessSprites AssetPath=" + this.assetPath);
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            Sprite sp = sprites[i];
+            Debug.Log("OnPostprocessSprites SpriteName=" + sp.name);
+        }
+    }
     //模型导入之前调用
     public void OnPreprocessModel()
     {
@@ -33,6 +121,7 @@ public class CustomAssetPostprocessor : AssetPostprocessor
     public void OnPreprocessTexture()
     {
         Debug.Log("CustomAssetPostprocessor OnPreProcessTexture=" + this.assetPath);
+
         TextureImporter importer = this.assetImporter as TextureImporter;
         importer.textureType = TextureImporterType.Sprite;
         importer.maxTextureSize = 512;
