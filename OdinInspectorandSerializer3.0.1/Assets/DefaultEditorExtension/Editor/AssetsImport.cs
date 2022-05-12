@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
+using UnityEditor.AssetImporters;
 
 /*
 OnPreprocessTexture：在导入纹理贴图之前调用
@@ -30,7 +32,7 @@ OnPostprocessAllAssets：所有资源的导入，删除，移动操作都会调�
  */
 
 /*
-OnAssignMaterialModel	==》Feeds a source material.
+OnAssignMaterialModel	==》Feeds a source material.  模型指定材质
 OnPostprocessAllAssets	==》This is called after importing of any number of assets is complete (when the Assets progress bar has reached the end).
 OnPostprocessAnimation	==》This function is called when an AnimationClip has finished importing.
 OnPostprocessAssetbundleNameChanged	==》Handler called when asset is assigned to a different asset bundle.
@@ -74,7 +76,8 @@ OnPreprocessTexture	==》Add this function to a subclass to get a notification j
 
     OnPreprocessAudio
     OnPostprocessAudio
-
+    
+    OnPreprocessMaterialDescription
     OnPostprocessMaterial
 
     OnPostprocessSprites
@@ -82,6 +85,58 @@ OnPreprocessTexture	==》Add this function to a subclass to get a notification j
  */
 public class CustomAssetPostprocessor : AssetPostprocessor
 {
+
+
+    //Unity 21才支持 19不支持
+    public void OnPostprocessPrefab(GameObject g)
+    {
+        Debug.Log("OnPostprocessPrefab AssetPath=" + this.assetPath);
+        Debug.Log("OnPostprocessPrefab GamgObjectName=" + g.name);
+    }
+
+    public void OnPreprocessAsset()
+    {
+        Debug.Log("[OnPreprocessAsset] AssetPath=" + this.assetPath);
+        if (assetImporter.importSettingsMissing)
+        {
+            //ModelImporter modelImporter = assetImporter as ModelImporter;
+            //if (modelImporter != null)
+            //{
+            //    if (!assetPath.Contains("@"))
+            //        modelImporter.importAnimation = false;
+            //    modelImporter.materialImportMode = ModelImporterMaterialImportMode.None;
+            //}
+        }
+    }
+    //Unity only calls this function if you set ModelImporter.materialImportMode to ModelImporterMaterialImportMode.ImportViaMaterialDescription
+    public void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation)
+    {
+        var shader = Shader.Find("Standard");
+        if (shader == null)
+            return;
+        material.shader = shader;
+
+        List<string> props = new List<string>();
+        // list the properties of type Vector4 :
+        description.GetVector4PropertyNames(props);
+        Debug.Log(props);
+
+        // Read a texture property from the material description.
+        TexturePropertyDescription textureProperty;
+        if (description.TryGetProperty("DiffuseColor", out textureProperty))
+        {
+            // Assign the texture to the material.
+            material.SetTexture("_MainTex", textureProperty.texture);
+        }
+    }
+
+
+    //这个调用不到
+    public void OnPostprocessMaterial(Material material)
+    {
+        Debug.Log("OnPostprocessMaterial AssetPath=" + this.assetPath);
+        Debug.Log("OnPostprocessMaterial MaterialName=" + material.name);
+    }
 
     public void OnPreprocessAnimation()
     {
@@ -136,7 +191,7 @@ public class CustomAssetPostprocessor : AssetPostprocessor
 
     public void OnPostprocessAudio(AudioClip clip)
     {
-
+        Debug.Log("CustomAssetPostprocessor OnPostprocessAudio=" + this.assetPath);
     }
     public void OnPreprocessAudio()
     {

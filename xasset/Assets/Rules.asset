@@ -23,7 +23,7 @@ MonoBehaviour:
   searchPatternTimeLine: '*.playable'
   searchPatternShader: '*.shader'
   searchPatternText: '*.txt,*.bytes,*.json,*.csv,*.xml,*htm,*.html,*.yaml,*.fnt'
-  version: 111
+  version: 116
   scenesInBuild:
   - {fileID: 102900000, guid: d378f07356e960549add8141397b1462, type: 3}
   - {fileID: 102900000, guid: 41515a2b3f98a445e88e746ac77f43d1, type: 3}
@@ -129,6 +129,8 @@ MonoBehaviour:
     path: Assets/XAsset/Demo/Scenes/Game.unity
   - bundle: 29b5b528e5e7c8e33456a5edebbfe82c.unity3d
     path: Assets/XAsset/Demo/Scenes/MiniLegion/AllUnits.unity
+  - bundle: 154efa19f58131300e006babbffe711d.unity3d
+    path: Assets/XAsset/Demo/Textures/Battlefield 3.png
   - bundle: 0bf95fdd3eb90de8a6c5e8669defa666.unity3d
     path: Assets/XAsset/Demo/Textures/MiniLegion/HP/footmanBlue.png
   - bundle: 1d3e6a0a3ba165270c348d3a2042e0b4.unity3d
@@ -2246,6 +2248,9 @@ MonoBehaviour:
     - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Victory.fbx
     - Assets/XAsset/Demo/Fbxs/MiniLegion/Footman_Walk.fbx
     - Assets/XAsset/Demo/Fbxs/MiniLegion/Stage.fbx
+  - name: 154efa19f58131300e006babbffe711d.unity3d
+    assets:
+    - Assets/XAsset/Demo/Textures/Battlefield 3.png
   - name: f8e2aef48315c7dc027960d5ea4388d2.unity3d
     assets:
     - Assets/XAsset/Demo/Textures/MiniLegion/PolyartStandard.png
