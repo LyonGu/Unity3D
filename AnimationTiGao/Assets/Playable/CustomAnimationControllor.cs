@@ -14,6 +14,7 @@ public class CustomAnimationControllor : MonoBehaviour
     {
         m_Graph = PlayableGraph.Create("CustomAnimationControllor1");
 
+        //一个playable里包含一个PlayableBehaviour
         var custPlayable = ScriptPlayable<CustomAnimationControllerPlayable>.Create(m_Graph);
 
         var playQueue = custPlayable.GetBehaviour();
