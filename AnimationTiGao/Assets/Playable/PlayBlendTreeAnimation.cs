@@ -39,6 +39,11 @@ public class PlayBlendTreeAnimation : MonoBehaviour
         _graph.Connect(clipPlayable1, 0, _animationMixerPlayable, 0);
         _graph.Connect(clipPlayable2, 0, _animationMixerPlayable, 1);
 
+
+        /*同时设置连接以及权重*/
+        //_animationMixerPlayable.AddInput(clipPlayable1,0, 1.0f - speed);
+        //_animationMixerPlayable.AddInput(clipPlayable2, 0, speed);
+
         animationPlayableOutput.SetSourcePlayable(_animationMixerPlayable);
         _graph.Play();
 
