@@ -17,7 +17,7 @@ namespace Animancer.Examples
     {
         /************************************************************************************************************************/
 
-        [SerializeField] private Vector3 _FocalPoint = new Vector3(0, 1, 0);
+        [SerializeField] private Vector3 _FocalPoint = new Vector3(0, 1, 0); //Ðý×ª½¹µã
         [SerializeField] private MouseButton _MouseButton = MouseButton.Right;
         [SerializeField] private Vector3 _Sensitivity = new Vector3(15, -10, -0.1f);
 
