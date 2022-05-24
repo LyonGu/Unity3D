@@ -47,6 +47,11 @@ namespace Animancer.Examples.FineControl
         protected virtual void Awake()
         {
             // Start paused at the beginning of the animation.
+            //仅仅想先播放_WakeUp，然后停到最开始位置，暂停graph播放
+            /*
+             * 在 SpiderBot 中，我们希望确保从 _WakeUp 动画的开头开始，
+             * 但实际上我们还不想做任何事情，所以我们播放它，然后立即调用 Evaluate 将其应用于模型，然后暂停图形
+             */
             _Animancer.Play(_WakeUp);
             _Animancer.Evaluate();
             _Animancer.Playable.PauseGraph();
