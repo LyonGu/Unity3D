@@ -35,6 +35,7 @@ namespace Animancer.Examples.Events
         {
             source.clip = _Sounds[Random.Range(0, _Sounds.Length)];
             source.Play();
+            Debug.Log($"[{this.GetType().Name}] Play Sound===={source.clip.name}");
 
             // Note that the minimum value in Random.Range is inclusive (so it can pick 0) while the maximum value is
             // exclusive (so it can not pick `_Sounds.Length`), which is perfect for picking a random array element.

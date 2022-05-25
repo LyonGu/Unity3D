@@ -55,6 +55,7 @@ namespace Animancer.Examples.Events
 
             // When the Animation Event with the function name "Event" occurs:
             // If the swing animation doesn't have an event with that function name, this will log a warning.
+            //动画文件Clip里有“Event”事件名
             _EventReceiver.OnEvent.Set(state, (animationEvent) => HitBall());
         }
 

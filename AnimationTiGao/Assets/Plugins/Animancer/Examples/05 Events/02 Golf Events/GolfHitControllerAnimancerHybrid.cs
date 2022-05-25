@@ -44,7 +44,7 @@ namespace Animancer.Examples.Events
             // Set the callback for the hit event using the constant from the base class which the [EventNames]
             // attribute will show in a dropdown menu in the Inspector when editing the event.
             // If no event exists with that name, this would throw an exception.
-            _Swing.Events.SetCallback(HitEventName, HitBall);
+            _Swing.Events.SetCallback(HitEventName, HitBall); //Inspector上设置了一个Hit的事件名
 
             // Or we could just use a magic string, but that is less safe:
             // _Swing.Events.SetCallback("Hit", HitBall);
@@ -54,7 +54,7 @@ namespace Animancer.Examples.Events
             // But that hard-codes the assumption that there will not be any other events before the one we want.
 
             // Or if we did not create the event in the Inspector, we could add it here:
-            // _Swing.Events.Add(new AnimancerEvent(0.375f, OnHitBall));
+            // _Swing.Events.Add(new AnimancerEvent(0.375f, OnHitBall)); //代码动态添加
 
             // Also set the end event's callback:
             _Swing.Events.OnEnd = EndSwing;

@@ -166,6 +166,8 @@ namespace Animancer.Examples.Events
             _Ball.velocity = _HitVelocity;
 
             _HitSound.Play();
+
+            Debug.Log($"{GetType().Name} HitBall=============");
         }
 
         /************************************************************************************************************************/
@@ -183,8 +185,10 @@ namespace Animancer.Examples.Events
 
             // Since the swing animation is ending early, we want it to calculate the fade duration to fade out over
             // the remainder of that animation instead of the value specified by the _Idle transition.
-            var fadeDuration = EndEventReceiver.GetFadeOutDuration();
+            var fadeDuration = EndEventReceiver.GetFadeOutDuration(); //获取当前状态的剩余时间
             _Animancer.Play(_Idle, fadeDuration);
+
+            Debug.Log($"{GetType().Name} EndSwing=============");
         }
 
         /************************************************************************************************************************/
