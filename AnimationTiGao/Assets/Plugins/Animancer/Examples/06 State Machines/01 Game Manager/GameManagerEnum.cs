@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+﻿// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -146,9 +146,11 @@ namespace Animancer.Examples.StateMachines.GameManager
                 case State.Action:
                     _Text.text = $"Wait for the ball to stop\nCurrent Speed: {_Ball.velocity.magnitude:0.00}m/s";
 
+                    //旋转摄像机
                     var targetRotation = Quaternion.LookRotation(_Ball.position - _Camera.position);
                     _Camera.rotation = Quaternion.Slerp(_Camera.rotation, targetRotation, _CameraTurnSpeedFactor * Time.deltaTime);
 
+                    //_Golfer调用EndSwing后_Golfer.CurrentState才会为Idle
                     if (_Golfer.CurrentState == Events.GolfHitController.State.Idle &&
                         _Ball.IsSleeping())
                         CurrentState = State.FadeOut;
