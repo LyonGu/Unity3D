@@ -74,6 +74,7 @@ namespace Animancer.Examples.Locomotion
                 eulerAngles.y = Mathf.MoveTowardsAngle(eulerAngles.y, targetEulerY, _TurnSpeed * Time.deltaTime);
                 transform.eulerAngles = eulerAngles;
 
+                //利用点积转换到局部坐标系
                 // The movement direction is in world space, so we need to convert it to local space to be appropriate
                 // for the current rotation by using dot-products to determine how much of that direction lies along
                 // each axis. This would be unnecessary if we did not rotate at all.
