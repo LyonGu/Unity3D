@@ -66,6 +66,11 @@ namespace Animancer.Examples.Layers
             _BasicAnimancer.Play(animation, _FadeDuration);
 
             // If the Action is currently playing on the layered character, move it to the appropriate layer.
+            //_IsRunning在上面已经被修改过了
+            //拿到上一个层的动作的状态然后copy一份
+            /*
+             * 在不同的层上播放动画需要创建其状态的副本，以使原始状态在前一层上正确淡出。所以我们需要给新状态正确的时间
+             */
             var previousLayer = _IsRunning ? BaseLayer : ActionLayer;
             var state = _LayeredAnimancer.Layers[previousLayer].CurrentState;
 
