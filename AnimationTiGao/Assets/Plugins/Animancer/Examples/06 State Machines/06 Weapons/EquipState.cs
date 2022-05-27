@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Animancer.Examples.StateMachines.Weapons
 {
+    //执行这个状态的EquipAnimation and UnequipAnimation 其他动作无法执行
     /// <summary>A <see cref="CharacterState"/> which managed the currently equipped <see cref="Weapon"/>.</summary>
     /// <example><see href="https://kybernetik.com.au/animancer/docs/examples/fsm/weapons">Weapons</see></example>
     /// https://kybernetik.com.au/animancer/api/Animancer.Examples.StateMachines.Weapons/EquipState
@@ -19,10 +20,10 @@ namespace Animancer.Examples.StateMachines.Weapons
         /************************************************************************************************************************/
 
         [SerializeField] private Transform _WeaponHolder;
-        [SerializeField] private Weapon _Weapon;
+        [SerializeField] private Weapon _Weapon; //当前持有的武器
 
-        private Weapon _EquippingWeapon;
-        private Action _OnUnequipEnd;
+        private Weapon _EquippingWeapon; //当前正在换的武器
+        private Action _OnUnequipEnd; //卸下装备结束回调
 
         /************************************************************************************************************************/
 
@@ -36,6 +37,7 @@ namespace Animancer.Examples.StateMachines.Weapons
                     return;
 
                 _EquippingWeapon = value;
+                //如果无法进入这个状态，直接_EquippingWeapon
                 if (!Character.StateMachine.TrySetState(this))
                     _EquippingWeapon = _Weapon;
             }
@@ -65,6 +67,7 @@ namespace Animancer.Examples.StateMachines.Weapons
         {
             if (_Weapon.UnequipAnimation.IsValid)
             {
+                //如果有卸下装备动画，就执行动画，动画结束执行回调处理
                 var state = Character.Animancer.Play(_Weapon.UnequipAnimation);
                 state.Events.OnEnd = _OnUnequipEnd;
             }
@@ -78,17 +81,21 @@ namespace Animancer.Examples.StateMachines.Weapons
 
         private void OnUnequipEnd()
         {
+            //卸下之前的武器
             DetachWeapon();
+            //把正在换装的武器赋值给当前持有武器变量
             _Weapon = _EquippingWeapon;
             AttachWeapon();
 
             if (_Weapon.EquipAnimation.IsValid)
             {
+                //有换上武器动画，执行动画，动画结束后恢复到默认动作
                 var state = Character.Animancer.Play(_Weapon.EquipAnimation);
                 state.Events.OnEnd = Character.StateMachine.ForceSetDefaultState;
             }
             else
             {
+                //没有动画直接进入默认动作
                 Character.StateMachine.ForceSetState(Character.Idle);
             }
         }
@@ -131,7 +138,7 @@ namespace Animancer.Examples.StateMachines.Weapons
         }
 
         /************************************************************************************************************************/
-
+        // 设置为false，表示这个状态不能别打断，例如换武器的时候不能执行攻击操作
         public override bool CanExitState => false;
 
         /************************************************************************************************************************/
