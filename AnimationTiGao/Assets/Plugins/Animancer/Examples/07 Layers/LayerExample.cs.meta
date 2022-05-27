@@ -6,7 +6,13 @@ labels:
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _BasicAnimancer: {instanceID: 0}
+  - _LayeredAnimancer: {instanceID: 0}
+  - _Idle: {instanceID: 0}
+  - _Run: {instanceID: 0}
+  - _Action: {instanceID: 0}
+  - _ActionMask: {fileID: 31900000, guid: 2ee86d3a5e2d3cf4fa965c906da1eb50, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
