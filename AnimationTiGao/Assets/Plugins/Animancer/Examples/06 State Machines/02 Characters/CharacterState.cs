@@ -24,12 +24,20 @@ namespace Animancer.Examples.StateMachines.Characters
 
         /// <summary>
         /// Plays the animation and if it is not looping it returns the <see cref="Character"/> to Idle afterwards.
+        /// StateBehaviour的OnEnterState里会设置enabled = true，然后调用到这里
         /// </summary>
         private void OnEnable()
         {
+            Debug.Log($"{_Animation.name} OnEnable============");
             var state = _Character.Animancer.Play(_Animation, 0.25f);
             if (!_Animation.isLooping)
                 state.Events.OnEnd = _Character.StateMachine.ForceSetDefaultState;
+        }
+        
+        private void OnDisable()
+        {
+            Debug.Log($"{_Animation.name} OnDisable============");
+           
         }
 
         /************************************************************************************************************************/

@@ -52,6 +52,8 @@ namespace Animancer.Examples.StateMachines.Characters
         /// <summary>
         /// Calls <see cref="StateMachine{TState}.TrySetState"/>. Normally you would just access the
         /// <see cref="StateMachine"/> directly. This method only exists to be called by UI buttons.
+        /// StateMachine.TrySetState会调用
+        /// 1 当前state的OnExitState方法 2目标state的OnEnterState方法
         /// </summary>
         public void TrySetState(CharacterState state) => StateMachine.TrySetState(state);
 
