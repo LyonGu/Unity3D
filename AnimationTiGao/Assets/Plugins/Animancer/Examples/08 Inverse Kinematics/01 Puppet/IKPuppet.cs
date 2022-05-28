@@ -30,7 +30,8 @@ namespace Animancer.Examples.InverseKinematics
         }
 
         /************************************************************************************************************************/
-
+        //After we enable ApplyAnimatorIK, Unity will call the OnAnimatorIK method every frame in any scripts
+        //attached to the same object as the Animator.
         private void OnAnimatorIK(int layerIndex)
         {
             _Animancer.Animator.bodyPosition = _BodyTarget.position;
