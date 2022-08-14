@@ -86,6 +86,20 @@ public class LineRenderDrawLine : MonoBehaviour
             newList.Add(pos);
         }
     }
+
+    private void AddTargetNewPosToNewList(List<Vector3> newPosList, Vector3 targetNewPos, Vector3 targetPos)
+    {
+
+        if (Physics.Raycast(targetNewPos, targetPos - targetNewPos, out RaycastHit hitInfo222, (targetPos - targetNewPos).magnitude))
+        {
+            AddToNewList(newPosList, targetNewPos);
+        }
+        else
+        {
+            AddToNewList(newPosList, targetPos);
+        }
+        //AddToNewList(newPosList, targetNewPos);
+    }
     private void UpdateAdjustWorldPos1()
     {
 
@@ -106,6 +120,18 @@ public class LineRenderDrawLine : MonoBehaviour
                 Vector3 targetDir = targetPos - startPos;
                 Vector3 rayCastdir = targetDir.normalized;
                 float dis = targetDir.magnitude;
+
+                //如果最后一个点跟下一个目标点之间没有射线碰撞就直接跳过
+                //if (newPosList.Count > 0 && isHit)
+                //{
+                //    var newStartPos = newPosList[newPosList.Count - 1];
+                //    var newDir = targetPos - newStartPos;
+                //    if (Physics.Raycast(newStartPos, newDir, out RaycastHit hitInfo11, newDir.magnitude))
+                //    {
+                //        AddToNewList(newPosList, targetPos);
+                //        continue;
+                //    }
+                //}
                 if (Physics.Raycast(startPos, rayCastdir, out RaycastHit hitInfo, dis))
                 {
 
@@ -140,15 +166,14 @@ public class LineRenderDrawLine : MonoBehaviour
                     //Vector3 targetV = startToHitPoint + Ndir;
                     //Vector3 targetNewPos = targetV + hitPoint;
 
-                    if(!newPosList.Contains(startPos))
-                        newPosList.Add(startPos);
-
+                    AddToNewList(newPosList, startPos);
                     if (preHitpoint == Vector3.zero)
                     {
                         //newPosList.Add(hitPoint);
                         //newPosList.Add(targetNewPos);
                         AddToNewList(newPosList, hitPoint);
-                        AddToNewList(newPosList, targetNewPos);
+
+                        AddTargetNewPosToNewList(newPosList, targetNewPos, targetPos);
                         preHitpoint = hitPoint;
                     }
                     else
@@ -174,7 +199,8 @@ public class LineRenderDrawLine : MonoBehaviour
 
                             if (Vector3.Dot(targetV, t2) >= 0)
                             {
-                                newPosList.Add(targetNewPos);
+                                AddTargetNewPosToNewList(newPosList, targetNewPos, targetPos);
+                                //newPosList.Add(targetNewPos);
                             }
                         }
                         else
@@ -183,7 +209,8 @@ public class LineRenderDrawLine : MonoBehaviour
                             //newPosList.Add(hitPoint);
                             //newPosList.Add(targetNewPos);
                             //AddToNewList(newPosList, hitPoint);
-                            AddToNewList(newPosList, targetNewPos);
+                            //AddToNewList(newPosList, targetNewPos);
+                            AddTargetNewPosToNewList(newPosList, targetNewPos, targetPos);
                             preHitpoint = hitPoint;
                         }
                     }
@@ -210,8 +237,8 @@ public class LineRenderDrawLine : MonoBehaviour
 
             _posList = newPosList;
 
-            //lineRender.positionCount = _posList.Count;
-            //lineRender.SetPositions(_posList.ToArray());
+            lineRender.positionCount = _posList.Count;
+            lineRender.SetPositions(_posList.ToArray());
         }
     }
 
@@ -293,7 +320,7 @@ public class LineRenderDrawLine : MonoBehaviour
         }
     }
 
-    private int _movePosIndex = 0;
+    private int _movePosIndex = 1;
     private Vector3 _tempTargetPos;
     private void UpdateBallMove()
     {
@@ -318,7 +345,7 @@ public class LineRenderDrawLine : MonoBehaviour
             else
             {
 
-                Vector3 updatePos = Vector3.Slerp(curPos, _tempTargetPos, Time.deltaTime * 500);
+                Vector3 updatePos = Vector3.Slerp(curPos, _tempTargetPos, Time.deltaTime * 100);
                 _moveGameObjectTransform.position = updatePos;
             }
             
@@ -365,8 +392,112 @@ public class LineRenderDrawLine : MonoBehaviour
         UpdateTrackLine();
         if (_isStartMove)
         {
-            UpdateBallMove();
+            //UpdateBallMove();
         }
 
     }
+
+
+    private bool _isHitT;
+    private Vector3 _targetNewPos;
+    private bool _isUsetargetNewPos;
+    private void UpdateBallMove1()
+    {
+        if (_posList.Count > 0)
+        {
+            //_moveGameObject.SetActive(true);
+            //Vector3 curPos = _moveGameObjectTransform.position;
+            //if (curPos == _tempTargetPos)
+            //{
+            //    //更新目标位置
+            //    _movePosIndex++;
+            //    if (_movePosIndex == _posList.Count)
+            //    {
+            //        //移动结束
+            //        _moveGameObject.SetActive(false);
+            //        _isStartMove = false;
+            //        return;
+            //    }
+
+            //    _tempTargetPos = _posList[_movePosIndex];
+            //}
+            //else
+            //{
+
+            //    Vector3 updatePos = Vector3.Slerp(curPos, _tempTargetPos, Time.deltaTime * 100);
+            //    _moveGameObjectTransform.position = updatePos;
+            //}
+
+            
+            _moveGameObject.SetActive(true);
+            Vector3 curPos = _moveGameObjectTransform.position;
+            _tempTargetPos = _posList[_movePosIndex];
+
+            if (curPos == _tempTargetPos)
+            {
+                _movePosIndex++;
+                if (_movePosIndex == _posList.Count)
+                {
+                    //移动结束
+                    _moveGameObject.SetActive(false);
+                    _isStartMove = false;
+                    return;
+                }
+            }
+            else
+            {
+
+                var rayCastdir = _tempTargetPos - curPos;
+                var dis = rayCastdir.magnitude;
+                if (Physics.Raycast(curPos, rayCastdir, out RaycastHit hitInfo, dis))
+                {
+                    _isHitT = true;
+                    Vector3 hitPoint = hitInfo.point;
+                    Vector3 HitPointToTarget = _tempTargetPos - hitPoint;
+                    float HitPointToTargetDis = HitPointToTarget.magnitude;
+
+
+                    Vector3 normal = hitInfo.normal;
+                    Vector3 normalN = normal.normalized;
+                    Vector3 reflectDir = Vector3.Reflect(rayCastdir, normal);
+                    Vector3 reflectDirT = reflectDir.normalized * HitPointToTargetDis;
+
+                    float nr_dot = Vector3.Dot(normal, reflectDir);
+
+                    float DisN = HitPointToTargetDis * nr_dot;
+                    Vector3 Ndir = DisN * normalN;
+
+                    Vector3 targetV = reflectDirT - Ndir;  //碰撞面的方向
+                    Vector3 targetNewPos = targetV + hitPoint;
+
+                    if (Physics.Raycast(targetNewPos, _tempTargetPos - targetNewPos, out RaycastHit hitInfo222, (_tempTargetPos - targetNewPos).magnitude))
+                    {
+                        //AddToNewList(newPosList, targetNewPos);
+                        _posList.Insert(_movePosIndex, targetNewPos);
+                       // _posList.Insert(_movePosIndex, hitPoint);
+                    }
+                    else
+                    {
+                        //AddToNewList(newPosList, targetPos);
+                    }
+
+                    _posList.Insert(_movePosIndex, targetNewPos);
+                    _posList.Insert(_movePosIndex,hitPoint);
+
+                    _targetNewPos = targetNewPos;
+
+
+                }
+                else
+                {
+                    Vector3 updatePos = Vector3.Slerp(curPos, _tempTargetPos, Time.deltaTime * 500);
+                    _moveGameObjectTransform.position = updatePos;
+                    _isHitT = false;
+                }
+
+            }
+               
+        }
+    }
+
 }
