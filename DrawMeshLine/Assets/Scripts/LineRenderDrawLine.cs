@@ -71,9 +71,147 @@ public class LineRenderDrawLine : MonoBehaviour
             // lineRender.positionCount = _posIndex + 1;
             // lineRender.SetPosition(_posIndex, wordlPos);
             _isStartMove = true;
-            
+
             //提前修正下位置坐标
-            UpdateAdjustWorldPos();
+            //UpdateAdjustWorldPos();
+
+            UpdateAdjustWorldPos1();
+        }
+    }
+
+    private void AddToNewList(List<Vector3> newList, Vector3 pos)
+    {
+        if (!newList.Contains(pos))
+        {
+            newList.Add(pos);
+        }
+    }
+    private void UpdateAdjustWorldPos1()
+    {
+
+        if (_posList.Count > 0)
+        {
+            List<Vector3> newPosList = new List<Vector3>();
+            bool isHit = false;
+            Vector3 starthitPoint = Vector3.zero;
+            Vector3 preHitpoint = Vector3.zero;
+            for (int i = 0; i < _posList.Count - 1; i++)
+            {
+                Vector3 startPos = _posList[i];
+                if (isHit)
+                {
+                    startPos = starthitPoint;
+                }
+                Vector3 targetPos = _posList[i + 1];
+                Vector3 targetDir = targetPos - startPos;
+                Vector3 rayCastdir = targetDir.normalized;
+                float dis = targetDir.magnitude;
+                if (Physics.Raycast(startPos, rayCastdir, out RaycastHit hitInfo, dis))
+                {
+
+                    isHit = true;
+                    starthitPoint = startPos; //记录碰撞的起始点
+                    Vector3 hitPoint = hitInfo.point;
+    
+                    Vector3 startToHitPoint = hitPoint - startPos;
+                    float startToHitPointDis = startToHitPoint.magnitude;
+
+                    Vector3 HitPointToTarget = targetPos - hitPoint;
+                    float HitPointToTargetDis = HitPointToTarget.magnitude;
+
+
+                    Vector3 normal = hitInfo.normal;
+                    Vector3 normalN = normal.normalized;
+                    Vector3 reflectDir = Vector3.Reflect(rayCastdir, normal);
+                    Vector3 reflectDirT = reflectDir.normalized * HitPointToTargetDis;
+                    //reflectDir = reflectDir.normalized;
+                    //Vector3 reflectT = startToHitPointDis * reflectDir;
+                    float nr_dot = Vector3.Dot(normal, reflectDir);
+                   // float rad = Mathf.Acos(nr_dot);
+                    float DisN = HitPointToTargetDis * nr_dot;
+                    Vector3 Ndir = DisN * normalN;
+
+                    Vector3 targetV = reflectDirT - Ndir;
+                    Vector3 targetNewPos = targetV + hitPoint;
+
+
+
+                    //沿碰撞面的方向向量是
+                    //Vector3 targetV = startToHitPoint + Ndir;
+                    //Vector3 targetNewPos = targetV + hitPoint;
+
+                    if(!newPosList.Contains(startPos))
+                        newPosList.Add(startPos);
+
+                    if (preHitpoint == Vector3.zero)
+                    {
+                        //newPosList.Add(hitPoint);
+                        //newPosList.Add(targetNewPos);
+                        AddToNewList(newPosList, hitPoint);
+                        AddToNewList(newPosList, targetNewPos);
+                        preHitpoint = hitPoint;
+                    }
+                    else
+                    {
+                       
+                        Vector3 prePos = _posList[i-1];
+                        Vector3 start1Pos = _posList[i];
+                        Vector3 nextPos = _posList[i+1];
+
+                        Vector3 one1 = start1Pos - prePos;
+                        Vector3 one2 = nextPos - start1Pos;
+                        if (Vector3.Dot(one1, one2) >= 0)
+                        {
+                            //方向未改变， 仅仅加入方向一致的点
+                            Vector3 t1 = hitPoint - preHitpoint;
+                            Vector3 t2 = targetNewPos - preHitpoint;
+                            if (Vector3.Dot(targetV, t1) >= 0)
+                            {
+                                //newPosList.Add(hitPoint);
+                                //AddToNewList(newPosList, hitPoint);
+                                preHitpoint = hitPoint;
+                            }
+
+                            if (Vector3.Dot(targetV, t2) >= 0)
+                            {
+                                newPosList.Add(targetNewPos);
+                            }
+                        }
+                        else
+                        {
+                            //方向改变
+                            //newPosList.Add(hitPoint);
+                            //newPosList.Add(targetNewPos);
+                            //AddToNewList(newPosList, hitPoint);
+                            AddToNewList(newPosList, targetNewPos);
+                            preHitpoint = hitPoint;
+                        }
+                    }
+
+ 
+                }
+                else
+                {
+                    if(isHit)
+                    {
+                        //之前发生过碰撞
+                        //newPosList.Add(targetPos);
+                        AddToNewList(newPosList, targetPos);
+                    }
+                    //没有碰撞不需要修正
+                    isHit = false;
+                    starthitPoint = Vector3.zero;
+                    //if(!newPosList.Contains(startPos))
+                    //    newPosList.Add(startPos);
+
+                    AddToNewList(newPosList, startPos);
+                }
+            }
+
+            _posList = newPosList;
+
+            //lineRender.positionCount = _posList.Count;
+            //lineRender.SetPositions(_posList.ToArray());
         }
     }
 
@@ -108,8 +246,10 @@ public class LineRenderDrawLine : MonoBehaviour
 
                     var nextTargetPox = Vector3.zero;
                     nextTargetPox.z = hitPointWorldPos.z;
+                    var hDir = new Vector3(offset.x, 0, 0);
+                    hDir = hDir.normalized;
                     //水平方向
-                    if (Physics.Raycast(hitPointWorldPos, new Vector3(offset.x, 0, 0), out RaycastHit hitInfo1,
+                    if (Physics.Raycast(hitPointWorldPos, hDir, out RaycastHit hitInfo1,
                         Mathf.Abs(offset.x)))
                     {
                         //水平方向不能移动了
@@ -121,8 +261,9 @@ public class LineRenderDrawLine : MonoBehaviour
                         //水平方向能移动了
                         nextTargetPox.x = targetPos.x;
                     }
-                    
-                    if (Physics.Raycast(hitPointWorldPos, new Vector3(0, offset.y, 0), out RaycastHit hitInfo2,
+                    var vDir = new Vector3(0, offset.y, 0);
+                    vDir = vDir.normalized;
+                    if (Physics.Raycast(hitPointWorldPos, vDir, out RaycastHit hitInfo2,
                         Mathf.Abs(offset.y)))
                     {
                         //竖直方向不能移动了
@@ -146,6 +287,9 @@ public class LineRenderDrawLine : MonoBehaviour
             }
 
             _posList = newPosList;
+
+            lineRender.positionCount = _posList.Count;
+            lineRender.SetPositions(_posList.ToArray());
         }
     }
 
@@ -223,6 +367,6 @@ public class LineRenderDrawLine : MonoBehaviour
         {
             UpdateBallMove();
         }
-        
+
     }
 }
