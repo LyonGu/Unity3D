@@ -92,7 +92,7 @@ public class ImportPicture : AssetPostprocessor
         TextureImporter importer = assetImporter as TextureImporter;
 
         //尺寸限制测试下
-        if (!CheckSizeLimit(importer))
+        if (!isBackGround && !CheckSizeLimit(importer))
         {
             RemoveCurFile("尺寸超过大小限制 2048 X 2048, 强制删除文件！！！！！");
             return;
