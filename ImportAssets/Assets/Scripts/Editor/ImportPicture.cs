@@ -44,17 +44,59 @@ public class ImportPicture : AssetPostprocessor
         return (0, 0);
     }
 
+     public void ReadTextureSize(string texturePath, out int width, out int height, out int diskSize)
+    {
+        var texture2D = new Texture2D(1, 1);
+
+        byte[] bytes = File.ReadAllBytes(texturePath);
+        texture2D.LoadImage(bytes);
+
+        width = texture2D.width;
+        height = texture2D.height;
+        diskSize = bytes.Length;
+
+        UnityEngine.Object.DestroyImmediate(texture2D);
+    }
+
+    bool CheckSizeLimit(TextureImporter importer)
+    {
+        (int width, int height) = GetTextureImporterSize(importer);
+        if (width > 2048 || height > 2048)
+            return false;
+        return true;
+    }
+
+    void RemoveCurFile(string log)
+    {
+        string filePath = Application.dataPath.Replace("\\", "/") + assetPath.Replace("Assets", "");
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+            Debug.LogError(log);
+            return;
+        }
+
+    }
+
     //可以写一个配置ScriptObject
     List<string> whiteList = new List<string>
     {
-
+        "Assets/Textures/double_Ramp.png"
     };
     void OnPreprocessTexture()
     {
         if (whiteList.Contains(assetPath))
             return;
+
         bool isBackGround = assetPath.IndexOf("background") != -1;
         TextureImporter importer = assetImporter as TextureImporter;
+
+        //尺寸限制测试下
+        if (!CheckSizeLimit(importer))
+        {
+            RemoveCurFile("尺寸超过大小限制 2048 X 2048, 强制删除文件！！！！！");
+            return;
+        }
 
         if (importer.isReadable)
         {
@@ -66,7 +108,11 @@ public class ImportPicture : AssetPostprocessor
             importer.mipmapEnabled = false;
         }
 
-        //是否要修改原图大小：TODO
+        if (importer.streamingMipmaps)
+        {
+            importer.streamingMipmaps = false;
+        }
+
         importer.npotScale = TextureImporterNPOTScale.ToNearest;
 
         bool isHaveAplha = importer.DoesSourceTextureHaveAlpha();
@@ -109,9 +155,13 @@ public class ImportPicture : AssetPostprocessor
 
         Debug.Log($"ImportPicture Assets ==={assetPath} ||  isHaveAplha = {isHaveAplha}");
 
+    }
+
+//    public void OnPostprocessTexture(Texture2D tex)
+//    {
+//        Debug.Log($"OnPostProcessTexture={assetPath}  Size == {tex.width} X {tex.height}"); //导入之后纹理的大小
 
         
-
-
-    }
+        
+//    }
 }
