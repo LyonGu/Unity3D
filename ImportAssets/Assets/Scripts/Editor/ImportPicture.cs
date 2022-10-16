@@ -78,16 +78,15 @@ public class ImportPicture : AssetPostprocessor
 
     }
 
-    //可以写一个配置ScriptObject
-    List<string> whiteList = new List<string>
-    {
-        "Assets/Textures/double_Ramp.png"
-    };
     void OnPreprocessTexture()
     {
-        if (whiteList.Contains(assetPath))
-            return;
 
+        ImportAssetsWhiteList cfg = AssetDatabase.LoadAssetAtPath<ImportAssetsWhiteList>("Assets/Textures/ImportAssetsWhiteList.asset");
+        if (cfg != null && cfg.importWhiteList != null)
+        {
+            if (cfg.importWhiteList.Contains(assetPath))
+                return;
+        }
         bool isBackGround = assetPath.IndexOf("background") != -1;
         TextureImporter importer = assetImporter as TextureImporter;
 
