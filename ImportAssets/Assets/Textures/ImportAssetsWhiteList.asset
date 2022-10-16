@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66e3a114b099044fa184f3ada33b4ed, type: 3}
   m_Name: ImportAssetsWhiteList
   m_EditorClassIdentifier: 
-  importWhiteList: []
+  importWhiteList:
+  - Assets/Textures/1.png
+  - Assets/Textures/mode1_normal.png
