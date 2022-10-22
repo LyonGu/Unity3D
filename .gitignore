@@ -463,3 +463,6 @@ XNode/Temp/PropertyDatabase_2066312223
 XNode/Temp/
 XNode/Logs/
 XNode/.vsconfig
+XNode_EX/.vsconfig
+XNode_EX/Library/
+XNode_EX/Temp/
