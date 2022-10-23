@@ -10,7 +10,7 @@ public class GameLevel :GameInst<GameLevel>
     
     void Start()
     {
-        gameStateGraph.startNod.GameStart();
+        gameStateGraph.startNod.GameStart(); //手动调用的
     }
     public void StartCoroutineCreateEnermys(int count, WaypointCircuit spline,CreateEnermyNode enermyNode)
     {
