@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
@@ -8,9 +10,15 @@ public class LearnITimeControl : MonoBehaviour , ITimeControl
 {
     // Start is called before the first frame update
 
+    public PlayableDirector director;
     public Text uitext;
 
     private string printLabel = "timeline的controltrack运行时每一帧调用,timeline的controltrack运行时每一帧调用,timeline的controltrack运行时每一帧调用,timeline的controltrack运行时每一帧调用";
+
+    public void Start()
+    {
+        Debug.Log($"director.duration============={director.duration}");
+    }
 
     public void OnControlTimeStart()
     {
