@@ -42,13 +42,13 @@ public class IronSourceDemoScript : MonoBehaviour
         
         //Add Rewarded Video Events
         IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
-        IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;
-        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
+        IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;  //奖励视频广告关闭事件
+        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;//广告视频是否可领取奖励变化
         IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
         IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
-        IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
+        IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent; //成功领取奖励事件
         IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
-        IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoAdClickedEvent;
+        IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoAdClickedEvent; //奖励视频广告被点击
 
         //Add Rewarded Video DemandOnly Events
         IronSourceEvents.onRewardedVideoAdOpenedDemandOnlyEvent += RewardedVideoAdOpenedDemandOnlyEvent;
@@ -71,7 +71,7 @@ public class IronSourceDemoScript : MonoBehaviour
 
         // Add Interstitial Events
         IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
-        IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent;
+        IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent; //
         IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
         IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
         IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
@@ -104,7 +104,7 @@ public class IronSourceDemoScript : MonoBehaviour
         IronSourceRewardedVideoEvents.onAdOpenedEvent += ReardedVideoOnAdOpenedEvent;
         IronSourceRewardedVideoEvents.onAdClosedEvent += ReardedVideoOnAdClosedEvent;
         IronSourceRewardedVideoEvents.onAdAvailableEvent += ReardedVideoOnAdAvailable;
-        IronSourceRewardedVideoEvents.onAdUnavailableEvent += ReardedVideoOnAdUnavailable;
+        IronSourceRewardedVideoEvents.onAdUnavailableEvent += ReardedVideoOnAdUnavailable;  //广告奖励不可获得
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += ReardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent += ReardedVideoOnAdRewardedEvent;
         IronSourceRewardedVideoEvents.onAdClickedEvent += ReardedVideoOnAdClickedEvent;
@@ -112,7 +112,7 @@ public class IronSourceDemoScript : MonoBehaviour
 
         //Add AdInfo Interstitial Events
         IronSourceInterstitialEvents.onAdReadyEvent += InterstitialOnAdReadyEvent;
-        IronSourceInterstitialEvents.onAdLoadFailedEvent += InterstitialOnAdLoadFailed;
+        IronSourceInterstitialEvents.onAdLoadFailedEvent += InterstitialOnAdLoadFailed;//1
         IronSourceInterstitialEvents.onAdOpenedEvent += InterstitialOnAdOpenedEvent;
         IronSourceInterstitialEvents.onAdClickedEvent += InterstitialOnAdClickedEvent;
         IronSourceInterstitialEvents.onAdShowSucceededEvent += InterstitialOnAdShowSucceededEvent;
@@ -249,6 +249,7 @@ public class IronSourceDemoScript : MonoBehaviour
     }
     void ReardedVideoOnAdClickedEvent(IronSourcePlacement ironSourcePlacement, IronSourceAdInfo adInfo)
     {
+        //adInfo 广告奖励详细信息
         Debug.Log("unity-script: I got ReardedVideoOnAdClickedEvent With Placement" + ironSourcePlacement.ToString() + "And AdInfo " + adInfo.ToString());
     }
 
@@ -260,6 +261,7 @@ public class IronSourceDemoScript : MonoBehaviour
 
     void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
     {
+        //canShowAd为true代表可领奖了
         Debug.Log("unity-script: I got RewardedVideoAvailabilityChangedEvent, value = " + canShowAd);
     }
 
