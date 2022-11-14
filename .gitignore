@@ -476,4 +476,6 @@ Ironsource/Temp/
 Ironsource/build/
 My project_Ironsource/Library/
 My project_Ironsource/Temp/
-Ironsource/
+Ironsource/.idea/
+Ironsource/Logs/
+Ironsource/obj/
