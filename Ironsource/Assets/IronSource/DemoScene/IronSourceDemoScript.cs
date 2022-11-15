@@ -38,7 +38,7 @@ public class IronSourceDemoScript : MonoBehaviour
     {
 
         //Add Init Event
-        IronSourceEvents.onSdkInitializationCompletedEvent += SdkInitializationCompletedEvent;
+        IronSourceEvents.onSdkInitializationCompletedEvent += SdkInitializationCompletedEvent; //初始化完成事件
         
         //Add Rewarded Video Events
         IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
@@ -51,53 +51,53 @@ public class IronSourceDemoScript : MonoBehaviour
         IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoAdClickedEvent; //奖励视频广告被点击
 
         //Add Rewarded Video DemandOnly Events
-        IronSourceEvents.onRewardedVideoAdOpenedDemandOnlyEvent += RewardedVideoAdOpenedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdClosedDemandOnlyEvent += RewardedVideoAdClosedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdLoadedDemandOnlyEvent += RewardedVideoAdLoadedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdRewardedDemandOnlyEvent += RewardedVideoAdRewardedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdShowFailedDemandOnlyEvent += RewardedVideoAdShowFailedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdClickedDemandOnlyEvent += RewardedVideoAdClickedDemandOnlyEvent;
-        IronSourceEvents.onRewardedVideoAdLoadFailedDemandOnlyEvent += RewardedVideoAdLoadFailedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdOpenedDemandOnlyEvent += RewardedVideoAdOpenedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdClosedDemandOnlyEvent += RewardedVideoAdClosedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdLoadedDemandOnlyEvent += RewardedVideoAdLoadedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdRewardedDemandOnlyEvent += RewardedVideoAdRewardedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdShowFailedDemandOnlyEvent += RewardedVideoAdShowFailedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdClickedDemandOnlyEvent += RewardedVideoAdClickedDemandOnlyEvent;
+        // IronSourceEvents.onRewardedVideoAdLoadFailedDemandOnlyEvent += RewardedVideoAdLoadFailedDemandOnlyEvent;
 
 
-        // Add Offerwall Events
-        IronSourceEvents.onOfferwallClosedEvent += OfferwallClosedEvent;
-        IronSourceEvents.onOfferwallOpenedEvent += OfferwallOpenedEvent;
-        IronSourceEvents.onOfferwallShowFailedEvent += OfferwallShowFailedEvent;
-        IronSourceEvents.onOfferwallAdCreditedEvent += OfferwallAdCreditedEvent;
-        IronSourceEvents.onGetOfferwallCreditsFailedEvent += GetOfferwallCreditsFailedEvent;
-        IronSourceEvents.onOfferwallAvailableEvent += OfferwallAvailableEvent;
-
-
-        // Add Interstitial Events
-        IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
-        IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent; //
-        IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
-        IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
-        IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
-        IronSourceEvents.onInterstitialAdOpenedEvent += InterstitialAdOpenedEvent;
-        IronSourceEvents.onInterstitialAdClosedEvent += InterstitialAdClosedEvent;
-
-        // Add Interstitial DemandOnly Events
-        IronSourceEvents.onInterstitialAdReadyDemandOnlyEvent += InterstitialAdReadyDemandOnlyEvent;
-        IronSourceEvents.onInterstitialAdLoadFailedDemandOnlyEvent += InterstitialAdLoadFailedDemandOnlyEvent;
-        IronSourceEvents.onInterstitialAdShowFailedDemandOnlyEvent += InterstitialAdShowFailedDemandOnlyEvent;
-        IronSourceEvents.onInterstitialAdClickedDemandOnlyEvent += InterstitialAdClickedDemandOnlyEvent;
-        IronSourceEvents.onInterstitialAdOpenedDemandOnlyEvent += InterstitialAdOpenedDemandOnlyEvent;
-        IronSourceEvents.onInterstitialAdClosedDemandOnlyEvent += InterstitialAdClosedDemandOnlyEvent;
-
-
-        // Add Banner Events
-        IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
-        IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;
-        IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent;
-        IronSourceEvents.onBannerAdScreenPresentedEvent += BannerAdScreenPresentedEvent;
-        IronSourceEvents.onBannerAdScreenDismissedEvent += BannerAdScreenDismissedEvent;
-        IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
-
+        // // Add Offerwall Events
+        // IronSourceEvents.onOfferwallClosedEvent += OfferwallClosedEvent;
+        // IronSourceEvents.onOfferwallOpenedEvent += OfferwallOpenedEvent;
+        // IronSourceEvents.onOfferwallShowFailedEvent += OfferwallShowFailedEvent;
+        // IronSourceEvents.onOfferwallAdCreditedEvent += OfferwallAdCreditedEvent;
+        // IronSourceEvents.onGetOfferwallCreditsFailedEvent += GetOfferwallCreditsFailedEvent;
+        // IronSourceEvents.onOfferwallAvailableEvent += OfferwallAvailableEvent;
+        //
+        //
+        // // Add Interstitial Events
+        // IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
+        // IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent; //
+        // IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
+        // IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
+        // IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
+        // IronSourceEvents.onInterstitialAdOpenedEvent += InterstitialAdOpenedEvent;
+        // IronSourceEvents.onInterstitialAdClosedEvent += InterstitialAdClosedEvent;
+        //
+        // // Add Interstitial DemandOnly Events
+        // IronSourceEvents.onInterstitialAdReadyDemandOnlyEvent += InterstitialAdReadyDemandOnlyEvent;
+        // IronSourceEvents.onInterstitialAdLoadFailedDemandOnlyEvent += InterstitialAdLoadFailedDemandOnlyEvent;
+        // IronSourceEvents.onInterstitialAdShowFailedDemandOnlyEvent += InterstitialAdShowFailedDemandOnlyEvent;
+        // IronSourceEvents.onInterstitialAdClickedDemandOnlyEvent += InterstitialAdClickedDemandOnlyEvent;
+        // IronSourceEvents.onInterstitialAdOpenedDemandOnlyEvent += InterstitialAdOpenedDemandOnlyEvent;
+        // IronSourceEvents.onInterstitialAdClosedDemandOnlyEvent += InterstitialAdClosedDemandOnlyEvent;
+        //
+        //
+        // // Add Banner Events
+        // IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
+        // IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;
+        // IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent;
+        // IronSourceEvents.onBannerAdScreenPresentedEvent += BannerAdScreenPresentedEvent;
+        // IronSourceEvents.onBannerAdScreenDismissedEvent += BannerAdScreenDismissedEvent;
+        // IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
+        //
         //Add ImpressionSuccess Event
-        IronSourceEvents.onImpressionSuccessEvent += ImpressionSuccessEvent;
-        IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
+        // IronSourceEvents.onImpressionSuccessEvent += ImpressionSuccessEvent;
+        // IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
 
 
         //Add AdInfo Rewarded Video Events
@@ -111,21 +111,21 @@ public class IronSourceDemoScript : MonoBehaviour
 
 
         //Add AdInfo Interstitial Events
-        IronSourceInterstitialEvents.onAdReadyEvent += InterstitialOnAdReadyEvent;
-        IronSourceInterstitialEvents.onAdLoadFailedEvent += InterstitialOnAdLoadFailed;//1
-        IronSourceInterstitialEvents.onAdOpenedEvent += InterstitialOnAdOpenedEvent;
-        IronSourceInterstitialEvents.onAdClickedEvent += InterstitialOnAdClickedEvent;
-        IronSourceInterstitialEvents.onAdShowSucceededEvent += InterstitialOnAdShowSucceededEvent;
-        IronSourceInterstitialEvents.onAdShowFailedEvent += InterstitialOnAdShowFailedEvent;
-        IronSourceInterstitialEvents.onAdClosedEvent += InterstitialOnAdClosedEvent;
+        // IronSourceInterstitialEvents.onAdReadyEvent += InterstitialOnAdReadyEvent;
+        // IronSourceInterstitialEvents.onAdLoadFailedEvent += InterstitialOnAdLoadFailed;//1
+        // IronSourceInterstitialEvents.onAdOpenedEvent += InterstitialOnAdOpenedEvent;
+        // IronSourceInterstitialEvents.onAdClickedEvent += InterstitialOnAdClickedEvent;
+        // IronSourceInterstitialEvents.onAdShowSucceededEvent += InterstitialOnAdShowSucceededEvent;
+        // IronSourceInterstitialEvents.onAdShowFailedEvent += InterstitialOnAdShowFailedEvent;
+        // IronSourceInterstitialEvents.onAdClosedEvent += InterstitialOnAdClosedEvent;
 
-        //Add AdInfo Banner Events
-        IronSourceBannerEvents.onAdLoadedEvent += BannerOnAdLoadedEvent;
-        IronSourceBannerEvents.onAdLoadFailedEvent += BannerOnAdLoadFailedEvent;
-        IronSourceBannerEvents.onAdClickedEvent += BannerOnAdClickedEvent;
-        IronSourceBannerEvents.onAdScreenPresentedEvent += BannerOnAdScreenPresentedEvent;
-        IronSourceBannerEvents.onAdScreenDismissedEvent += BannerOnAdScreenDismissedEvent;
-        IronSourceBannerEvents.onAdLeftApplicationEvent += BannerOnAdLeftApplicationEvent;
+        // //Add AdInfo Banner Events
+        // IronSourceBannerEvents.onAdLoadedEvent += BannerOnAdLoadedEvent;
+        // IronSourceBannerEvents.onAdLoadFailedEvent += BannerOnAdLoadFailedEvent;
+        // IronSourceBannerEvents.onAdClickedEvent += BannerOnAdClickedEvent;
+        // IronSourceBannerEvents.onAdScreenPresentedEvent += BannerOnAdScreenPresentedEvent;
+        // IronSourceBannerEvents.onAdScreenDismissedEvent += BannerOnAdScreenDismissedEvent;
+        // IronSourceBannerEvents.onAdLeftApplicationEvent += BannerOnAdLeftApplicationEvent;
 
     }
 
@@ -161,53 +161,53 @@ public class IronSourceDemoScript : MonoBehaviour
        
         
 
-        Rect showOfferwallButton = new Rect(0.10f * Screen.width, 0.25f * Screen.height, 0.80f * Screen.width, 0.08f * Screen.height);
-        if (GUI.Button(showOfferwallButton, "Show Offerwall"))
-        {
-            if (IronSource.Agent.isOfferwallAvailable())
-            {
-                IronSource.Agent.showOfferwall();
-            }
-            else
-            {
-                Debug.Log("IronSource.Agent.isOfferwallAvailable - False");
-            }
-        }
-
-        Rect loadInterstitialButton = new Rect(0.10f * Screen.width, 0.35f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
-        if (GUI.Button(loadInterstitialButton, "Load Interstitial"))
-        {
-            Debug.Log("unity-script: LoadInterstitialButtonClicked");
-            IronSource.Agent.loadInterstitial();
-        }
-
-        Rect showInterstitialButton = new Rect(0.55f * Screen.width, 0.35f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
-        if (GUI.Button(showInterstitialButton, "Show Interstitial"))
-        {
-            Debug.Log("unity-script: ShowInterstitialButtonClicked");
-            if (IronSource.Agent.isInterstitialReady())
-            {
-                IronSource.Agent.showInterstitial();
-            }
-            else
-            {
-                Debug.Log("unity-script: IronSource.Agent.isInterstitialReady - False");
-            }
-        }
-
-        Rect loadBannerButton = new Rect(0.10f * Screen.width, 0.45f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
-        if (GUI.Button(loadBannerButton, "Load Banner"))
-        {
-            Debug.Log("unity-script: loadBannerButtonClicked");
-            IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
-        }
-
-        Rect destroyBannerButton = new Rect(0.55f * Screen.width, 0.45f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
-        if (GUI.Button(destroyBannerButton, "Destroy Banner"))
-        {
-            Debug.Log("unity-script: loadBannerButtonClicked");
-            IronSource.Agent.destroyBanner();
-        }
+        // Rect showOfferwallButton = new Rect(0.10f * Screen.width, 0.25f * Screen.height, 0.80f * Screen.width, 0.08f * Screen.height);
+        // if (GUI.Button(showOfferwallButton, "Show Offerwall"))
+        // {
+        //     if (IronSource.Agent.isOfferwallAvailable())
+        //     {
+        //         IronSource.Agent.showOfferwall();
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("IronSource.Agent.isOfferwallAvailable - False");
+        //     }
+        // }
+        //
+        // Rect loadInterstitialButton = new Rect(0.10f * Screen.width, 0.35f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
+        // if (GUI.Button(loadInterstitialButton, "Load Interstitial"))
+        // {
+        //     Debug.Log("unity-script: LoadInterstitialButtonClicked");
+        //     IronSource.Agent.loadInterstitial();
+        // }
+        //
+        // Rect showInterstitialButton = new Rect(0.55f * Screen.width, 0.35f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
+        // if (GUI.Button(showInterstitialButton, "Show Interstitial"))
+        // {
+        //     Debug.Log("unity-script: ShowInterstitialButtonClicked");
+        //     if (IronSource.Agent.isInterstitialReady())
+        //     {
+        //         IronSource.Agent.showInterstitial();
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("unity-script: IronSource.Agent.isInterstitialReady - False");
+        //     }
+        // }
+        //
+        // Rect loadBannerButton = new Rect(0.10f * Screen.width, 0.45f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
+        // if (GUI.Button(loadBannerButton, "Load Banner"))
+        // {
+        //     Debug.Log("unity-script: loadBannerButtonClicked");
+        //     IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
+        // }
+        //
+        // Rect destroyBannerButton = new Rect(0.55f * Screen.width, 0.45f * Screen.height, 0.35f * Screen.width, 0.08f * Screen.height);
+        // if (GUI.Button(destroyBannerButton, "Destroy Banner"))
+        // {
+        //     Debug.Log("unity-script: loadBannerButtonClicked");
+        //     IronSource.Agent.destroyBanner();
+        // }
 
 
 
