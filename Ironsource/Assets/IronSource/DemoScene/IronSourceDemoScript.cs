@@ -42,13 +42,15 @@ public class IronSourceDemoScript : MonoBehaviour
         
         //Add Rewarded Video Events
         IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
-        IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;  //奖励视频广告关闭事件
-        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;//广告视频是否可领取奖励变化
+        IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;  //奖励视频广告关闭事件 也可以是成功观看后的事件
+        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;//广告视频是否已经加载好了
         IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
         IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
-        IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent; //成功领取奖励事件
+        IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent; //成功领取奖励事件  发奖只看这个回调####
         IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
         IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoAdClickedEvent; //奖励视频广告被点击
+        
+        //close ==> reward
 
         //Add Rewarded Video DemandOnly Events
         // IronSourceEvents.onRewardedVideoAdOpenedDemandOnlyEvent += RewardedVideoAdOpenedDemandOnlyEvent;
@@ -96,7 +98,7 @@ public class IronSourceDemoScript : MonoBehaviour
         // IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
         //
         //Add ImpressionSuccess Event
-        // IronSourceEvents.onImpressionSuccessEvent += ImpressionSuccessEvent;
+        // IronSourceEvents.onImpressionSuccessEvent += ImpressionSuccessEvent; //一打开广告就知道信心
         // IronSourceEvents.onImpressionDataReadyEvent += ImpressionDataReadyEvent;
 
 
@@ -106,7 +108,7 @@ public class IronSourceDemoScript : MonoBehaviour
         IronSourceRewardedVideoEvents.onAdAvailableEvent += ReardedVideoOnAdAvailable;
         IronSourceRewardedVideoEvents.onAdUnavailableEvent += ReardedVideoOnAdUnavailable;  //广告奖励不可获得
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += ReardedVideoOnAdShowFailedEvent;
-        IronSourceRewardedVideoEvents.onAdRewardedEvent += ReardedVideoOnAdRewardedEvent;
+        IronSourceRewardedVideoEvents.onAdRewardedEvent += ReardedVideoOnAdRewardedEvent; //当前广告load成功的回调
         IronSourceRewardedVideoEvents.onAdClickedEvent += ReardedVideoOnAdClickedEvent;
 
 
@@ -151,7 +153,7 @@ public class IronSourceDemoScript : MonoBehaviour
             Debug.Log("unity-script: ShowRewardedVideoButtonClicked");
             if (IronSource.Agent.isRewardedVideoAvailable())
             {
-                IronSource.Agent.showRewardedVideo();
+                IronSource.Agent.showRewardedVideo("IronSource_StormShot");
             }
             else
             {
@@ -245,6 +247,7 @@ public class IronSourceDemoScript : MonoBehaviour
     }
     void ReardedVideoOnAdRewardedEvent(IronSourcePlacement ironSourcePlacement,IronSourceAdInfo adInfo)
     {
+        //收到这个回调，可以给用户发奖励了
         Debug.Log("unity-script: I got ReardedVideoOnAdRewardedEvent With Placement" + ironSourcePlacement.ToString()+ "And AdInfo " + adInfo.ToString());
     }
     void ReardedVideoOnAdClickedEvent(IronSourcePlacement ironSourcePlacement, IronSourceAdInfo adInfo)
@@ -261,7 +264,7 @@ public class IronSourceDemoScript : MonoBehaviour
 
     void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
     {
-        //canShowAd为true代表可领奖了
+        //canShowAd为true代表视频广告加载好了，可以点击打开展示
         Debug.Log("unity-script: I got RewardedVideoAvailabilityChangedEvent, value = " + canShowAd);
     }
 
@@ -272,7 +275,8 @@ public class IronSourceDemoScript : MonoBehaviour
 
     void RewardedVideoAdRewardedEvent(IronSourcePlacement ssp)
     {
-        Debug.Log("unity-script: I got RewardedVideoAdRewardedEvent, amount = " + ssp.getRewardAmount() + " name = " + ssp.getRewardName());
+        string PlacementName = ssp.getPlacementName();
+        Debug.Log("unity-script: I got RewardedVideoAdRewardedEvent, amount = " + ssp.getRewardAmount() + " name = " + ssp.getRewardName()+ " PlacementName = " + PlacementName);
         
     }
 

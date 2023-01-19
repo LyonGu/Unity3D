@@ -84,6 +84,7 @@
 	            cmd.Blit(source, destination, material, passIndex);
 	        }
 
+			//m_InternalLut为RenderTargetHandle类型对象
 	        Blit(cmd, m_InternalLut.id, m_InternalLut.id, material);
 		}
 
