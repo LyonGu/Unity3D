@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DXGame.structs;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -277,5 +278,32 @@ namespace GamePool
         /// </summary>
         /// <param name="toRelease">Dictionary to release.</param>
         public static void Release(Dictionary<TKey, TValue> toRelease) => s_Pool.Release(toRelease);
+    }
+    
+    
+    public static class QueuePool<T>
+    {
+        // Object pool to avoid allocations.
+        // 参数l其实就是DXQueue<T>
+        static readonly ObjectPool<DXQueue<T>> s_Pool = new ObjectPool<DXQueue<T>>(null, l => l.Clear());
+
+        /// <summary>
+        /// Get a new List
+        /// </summary>
+        /// <returns>A new List</returns>
+        public static DXQueue<T> Get() => s_Pool.Get();
+
+        /// <summary>
+        /// Get a new list PooledObject.
+        /// </summary>
+        /// <param name="value">Output typed List.</param>
+        /// <returns>A new List PooledObject.</returns>
+        public static ObjectPool<DXQueue<T>>.PooledObject Get(out DXQueue<T> value) => s_Pool.Get(out value);
+
+        /// <summary>
+        /// Release an object to the pool.
+        /// </summary>
+        /// <param name="toRelease">List to release.</param>
+        public static void Release(DXQueue<T> toRelease) => s_Pool.Release(toRelease);
     }
 }

@@ -123,7 +123,7 @@ namespace Game
                     complete?.Invoke(_request.asset as T, _request, assetLogicId);
                 };
             }
-            public static void LoadSprie(string assetName, Action<Sprite,int> complete, bool isAsyn = true)
+            public static void LoadSprite(string assetName, Action<Sprite,int> complete, bool isAsyn = true)
             {
                 if (isAsyn)
                 {
@@ -135,7 +135,7 @@ namespace Game
                 }
             }
 
-        public static void LoadSceneAsync(string sceneName, Action complete)
+            public static void LoadSceneAsync(string sceneName, Action complete)
         {
             if (string.IsNullOrEmpty(sceneName))
             {
@@ -164,6 +164,40 @@ namespace Game
                 complete?.Invoke();
             };
         }
+            
+            public static void LoadAsyncByPath<T>(string assetName, Action<T,int> complete) where T:UnityObject
+            {
+                if (string.IsNullOrEmpty(assetName))
+                {
+                    LogUtils.Error($"【AssetsMgr.LoadAyns】 assetName is empty===========");
+                    return;
+                }
+                int assetLogicId = NameToId(assetName);
+                string path = Assets.GetAssetPathByName(assetName);
+                if (string.IsNullOrEmpty(assetName))
+                {
+                    LogUtils.Error($"【AssetsMgr.LoadAyns】 path is empty, assetName is {assetName}===========");
+                    return;
+                }
+                var request = Assets.LoadAssetAsync(path, typeof(T));
+                request.completed = (_request) =>
+                {
+                    if (_request == null)
+                        return;
+                    if (!string.IsNullOrEmpty (_request.error)) {
+                        LogUtils.Error($"【AssetsMgr.LoadAyns】 _request.error is {_request.error}===========");
+                        _request.Release ();
+                        return;
+                    }
+
+                    if (_request.asset == null)
+                    {
+                        request.Release ();
+                        return;
+                    }
+                    complete?.Invoke(_request.asset as T, assetLogicId);
+                };
+            }
 
         #endregion
 
@@ -477,8 +511,8 @@ namespace Game
                     instantCount =  realyNeedCount,
                     assetLogicId = assetLogicId
                 };
-                ref var value = ref InstantiateRequestList.AddRef();
-                value = InstantiateRequest;
+                
+                InstantiateRequestList.Add(ref InstantiateRequest);
             });
         }
         

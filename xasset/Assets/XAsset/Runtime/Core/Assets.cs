@@ -188,6 +188,16 @@ namespace libx
                 return path;
             return string.Empty;
         }
+        
+        public static string GetNameByAssetPath(string assetPath)
+        {
+            foreach (var item in _assetNameToPath)
+            {
+                if (item.Value.Equals(assetPath))
+                    return item.Key;
+            }
+            return string.Empty;
+        }
 
         public static void AddAssetPath2Name(string flieName, string path)
         {
