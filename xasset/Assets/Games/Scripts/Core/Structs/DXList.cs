@@ -221,7 +221,7 @@ namespace DXGame.structs
 
                     if (offset > 0)
                     {
-                        _buffer[i - offset] = t;
+                        _buffer[i - offset] = t; //用下个元素覆盖上个元素
                     }
 
                     if (callback(t))
