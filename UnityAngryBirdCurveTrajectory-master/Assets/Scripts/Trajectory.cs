@@ -2,32 +2,32 @@
 using UnityEngine;
 
 /// <summary>
-/// ÇúÏßÔ¤²âÆ÷
+/// æ›²çº¿é¢„æµ‹å™¨
 /// </summary>
 public class Trajectory : MonoBehaviour
 {
     /// <summary>
-    /// Ô¤²âµãµÄÊıÁ¿
+    /// é¢„æµ‹ç‚¹çš„æ•°é‡
     /// </summary>
     [SerializeField] private int m_dotsNum = 20;
     /// <summary>
-    /// µãÎïÌåµÄ¸¸½Úµã
+    /// ç‚¹ç‰©ä½“çš„çˆ¶èŠ‚ç‚¹
     /// </summary>
     [SerializeField] private GameObject m_dotsParent;
     /// <summary>
-    /// µãÔ¤Éè
+    /// ç‚¹é¢„è®¾
     /// </summary>
     [SerializeField] private GameObject m_dotsPrefab;
     /// <summary>
-    /// µã¼ä¾à
+    /// ç‚¹é—´è·
     /// </summary>
     [SerializeField] private float m_dotSpacing = 0.01f;
     /// <summary>
-    /// µãµÄ×îĞ¡Ëõ·Å
+    /// ç‚¹çš„æœ€å°ç¼©æ”¾
     /// </summary>
     [SerializeField] [Range(0.01f, 0.3f)] private float m_dotMinScale = 0.1f;
     /// <summary>
-    /// µãµÄ×î´óËõ·Å
+    /// ç‚¹çš„æœ€å¤§ç¼©æ”¾
     /// </summary>
     [SerializeField] [Range(0.3f, 1f)] private float m_dotMaxScale = 1f;
 
@@ -43,7 +43,7 @@ public class Trajectory : MonoBehaviour
     }
 
     /// <summary>
-    /// ×¼±¸¹ì¼£µã
+    /// å‡†å¤‡è½¨è¿¹ç‚¹
     /// </summary>
     private void PrepareDots()
     {
@@ -64,10 +64,10 @@ public class Trajectory : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸üĞÂµã×ø±ê
+    /// æ›´æ–°ç‚¹åæ ‡ï¼Œæ°´å¹³é—´éš”ç›¸ç­‰
     /// </summary>
-    /// <param name="birdPos">ÄñµÄ×ø±ê</param>
-    /// <param name="pushSpeed">³õÊ¼ËÙ¶ÈÏòÁ¿</param>
+    /// <param name="birdPos">é¸Ÿçš„åæ ‡</param>
+    /// <param name="pushSpeed">åˆå§‹é€Ÿåº¦å‘é‡</param>
     public void UpdateDots(Vector2 birdPos, Vector2 pushSpeed)
     {
         m_timeStamp = m_dotSpacing;
@@ -82,7 +82,7 @@ public class Trajectory : MonoBehaviour
     }
 
     /// <summary>
-    /// ÏÔÊ¾Ô¤²â¹ì¼£
+    /// æ˜¾ç¤ºé¢„æµ‹è½¨è¿¹
     /// </summary>
     public void Show()
     {
@@ -90,7 +90,7 @@ public class Trajectory : MonoBehaviour
     }
 
     /// <summary>
-    /// Òş²ØÔ¤²â¹ì¼£
+    /// éšè—é¢„æµ‹è½¨è¿¹
     /// </summary>
     public void Hide()
     {
