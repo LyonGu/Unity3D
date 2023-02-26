@@ -133,11 +133,11 @@ namespace libx
 			 * res文件内容：先把文件信息存储完再存储文件内容
 			 * {
 			 * 	  文件总数量
-			 * 	  bundle1名字，bundle1文件大小，bundel1内容hash值，
-			 * 	  bundle2名字，bundle2文件大小，bundel2内容hash值，
-			 * 	  bundle3名字，bundle3文件大小，bundel3内容hash值，
+			 * 	  bundle1名字，bundle1文件大小，bundle1内容hash值，
+			 * 	  bundle2名字，bundle2文件大小，bundle2内容hash值，
+			 * 	  bundle3名字，bundle3文件大小，bundle3内容hash值，
 			 * 	  ......
-			 * 	  bundle1内容，bundle2内容，bundle2内容，
+			 * 	  bundle1内容，bundle2内容，bundle3内容，
 			 * }
 			 *
 			 * ver文件内容
@@ -145,9 +145,9 @@ namespace libx
 			 * 		当前版本号
 			 * 		文件总数量
 			 * 		res文件名字，res文件长度，res内容hash值
-			 * 		bundle1名字，bundle1文件大小，bundel1内容hash值，
-			 * 	  	bundle2名字，bundle2文件大小，bundel2内容hash值，
-			 * 	  	bundle3名字，bundle3文件大小，bundel3内容hash值，
+			 * 		bundle1名字，bundle1文件大小，bundle1内容hash值，
+			 * 	  	bundle2名字，bundle2文件大小，bundle2内容hash值，
+			 * 	  	bundle3名字，bundle3文件大小，bundle3内容hash值，
 			 * 		......
 			 * }
 			 * 
