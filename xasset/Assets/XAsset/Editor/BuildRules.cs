@@ -350,6 +350,10 @@ namespace libx
                 if (assetPaths.Exists(IsScene) && !assetPaths.TrueForAll(IsScene))
                     _conflicted.Add(bundle, assetPaths.ToArray());
 
+                
+                //也可以时使用AssetBundleManifest文件获取
+                //AssetBundleManifest manifest = assetBundle.LoadAsset<AssetBundleManifest>("ManifestName");
+                //string [] dependencies = manifest.GetAllDependencies("assetBundle"); //这里传入你想获取依赖关系的AB包包名
                 //AssetDatabase.GetDependencies ==> 返回文件依赖项列表（具体的文件列表不是bundle），第二个参数为true的话连间接依赖也能获取
                 var dependencies = AssetDatabase.GetDependencies(assetPaths.ToArray(), true);
                 if (dependencies.Length > 0)
