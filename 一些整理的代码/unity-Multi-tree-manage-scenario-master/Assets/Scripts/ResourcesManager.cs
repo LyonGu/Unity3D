@@ -62,6 +62,7 @@ public class ResourcesManager : MonoBehaviour
 
     private Dictionary<string, ResourcesObj> resourcesObjDic;//<resPath,ResourcesObj>
     #region get set
+    //激活对象
     public Dictionary<string, SceneObj> ActiveObjDic
     {
         get
@@ -77,7 +78,7 @@ public class ResourcesManager : MonoBehaviour
             activeObjDic = value;
         }
     }
-
+    //非激活对象
     public Dictionary<string, SceneObj> InActiveObjDic {
         get {
             if(inActiveObjDic == null)
@@ -268,10 +269,12 @@ public class ResourcesManager : MonoBehaviour
     {
         if (CheckIsActive(obj.sUid) != null)
         {
+            //如果已经显示就直接返回
             return;
         }
         if (!MoveToActive(obj))
         {
+            //如果没有创建过，重新load一次
             StartCoroutine(IELoad(obj));
         }
     }

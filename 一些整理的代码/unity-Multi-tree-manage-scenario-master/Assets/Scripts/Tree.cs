@@ -34,6 +34,7 @@ public class Tree : INode
 
     public void TriggerMove(Camera camera)
     {
+        //拿到树的根节点就能遍历所有划分的子区域
         root.TriggerMove(camera);
     }
 

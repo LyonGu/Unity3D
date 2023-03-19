@@ -31,13 +31,13 @@ public class Node : INode
     
     public void InsertObj(ObjData obj)//插入对象
     {
-        Node node = null;
-        bool bChild = false;
+        Node node = null;  //找到obj归属于哪个node区域
+        bool bChild = false; //判断obj是不是只属于单个node管理，有时obj会跨区域，如果跨区域直接放到根节点管理
         
         if(depth < belongTree.maxDepth && childList == null)//如果深度小于数的最大子节点数    并且没有子节点
         {
             //如果还没到叶子节点，可以拥有儿子且儿子未创建，则创建儿子
-            CerateChild();
+            CreateChild();
         }
 
         if(childList != null) // 什么时候childList会为NULL， 到了叶子节点的时候;
@@ -49,6 +49,7 @@ public class Node : INode
                 {
                     break;
                 }
+                //仅仅判断某个对象应该插到哪块区域
                 if (item.bound.Contains(obj.pos))
                 {
                     // 表示前面已经有人管理了, 有属于另外一个孩子的管理区域
@@ -92,6 +93,8 @@ public class Node : INode
         {
             for(int i = 0; i < childList.Length; ++i)
             {
+                //检测每个子区域是否在摄像机范围内，处于的话才进一步去走子区域里的显示逻辑
+                //这一步就过滤了很多无效区域 四叉树的区域管理就是这里了
                 if (childList[i].bound.CheckBoundIsInCamera(camera))
                 {
                     childList[i].TriggerMove(camera);
@@ -100,7 +103,7 @@ public class Node : INode
         }
     }
  
-    private void CerateChild()//创建孩子
+    private void CreateChild()//创建孩子
     {
         childList = new Node[belongTree.maxChildCount];
         int index = 0;
@@ -108,6 +111,7 @@ public class Node : INode
         {
             for(int j = -1; j <= 1; j+=2)
             {
+                //分别计算划分后每个区域的中心点以及区域大小
                 Vector3 centerOffset = new Vector3(bound.size.x / 4 * i, 0, bound.size.z / 4 * j);
                 Vector3 cSize = new Vector3(bound.size.x / 2, bound.size.y, bound.size.z / 2);
                 Bounds cBound = new Bounds(bound.center + centerOffset, cSize);
@@ -123,7 +127,7 @@ public class Node : INode
             Gizmos.color = Color.blue;
             Gizmos.DrawWireCube(bound.center, bound.size - Vector3.one * 0.1f);
         }
-        else//没有就画红色
+        else//没有就画绿色
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireCube(bound.center, bound.size - Vector3.one * 0.1f);

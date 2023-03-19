@@ -49,7 +49,7 @@ public class Main : MonoBehaviour
         }
         else
         {
-            Gizmos.DrawWireCube(mainBound.center, mainBound.size);//画出一个最大的包围盒
+            Gizmos.DrawWireCube(mainBound.center, mainBound.size);//画出一个最大的包围盒 白色
         }
     }
 
