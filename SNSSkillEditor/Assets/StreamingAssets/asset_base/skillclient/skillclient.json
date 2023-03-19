@@ -1,0 +1,2799 @@
+{
+  "skills": [
+    {
+      "id": 200011,
+      "des": "女主-剑-普攻01",
+      "stages": {
+        "default": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "attack01",
+              "speedScale": [
+                {
+                  "timeBegin": 0.0,
+                  "speed": 1.5
+                }
+              ],
+              "otherElementScale": true,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 0.566666663,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_attack01.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 3.8,
+                "y": 3.8,
+                "z": 3.8
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 1.2,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 293.0,
+                "y": 54.0000229,
+                "z": 87.9999847
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.183333337,
+              "time": 0.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_attack_01",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.183333337,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 1.0,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack01_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.225000009,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -1.242971E-14,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.25,
+                    "value": 0.0,
+                    "inTangent": 1.48374042E-07,
+                    "outTangent": 1.4837353E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.275,
+                    "value": 0.259259254,
+                    "inTangent": 4.23924774E-07,
+                    "outTangent": 4.23923751E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.299999982,
+                    "value": 0.7407408,
+                    "inTangent": 4.239231E-07,
+                    "outTangent": 4.23924831E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.325,
+                    "value": 1.0,
+                    "inTangent": 1.48373829E-07,
+                    "outTangent": 1.48374269E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.35,
+                    "value": 1.0,
+                    "inTangent": -2.49343379E-13,
+                    "outTangent": 8.27180663E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 3.54505079E-22,
+                    "outTangent": 3.54505079E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 8,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.116666667,
+              "time": 0.516666651,
+              "trackName": "Move Track"
+            }
+          ],
+          "target": [
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.266666681,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.266666681,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 1.0,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.266666681,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 330.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.266666681,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -1.0,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack01_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.225000009,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -1.242971E-14,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.25,
+                    "value": 0.0,
+                    "inTangent": 1.48374042E-07,
+                    "outTangent": 1.4837353E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.275,
+                    "value": 0.259259254,
+                    "inTangent": 4.23924774E-07,
+                    "outTangent": 4.23923751E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.299999982,
+                    "value": 0.7407408,
+                    "inTangent": 4.239231E-07,
+                    "outTangent": 4.23924831E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.325,
+                    "value": 1.0,
+                    "inTangent": 1.48373829E-07,
+                    "outTangent": 1.48374269E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.35,
+                    "value": 1.0,
+                    "inTangent": -2.49343379E-13,
+                    "outTangent": 8.27180663E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 3.54505079E-22,
+                    "outTangent": 3.54505079E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 8,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.183333337,
+              "time": 0.516666651,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200012,
+      "des": "女主-剑-普攻02",
+      "stages": {
+        "default": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "attack02",
+              "speedScale": [
+                {
+                  "timeBegin": 0.0,
+                  "speed": 1.5
+                }
+              ],
+              "otherElementScale": true,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 0.55,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_attack01.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 4.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 80.00003,
+                "y": 90.0,
+                "z": 90.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.116666667,
+              "time": 0.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_attack_02",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.116666667,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 0.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack02_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -4.28441377E-15,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.228571445,
+                    "value": 0.0,
+                    "inTangent": 3.08618482E-08,
+                    "outTangent": 3.08617025E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.257142872,
+                    "value": 0.156249985,
+                    "inTangent": 9.87576E-08,
+                    "outTangent": 9.875776E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2857143,
+                    "value": 0.5,
+                    "inTangent": 1.35791751E-07,
+                    "outTangent": 1.35792178E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.314285725,
+                    "value": 0.84375006,
+                    "inTangent": 9.875755E-08,
+                    "outTangent": 9.875758E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.342857152,
+                    "value": 1.0,
+                    "inTangent": 3.08615427E-08,
+                    "outTangent": 3.08618873E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.371428579,
+                    "value": 1.0,
+                    "inTangent": 9.608174E-14,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 9,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.0,
+              "time": 0.43,
+              "trackName": "Move Track"
+            }
+          ],
+          "target": [
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 15.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.229999989,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.229999989,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.233333334,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 1.0,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.233333334,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -0.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack02_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -4.28441377E-15,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.228571445,
+                    "value": 0.0,
+                    "inTangent": 3.08618482E-08,
+                    "outTangent": 3.08617025E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.257142872,
+                    "value": 0.156249985,
+                    "inTangent": 9.87576E-08,
+                    "outTangent": 9.875776E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2857143,
+                    "value": 0.5,
+                    "inTangent": 1.35791751E-07,
+                    "outTangent": 1.35792178E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.314285725,
+                    "value": 0.84375006,
+                    "inTangent": 9.875755E-08,
+                    "outTangent": 9.875758E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.342857152,
+                    "value": 1.0,
+                    "inTangent": 3.08615427E-08,
+                    "outTangent": 3.08618873E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.371428579,
+                    "value": 1.0,
+                    "inTangent": 9.608174E-14,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 9,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.186666667,
+              "time": 0.43,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200013,
+      "des": "女主-剑-普攻03",
+      "stages": {
+        "default": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "attack03",
+              "speedScale": [
+                {
+                  "timeBegin": 0.0,
+                  "speed": 1.5
+                }
+              ],
+              "otherElementScale": true,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 0.7,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_attack03.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 5.4,
+                "y": 5.0,
+                "z": 5.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 1.36,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 289.999969,
+                "y": 270.0,
+                "z": 270.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.233333334,
+              "time": 0.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_attack_03",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.233333334,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 1.0,
+              "frequencyGain": 0.5,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.233333334,
+              "time": 0.283333331,
+              "trackName": "Camera Shake Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 1.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack03_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0166666675,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 7.919101E-15,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0333333351,
+                    "value": 0.0,
+                    "inTangent": 1.32674856E-07,
+                    "outTangent": 1.32674813E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.05,
+                    "value": 0.11338713,
+                    "inTangent": 3.55022848E-07,
+                    "outTangent": 3.55021882E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.06666667,
+                    "value": 0.303411067,
+                    "inTangent": 4.48364972E-07,
+                    "outTangent": 4.48367246E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0833333358,
+                    "value": 0.496571153,
+                    "inTangent": 3.62363153E-07,
+                    "outTangent": 3.62362726E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.1,
+                    "value": 0.6130945,
+                    "inTangent": 1.357554E-07,
+                    "outTangent": 1.35754235E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.116666667,
+                    "value": 0.6125899,
+                    "inTangent": -1.181065E-09,
+                    "outTangent": -1.18146937E-09,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.166666672,
+                    "value": 0.640427947,
+                    "inTangent": 9.368355E-08,
+                    "outTangent": 9.36833E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.183333337,
+                    "value": 0.696897566,
+                    "inTangent": 2.66100045E-07,
+                    "outTangent": 2.660999E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2,
+                    "value": 0.8678445,
+                    "inTangent": 3.546594E-07,
+                    "outTangent": 3.546615E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.216666669,
+                    "value": 1.0,
+                    "inTangent": 1.54635586E-07,
+                    "outTangent": 1.54636183E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.233333334,
+                    "value": 1.0,
+                    "inTangent": 7.659044E-13,
+                    "outTangent": 1.65436133E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 7.090127E-22,
+                    "outTangent": 7.090127E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 14,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.1,
+              "time": 0.516666651,
+              "trackName": "Move Track"
+            }
+          ],
+          "target": [
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.316666663,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.316666663,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 1.0,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.316666663,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.7,
+                "y": 0.7,
+                "z": 0.7
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 20.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.316666663,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -1.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@attack03_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 1.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 34
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 34
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.316666663,
+              "time": 0.08333333,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200014,
+      "des": "女主-剑-技能01",
+      "stages": {
+        "default": {
+          "attacker": [],
+          "target": [
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.0,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.3,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.0,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.3,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.25,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -1.0,
+              "offset": 0.0,
+              "animClipPath": null,
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.25,
+              "time": 0.1,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.25,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 45.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 0.5333333,
+              "trackName": "Effect Track (1)"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        },
+        "chant": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "skill01",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 1.95,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 2.0,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@skill01_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.05,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -2.806777E-13,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0625,
+                    "value": 0.0,
+                    "inTangent": 5.60476565E-07,
+                    "outTangent": 5.604797E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0749999955,
+                    "value": 0.237553582,
+                    "inTangent": 6.708554E-07,
+                    "outTangent": 6.7085233E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0875,
+                    "value": 0.284335434,
+                    "inTangent": 2.20751943E-07,
+                    "outTangent": 2.2075092E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.1625,
+                    "value": 0.5650266,
+                    "inTangent": 2.20750849E-07,
+                    "outTangent": 2.20751446E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.175,
+                    "value": 0.6118084,
+                    "inTangent": 2.91933617E-07,
+                    "outTangent": 2.91932082E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.1875,
+                    "value": 0.688760638,
+                    "inTangent": 3.62622956E-07,
+                    "outTangent": 3.62623155E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2,
+                    "value": 0.7655042,
+                    "inTangent": 1.81062376E-07,
+                    "outTangent": 1.81066767E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.212499991,
+                    "value": 0.7655042,
+                    "inTangent": 5.39621E-15,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.225000009,
+                    "value": 0.7655042,
+                    "inTangent": 0.0,
+                    "outTangent": 2.037299E-12,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2375,
+                    "value": 0.7655042,
+                    "inTangent": 2.40750381E-07,
+                    "outTangent": 2.40745521E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.25,
+                    "value": 0.867543936,
+                    "inTangent": 4.857851E-07,
+                    "outTangent": 4.857937E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2625,
+                    "value": 0.9714036,
+                    "inTangent": 3.12514459E-07,
+                    "outTangent": 3.12509826E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2875,
+                    "value": 1.0,
+                    "inTangent": 1.01707282E-12,
+                    "outTangent": 1.65435991E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.900000036,
+                    "value": 1.0,
+                    "inTangent": 7.09007633E-22,
+                    "outTangent": 1.65436284E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 7.090127E-22,
+                    "outTangent": 7.090127E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 17,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.15,
+              "time": 1.58333337,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 1.0,
+              "frequencyGain": 0.5,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.5833333,
+              "time": 0.55,
+              "trackName": "Camera Shake Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_skill01.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": true,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_skill_03",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.233333334,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            }
+          ],
+          "target": []
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200015,
+      "des": "女主-剑-大招",
+      "stages": {
+        "default": {
+          "attacker": [],
+          "target": [
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.0,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 1.0,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.0,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -1.0,
+              "offset": 0.0,
+              "animClipPath": null,
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.0,
+              "time": 0.1,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        },
+        "chant": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "skill02_01",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 0.6,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 0.6,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 1.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@skill02_01_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 4.98243139E-07,
+                    "outTangent": 4.98243139E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0588235334,
+                    "value": 0.08792049,
+                    "inTangent": 4.71259142E-07,
+                    "outTangent": 4.71259455E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.117647067,
+                    "value": 0.166317716,
+                    "inTangent": 4.44275344E-07,
+                    "outTangent": 4.44274434E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.3529412,
+                    "value": 0.479906678,
+                    "inTangent": 4.44277021E-07,
+                    "outTangent": 4.442772E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.4117647,
+                    "value": 0.558303952,
+                    "inTangent": 3.472942E-07,
+                    "outTangent": 3.472915E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.470588267,
+                    "value": 0.602473557,
+                    "inTangent": 2.503065E-07,
+                    "outTangent": 2.503091E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 2.50308773E-07,
+                    "outTangent": 2.50308773E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 7,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.0,
+              "time": 0.45,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 1.0,
+              "frequencyGain": 1.0,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.3,
+              "time": 0.3,
+              "trackName": "Camera Shake Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_skill02_01.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_skill_01",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.116666667,
+              "time": 0.8833333,
+              "trackName": "Skill Audio Track"
+            }
+          ],
+          "target": []
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200016,
+      "des": "女主-剑-大招02",
+      "stages": {
+        "default": {
+          "attacker": [],
+          "target": [
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.0,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.3,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.0,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.3,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.3,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.4,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.62,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -1.0,
+              "offset": 0.0,
+              "animClipPath": null,
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.62,
+              "time": 0.1,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.3,
+              "time": 0.5333333,
+              "trackName": "Effect Track (1)"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 10.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.62,
+              "time": 0.5333333,
+              "trackName": "Effect Track (2)"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        },
+        "chant": {
+          "target": [],
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "skill02_02",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 1.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@skill02_02_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 3.68078652E-08,
+                    "outTangent": 3.68078652E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0232558157,
+                    "value": 0.009365311,
+                    "inTangent": 7.07346E-08,
+                    "outTangent": 7.073459E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.139534891,
+                    "value": 0.271175,
+                    "inTangent": 3.01960682E-07,
+                    "outTangent": 3.01960171E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.348837227,
+                    "value": 0.9526108,
+                    "inTangent": 1.73629928E-07,
+                    "outTangent": 1.73627654E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.372093052,
+                    "value": 0.990026534,
+                    "inTangent": 9.31211943E-08,
+                    "outTangent": 9.31253155E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.395348847,
+                    "value": 1.0,
+                    "inTangent": 1.95982857E-08,
+                    "outTangent": 1.95997973E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.418604672,
+                    "value": 1.0,
+                    "inTangent": 1.01564438E-12,
+                    "outTangent": 2.48154426E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.488372117,
+                    "value": 1.0,
+                    "inTangent": 1.063519E-21,
+                    "outTangent": 2.48153982E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.063519E-21,
+                    "outTangent": 1.063519E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 9,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.116666667,
+              "time": 0.85,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 1.0,
+              "frequencyGain": 0.5,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.65,
+              "time": 0.55,
+              "trackName": "Camera Shake Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_skill02_02.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": true,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_skill_02",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.4,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            }
+          ]
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    },
+    {
+      "id": 200017,
+      "des": "女主-剑-大招03",
+      "stages": {
+        "default": {
+          "attacker": [],
+          "target": [
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.482352942,
+                "g": 0.447058827,
+                "b": 0.34117648,
+                "a": 1.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.0,
+              "time": 0.2,
+              "trackName": "Glow Effect Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "stronghit",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 2,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Animation Track"
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 0.3,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.0,
+              "time": 0.05,
+              "trackName": "Damage Text Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 4,
+              "distance": -2.0,
+              "offset": 0.0,
+              "animClipPath": null,
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.0,
+              "time": 0.1,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Common/fx_common_daoguang_hit01.prefab",
+              "attach": 2,
+              "attachNodeName": "chest",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 0.5333333,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 10011,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.5,
+              "trackName": "Buff Track"
+            }
+          ]
+        },
+        "chant": {
+          "target": [],
+          "attacker": [
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 0.15,
+              "trackName": "Adjust Direction Track"
+            },
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "skill02_03",
+              "speedScale": null,
+              "otherElementScale": false,
+              "priority": 1,
+              "fadeTime": 0.0,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Skill Animation Track"
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 2.13333344,
+              "trackName": "Skill Event Track"
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 1,
+              "distance": 1.5,
+              "offset": 0.0,
+              "animClipPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/fbx_wy/nvzhuhei_jian@skill02_03_wy.FBX",
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.05,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": -3.32526622E-13,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0625,
+                    "value": 0.0,
+                    "inTangent": 6.833598E-07,
+                    "outTangent": 6.833637E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0749999955,
+                    "value": 0.2585843,
+                    "inTangent": 8.42376153E-07,
+                    "outTangent": 8.42373254E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.0875,
+                    "value": 0.318754733,
+                    "inTangent": 2.92156358E-07,
+                    "outTangent": 2.921547E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.1625,
+                    "value": 0.553274632,
+                    "inTangent": 1.96636179E-07,
+                    "outTangent": 1.96638382E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.175,
+                    "value": 0.5923612,
+                    "inTangent": 3.24810145E-07,
+                    "outTangent": 3.248067E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.1875,
+                    "value": 0.6761833,
+                    "inTangent": 3.54424174E-07,
+                    "outTangent": 3.54422184E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2,
+                    "value": 0.7264765,
+                    "inTangent": 1.32908653E-07,
+                    "outTangent": 1.32908667E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.225000009,
+                    "value": 0.7264765,
+                    "inTangent": 7.517536E-08,
+                    "outTangent": 7.517773E-08,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.2375,
+                    "value": 0.7549229,
+                    "inTangent": 2.544397E-07,
+                    "outTangent": 2.544351E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.275,
+                    "value": 0.971553564,
+                    "inTangent": 2.544351E-07,
+                    "outTangent": 2.544382E-07,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.31249997,
+                    "value": 1.0,
+                    "inTangent": 7.090127E-22,
+                    "outTangent": 1.65435991E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 0.925,
+                    "value": 1.0,
+                    "inTangent": 7.090127E-22,
+                    "outTangent": 1.65436284E-21,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 7.090127E-22,
+                    "outTangent": 7.090127E-22,
+                    "inWeight": 0.333333343,
+                    "outWeight": 0.333333343,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 15,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.116666667,
+              "time": 1.2166667,
+              "trackName": "Move Track"
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 2.0,
+              "frequencyGain": 1.0,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.733333349,
+              "time": 0.3,
+              "trackName": "Camera Shake Track"
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "Assets/Arts/Effects/Prefabs/Hero/fx_hero_nvzhuheijian_skill02_03.prefab",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 0.55
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": true,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 2.5,
+              "trackName": "Effect Track"
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "se_all",
+              "eventName": "sfx_se_player_female_sword_skill_03",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.233333334,
+              "time": 1.0,
+              "trackName": "Skill Audio Track"
+            }
+          ]
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": "Assets/Arts/Characters/hero/hero_nvzhuhei_jian/prefab/nvzhuhei_jian_se.prefab",
+      "targetPrefabPath": "Assets/Arts/Characters/monster/monster_chongxiaoguai/prefab/monster_chongxiaoguai_se.prefab"
+    }
+  ],
+  "version": 1,
+  "groups": [
+    {
+      "groupDesc": "SE1"
+    }
+  ]
+}

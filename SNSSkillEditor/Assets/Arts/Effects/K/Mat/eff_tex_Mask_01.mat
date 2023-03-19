@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: eff_tex_Mask_01
+  m_Shader: {fileID: 4800000, guid: 04f0c353d6f28b8438b53fd5aaa1f2a9, type: 3}
+  m_ShaderKeywords: DISSOLVE RIMLIGHT_NONE _MASKCOUNT_NONE _RIMLIGHT_NONE
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveSrc:
+        m_Texture: {fileID: 2800000, guid: 7c1fa9301576c43419ea34aef58fbd48, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveSrc2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlowlightTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 4c521b696281c0f489ce7630f10d8e89, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: 3e27f8342d83bfd45adba942082a6003, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: -0.14}
+    - _TextureSample2:
+        m_Texture: {fileID: 2800000, guid: 75e93551d64e0bc4aa9c0d844cd11a09, type: 3}
+        m_Scale: {x: 1, y: 1.84}
+        m_Offset: {x: 0, y: 0}
+    - _Texture_001:
+        m_Texture: {fileID: 2800000, guid: 071129ac5cca73241bf428d340c578a3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AllPower: 1
+    - _AlphaCutoff: 0.5
+    - _Amount: -0.08
+    - _BlendMode: 2
+    - _BlendModeDst: 10
+    - _BlendModeSrc: 5
+    - _BlendOp: 0
+    - _BumpScale: 1
+    - _CameraFadingEnabled: 0
+    - _CameraFarFadeDistance: 2
+    - _CameraNearFadeDistance: 1
+    - _ColorMode: 0
+    - _Cull: 2
+    - _CullMode: 0
+    - _Cutoff: 0.5
+    - _DissolveScale: 0.245
+    - _DistortionBlend: 0.5
+    - _DistortionEnabled: 0
+    - _DistortionStrength: 1
+    - _DistortionStrengthScaled: 0
+    - _DstBlend: 1
+    - _EmissionEnabled: 0
+    - _FlipbookMode: 0
+    - _FlowPower: 1
+    - _InvFade: 1
+    - _LightingEnabled: 0
+    - _MaskCount: 0
+    - _Mode: 0
+    - _RimLight: 0
+    - _RimPower: 2.5
+    - _RotateDegree: 0
+    - _RotateDegree2: 0
+    - _RotateDegree3: 0
+    - _RotateDegreeFlow: 0
+    - _RotateSpeed: 0
+    - _RotateSpeed2: 0
+    - _RotateSpeed3: 0
+    - _RotateSpeedFlow: 0
+    - _Slider: 0.341
+    - _SoftParticlesEnabled: 0
+    - _SoftParticlesFarFadeDistance: 1
+    - _SoftParticlesNearFadeDistance: 0
+    - _SrcBlend: 5
+    - _StartAmount: 0
+    - _Tile: 1
+    - _ZWrite: 0
+    - _alpha: 0.1
+    - _alphaRange: 0.464
+    - _color_s: 1
+    - _color_s2: 0.75
+    - _dis_test: -0
+    - _dis_test2: 2
+    - _soft: 0.49
+    - _soft2: 0.49
+    m_Colors:
+    - _AddBackColor: {r: 1, g: 1, b: 1, a: 1}
+    - _AddColor: {r: 14.754423, g: 14.754423, b: 14.754423, a: 1}
+    - _AddColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _AddColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _Ani: {r: 1, g: 1, b: 0, a: 0}
+    - _Ani2: {r: 1, g: 1, b: 0, a: 0}
+    - _Ani3: {r: 1, g: 1, b: 0, a: 0}
+    - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
+    - _Color: {r: 7.011434, g: 7.011434, b: 7.011434, a: 1}
+    - _Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
+    - _ColorAnimate: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_001: {r: 1, g: 0, b: 0, a: 1}
+    - _DisAni1: {r: 1, g: 1, b: 0, a: 0}
+    - _DisAni2: {r: 1, g: 1, b: 0, a: 0}
+    - _DissColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FlowAni: {r: 1, g: 1, b: 0, a: 0}
+    - _FlowlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+    - _SoftPar: {r: 0, g: 0.05, b: 0, a: 0}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 0.5}

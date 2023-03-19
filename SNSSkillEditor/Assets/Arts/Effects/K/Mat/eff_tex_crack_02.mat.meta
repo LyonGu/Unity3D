@@ -1,0 +1,29 @@
+<<<<<<< .mine
+fileFormatVersion: 2
+guid: 3c8ff8fed9f3a3b44a64cf5f7ecb53e0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+||||||| .r2806
+fileFormatVersion: 2
+guid: 72ec5fb7796b0064b89d08eea7edd8aa
+timeCreated: 1521097590
+licenseType: Pro
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+=======
+fileFormatVersion: 2
+guid: 81beee8bcf7b86f4590dfaac7a0aa265
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>> .r2946

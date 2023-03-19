@@ -1,0 +1,271 @@
+{
+  "skills": [
+    {
+      "id": 1001,
+      "des": "散弹枪",
+      "stages": {
+        "default": {
+          "attacker": [
+            {
+              "$type": "SkillEditor.Animation, Assembly-CSharp-Editor",
+              "animName": "attack",
+              "speedScale": [],
+              "otherElementScale": false,
+              "priority": 1,
+              "fadeTime": 0.1,
+              "type": 0,
+              "des": "Animation",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.Effect, Assembly-CSharp-Editor",
+              "effectId": 0,
+              "effectPath": "",
+              "attach": 0,
+              "attachNodeName": "",
+              "attachTarget": 0,
+              "attachTargetNodeName": "",
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "isFollow": false,
+              "isBallistic": false,
+              "destroyWhenOwnerDie": true,
+              "destroyWhenSkillCancel": true,
+              "type": 1,
+              "des": "Effect",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.Move, Assembly-CSharp-Editor",
+              "useNotDistance": false,
+              "directionType": 0,
+              "distance": 0.0,
+              "offset": 0.0,
+              "animClipPath": null,
+              "curve": {
+                "keys": [
+                  {
+                    "time": 0.0,
+                    "value": 0.0,
+                    "inTangent": 0.0,
+                    "outTangent": 1.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  },
+                  {
+                    "time": 1.0,
+                    "value": 1.0,
+                    "inTangent": 1.0,
+                    "outTangent": 0.0,
+                    "inWeight": 0.0,
+                    "outWeight": 0.0,
+                    "weightedMode": 0,
+                    "tangentMode": 0
+                  }
+                ],
+                "length": 2,
+                "preWrapMode": 8,
+                "postWrapMode": 8
+              },
+              "type": 2,
+              "des": "Move",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.CameraShake, Assembly-CSharp-Editor",
+              "amplitudeGain": 0.0,
+              "frequencyGain": 0.0,
+              "type": 3,
+              "des": "CameraShake",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.GlowEffect, Assembly-CSharp-Editor",
+              "color": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "endColor": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              },
+              "easeTime": 0.0,
+              "type": 4,
+              "des": "GlowEffect",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.AdjustDirection, Assembly-CSharp-Editor",
+              "dirTarget": 1,
+              "angle": 0.0,
+              "tweening": false,
+              "type": 5,
+              "des": "AdjustDirection",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.ModelShake, Assembly-CSharp-Editor",
+              "range": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "angularFrequency": 0.0,
+              "damping": 0.0,
+              "type": 6,
+              "des": "ModelShake",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.Alert, Assembly-CSharp-Editor",
+              "shape": 0,
+              "length": 0.0,
+              "width": 0.0,
+              "angle": 0.0,
+              "shiftDistance": 0.0,
+              "type": 7,
+              "des": "Alert",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.DamageText, Assembly-CSharp-Editor",
+              "damageTextType": 0,
+              "rate": 1.0,
+              "type": 8,
+              "des": "DamageText",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.SkillAudio, Assembly-CSharp-Editor",
+              "bankName": "",
+              "eventName": "",
+              "type": 9,
+              "des": "SkillAudio",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.ProjectileEffect, Assembly-CSharp-Editor",
+              "effectPath": "",
+              "attachNodeName": "",
+              "height": 1.0,
+              "gravity": 10.0,
+              "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+              },
+              "offset": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "type": 10,
+              "des": "ProjectileEffect",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.SkillEvent, Assembly-CSharp-Editor",
+              "skillEventType": 0,
+              "param": "",
+              "type": 11,
+              "des": "SkillEvent",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.TimeProgressTip, Assembly-CSharp-Editor",
+              "direction": 0,
+              "text": "",
+              "type": 12,
+              "des": "TimeProgressTip",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.KeyEvent, Assembly-CSharp-Editor",
+              "type": 13,
+              "des": "KeyEvent",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.AdjustPos, Assembly-CSharp-Editor",
+              "type": 14,
+              "des": "AdjustPos",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.AddBuff, Assembly-CSharp-Editor",
+              "buffId": 0,
+              "type": 15,
+              "des": "AddBuff",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            },
+            {
+              "$type": "SkillEditor.KeepDirection, Assembly-CSharp-Editor",
+              "type": 16,
+              "des": "KeepDirection",
+              "timeBegin": 0.0,
+              "time": 1.0,
+              "trackName": null
+            }
+          ],
+          "target": []
+        }
+      },
+      "groupIndex": 0,
+      "attackerPrefabPath": null,
+      "targetPrefabPath": null
+    }
+  ],
+  "version": 1,
+  "groups": []
+}

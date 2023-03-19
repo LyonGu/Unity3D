@@ -1,0 +1,26 @@
+﻿-- auto gen. do not modify
+
+---@class skillclient.gen
+local gen = {
+  {{ for enumData in enums }}
+    {{enumData.name}} = {
+      {{~ for pair in enumData.list ~}}
+      {{pair.name}} = {{pair.value}},    
+      {{~ end ~}}
+    },
+  {{ end }}
+}
+
+---@class skillclient.vector3
+---@field x number
+---@field y number
+---@field z number
+
+{{ for classData in classDatas }}
+---@class skillclient.data.{{classData.name}}
+{{~ for field in classData.fields ~}}
+---@field {{field.name}} {{field.type}} @{{field.des}}
+{{~ end ~}}
+{{ end }}
+
+return gen
