@@ -90,7 +90,7 @@ public class LinearSceneTreeLeaf<T> where T : ISceneObject, ISOLinkedListNode
 	{
 		get { return m_DataList; }
 	}
-
+	//链表
 	private LinkedList<T> m_DataList;
 
 	public LinearSceneTreeLeaf()

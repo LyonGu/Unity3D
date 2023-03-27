@@ -27,6 +27,7 @@ public interface ISceneObject
     
 }
 
+//这个接口类暂时没看懂 TODO
 public interface ISOLinkedListNode
 {
 

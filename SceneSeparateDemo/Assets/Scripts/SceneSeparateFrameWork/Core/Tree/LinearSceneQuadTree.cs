@@ -26,6 +26,7 @@ public class LinearSceneQuadTree<T> : LinearSceneTree<T> where T : ISceneObject,
 		{
 			if (m_MaxDepth == 0)
 			{
+				//如果最大深度为0,就全部加到根节点上
 				if (m_Nodes.ContainsKey(0) == false)
 					m_Nodes[0] = new LinearSceneTreeLeaf<T>();
 				var node = m_Nodes[0].Insert(item);

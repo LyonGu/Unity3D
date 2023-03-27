@@ -111,7 +111,9 @@ public class SceneObjectLoadController : MonoBehaviour
 				break;
 	    }
 
+        //待加载队列
 	    m_LoadedObjectLinkedList = new LinkedList<SceneObject>();
+        //待删除队列
         m_PreDestroyObjectQueue = new PriorityQueue<SceneObject>(new SceneObjectWeightComparer());
         m_TriggerHandle = new TriggerHandle<SceneObject>(this.TriggerHandle); 
 
@@ -178,6 +180,7 @@ public class SceneObjectLoadController : MonoBehaviour
             return;
         //使用SceneObject包装
         SceneObject sbobj = new SceneObject(obj);
+        //添加进四叉树/八叉树里
         m_Tree.Add(sbobj);
         //如果当前触发器存在，直接物体是否可触发，如果可触发，则创建物体
         if (m_CurrentDetector != null && m_CurrentDetector.IsDetected(sbobj.Bounds))

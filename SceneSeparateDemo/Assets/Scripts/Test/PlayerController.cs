@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 	        }
 	    }
 
+	    //保持摄像机跟角色位置相对固定
 	    Vector3 campos = transform.position + m_DeltaPos;
 	    camera.transform.position = Vector3.Lerp(camera.transform.position, campos, Time.deltaTime*10);
 	}
