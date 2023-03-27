@@ -503,3 +503,6 @@ Flux/Library/
 SNSSkillEditor/.idea/
 SNSSkillEditor/Library/
 SNSSkillEditor/Temp/
+Flux/.idea/
+Flux/obj/
+Flux/Logs/
