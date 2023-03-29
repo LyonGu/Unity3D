@@ -115,12 +115,16 @@ public class SceneObjectLoadController : MonoBehaviour
 	    m_LoadedObjectLinkedList = new LinkedList<SceneObject>();
         //待删除队列
         m_PreDestroyObjectQueue = new PriorityQueue<SceneObject>(new SceneObjectWeightComparer());
+        
+        //检测触发函数
         m_TriggerHandle = new TriggerHandle<SceneObject>(this.TriggerHandle); 
 
         m_MaxCreateCount = Mathf.Max(0, maxCreateCount);
+        
+        //场景中至少包含多少个物体，设置为0后包围盒不发生接触就自动销毁了
         m_MinCreateCount = Mathf.Clamp(minCreateCount, 0, m_MaxCreateCount);
-        m_MaxRefreshTime = maxRefreshTime;
-        m_MaxDestroyTime = maxDestroyTime;
+        m_MaxRefreshTime = maxRefreshTime; //刷新检测时间间隔
+        m_MaxDestroyTime = maxDestroyTime; //销毁检测时间间隔
         m_Asyn = asyn;
 
         m_IsInitialized = true;

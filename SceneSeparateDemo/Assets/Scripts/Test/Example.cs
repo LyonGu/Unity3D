@@ -84,6 +84,7 @@ public class Example : MonoBehaviour
         m_Controller = gameObject.GetComponent<SceneObjectLoadController>();
         if (m_Controller == null)
             m_Controller = gameObject.AddComponent<SceneObjectLoadController>();
+        //初始化最外层的包围盒
         m_Controller.Init(bounds.center, bounds.size, asyn, treeType);
 
 

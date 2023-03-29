@@ -54,6 +54,7 @@ public class SceneObject : ISceneObject, ISOLinkedListNode
         get { return m_TargetObj.Bounds; }
     }
 
+    //这个是用来标记什么的？？ TODO
     public float Weight
     {
         get { return m_Weight; }
@@ -68,8 +69,10 @@ public class SceneObject : ISceneObject, ISOLinkedListNode
         get { return m_TargetObj; }
     }
 
+    //创建物体标记
     public CreateFlag Flag { get; set; }
 
+    //加载物体标记
     public CreatingProcessFlag ProcessFlag { get; set; }
 
     private ISceneObject m_TargetObj;
@@ -77,7 +80,7 @@ public class SceneObject : ISceneObject, ISOLinkedListNode
     private float m_Weight;
 
 	//private System.Object m_Node;
-
+	// 这个是存什么的呀？？TODO
 	private Dictionary<uint, System.Object> m_Nodes;
 
     public SceneObject(ISceneObject obj)
@@ -115,12 +118,14 @@ public class SceneObject : ISceneObject, ISOLinkedListNode
 		m_Nodes[morton] = node;
 	}
 
+	//隐藏物体
 	public void OnHide()
     {
         Weight = 0;
         m_TargetObj.OnHide();
     }
-
+	
+	//显示物体
     public bool OnShow(Transform parent)
     {
         return m_TargetObj.OnShow(parent);
