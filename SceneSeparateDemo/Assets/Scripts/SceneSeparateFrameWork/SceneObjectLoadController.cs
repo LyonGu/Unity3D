@@ -184,7 +184,7 @@ public class SceneObjectLoadController : MonoBehaviour
             return;
         //使用SceneObject包装
         SceneObject sbobj = new SceneObject(obj);
-        //添加进四叉树/八叉树里
+        //添加进四叉树/八叉树里，构建树结构
         m_Tree.Add(sbobj);
         //如果当前触发器存在，直接物体是否可触发，如果可触发，则创建物体
         if (m_CurrentDetector != null && m_CurrentDetector.IsDetected(sbobj.Bounds))
@@ -487,12 +487,13 @@ public class SceneObjectLoadController : MonoBehaviour
     public int debug_DrawMinDepth = 0;
     public int debug_DrawMaxDepth = 5;
     public bool debug_DrawObj = true;
+    //需要选中游戏对象，才能显示
     void OnDrawGizmosSelected()
     {
         Color mindcolor = new Color32(0, 66, 255, 255);
         Color maxdcolor = new Color32(133, 165, 255, 255);
-        Color objcolor = new Color32(0, 210, 255, 255);
-        Color hitcolor = new Color32(255, 216, 0, 255);
+        Color objcolor = new Color32(0, 210, 255, 255); //场景元素包围盒颜色
+        Color hitcolor = new Color32(255, 216, 0, 255); //处于包围盒或者视口里的颜色
         if (m_Tree != null)
             m_Tree.DrawTree(mindcolor, maxdcolor, objcolor, hitcolor, debug_DrawMinDepth, debug_DrawMaxDepth, debug_DrawObj);
     }

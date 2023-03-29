@@ -33,9 +33,11 @@ public class SceneTree<T> : ISeparateTree<T> where T : ISceneObject, ISOLinkedLi
 	public SceneTree(Vector3 center, Vector3 size, int maxDepth, bool ocTree)
 	{
 		this.m_MaxDepth = maxDepth;
+		//根节点区域
 		this.m_Root = new SceneTreeNode<T>(new Bounds(center, size), 0, ocTree ? 8 : 4);
 	}
 
+	//向区域中插入一个元素
 	public void Add(T item)
 	{
 		m_Root.Insert(item, 0, m_MaxDepth);
@@ -61,10 +63,12 @@ public class SceneTree<T> : ISeparateTree<T> where T : ISceneObject, ISOLinkedLi
 			return;
 		if (detector.UseCameraCulling)
 		{
+			//使用摄像机视口剔除
 			m_Root.Trigger(detector, handle);
 		}
 		else
 		{
+			//超过Tree的包围盒直接不判断
 			if (detector.IsDetected(Bounds) == false)
 				return;
 			m_Root.Trigger(detector, handle);
@@ -85,6 +89,7 @@ public class SceneTree<T> : ISeparateTree<T> where T : ISceneObject, ISOLinkedLi
 #endif
 }
 
+//树的节点类
 public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 {
 	public Bounds Bounds
@@ -124,12 +129,18 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 	{
 		m_Bounds = bounds;
 		m_CurrentDepth = depth;
+		
+		//当前节点管理的场景元素列表
 		m_ObjectList = new LinkedList<T>();
+		
+		//当前节点管理的子节点数组
 		m_ChildNodes = new SceneTreeNode<T>[childCount];
 
 		if (childCount == 8)
+			//八叉树
 			m_HalfSize = new Vector3(m_Bounds.size.x / 2, m_Bounds.size.y / 2, m_Bounds.size.z / 2);
 		else
+			//四叉树
 			m_HalfSize = new Vector3(m_Bounds.size.x / 2, m_Bounds.size.y, m_Bounds.size.z / 2);
 
 		m_ChildCount = childCount;
@@ -137,23 +148,26 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 
 	public void Clear()
 	{
+		//清空子节点区域
 		for (int i = 0; i < m_ChildNodes.Length; i++)
 		{
 			if (m_ChildNodes[i] != null)
 				m_ChildNodes[i].Clear();
 		}
+		//清空当前节点区域
 		if (m_ObjectList != null)
 			m_ObjectList.Clear();
 	}
 
 	public bool Contains(T obj)
 	{
+		//先判断是否在子节点区域中
 		for (int i = 0; i < m_ChildNodes.Length; i++)
 		{
 			if (m_ChildNodes[i] != null && m_ChildNodes[i].Contains(obj))
 				return true;
 		}
-
+		//再判断是否在当前节点区域中
 		if (m_ObjectList != null && m_ObjectList.Contains(obj))
 			return true;
 		return false;
@@ -161,14 +175,19 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 
 	public SceneTreeNode<T> Insert(T obj, int depth, int maxDepth)
 	{
+		//如果当前节点区域已包含目标场景元素，直接返回
 		if (m_ObjectList.Contains(obj))
 			return this;
 		if (depth < maxDepth)
 		{
+			//找到包含目标元素对象的子区域节点
+			//当某个节点同时属于两个子节点区域时，代码里是怎么判断的放到哪个区域管理的？？TODO  感觉是优先原则
 			SceneTreeNode<T> node = GetContainerNode(obj, depth);
 			if (node != null)
+				//目标元素对象放入子区域节点管理，递归调用
 				return node.Insert(obj, depth + 1, maxDepth);
 		}
+		//超过最大深度或者子节点区域不包含就放到当前节点区域管理
 		var n = m_ObjectList.AddFirst(obj);
 		obj.SetLinkedListNode(0, n);
 		return this;
@@ -176,9 +195,11 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 
 	public void Remove(T obj)
 	{
+		//通过映射找到对应的LinkedListNode
 		var node = obj.GetLinkedListNode<T>(0);
 		if (node != null)
 		{
+			// 感觉这段逻辑好多余？？？？ 其实就是判断是否属于当前节点管理，是的话从当前节点里删除
 			if (node.List == m_ObjectList)
 			{
 				m_ObjectList.Remove(node);
@@ -188,6 +209,8 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 				return;
 			}
 		}
+		
+		//判断是否在子节点区域里，是的话调用删除接口
 		if (m_ChildNodes != null && m_ChildNodes.Length > 0)
 		{
 			for (int i = 0; i < m_ChildNodes.Length; i++)
@@ -202,6 +225,7 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 		//return false;
 	}
 
+	//判断触发交互的接口，
 	public void Trigger(IDetector detector, TriggerHandle<T> handle)
 	{
 		if (handle == null)
@@ -224,6 +248,7 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 		}
 		else
 		{
+			//先判断子节点区域是否发送触碰
 			int code = detector.GetDetectedCode(m_Bounds.center.x, m_Bounds.center.y, m_Bounds.center.z, m_ChildCount == 4);
 			for (int i = 0; i < m_ChildNodes.Length; i++)
 			{
@@ -235,9 +260,11 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 			}
 
 			{
+				//在判断当前节点区域是否发送触碰
 				var node = m_ObjectList.First;
 				while (node != null)
 				{
+					//包围盒发生触碰
 					if (detector.IsDetected(node.Value.Bounds))
 						handle(node.Value);
 					node = node.Next;
@@ -439,6 +466,7 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 			{
 				for (int j = iz; j <= 1; j += 2)
 				{
+					//内部构建子节点的时候，如果包含了目标元素就直接返回了，不会同时去构建其他子节点，（可能判断其他目标元素的时候会创建）
 					result = CreateNode(ref m_ChildNodes[nodeIndex], depth,
 						m_Bounds.center + new Vector3(i * m_HalfSize.x * 0.5f, k * m_HalfSize.y * 0.5f, j * m_HalfSize.z * 0.5f),
 						m_HalfSize, obj);
@@ -480,6 +508,7 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 	{
 		if (m_ChildNodes != null)
 		{
+			//绘制子节点区域包围盒
 			for (int i = 0; i < m_ChildNodes.Length; i++)
 			{
 				var node = m_ChildNodes[i];
@@ -492,11 +521,12 @@ public class SceneTreeNode<T> where T : ISceneObject, ISOLinkedListNode
 		{
 			float d = ((float)m_CurrentDepth) / maxDepth;
 			Color color = Color.Lerp(treeMinDepthColor, treeMaxDepthColor, d);
-
+			//绘制当前节点区域包围盒
 			m_Bounds.DrawBounds(color);
 		}
 		if (drawObj)
 		{
+			//绘制当前节点区域包含目标场景对象的包围盒区域
 			var node = m_ObjectList.First;
 			while (node != null)
 			{

@@ -80,7 +80,7 @@ public class SceneObject : ISceneObject, ISOLinkedListNode
     private float m_Weight;
 
 	//private System.Object m_Node;
-	// 这个是存什么的呀？？TODO
+	//场景元素对象跟LinkedListNode做的一个映射管理
 	private Dictionary<uint, System.Object> m_Nodes;
 
     public SceneObject(ISceneObject obj)

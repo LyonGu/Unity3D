@@ -35,6 +35,7 @@ public interface ISOLinkedListNode
 
 	LinkedListNode<T> GetLinkedListNode<T>(uint morton) where T : ISceneObject;
 
+	//场景元素对象跟LinkedListNode做的一个映射管理
 	void SetLinkedListNode<T>(uint morton, LinkedListNode<T> node);
 
 	//void ClearLinkedListNode(int morton);
