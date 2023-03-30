@@ -293,12 +293,24 @@ public class GameAssets : MonoBehaviour
 	        goSync1.name = "AssetsMgr_HotTestSync";
         });
         
+        //测试异步加载立即卸载资源，资源会被卸载
+        //连续两次加载同一份资源，底层对应的是同一份资源请求，只要有一份完成了加载，另一份资源请求就不去进行资源加载了，如果要实例化多分可以在回调里实例化
         AssetsMgr.LoadAsync<GameObject>("FootmanHP", (obj,assetLogicId) =>
         {
 	        var goSync1 = Instantiate(obj);
 	        goSync1.SetActive(true);
 	        goSync1.name = "AssetsMgr_HotTestAync";
         });
+        
+        // AssetsMgr.UnLoad("FootmanHP");
+        
+        // AssetsMgr.LoadAsync<GameObject>("FootmanHP", (obj,assetLogicId) =>
+        // {
+        //  //第二次资源加载完的回调不会调用
+        //  var goSync1 = Instantiate(obj);
+        //  goSync1.SetActive(true);
+        //  goSync1.name = "AssetsMgr_HotTestAync1";
+        // });
 
 
         AssetsMgr.CreatePoolGameObject("FootmanHP", 10, (isOk) =>
