@@ -211,7 +211,12 @@ public class SceneObjectLoadController : MonoBehaviour
                 m_OldRefreshPosition = detector.Position;
                 m_RefreshTime = 0;
                 m_CurrentDetector = detector;
-                //进行触发检测
+                //进行触发检测 m_TriggerHandle 其实就是TriggerHandle方法，
+                //TriggerHandle方法里创建场景物体然后标记为SceneObject.CreateFlag.New， 但是MarkOutofBoundsObjs方法会同一帧标记为SceneObject.CreateFlag.Old
+                
+                //如果加载过的物体仍然跟角色包围盒/视锥范围有接触，对应的场景物体调用TriggerHandle方法，会重新标记为SceneObject.CreateFlag.New
+                //如果加载过的物体仍然跟角色包围盒/视锥范围没有接触，对应的场景物体标记仍为SceneObject.CreateFlag.Old，
+                //然后MarkOutofBoundsObjs方法里会重新标记为SceneObject.CreateFlag.OutofBounds，然后清除区域外物体
                 m_Tree.Trigger(detector, m_TriggerHandle);
                 //标记超出区域的物体
                 MarkOutofBoundsObjs();
@@ -236,7 +241,7 @@ public class SceneObjectLoadController : MonoBehaviour
     }
 
     /// <summary>
-    /// 四叉树触发处理函数
+    /// 四叉树触发处理函数， 这个接口是跟包围盒接触才会回调的
     /// </summary>
     /// <param name="data">与当前包围盒发生触发的场景物体</param>
     void TriggerHandle(SceneObject data)
@@ -245,6 +250,7 @@ public class SceneObjectLoadController : MonoBehaviour
             return;
         if (data.Flag == SceneObject.CreateFlag.Old) //如果发生触发的物体已经被创建则标记为新物体，以确保不会被删掉
         {
+            //如果已经创建的场景物体还在我的包围盒里就重新标记为new
             data.Weight ++;
             data.Flag = SceneObject.CreateFlag.New;
         }
@@ -259,6 +265,7 @@ public class SceneObjectLoadController : MonoBehaviour
         }
         else if (data.Flag == SceneObject.CreateFlag.None) //如果发生触发的物体未创建则创建该物体并加入已加载的物体列表
         {
+            //如果场景物体在我的包围盒里，但是没有创建就新创建
             DoCreateInternal(data);
         }
     }
@@ -280,6 +287,7 @@ public class SceneObjectLoadController : MonoBehaviour
 	    if (m_LoadedObjectLinkedList == null)
 		    return;
 
+        //遍历所有加载过的场景物体，检测是否超出检测区域
 	    var node = m_LoadedObjectLinkedList.First;
 	    while (node != null)
 	    {
@@ -293,9 +301,10 @@ public class SceneObjectLoadController : MonoBehaviour
 			    }
 			    else
 			    {
+                    //如果有保留最小数量，就先加入待删除队列
 				    m_PreDestroyObjectQueue.Push(obj);//加入待删除队列
 			    }
-
+                //需要从加载队列里移除
 			    var next = node.Next;
 			    m_LoadedObjectLinkedList.Remove(node);
 				node = next;

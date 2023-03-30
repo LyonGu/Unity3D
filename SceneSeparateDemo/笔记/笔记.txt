@@ -4,3 +4,16 @@
 3 当某个节点同时属于两个子节点区域时，代码里是怎么判断的放到哪个区域管理的？？TODO
 
 4 使用摄像机视口剔除，使用包围盒剔除 TODO
+
+SceneObjectLoadController
+  ISeparateTree
+	SceneTreeNode(根节点)
+		SceneTreeNode<T>[] m_ChildNodes
+
+
+5 异步加载的一些问题处理
+{
+   1 A区域的包围盒如果跟角色的包围盒接触，触发新建物体，然后角色立马移动导致跟A区域不接触了，又触发了销毁物体，这时怎么处理==》 感觉时资源加载框架处理的问题
+   2 
+}
+	
