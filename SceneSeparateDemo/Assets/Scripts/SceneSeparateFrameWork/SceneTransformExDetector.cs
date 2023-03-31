@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// <summary>
-/// 该触发器根据Transform的包围盒区域触发-且根据Transform运动趋势扩展包围盒
+/// 该触发器根据Transform的包围盒区域触发-且根据Transform运动趋势扩展包围盒，其实就是扩展m_Bounds的范围
 /// </summary>
 public class SceneTransformExDetector : SceneTransformDetector
 {
@@ -28,7 +28,7 @@ public class SceneTransformExDetector : SceneTransformDetector
     void Update()
     {
         Vector3 movedir = transform.position - m_Position;
-        m_Position = transform.position;
+        m_Position = transform.position;  //上一帧位置
 
         float xex = 0,zex = 0;
         if (movedir.x < -Mathf.Epsilon)
