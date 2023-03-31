@@ -29,13 +29,17 @@ public abstract class LinearSceneTree<T> : ISeparateTree<T> where T : ISceneObje
 
 		m_Cols = (int)Mathf.Pow(2, maxDepth);
 		m_Nodes = new Dictionary<uint, LinearSceneTreeLeaf<T>>();
+		
+		//没有根节点？？？
 	}
 
+	//清除节点区域
 	public void Clear()
 	{
 		m_Nodes.Clear();
 	}
 
+	//判断某个场景物体是否处于当前树中，遍历所有的子区域
 	public bool Contains(T item)
 	{
 		if (m_Nodes == null)
@@ -49,6 +53,7 @@ public abstract class LinearSceneTree<T> : ISeparateTree<T> where T : ISceneObje
 		return false;
 	}
 
+	//删除某个场景对象，这写法有点绕啊。。。。
 	public void Remove(T item)
 	{
 		if (item == null)
