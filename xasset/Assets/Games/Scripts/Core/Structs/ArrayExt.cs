@@ -1,5 +1,3 @@
-//Create By Zhangjinhui
-//***********************
 
 using System;
 

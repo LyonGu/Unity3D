@@ -206,30 +206,30 @@ namespace Game
 
         //卸载某个资源
         public static void UnLoad(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName))
+                return;
+            string assetPath = Assets.GetAssetPathByName(assetName);
+            AssetRequest request = Assets.TryGetAssetRequest(assetPath);
+            if(request!=null)
+                request.Release(); //XAsset库里回去判断该资源是否要释放
+        }
+        
+        public static void UnLoad(int assetLogicId)
+        {
+            string assetName = IdToName(assetLogicId);
+            UnLoad(assetName);
+        }
+        
+        //卸载一个GameObject
+        public static void UnLoadGameObject(GameObject obj, int assetLogicId)
+        {
+            if (obj != null)
             {
-                if (string.IsNullOrEmpty(assetName))
-                    return;
-                string assetPath = Assets.GetAssetPathByName(assetName);
-                AssetRequest request = Assets.TryGetAssetRequest(assetPath);
-                if(request!=null)
-                    request.Release(); //XAsset库里回去判断该资源是否要释放
+                GameObject.Destroy(obj);
+                UnLoad(assetLogicId);
             }
-            
-            public static void UnLoad(int assetLogicId)
-            {
-                string assetName = IdToName(assetLogicId);
-                UnLoad(assetName);
-            }
-            
-            //卸载一个GameObject
-            public static void UnLoadGameObject(GameObject obj, int assetLogicId)
-            {
-                if (obj != null)
-                {
-                    GameObject.Destroy(obj);
-                    UnLoad(assetLogicId);
-                }
-            }
+        }
 
 
         #endregion
