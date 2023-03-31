@@ -140,7 +140,7 @@ public class SceneObjectLoadController : MonoBehaviour
     /// <param name="asyn">是否异步</param>
     public void Init(Vector3 center, Vector3 size, bool asyn, TreeType treeType)
     {
-        Init(center, size, asyn, 25, 15, 1, 5, treeType);
+        Init(center, size, asyn, 25, 5, 1, 1, treeType);
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public class SceneObjectLoadController : MonoBehaviour
                 //进行触发检测 m_TriggerHandle 其实就是TriggerHandle方法，
                 //TriggerHandle方法里创建场景物体然后标记为SceneObject.CreateFlag.New， 但是MarkOutofBoundsObjs方法会同一帧标记为SceneObject.CreateFlag.Old
                 
-                //如果加载过的物体仍然跟角色包围盒/视锥范围有接触，对应的场景物体调用TriggerHandle方法，会重新标记为SceneObject.CreateFlag.New
+                //如果加载过的物体仍然跟角色包围盒/视锥范围有接触，对应的场景物体调用TriggerHandle方法，会重新标记为SceneObject.CreateFlag.New, 同时MarkOutofBoundsObjs方法会同一帧标记为SceneObject.CreateFlag.Old
                 //如果加载过的物体仍然跟角色包围盒/视锥范围没有接触，对应的场景物体标记仍为SceneObject.CreateFlag.Old，
                 //然后MarkOutofBoundsObjs方法里会重新标记为SceneObject.CreateFlag.OutofBounds，然后清除区域外物体
                 m_Tree.Trigger(detector, m_TriggerHandle);
@@ -225,7 +225,9 @@ public class SceneObjectLoadController : MonoBehaviour
         }
         if (m_OldDestroyRefreshPosition != detector.Position)
         {
-            if(m_PreDestroyObjectQueue != null && m_PreDestroyObjectQueue.Count >= m_MaxCreateCount && m_PreDestroyObjectQueue.Count > m_MinCreateCount)
+            // if(m_PreDestroyObjectQueue != null && m_PreDestroyObjectQueue.Count >= m_MaxCreateCount && m_PreDestroyObjectQueue.Count > m_MinCreateCount)
+            
+            if(m_PreDestroyObjectQueue != null && m_PreDestroyObjectQueue.Count > m_MinCreateCount)
             //if (m_PreDestroyObjectList != null && m_PreDestroyObjectList.Count >= m_MaxCreateCount)
             {
                 m_DestroyRefreshTime += Time.deltaTime;
@@ -257,6 +259,7 @@ public class SceneObjectLoadController : MonoBehaviour
         else if (data.Flag == SceneObject.CreateFlag.OutofBounds)//如果发生触发的物体已经被标记为超出区域，则从待删除列表移除该物体，并标记为新物体
         {
             data.Flag = SceneObject.CreateFlag.New;
+            DeletePreDestroyObject(data);
             //if (m_PreDestroyObjectList.Remove(data))
             {
 	            m_LoadedObjectLinkedList.AddFirst(data);
@@ -265,7 +268,8 @@ public class SceneObjectLoadController : MonoBehaviour
         }
         else if (data.Flag == SceneObject.CreateFlag.None) //如果发生触发的物体未创建则创建该物体并加入已加载的物体列表
         {
-            //如果场景物体在我的包围盒里，但是没有创建就新创建
+            //如果场景物体在我的包围盒里，但是没有创建就新创建，
+            //这里每次都时新建，没有考虑从待删除列表里拿到之前创建过的对象 ？？？
             DoCreateInternal(data);
         }
     }
@@ -302,7 +306,7 @@ public class SceneObjectLoadController : MonoBehaviour
 			    else
 			    {
                     //如果有保留最小数量，就先加入待删除队列
-				    m_PreDestroyObjectQueue.Push(obj);//加入待删除队列
+                    m_PreDestroyObjectQueue.Push(obj);//加入待删除队列
 			    }
                 //需要从加载队列里移除
 			    var next = node.Next;
@@ -477,6 +481,24 @@ public class SceneObjectLoadController : MonoBehaviour
             }
         }
         m_IsTaskRunning = false;
+    }
+
+    private void DeletePreDestroyObject(SceneObject data)
+    {
+        int index = -1;
+        var arrys = m_PreDestroyObjectQueue.heap;
+        for (int i = 0; i < m_PreDestroyObjectQueue.Count; i++)
+        {
+            if (arrys[i] == data)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1)
+        {
+            m_PreDestroyObjectQueue.RemoveByIndex(index);
+        }
     }
 
     private class SceneObjectWeightComparer : IComparer<SceneObject>

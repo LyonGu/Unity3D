@@ -7,7 +7,7 @@ public class PriorityQueue<T>
 {
 
     IComparer<T> comparer;
-    T[] heap;
+    public T[] heap;
 
     public int Count { get; private set; }
 
@@ -59,6 +59,21 @@ public class PriorityQueue<T>
             heap[n] = heap[n2];
         }
         heap[n] = v;
+    }
+
+    public void RemoveAndSwapback(int index)
+    {
+        if(index>=Count) return;
+        heap[index] = heap[--Count];
+        heap[Count] = default; 
+    }
+    
+    public void RemoveByIndex(int index)
+    {
+        if(index>=Count) return;
+        heap.Move(index + 1, index, Count - index - 1);
+        heap[Count-1] = default; 
+        Count--;
     }
 
 }
