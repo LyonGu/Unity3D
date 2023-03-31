@@ -23,7 +23,7 @@ public static class BoundsEx
     /// <returns></returns>
     public static bool IsBoundsInCamera(this Bounds bounds, Camera camera)
     {
-
+        //VP 矩阵
         Matrix4x4 matrix = camera.projectionMatrix*camera.worldToCameraMatrix;
 
         int code =
