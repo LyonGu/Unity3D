@@ -297,6 +297,7 @@ namespace Coffee.UIEffects
 
         protected override void SetEffectParamsDirty()
         {
+            //居然把属性的变化值存储再纹理的像素信息里
             paramTex.SetData(this, 0, m_EffectFactor); // param1.x : effect factor
             if (m_EffectMode == EffectMode.Dissolve)
             {
