@@ -12,7 +12,12 @@ public class AnimatorTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        AnimationClip[] ans = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < ans.Length; i++)
+        {
+            var an = ans[i];
+            Debug.Log($"animationClip {an.name}  {an.length}");
+        }
     }
 
     // Update is called once per frame
@@ -25,6 +30,8 @@ public class AnimatorTest : MonoBehaviour
 
         var animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         
+        
+        // ** 如果状态中有过渡，处于过渡状态中GetCurrentAnimatorStateInfo返回的结果仍然是切换前的状态
         //用hash比较需要完整的路径hash 才能得出当前状态
         int hash = animatorStateInfo.fullPathHash;
         int hash1 = animatorStateInfo.nameHash;
@@ -37,8 +44,11 @@ public class AnimatorTest : MonoBehaviour
         {
             Debug.Log($"{Time.frameCount} curstate is JUMP01B==========");
         }
-        
-        
+
+        // var transitionInfo = animator.GetAnimatorTransitionInfo(0);
+        // Debug.Log($"{Time.frameCount} transitionInfo time =========={transitionInfo.duration} {transitionInfo.durationUnit}");
+
+
         //用IsName比较能得出当前状态 ok
         // if (animatorStateInfo.IsName("JUMP00B"))
         // {
@@ -49,7 +59,7 @@ public class AnimatorTest : MonoBehaviour
         // {
         //     Debug.Log($"{Time.frameCount} curstate is JUMP01B==========");
         // }
-        
-        
+
+
     }
 }
