@@ -36,15 +36,20 @@ public class CannonController : MonoBehaviour
     public float lastShotTime { get; private set; }
     public float lastShotTimeOfFlight { get; private set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="point">目标点</param>
+    /// <param name="angle">斜抛角度</param>
     public void SetTargetWithAngle(Vector3 point, float angle)
     {
         currentAngle = angle;
-
+        //firePoint 炮起始点
         Vector3 direction = point - firePoint.position;
         float yOffset = -direction.y;
         //这里换算出的像水平方向
         direction = Math3d.ProjectVectorOnPlane(Vector3.up, direction);
-        float distance = direction.magnitude;
+        float distance = direction.magnitude; //水平距离
         
         //计算发射速度  没推到出公式由来
         currentSpeed = ProjectileMath.LaunchSpeed(distance, yOffset, Physics.gravity.magnitude, angle * Mathf.Deg2Rad);

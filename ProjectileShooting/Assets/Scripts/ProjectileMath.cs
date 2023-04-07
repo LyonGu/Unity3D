@@ -35,7 +35,7 @@ public static class ProjectileMath
     }
 
     /// <summary>
-    /// Calculates the initial launch speed required to hit a target at distance with elevation yOffset.
+    /// Calculates the initial launch speed required to hit a target at distance with elevation yOffset. 计算以仰角 yOffset 距离击中目标所需的初始发射速度
     /// </summary>
     /// <param name="distance">Planar distance from origin to the target</param>
     /// <param name="yOffset">Elevation of the origin with respect to the target</param>

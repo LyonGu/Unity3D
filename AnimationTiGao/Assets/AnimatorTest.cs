@@ -18,6 +18,19 @@ public class AnimatorTest : MonoBehaviour
             var an = ans[i];
             Debug.Log($"animationClip {an.name}  {an.length}");
         }
+        
+        //必须是AnimatorOverrideController才行
+        // var runtimeAnamator = animator.runtimeAnimatorController as AnimatorOverrideController;
+        // var JUMP00B = runtimeAnamator["JUMP00B"]; // <originClip, overrideClip> ==> 拿到的是overrideClip  key为资源的名字
+        // if (JUMP00B)
+        // {
+        // 	Debug.Log($"JUMP00B ClipTime is========{JUMP00B.length}");
+        // }
+        // animator.layer
+
+        // Vector3 dir1 = transform.right;
+        var propertyBlock = new MaterialPropertyBlock();
+        
     }
 
     // Update is called once per frame
