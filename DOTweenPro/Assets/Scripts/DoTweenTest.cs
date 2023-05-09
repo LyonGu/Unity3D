@@ -23,7 +23,13 @@ public class DoTweenTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             TargetTrans.position = StartTrans.position;
-            TargetTrans.DOJump(EndTrans.position, 5, 1, 2.0f, false);
+            Debug.Log("JumpStart==============");
+            Tween tween = TargetTrans.DOJump(EndTrans.position, 5, 1, 2.0f, false);
+            tween.onComplete = () =>
+            {
+                Debug.Log("JumpEnd==============");
+            };
+            tween.SetAutoKill(true); //onComplete后自动销毁
         }
     }
 }
