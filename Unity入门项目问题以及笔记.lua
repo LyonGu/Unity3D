@@ -22,7 +22,7 @@
 		方法1：四元素插值, 推荐这个
 		{
 			Quaternion dir = Quaternion.LookRotation(player.position - transform.position);
-        	transform.rotation = Quaternion.Lerp(transform.rotation, dir, Time.deltaTime);
+        	transform.rotation = Quaternion.SLerp(transform.rotation, dir, Time.deltaTime);
 
 			// Calculate the rotation 另一种旋转方式，超向目标
             float3 displacement = targetPosition - transform.Position;
