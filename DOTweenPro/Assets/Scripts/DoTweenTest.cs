@@ -11,6 +11,8 @@ public class DoTweenTest : MonoBehaviour
     public Transform EndTrans;
 
     public Transform TargetTrans;
+
+    public Ease easeType = Ease.Unset;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +31,15 @@ public class DoTweenTest : MonoBehaviour
             {
                 Debug.Log("JumpEnd==============");
             };
+            tween.SetEase(easeType);
             tween.SetAutoKill(true); //onComplete后自动销毁
+            
+            // Ease.InSine
+            // Ease.InCubic
+            // Ease.InQuart
+            // Ease.OutBack
+            // Ease.InFlash
+            // Ease.Linear
         }
     }
 }
