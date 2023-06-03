@@ -21,4 +21,9 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Debug.Log("PrintLog============");
     }
+
+    public void CallFuncEvent()
+    {
+        Debug.Log("CallFuncEvent============");
+    }
 }

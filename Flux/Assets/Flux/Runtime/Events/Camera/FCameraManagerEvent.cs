@@ -26,11 +26,13 @@ namespace Flux
 
 		protected override void OnTrigger( float timeSinceTrigger )
 		{
+			Debug.Log($"{Time.frameCount} OnTrigger==================");
 			_camera.gameObject.SetActive( true );
 		}
 
 		protected override void OnFinish()
 		{
+			Debug.Log($"{Time.frameCount} OnFinish==================");
 			_camera.gameObject.SetActive( false );
 		}
 
