@@ -23,6 +23,8 @@ MonoBehaviour:
     _color: {r: 0.7842822, g: 0.8308824, b: 0.34823745, a: 0.8}
   - _str: Flux.FTweenPositionEvent
     _color: {r: 0.83823526, g: 0.47165608, b: 0.23421282, a: 0.8}
+  - _str: Flux.FTriggerRangeEvent
+    _color: {r: 0.578102, g: 0, b: 0.6132076, a: 0.8}
   _defaultContainers:
   - _str: Animation
     _color: {r: 1, g: 1, b: 0, a: 1}

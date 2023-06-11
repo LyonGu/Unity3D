@@ -65,5 +65,12 @@ namespace FluxEditor
                 }
             }
         }
+
+        public override void Render(Rect rect, float headerWidth)
+        {
+            Track.name = "碰撞器范围Track";
+            base.Render(rect, headerWidth);
+            
+        }
     }
 }
