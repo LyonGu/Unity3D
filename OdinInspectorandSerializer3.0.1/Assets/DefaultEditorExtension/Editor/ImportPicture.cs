@@ -20,8 +20,8 @@ public class ImportPicture : AssetPostprocessor
                 //Iphone平台
                 TextureImporterPlatformSettings settings = importer.GetPlatformTextureSettings("iPhone");
                 bool isPowerOfTwo = IsPowerOfTwo(importer);
-                TextureImporterFormat defaultAlpha = isPowerOfTwo ? TextureImporterFormat.PVRTC_RGBA4 : TextureImporterFormat.ASTC_RGBA_4x4;
-                TextureImporterFormat defaultNotAlpha = isPowerOfTwo ? TextureImporterFormat.PVRTC_RGB4 : TextureImporterFormat.ASTC_RGB_6x6;
+                TextureImporterFormat defaultAlpha = isPowerOfTwo ? TextureImporterFormat.PVRTC_RGBA4 : TextureImporterFormat.ASTC_4x4;
+                TextureImporterFormat defaultNotAlpha = isPowerOfTwo ? TextureImporterFormat.PVRTC_RGB4 : TextureImporterFormat.ASTC_6x6;
                 settings.overridden = true;
                 settings.format = importer.DoesSourceTextureHaveAlpha() ? defaultAlpha : defaultNotAlpha;
                 importer.SetPlatformTextureSettings(settings);
@@ -35,8 +35,8 @@ public class ImportPicture : AssetPostprocessor
                  */
                 settings.allowsAlphaSplitting = false;
                 bool divisible4 = IsDivisibleOf4(importer);
-                defaultAlpha = divisible4 ? TextureImporterFormat.ETC2_RGBA8Crunched : TextureImporterFormat.ASTC_RGBA_4x4;
-                defaultNotAlpha = divisible4 ? TextureImporterFormat.ETC_RGB4Crunched : TextureImporterFormat.ASTC_RGB_6x6;
+                defaultAlpha = divisible4 ? TextureImporterFormat.ETC2_RGBA8Crunched : TextureImporterFormat.ASTC_4x4;
+                defaultNotAlpha = divisible4 ? TextureImporterFormat.ETC_RGB4Crunched : TextureImporterFormat.ASTC_6x6;
                 settings.format = importer.DoesSourceTextureHaveAlpha() ? defaultAlpha : defaultNotAlpha;
                 importer.SetPlatformTextureSettings(settings);
             }
