@@ -526,3 +526,6 @@ SimpleWaypointSystem/obj/
 Flux/Temp/
 JobSystem/Library/
 JobSystem/Temp/
+JobSystem/.idea/
+JobSystem/Logs/
+JobSystem/obj/
