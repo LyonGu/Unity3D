@@ -529,3 +529,6 @@ JobSystem/Temp/
 JobSystem/.idea/
 JobSystem/Logs/
 JobSystem/obj/
+DOTS_1.0/Library/
+DOTS_1.0/Logs/
+DOTS_1.0/Temp
