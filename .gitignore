@@ -532,3 +532,15 @@ JobSystem/obj/
 DOTS_1.0/Library/
 DOTS_1.0/Logs/
 DOTS_1.0/Temp
+ImportAssets/obj/
+UIEffect/obj/
+Protobuf-net/obj/
+EntityComponentSystemSamples/HybridURPSamples/obj/
+DrawMeshLine/obj/
+DrawMeshLine/Logs/
+ImportAssets/Logs/
+A-Star PathFind/Logs/
+ProjectileShooting/Logs/
+Spine/Logs/
+UnRix/Logs/
+
