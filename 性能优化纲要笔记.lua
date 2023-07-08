@@ -385,15 +385,83 @@
 
 -----------------------------------------------------<<<<<< 降低动画模块耗时 >>>>>-----------------------------------------------------------------------------
 --[====[
---------------------------------------Mecanim动画---------------------------------------------------------
+	--------------------------------------Mecanim动画---------------------------------------------------------
+
+	--[==[
+	Mecanim动画造成的性能压力主要体现在CPU端的耗时上，它的主要耗时函数是PreLateUpdate.DirectorUpdateAnimationBegin和PreLateUpdate.DirectorUpdateAnimationEnd。
+	针对Mecanim动画耗时的优化主要是优化这两个函数的耗时，确认导致这两个函数耗时较高的原因。一般而言，动画系统顶层函数的自身耗时占比是较低的，所以优化的重点在于它的子堆栈的耗时。
+
+	Active Animator数量 （Culling mode）
+	{
+		Active Animator指的是在场景中会造成Animator.ApplyOnAnimatorMove调用的Animator对象，它的数量越多，Mecanim动画的耗时也就越高。
+		建议将Animator的Culling Mode设置为Cull Update Transform，这样当Animator所控制的对象不在任何相机的可见范围内时，
+		Unity会停止更新该动画对象的Retarget、IK和Write Transform也就是写回骨骼节点的Transform，但是仍然是会更新动画状态机和根运动。
+		但是需要注意的是，如果是用于UI动画的Animator，则其Culling Mode一定要设置为Always Animate，否则会有表现上的错误
+	}
+
+
+	Optimize Game Objects
+	{
+		Optimize Game Objects是针对骨骼节点数量较多的模型给出的优化项，勾选上之后可以【【减少骨骼节点的Transform回传C#端的耗时】】。
+		它的耗时主要体现在Animator.WriteJob函数下，当Animator.WriteJob函数的耗时占比较高时，需要确认场景中的模型的Optimize Game Objects选项是否有勾选上。
+	}
+
+	 Apply Root Motion
+	 {
+		Apply Root Motion的选项只有在动画播放过程中需要位移的对象才有必要勾选，关闭它可以节省部分耗时。
+		它的耗时主要体现在【【Animator.ApplyBuiltinRootMotion函数】】，当该函数的耗时占比较高时，需要确认场景中Animator对象是否都需要产生位移。
+	 }
+
+	 Compute Skinning
+	 {
+		Compute Skinning选项是指使用GPU来计算骨骼动画的蒙皮的选项，但是实际上勾选上后性能表现会有所下降，不建议勾选。
+	 }
+
+	 Animator.Initialize
+	 {
+		Animator.Initialize是指Animator所在的对象被激活时会触发的调用，需要确认它的调用频率和耗时情况是否合理。
+		【【Animator.Initialize会在含有Animator组件的GameObject被Active或Instantiate时触发，耗时较高】】，
+		因此在战斗中不建议过于频繁地对含有Animator的GameObject进行Deactive/ActiveGameObject操作，可以改为Disable并且移除Animator组件的方式来进行Animator动画的激活和禁用。
+	 }
+
+	]==]
 
 
 
 
 
 
+	--------------------------------------Legacy动画---------------------------------------------------------
 
---------------------------------------Legacy动画---------------------------------------------------------
+	--[==[
+
+		Legacy动画是Unity的老的动画系统，目前也还有一些适合它的场景，比如说用于一些简单的UI动画等。它的主要耗时函数是PreLateUpdate.LegacyAnimationUpdate，一般而言，优化的重点也是它的子堆栈的耗时
+
+
+
+		Animation.Sample的调用次数显示了场景中实际在更新的Animation对象的数量，而它的父节点Animation.Update的调用次数则是显示了场景中存在的Animation对象的数量。
+		因此，优化Legacy Animation动画耗时则是要减少Animation.Sample的调用次数。
+
+
+		Culling type
+		{
+			Always Animate: 一直更新
+			Based On Renderers: 视椎体外就不更新了
+		}
+
+		激活实例化
+		{
+			激活一个带有Animation组件的物体时，会触发Animation.RebuildInternalState这个函数，操作非常频繁时会带来较高的耗时
+			可以禁用组件以及改变位置（改变缩放也行）的方式来替代激活
+		}
+
+		AddClip
+		{
+			重复执行会产生不必要的耗时
+		}
+
+
+	]==]
 
 ]====]
 
