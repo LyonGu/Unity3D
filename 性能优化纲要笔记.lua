@@ -712,3 +712,142 @@
 ]====]
 
 -----------------------------------------------------<<<<<< UGUI DrawCall优化 >>>>>-----------------------------------------------------------------------------
+
+
+
+-----------------------------------------------------<<<<<< 加载相关函数 优化 >>>>>-----------------------------------------------------------------------------
+
+--[====[
+	Loading.UpdatePreloading
+	{
+		Shader解析和编译
+		{
+			Shader的解析和编译耗时一般是指，
+			在Shader资源被加载进内存后触发的【【Shader.Parse()和Shader.CreateGPUProgram】】两种API的耗时。
+			忽视Shader资源加载策略的管理，往往会导致游戏过程中触发以上两种API的不必要耗时峰值。
+
+			如果shader没有单独打包，会在加载assetbundle多次加载，就会多次触发Shader.Parse()和Shader.CreateGPUProgram，造成不必要的耗时
+
+			shader最好单独打包
+			将Shader和AB包进行缓存（都不能卸载）
+
+
+		}
+
+		Resources.UnloadUnusedAssets
+		{
+			Resources.UnloadUnusedAssets为Unity遍历所有资源的引用情况并卸载Unused对象的API，
+			一般在场景切换时由Unity自动触发或由开发者手动调用。往往因其自身底层机理和使用不当造成不必要的耗时峰值。
+
+			Unity在切换场景的时候，Unity会自动调用Resources.UnloadUnusedAssets这个函数来卸载场景中没有被使用的函数，这个函数的单次调用比较高，一般不建议手动调用
+			当调用这个函数的时候，会对每一个资源都遍历一次Hierarchy中的GameObject以及堆内存中的对象，判断这个资源是否被GameObject或者组件使用，因此这个函数的单次耗时
+			随着GameObject与Mono对象数量之和乘以Asset数量的乘积的变大而变大
+		}
+
+		异步加载优先级
+		{
+			异步加载是很多项目中场景切换时加载资源的做法，但往往受Application.backgroundLoadingPriority这一API的默认设置限制而效率低下
+
+			https://www.jianshu.com/p/a3f252da84e6
+			Application.backgroundLoadingPriority 
+			{
+				后台加载线程的优先级 可用于控制异步加载数据所需的时间以及在后台加载时对游戏的性能影响
+
+				加载对象（Resources.LoadAsync、AssetBundle.LoadAssetAsync、AssetBundle.LoadAllAssetAsync）、场景 (SceneManager.LoadSceneAsync) 的异步加载函数
+				在【【单独的后台加载线程中执行数据读取和反序列化，并在主线程中执行对象集成】】。 “集成”取决于对象类型，纹理和网格意味着将数据上传到 GPU，音频剪辑可准备数据以进行播放。
+
+				为了防止卡顿，会限制主线程上执行的时间：
+				- ThreadPriority.Low - 2ms;
+				- ThreadPriority.BelowNormal - 4ms;
+				- ThreadPriority.Normal - 10ms;
+				- ThreadPriority.High - 50ms.
+
+				这是异步操作可以在主线程的【【单帧花费】】最长时间
+				单帧花费时间越多，可加载的数据越多，因此帧率将有所下降，较为影响游戏性能，但可减少加载资源的时间，能更快的进入游戏
+				反之，单帧花费时间越少，可加载的数据越少，对游戏的游戏性能影响越小，可在游戏进行时有很好的后台加载
+
+				异步加载时处于战斗场景：设置调高会增加主线程耗时，可能影响性能
+				异步加载时处于加载界面：建议设置调高，尽量缩放加载时间  可以设置ThreadPriority.High
+				
+			}
+			
+		}
+	}
+
+	合理使用加载的API
+	{
+		加载和卸载AssetBundle
+		{
+			使用AssetBundle加载资源是目前移动端项目中比较常见和普遍的做法。而其中对于压缩格式、加载API、加载策略的选用也会一定程度上影响性能
+
+			加载和卸载AssetBundle的API
+			{
+				LoadFromFile：用于从本地加载AB包
+				LoadFromStream：用于AB包需要加密的情况
+				DownLoadHandlerAssetBundle：用于从网络下载AB包（热更新）
+				{
+					using UnityEngine;
+					using UnityEngine.Networking; 
+					using System.Collections;
+					 
+					class MyBehaviour: MonoBehaviour {
+					    void Start() {
+					        StartCoroutine(GetAssetBundle());
+					    }
+					 
+					    IEnumerator GetAssetBundle() {
+					        UnityWebRequest www = new UnityWebRequest("http://www.my-server.com");
+					        DownloadHandlerAssetBundle handler = new DownloadHandlerAssetBundle(www.url, uint.MaxValue);
+					        www.downloadHandler = handler;
+					        yield return www.Send();
+					 
+					        if(www.isError) {
+					            Debug.Log(www.error);
+					        }
+					        else {
+					            // Extracts AssetBundle
+					            AssetBundle bundle = handler.assetBundle;
+					        }
+					    }
+					}
+				}
+			}
+			
+		}
+
+		加载和卸载资源
+		{
+			使用Resources或AssetBundle的API加载资源本身并没有难度，但仍需要分别关注同步加载和异步加载情况下的一些策略导致的性能问题
+
+			打ab包的时候设置压缩算法会导致加载速度不一样
+			{
+				BuildAssetBundleOptions.None ==》 使用LZMA算法压缩
+				BuildAssetBundleOptions.ChunkBaseCompression==》使用LZ4算法压缩
+
+				LZMA：stream-based（流式压缩），只支持顺序读取，加载需要将整个包解压
+				LZ4：chunk-based（块压缩），支持随机读取，加载速度快 （会先加载bundle头部到内存，使用哪个资源就把对应资源加载到内存）
+			}
+
+			StreamAssets文件压缩，默认不压缩
+			
+		}
+
+		实例化和销毁对象
+		{
+			
+			频繁大量的实例化和单次实例化过长都是可能困扰开发者的性能问题，而【【缓存池、分帧加载】】等策略和技巧可能获得良好的优化效果。
+		}
+
+		激活和隐藏对象
+		{
+			
+			激活和隐藏的耗时本身不高，但如果单帧的操作次数过多就需要予以关注。可能出于游戏逻辑中的一些判断和条件不够合理，
+			很多项目中往往会出现某一种资源的显隐操作次数过多，且其中SetActive(True)远比SetActive(False)次数多得多、或者反之的现象，亦即存在大量不必要的SetActive调用。
+
+			SetScale代替，
+		}
+	}
+
+]====]
+
+-----------------------------------------------------<<<<<< 加载相关函数 优化 >>>>>-----------------------------------------------------------------------------
