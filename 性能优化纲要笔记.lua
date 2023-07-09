@@ -466,3 +466,195 @@
 ]====]
 
 -----------------------------------------------------<<<<<< 降低动画模块耗时 >>>>>-----------------------------------------------------------------------------
+
+
+
+
+-----------------------------------------------------<<<<<< 降低物理模块耗时 >>>>>-----------------------------------------------------------------------------
+--[====[
+
+	Unity物理系统的性能瓶颈主要体现在【【CPU端的耗时】】，它的主要耗时函数为【【FixedUpdate.PhysicsFixedUpdate】】。
+	在开启Physics设置时，它的主要耗时堆栈是【【Physics.Processing和Physics.Simulate】】，需要针对这两个函数进行优化。
+	【【首先会影响这两个函数耗时的是它们的调用次数】】，调用次数越多则耗时也就越高，而物理函数的调用次数受到Time设置里Maximum Allowed Timestep和Fixed TimeStep的影响会存在一个调用次数上限。
+	其中，Maximum Allowed TimeStep决定fxf了单帧物理最大调用次数，该值越小，单帧物理最大调用次数越少；Fixed TimeStep决定了FixedUpdate的更新间隔，该值越大，每帧物理更新调用次数越少。
+	此外，当游戏陷入卡顿，帧耗时较高时，物理函数的调用次数也会随之增加。
+
+	物理模块的开销：CPU耗时以及堆内存
+	{
+		CPU耗时
+		{
+			FixedUpdate.PhysicsFixedUpdate
+			{
+				Physics.Processing
+				Physics.Simulate
+			}
+
+			逻辑代码
+			{
+				OnTriggerEnter,OnCollisionEnter等碰撞事件
+				Raycast，OverLap等检测函数
+			}
+		}
+		
+
+		堆内存
+		{
+			OnTriggerEnter等回调会生成Collision的实例，它被分配到堆内存，产生GC
+			Raycast等检测函数会将多个返回物体实例分配到堆内存，产生GC
+		}
+	}
+
+	简单描述
+	{
+		Collision的产生
+		{
+			了解Collision的产生条件，哪些碰撞体之间会产生Collision。每当产生Collision，Unity对象会在OnTriggerEnter、OnCollisionEnter等函数中收到碰撞事件的相关信息并执行其中的相关逻辑。
+			因此有必要确认当前Collision的产生情况是否符合预期，是否存在不必要的Collision。
+		}
+
+
+		Trigger的替代方案
+		{
+			Collider.Bounds实现替代Trigger，避免使用Unity的物理模块。T
+			rigger触发是比较方便的能够使用非物理模拟的方式来进行替换的一种Collision，使用C#逻辑来替代掉Trigger可以降低部分物理模块的耗时
+		}
+
+
+		Physics Layer的设置
+		{
+			Physics Layer中取消不必要的层之间的碰撞检测，避免多余的Contacts的产生。
+		}
+
+		物理更新次数
+		{
+			Time设置会影响到物理更新次数的上限，而具体的物理更新次数会受到帧耗时的影响。
+		}
+
+		Auto Simulation
+		{
+			不需要使用物理模块时直接关闭Auto Simulation以节省物理模拟的耗时，而如果需要使用射线检测时只需要开启Auto Sync Transform即可。
+			在使用NGUI时也是可以这么做的，但是开启了Trigger和Collision的粒子系统要想有正常的物理表现则不可以关闭Auto Simulation
+		}
+
+		RaycastCommand
+		{
+			射线检测在场景中碰撞体数量较多时同样会产生较高的CPU端耗时，可以使用Unity提供的RaycastCommand来进行Job化的异步射线检测，减少主线程的耗时。
+		}
+
+	}
+
+	物理模拟优化
+	{
+		Unity中的物理系统以固定的时间间隔允许，默认是0.02秒，
+		如果两帧之间的时长大于这个间隔，那它会调用更多次的物理更新来实现
+		也就是说可能会调用多次FixedUpdate.PhysicsFixedUpdate,它发生在一帧中靠前的位置
+
+		Unity会自动模拟这些物理更新，带来物理方面的开销
+		Unity2017.4后出现Auto Simulation选项，默认为开启状态
+		在Editor>Project Settings > Physics中开启或关闭 
+		使用脚本关闭：Physics.autoSimulation
+
+		如果项目没有物理模块就不需要开启
+
+
+		自动同步几何信息 Auto Syns Transform
+		2017.2版本后该选项是默认关闭的，
+		开启该选项会使每次Transform属性发生变化时，强制与物理系统进行同步，这样会增加物理运算负担
+		关闭该选项时，仅在FixedUpdate的物理模拟步骤前进行同步，也可以使用Physics.SyncTransform手动同步变换更改
+	}
+
+	物理碰撞优化（物理碰撞跟物理模拟不是一个概念）
+	{
+		物理碰撞只是物理对象之间发生的Collision与Overlap的回调，并不会对后续的反馈做物理模拟
+		物理碰撞需要添加Collider来管理碰撞事件
+		物理模拟需要添加Rigidbody来实现基于物理的行为，比如移动 重力 碰撞
+
+
+		###尽量不要使用Mesh Collider, 可以用多个简单的碰撞体支付复合碰撞体
+		###如果一定要使用Mesh Collider,建议开启Play Setting中的Prebake Collision Mesh选项，可以在构建时预先将数据烘焙，不会在运行时带来开销
+		
+		开启Trigger选项后物理不会表现为实体对象，不会发生碰撞而会直接穿过
+
+		###如果只想检测物体是否碰撞，并且不需要做任何的碰撞模拟效果,使用Trigger会比Collider更高效
+		还可以利用Collider.Bounds的检测，使用C#逻辑来代替Trigger的检测，也能降低部分物理模块的耗时
+
+		Rigidbody组件
+		{
+			Rigidbody组件是实现游戏对象物理行为的主要组件
+			添加组件后，对象会立刻相应重力，一般同时还会添加碰撞体组件，这样会因为碰撞而移动
+
+			优化建议
+			{
+				刚体组件会接管该游戏对象的运动，因此不建议直接对Transform属性做修改，这会导致物理世界中重新计算
+				应该使用MovePosition或AddForce函数之类的物理方法来移动对象
+
+				最好在FixedUpdate中移动而不是在Update中
+			}
+
+			Rigidbody的Is Kinematic属性
+			默认不开启的情况下Rigidbody完全由物理引擎模拟来控制
+			开启Is Kinematic后会让物体摆脱物理引擎的控制，允许脚本进行控制
+			Kinematic对象不会相应的碰撞或力，但仍然会对其他刚体对象施加物理影响
+
+			静态碰撞体：只有Collider组件没有Rigidbody组件
+			刚体碰撞体：有Collider组件有Rigidbody组件，但是Rigidbody的Is Kinematic选项未开启
+			运动刚体碰撞体：有Collider组件有Rigidbody组件，Rigidbody的Is Kinematic选项开启
+		}
+		
+	}
+
+	物理更新次数优化
+	{
+		Unity中的物理以固定的时间间隔运行，这对于模拟的准确性和一致性非常重要
+		在每一帧开始时，Unity会根据前一帧花费的时长，执行尽可能多的FixedUpdate，以赶上当前时间
+		一般情况下，执行的物理更新次数越多，物理开销越大
+
+		优化建议
+		{
+			先优化其他模块，以降低每一帧的耗时，从而减少物理的更新次数
+			调整Unity中Time的相关次数：Fixed Timestep以及Maximum Allowed Timestep
+			{
+				Fixed Timestep 确定了执行物理计算和FixedUpdate()事件的时间间隔
+				该值越大，每帧调用的物理更新次数就会越少，但物理计算的频率也会降低
+				物理计算频率过低可能会造成部分机制异常，比如检测不到碰撞的回调
+
+				优化建议：在可接受范围内尽可能调高Fixed Timestep
+
+				Maximum Allowed Timestep：执行物理计算和FixedUpdate()事件的时间长度不会超过该值
+				该值越小，单帧物理最大调用次数越小，但是卡顿时物理可能有问题
+				优化建议：一般设置在8~10个FPS之间
+
+			}
+		}
+	}
+
+	堆内存优化
+	{
+		碰撞回调的GC开销
+		{
+			OnCollisionEnter/Stay/Exit会将结果返回生成新的实例分配到堆内存中，因此会触发GC
+			优化建议：开启Physics设置中的Reuse Collision Callbacks，碰撞回调会同时使用同一个Instance，减少GC
+		}
+
+		检测函数造成的GC开销
+		{
+			Raycast, boxCast，overlapBox等函数会将返回结果的实例分配到堆内存，因此会触发GC
+
+			优化建议：使用对应的Non-alloc版本的函数，如RaycastNonAlloc,BoxCastNonAlloc,OverlapBoxNonAlloc等，需要预先分配一个较大的容器来存储返回结果，避免了持续的堆内存分配
+		}
+	}
+
+	其他优化
+	{
+		可以对单个Rigidbody的solverIteration属性进行设置，该值越大模拟越精准，但是开销越大
+		
+		射线检测在场景中碰撞体数量较多的时同样会产生较高的CPU端耗时
+		使用RaycastCommand来进行job话的异步检测，减少主线程的耗时
+	}
+
+
+]====]
+
+
+
+-----------------------------------------------------<<<<<< 降低物理模块耗时 >>>>>-----------------------------------------------------------------------------
