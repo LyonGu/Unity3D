@@ -862,17 +862,56 @@
 	{
 		Batching
 		{
+			在GPU进行渲染前，需要获取到需要渲染的对象的各种渲染数据，比如三角形顶点的position、rotation、scale、uv、color属性等，这些数据需要从CPU获取到。
+			【【CPU传给GPU这些数据时是以Batch为单位进行传输的，所以Batch的数量大小会影响到最终的渲染效率】】，因此如何控制好Batch数量也是需要关注的一个点。
 			Unity中提供了四种合批的优化方法，能够降低Batch的数量。
 			分别是Static Batching、Dynamic Batching、GPU Instancing、SRP Batcher。它们的原理各不相同，使用条件和适用场景也有所区别，需要根据项目实际情况进行选择。
+			
+
+			为了准备绘制调用，CPU设置资源并更改GPU的内部位置，这称为渲染状态，对渲染状态的更改，例如切换到不同的材质，往往是最耗费资源的操作
+
+			合并网格
+			{
+				Mesh.CombinesMeshes手动合并网格，Unity无法剔除单独的网格，哪怕只有整体网格的一小部分在屏幕中出现，Unity也会将合并的网格全部绘制
+
+				DrawCall Batching与手动合并网格的区别
+				{
+					只合并了顶点数组，而索引数组还是会继续保留
+					可以对单独的网格做剔除
+					
+				}
+
+				DrawCall Batching使用条件
+				{
+					1 支持Mesh Renderers、Trail Renderers、.Line Renderers、Particle Systems和Sprite Renderers,且只能批量处理相同类型的Renderer
+					2 需要使用相同的材质，因此在脚本中要使用Renderer.sharedMateriali而不是Render.material,.后者生成的是材质的副本，会打断合批
+					3 使用MaterialPropertyBlock也会打断合批，不过它还是比使用多个材质要快
+					4 透明物体的渲染严格按照先后顺序执行，合批很容易被打断
+					5 尽量不要使用负的缩放值
+					重点总结：【【【【使用相同的材质】】】】
+				}
+			}
+				
+
 
 			Static Batching
 			{
-				
+				思路都是合并网格来降低DrawCall 使用相同的材质
+
+				静态合批Static Batching-原理
+
+				原理：
+				◆将场景中不会移动的游戏对象进行合并组成一个大网格，然后进行绘制。
+				◆将所有的子模型的顶点变换到了世界空间下，为它们创建了共享的顶点和索引缓存区
+				效果：
+				◆大大节省了传递几何信息和绑定顶点信息的时间开销
+				◆在具有相同的材质的情况下，还会节省传递材质信息、纹理信息的开销
+				◆虽然整体Draw Call的数量并没有减少（？？？？？），但是由于几乎没有渲染状态的切换，因此准备工作的时间大大降低了，起到了渲染优化的目的
 			}
 
 			Dynamic Batching
 			{
-				
+				思路都是合并网格来降低DrawCall 使用相同的材质
 			}
 
 			GPU Instancing
