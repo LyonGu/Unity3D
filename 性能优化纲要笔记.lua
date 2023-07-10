@@ -894,7 +894,7 @@
 				
 
 
-			Static Batching
+			【【Static Batching】】
 			{
 				思路都是合并网格来降低DrawCall 使用相同的材质
 
@@ -909,20 +909,150 @@
 				◆虽然整体Draw Call的数量并没有减少（？？？？？），但是由于几乎没有渲染状态的切换，因此准备工作的时间大大降低了，起到了渲染优化的目的
 			}
 
-			Dynamic Batching
+			【【Dynamic Batching】】
 			{
 				思路都是合并网格来降低DrawCall 使用相同的材质
-			}
 
-			GPU Instancing
-			{
+				动态合批是一种绘制调用批处理方法，它对移动游戏对象进行批处理以减少绘制调用。它在Unity中有两种类型，一种针对网格，一种针对动态生成的几何体
+
+				前者针对网格对象，后者则应用再粒子系统/Line Renderers等对象
+				前者需要手动开启动态合批，后者Unity会自动使用动态合批
+
+				原理：将一些较小的网格，在CPU转换它们的顶点到世界空间，将使用相同配置的顶点组合在一起，然后一次性绘制它们
+				效果：
+				{
+					以最小的代价合并网格模型，以此来减少DrawCall
+					CPU会一直计算，所以能使用运动的物体
+					虽然能节省Draw Call的开销，但是会带来CPU计算的开销
+				}
+
+				动态合批的条件要苛刻很多，静态合批只需要注意材质相同即可，动态合批还有很多注意点尤其是网格
+				{
+					基础条件：使用相同的材质实例
+					其他条件：
+					{
+						网格的顶点数不超过300，shader中使用的顶点属性不超过900
+						动态光照贴图的GameObjects应指向完全相同的光照贴图位置
+						使用多个pass的Shader不会被动态合批处理
+					}
+				}
+
+				动态合批Dynamic Batching-优点
+				优点：
+				◆相比于静态合批，它不会造成内存的额外开销
+				◆可以应用于运动的物体
+				◆对于UI比较容易满足条件
 				
+				适用场景：
+				◆网格较少、几何较简单，如UI、粒子、Sprite等
+
+
+			}
+
+			【【GPU Instancing】】
+			{
+				GPU实例化是一种绘制调用优化方法，它在一次绘制调用中渲染具有相同材质的网格的多个副本。网格的每个副本称为一个实例。这对于绘制在场景中多次出现的事物非常有用，例如树木或灌木丛。
+
+				原理
+				{
+					Unity对于所有符合要求的对象，将其位置、缩放、uv偏移、lightmapindex等相关信息放到Constant Bufferi常量缓冲区中
+					当一个对象作为实例进入渲染流程时，会根据传入的Instance ID来从显存中取出对应的信息，用于后续的渲染似
+				}
+
+				效果
+				{
+					◆在一个Draw Call中渲染拥有相同材质的、同一个mesh的多个复本，每个副本被称为一个实例instance
+					◆【【一次性存入所有对象的公共信息到CBuffer,后续根据id来取】】，不用每次都发数据到GPU，以此实现优化的效果。
+				}
+
+				使用GPU Instancing一般有两种方法，
+				{
+					1 在材质的Inspector面板中勾选Enable Instancing的选项,需要对应的shader里支持
+					2 使用Graphics.DrawMeshInstanced或者Graphics.DrawMeshInstancedIndirect在代码中实现，
+				}
+
+				【【SRP Batcher和Static Batching优先级都高于GPU Instancing,因此如果已经满足了其中任意一个，GPU Instancing都会被打断】】
+
+				GPU Instancing-使用条件
+				{
+					着色器Shader:
+					{
+						◆必须支持GPU Instancing,Unity中的Standard、StandardSpecularl以及所有的Surface Shader都默认支持
+						◆其它的Shaderi可以手动添加GPU Instancing的支持
+					}
+		
+					
+					其它条件
+					{
+						◆使用同一个Mesh
+						◆只支持MeshRenderer,不支持SkinnedMeshRenderer
+						◆使用同一个Material
+					}
+				}
+
+				GPU Instancing-增加变化
+					◆默认情况下，GPU Instancing在每次Draw Call中对具有不同Transforms属性的对象进行实例化
+					◆为了添加更多变化(variance),可以在Shader中添加per-instance属性
+					◆使用MaterialPropertyBlocki可以在运行时设置这些per-instance属性，并且不会打断GPU Instancing
+
+
+				GPU Instancing-缺点
+				{
+					◆优先级比SRP Batcherz和静态合批都要低，在满足这两种的使用条件时GPU Instancing都无法使用
+					◆提交一次GPU Instancing的Draw Call耗时是比正常的Draw Call耗时要高不少的，因此若要使用GPU Instancing,要确认开启该选项后能让Draw Call大幅下降
+					◆对于半透明的物体严格按照从远到近渲染，合批很容易被打断
+					◆不适用于Mesh种类多的场景（需要相同网格）
+				}
+
+				GPU Instancing-优点
+				{
+					◆相比静态合批不会带来额外的内存压力
+					◆相比动态合批没有严格的顶点限制
+					◆与MaterialPropertyBlock很适配，不会打断合批
+
+					适用场景：
+						◆需要画大批相同Mesh的场景，如草海、树林之类的
+				}
 			}
 
 
-			SRP Batcher
+			【【SRP Batcher】】
 			{
-	
+				SRP Batcher是一种绘制调用优化方法，可以显著提高使用SRP的应用程序的性能。对于使用相同的【【着色器变体的材质】】，SRP Batcher会降低Unity准备和调度绘制调用的CPU耗时。（减少SetPass）
+
+				当项目从Build-in渲染管线切换到SRP管线后，信息传递的方式会从原来glUniform变为glBufferData和glBufferSubData，
+				在开启SRP Batcher后，它会预先生成Uniform Buffer，将数据一次行放进去，接下来提交DrawCall的时候，让GPU去取Buffer里的数据就可以了，降低了CPU的写入操作
+
+				SRP Batcher以Shader为单位进行合批，可以有效降低SetPassCall(设置渲染状态)的数目，用于CPU性能优化
+
+
+				SRP Batcher-原理
+				{
+					标准的Unity渲染工作流：
+						◆场景中的材质越多，设置GPU数据所需的CPU操作就越多
+						◆当检测到新材质时，CPU收集所有属性，并在GPU内存中设置不同的常量缓冲区
+
+					我们希望將数据能够一次性放进去，减少CPU反复的读写操作，对于使用相同shadert的物体，它们需要的信息结构是相同的，因此可以合在一起共同写入，这些物体就合成了一个Batch
+					在这样一个批次中例如光源、几何信息这些属性每个物体都不一样，CPU会使用一个专用的代码路径將它们合在一个大的GPU缓冲区，如PerDraw
+					而材质信息有些物体可能是一样的，合成大的Buffer就有些浪费了，所以可以将它们各自合成一个小的Buffer，称为PerMaterial
+
+
+					SRP Batcheri渲染工作流：
+						◆使用一个专用的代码路径来快速更新内置引擎属性在一个大的GPU缓冲区
+						◆所有材质在GPU内存中都有特久的CBUFFER,这些CBUFFER随时可以使用
+						这些材质在GPU内存中的Buffer都是持久的，随时可以使用
+
+						如果材质设有变化CPU就不需要揉作，如果发生了改变CPU用通过专用的代码路径将其上传到GPU的缓冲区中
+						传统上、我们倾向于减少Draw Cal的数量来优化CPU渲染成本，不过Drawcall本身只是推入GPU命令缓冲区的一些字节，真正的CPU成本来自Draw Call之前的许多设置（渲染状态设置）
+						传统的流程中每遇到一个新的材质就会重新设置各种信息而SRP Batcher则是要遇到一个新的Shader才进行新的设置
+						SRP Batcher在每个Batch开始的时候会通过memory copy的方式一次性传递Uniform Buffer，之后在Batch的内部只需要不断的绑定和绘制就行
+						CPU会提供一个OffSet的数据来告诉GPU从buffer中去取不同物体的数据，这就省去了GPU写入的擦作
+						所以SRP Batchere虽然没有降低Draw Cal的数量，但是大大降低了Draw Call之间的设置成本
+
+					因为不同的变体在计算时仍然属于不同的Shader、会打断合批
+				}
+
+
 			}
 		}
 
