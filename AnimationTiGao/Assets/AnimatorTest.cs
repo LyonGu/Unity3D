@@ -38,7 +38,16 @@ public class AnimatorTest : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.A))
         {
-            animator.Play("POSE03");
+            // animator.Play("POSE03");
+            //AnimatorControle里可以不通过连线过渡，直接手动播放
+            animator.CrossFade("RUN00_F", 0.25f, 0);
+        }
+        
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            // animator.Play("POSE03");
+            //AnimatorControle里可以不通过连线过渡，直接手动播放
+            animator.CrossFade("WAIT01", 0.25f, 0);
         }
 
         var animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
