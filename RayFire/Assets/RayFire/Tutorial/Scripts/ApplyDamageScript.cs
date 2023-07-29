@@ -23,9 +23,12 @@ public class ApplyDamageScript : MonoBehaviour
 					worldPosition = damagePoint.position;
 				
 				// Apply damage
-				bool dmg = rigid.ApplyDamage (damageValue, worldPosition, damageRadius, coll);
+				// bool dmg = rigid.ApplyDamage (damageValue, worldPosition, damageRadius, coll);
 				
 					//Debug.Log (dmg);
+					
+					bool dmg = rigid.ApplyDamage (damageValue, worldPosition, damageRadius);
+					Debug.Log (dmg);
 			}
 		}
 	}
