@@ -19,7 +19,7 @@ public class RayFireTest : MonoBehaviour
     private void Start()
     {
         int a = 10;
-        if (_rayfirwRigid.fragments != null)
+        if (_rayfirwRigid!= null && _rayfirwRigid.fragments != null)
         {
             foreach (var rayfireRigid in _rayfirwRigid.fragments)
             {
@@ -29,6 +29,19 @@ public class RayFireTest : MonoBehaviour
                     _rayfireRigidDic.Add(id, rayfireRigid);
                 }
             }
+        }
+
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        if (rigidbody != null)
+        {
+            //加限制
+            // var addMask = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY;
+            // rigidbody.constraints = rigidbody.constraints | addMask;
+            
+            //删限制
+            var removeMask = ~RigidbodyConstraints.FreezeRotationZ;  //删一个
+             removeMask = ~(RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY); //删多个
+            rigidbody.constraints = rigidbody.constraints & removeMask;
         }
     }
 
