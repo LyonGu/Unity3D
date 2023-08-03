@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class RayFireTest : MonoBehaviour
 {
+    
     // Start is called before the first frame update
     private RayfireRigid _rayfirwRigid;
 
@@ -72,6 +73,14 @@ public class RayFireTest : MonoBehaviour
     private void Update()
     {
         int a = 10;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Physics.Raycast(transform.position, transform.forward, out var _hit, 10))
+            {
+                Debug.Log($"{Time.frameCount} : {_hit.transform.name}================");
+            }
+        }
     }
 
     void MyMethod(RayfireRigid rigid)
