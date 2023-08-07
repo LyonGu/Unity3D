@@ -56,6 +56,7 @@ class HUDGif
     }
 };
 
+//HUD 顶点数据类
 class HUDVertex
 {
     HUDVertex m_pNext;  //下一个节点
@@ -288,7 +289,7 @@ class HUDVertex
     }
 }
 
-
+//HUD Mesh数据类
 class HUDMesh
 {
     public Mesh m_Mesh;
@@ -304,6 +305,7 @@ class HUDMesh
     int m_nOldSpriteNumb = 0;
     CharacterInfo m_tempCharInfo;
 
+    //存储HUD顶点数据
     BetterList<HUDVertex> m_SpriteVertex = new BetterList<HUDVertex>();
     bool m_bQueryTexture = false;
     int mAtlasID = 0;
