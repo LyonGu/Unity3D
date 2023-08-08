@@ -108,7 +108,10 @@ class HudSetting
         }
     }
 
-    public static string AtlasPath = "Assets/Atlas/";
+    public static string AtlasPath = "Assets/HUD/Atlas/";
+    public static string DataConfigPath = Application.dataPath + "/HUD/Atlas/assets_all.txt";
+    public static string DataConfigPath_bin = Application.dataPath + "/HUD/Atlas/assets_all.bytes";
+    
     public float m_fDurationTime = 2.0f;
 
     public float m_fCalbackTime = 1.0f;

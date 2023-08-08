@@ -449,7 +449,7 @@ public class AtlasMng_Editor : CAtlasMng
 
     void Reload()
     {
-        string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
+        string szCfgPathName = HudSetting.DataConfigPath;
 
         if (File.Exists(szCfgPathName))
         {
@@ -488,7 +488,7 @@ public class AtlasMng_Editor : CAtlasMng
         if (!IsEditorMode())
             return false;
 
-        string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
+        string szCfgPathName = HudSetting.DataConfigPath;
         if (File.Exists(szCfgPathName))
         {
             SerializeText ar = new SerializeText(SerializeType.read, szCfgPathName);
@@ -529,7 +529,7 @@ public class AtlasMng_Editor : CAtlasMng
     {
         if (bLoadFromTxt)
         {
-            string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
+            string szCfgPathName = HudSetting.DataConfigPath;
 
             if (File.Exists(szCfgPathName))
             {
@@ -541,7 +541,7 @@ public class AtlasMng_Editor : CAtlasMng
         }
         else
         {
-            string szCfgPathName = Application.dataPath + "/Atlas/assets_all.bytes";
+            string szCfgPathName = HudSetting.DataConfigPath_bin;
             if (File.Exists(szCfgPathName))
             {
                 CSerialize ar = new CSerialize(SerializeType.read, szCfgPathName);
@@ -655,7 +655,7 @@ public class AtlasMng_Editor : CAtlasMng
             return;
         }
         //总配置文件
-        string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
+        string szCfgPathName = HudSetting.DataConfigPath;
         if (File.Exists(szCfgPathName))
         {
             SerializeText ar = new SerializeText(SerializeType.read, szCfgPathName);
@@ -749,11 +749,11 @@ public class AtlasMng_Editor : CAtlasMng
         {
             ++m_nFileVersion;
             MakeSpriteAtlasID();
-            string szCfgPathName = Application.dataPath + "/Atlas/assets_all.txt";
+            string szCfgPathName = HudSetting.DataConfigPath;
             SerializeText ar = new SerializeText(SerializeType.write, szCfgPathName);
             SerializeToTxt(ar);
             ar.Close();
-            string szBinPathName = Application.dataPath + "/Atlas/assets_all.bytes";
+            string szBinPathName = HudSetting.DataConfigPath_bin;
             CSerialize arBin = new CSerialize(SerializeType.write, szBinPathName);
             Serialize(arBin);
             arBin.Close();

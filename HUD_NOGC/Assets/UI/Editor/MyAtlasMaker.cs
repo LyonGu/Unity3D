@@ -311,7 +311,7 @@ public class MyAtlasMaker : EditorWindow
             string szName = AtlasMng_Editor.GetAssetPathByTexture(o);
             if (!string.IsNullOrEmpty(szName))
             {
-                if(szName.IndexOf("Assets/Atlas/") == 0)
+                if(szName.IndexOf("Assets/HUD/Atlas/") == 0)
                 {
                     continue;
                 }
