@@ -556,7 +556,7 @@ public class AtlasMng_Editor : CAtlasMng
     public void MakeAllLODTexture()
     {
         Dictionary<string, UITexAtlas>.Enumerator itTexture = m_TexAtlas.GetEnumerator();
-        string szAssetPath = "Assets/Atlas/";
+        string szAssetPath = HudSetting.AtlasPath;
         while (itTexture.MoveNext())
         {
             string szAtlasName = itTexture.Current.Key;
@@ -690,13 +690,13 @@ public class AtlasMng_Editor : CAtlasMng
 
     bool AdjustAtlasShaderName(UITexAtlas atlas)
     {
-        string szAssetsPath = "Assets/Atlas/" + atlas.m_szAtlasName + ".mat";
+        string szAssetsPath = HudSetting.AtlasPath + atlas.m_szAtlasName + ".mat";
         Material mat = AssetDatabase.LoadAssetAtPath(szAssetsPath, typeof(Material)) as Material;
         string szShaderName = atlas.m_szShaderName;
         if( mat != null && mat.shader != null )
             szShaderName = mat.shader.name;
 
-        szAssetsPath = "Assets/Atlas/" + atlas.m_szAtlasName + ".png";
+        szAssetsPath = HudSetting.AtlasPath + atlas.m_szAtlasName + ".png";
         Texture mainTex = AssetDatabase.LoadAssetAtPath(szAssetsPath, typeof(Texture)) as Texture;
 
         string szOldShaderName = atlas.m_szShaderName;
@@ -1095,7 +1095,7 @@ public class AtlasMng_Editor : CAtlasMng
     {
         if (IsEditorMode())
         {
-            string szTxtAssetPath = "Assets/Atlas/" + atlas.m_szAtlasName + ".png";
+            string szTxtAssetPath = HudSetting.AtlasPath + atlas.m_szAtlasName + ".png";
             Texture tex = AssetDatabase.LoadAssetAtPath(szTxtAssetPath, typeof(Texture)) as Texture;
             if (atlas.m_material == null)
             {
@@ -1117,7 +1117,7 @@ public class AtlasMng_Editor : CAtlasMng
                 atlas.m_material.name = atlas.m_szAtlasName;
                 if(bHaveMainAlpha)
                 {
-                    szTxtAssetPath = "Assets/Atlas/" + atlas.m_szAtlasName + "_alpha.png";
+                    szTxtAssetPath = HudSetting.AtlasPath + atlas.m_szAtlasName + "_alpha.png";
                     Texture mainAlpha = AssetDatabase.LoadAssetAtPath(szTxtAssetPath, typeof(Texture)) as Texture;
                     atlas.m_MainAlpha = mainAlpha;
                     atlas.m_material.SetTexture("_MainAlpha", mainAlpha);
@@ -1246,7 +1246,7 @@ public class AtlasMng_Editor : CAtlasMng
 
         bReplace = false;
         UITexAtlas atlas = GetAltas(szAtlasName);
-        string szAtlasPathName = "Assets/Atlas/" + szAtlasName + ".png";
+        string szAtlasPathName = HudSetting.AtlasPath + szAtlasName + ".png";
 
         Texture2D atlasTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
 
@@ -1313,7 +1313,7 @@ public class AtlasMng_Editor : CAtlasMng
                 || rcOut.height != selTex.m_tex.height)
                 return false;
         }
-        string szAtlasPathName = "Assets/Atlas/" + szAtlasName + ".png";
+        string szAtlasPathName = HudSetting.AtlasPath + szAtlasName + ".png";
         Texture2D atlasTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
         if (atlasTex == null)
             return false;
@@ -1486,7 +1486,7 @@ public class AtlasMng_Editor : CAtlasMng
     public void ChangeTextureFormat(string szPathName)
     {
         szPathName = szPathName.Replace('\\', '/');
-        int nPos = szPathName.IndexOf("/Assets/Atlas/");
+        int nPos = szPathName.IndexOf(HudSetting.AtlasPath);
         string szAssetsPath = szPathName.Substring(nPos + 1);
         ChangeAssetTextureFormat(szAssetsPath, TextureImporterType.GUI);
     }
@@ -1636,7 +1636,7 @@ public class AtlasMng_Editor : CAtlasMng
 
         if(atlas.IsCanLOD())
         {
-            string szAssetPath = "Assets/Atlas/";
+            string szAssetPath = HudSetting.AtlasPath;
             string szAtlasName = atlas.m_szAtlasName;
             MakeLODTexture(szAssetPath, szAtlasName);
             MakeLODTexture(szAssetPath, szAtlasName + "_alpha");
@@ -1675,7 +1675,7 @@ public class AtlasMng_Editor : CAtlasMng
     {
         UITexAtlas atlas = GetAltas(szAtlasName);
         List<UISpriteInfo> aSprite = GetAllSpriteByAtlas(szAtlasName);
-        string  szAtlasPathName = "Assets/Atlas/" + szAtlasName + ".png";
+        string  szAtlasPathName = HudSetting.AtlasPath + szAtlasName + ".png";
 		Texture2D atlasTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
 
         // 创建一个空的吧
@@ -1852,8 +1852,8 @@ public class AtlasMng_Editor : CAtlasMng
         UITexAtlas newAtlas = GetAltas(szNewAtlasName);
         newAtlas.CopyFromSetting(oldAtlas);
 
-        string szAtlasPathName = "Assets/Atlas/" + szAtlasName + ".png";
-        string szNewAtlasPathName = "Assets/Atlas/" + szNewAtlasName + ".png";
+        string szAtlasPathName = HudSetting.AtlasPath + szAtlasName + ".png";
+        string szNewAtlasPathName = HudSetting.AtlasPath + szNewAtlasName + ".png";
 
         Texture2D oldAtlasTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
         Texture2D newAtlasTex = LoadCanWriteTextureByAssetsName(szNewAtlasPathName);
@@ -1912,7 +1912,7 @@ public class AtlasMng_Editor : CAtlasMng
 		UITexAtlas oldAtlas = GetAltas(szAtlasName);
 		if( oldAtlas == null )
 			return false;
-		string szAtlasPathName = "Assets/Atlas/" + szAtlasName + ".png";
+		string szAtlasPathName = HudSetting.AtlasPath + szAtlasName + ".png";
 		Texture2D oldAtlasTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
 		if( oldAtlasTex == null )
 			return false;
@@ -1952,7 +1952,7 @@ public class AtlasMng_Editor : CAtlasMng
                 m_pLastPixelTex = null;
             }
             m_nLastAtlasID = nAtlasID;
-            string szAtlasPathName = "Assets/Atlas/" + atlas.m_szAtlasName + ".png";
+            string szAtlasPathName = HudSetting.AtlasPath + atlas.m_szAtlasName + ".png";
             m_pLastPixelTex = LoadCanWriteTextureByAssetsName(szAtlasPathName);
         }
         if (m_pLastPixelTex != null)

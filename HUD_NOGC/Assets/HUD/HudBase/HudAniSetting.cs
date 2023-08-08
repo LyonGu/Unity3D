@@ -108,6 +108,7 @@ class HudSetting
         }
     }
 
+    public static string AtlasPath = "Assets/Atlas/";
     public float m_fDurationTime = 2.0f;
 
     public float m_fCalbackTime = 1.0f;
