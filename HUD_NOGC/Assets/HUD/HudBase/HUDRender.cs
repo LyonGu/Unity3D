@@ -17,7 +17,7 @@ class HUDTitleBase
     {
         if (s_pFont == null)
         {
-            s_pFont = UIPrefabLoader.LoadFont("Assets/UIPrefab/DFont.prefab") as UIFont;
+            s_pFont = UIPrefabLoader.LoadFont("Assets/HUD/UIPrefab/DFont.prefab") as UIFont;
         }
         return s_pFont;
     }

@@ -438,7 +438,7 @@ public class UIPrefabLoader
         s_NameToAssetsName = new Dictionary<string, string>();
 
         string szDataPath = Application.dataPath;
-        string szUIPath = Application.dataPath + "/UIPrefab/";
+        string szUIPath = Application.dataPath + "/HUD/UIPrefab/";
         string[] fileList = Directory.GetFiles(szUIPath, "*.prefab", SearchOption.AllDirectories);
         int nRootLen = szDataPath.Length - 6;
         if (fileList == null)
@@ -464,7 +464,7 @@ public class UIPrefabLoader
         string szAssetsName = string.Empty;
         if (s_NameToAssetsName.TryGetValue(name, out szAssetsName))
             return szAssetsName;
-        szAssetsName = "Assets/UIPrefab/" + name + ".prefab";
+        szAssetsName = "Assets/HUD/UIPrefab/" + name + ".prefab";
         return szAssetsName;
     }
 #endif
