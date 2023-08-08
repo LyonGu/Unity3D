@@ -4,12 +4,7 @@ using System.Text;
 using UnityEngine;
 
 ///////////////////////////////////////////////////////////
-//
-//  Written by              ：laishikai
-//  Copyright(C)            ：成都博瑞梦工厂
-//  ------------------------------------------------------
 //  功能描述                ：文本控制符解释模块
-//
 ///////////////////////////////////////////////////////////
 
 public enum UIFontUnitType
@@ -81,6 +76,7 @@ struct HUDCharInfo
     public int LineH; // 当前行高
 };
 
+//文本解析类
 class HUDTextParse
 {
     public HUDCharInfo[] m_Sprites;

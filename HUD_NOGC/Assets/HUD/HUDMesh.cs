@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-///////////////////////////////////////////////////////////
-//
-//  Written by              ：laishikai
-//  Copyright(C)            ：成都博瑞梦工厂
-//  ------------------------------------------------------
-//  功能描述                ：Mesh类
-//
-///////////////////////////////////////////////////////////
+/*
+ *
+ * 这个HUD目前是支持GIF动画的，包括头顶显示超链接，这些都是支持，由于不同的项目有自己的资源管理，你需要自己扩展CAtlasMng的功能，
+ * GIF动画的管理器在UISpriteGifManager,是XML配置。动态表情这里就是一个序列帧，只需要定时刷新贴图就可以了。
+ *
+ */
 
 class HUDGif
 {

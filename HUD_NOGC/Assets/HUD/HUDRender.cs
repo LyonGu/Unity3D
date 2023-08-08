@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+//HUD 头顶信息基础类
 class HUDTitleBase
 {
     public Vector3 m_vPos; // 对象的世界坐标
@@ -272,6 +273,7 @@ class HUDTitleBase
     }
 };
 
+//最后的绘制类  使用commandBuffer
 class HUDRender
 {
     BetterList<HUDMesh> m_MeshList = new BetterList<HUDMesh>(); // 所有的
@@ -387,7 +389,7 @@ class HUDRender
             }
         }
     }
-    public void OnCacelRender()
+    public void OnCancelRender()
     {
         m_bMeshDirty = false;
     }

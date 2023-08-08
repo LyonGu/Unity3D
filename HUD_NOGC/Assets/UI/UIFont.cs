@@ -16,7 +16,6 @@ using System.Text;
 /// </summary>
 
 [ExecuteInEditMode]
-[AddComponentMenu("NGUI/UI/Font")]
 public class UIFont : MonoBehaviour
 {
 	public enum Alignment

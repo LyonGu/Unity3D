@@ -4,12 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 ///////////////////////////////////////////////////////////
-//
-//  Written by              ：laishikai
-//  Copyright(C)            ：成都博瑞梦工厂
-//  ------------------------------------------------------
 //  功能描述                ：角色头顶渲染管理模块
-//
 ///////////////////////////////////////////////////////////
 
 class HUDTilteLine
@@ -26,6 +21,7 @@ class HUDTilteLine
     public int m_nLine;
 }
 
+//头顶图示类型
 enum HUDTilteType
 {
     PlayerName,
@@ -1384,8 +1380,8 @@ class HUDTitleInfo : HUDTitleBase
             }
             else
             {
-                m_DynamicBatcher.m_MeshRender.OnCacelRender();
-                m_StaticBatcher.m_MeshRender.OnCacelRender();
+                m_DynamicBatcher.m_MeshRender.OnCancelRender();
+                m_StaticBatcher.m_MeshRender.OnCancelRender();
             }
             // 添加对话
             HUDTalk.HUDTalkRender.Instance.TryRenderTalk(m_cmdBuffer);
