@@ -13,7 +13,6 @@ using UnityEngine;
 /// </summary>
 
 [ExecuteInEditMode]
-[AddComponentMenu("NGUI/Internal/Update Manager")]
 public class UpdateManager : MonoBehaviour
 {
 	public delegate void OnUpdate (float delta);
