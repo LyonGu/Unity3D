@@ -77,6 +77,12 @@ UISpriteInfo.SerializeToTxt ==> 读取对应的字段
 
 
 	SlicedFill==》 这个方法需要理解下
+
+
+
+	CAtlasMng instance==》AtlasMng.InitAltasCfg ==》 加载配置信息 assets_all.text 可以直接修改配置信息来调试看结果
+
+	Player.RefreshTitle 有很多例子
 }
 
 

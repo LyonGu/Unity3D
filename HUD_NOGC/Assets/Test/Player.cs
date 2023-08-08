@@ -37,48 +37,69 @@ public class Player : MonoBehaviour
             title.BeginTitle();
             title.PushBlood(nBloodType, curHpBarValue());
             title.EndTitle();
+
+            // Test(title);
         }
 
-//        title.BeginTitle();
-//        title.PushTitle(m_szName, HUDTilteType.PlayerName, 0);
-//        // 威望
-//        {
-//            title.PushTitle("天下无双", HUDTilteType.PlayerPrestige, 1);
-//        }
-//        // 可反击标识(主角和平模式，并且可以反击）
-//        if (!m_bMain)
-//        {
-//            title.PushIcon(HUDTilteType.PKFlag, HudSetting.Instance.m_nPKFlagPic);
-//        }
-//        title.EndTitle();
-//
-//        // 帮会名字
-//        string szFamily = "天下第一帮";
-//        if (!string.IsNullOrEmpty(szFamily))
-//        {
-//            title.BeginTitle();
-//            title.PushTitle(szFamily, HUDTilteType.PlayerCorp, 0);
-//            title.EndTitle();
-//        }
-//
-//        // 称号
-//        {
-//            {
-//                string szDesign = "武林蒙主";
-//                int nFontType = 1;
-//                title.BeginTitle();
-//                title.PushTitle(szDesign, HUDTilteType.PlayerDesignation, nFontType);
-//                title.EndTitle();
-//            }
-//        }
-//
-//        // 队长标记
-//        //if (isTeamLeader)
-//        {
-//            title.BeginTitle();
-//            title.PushIcon(HUDTilteType.HeadIcon, HudSetting.Instance.m_nTeamFlagPic);
-//            title.EndTitle();
-//        }
+        title.BeginTitle();
+        title.PushTitle(m_szName, HUDTilteType.PlayerName, 0);
+        // 威望
+        {
+            title.PushTitle("天下无双", HUDTilteType.PlayerPrestige, 1);
+        }
+        // 可反击标识(主角和平模式，并且可以反击）
+        if (!m_bMain)
+        {
+            title.PushIcon(HUDTilteType.PKFlag, HudSetting.Instance.m_nPKFlagPic);
+        }
+        title.EndTitle();
+
+        // 帮会名字
+        string szFamily = "天下第一帮";
+        if (!string.IsNullOrEmpty(szFamily))
+        {
+            title.BeginTitle();
+            title.PushTitle(szFamily, HUDTilteType.PlayerCorp, 0);
+            title.EndTitle();
+        }
+
+        // 称号
+        {
+            {
+                string szDesign = "武林蒙主";
+                int nFontType = 1;
+                title.BeginTitle();
+                title.PushTitle(szDesign, HUDTilteType.PlayerDesignation, nFontType);
+                title.EndTitle();
+            }
+        }
+
+        // 队长标记
+        //if (isTeamLeader)
+        {
+            title.BeginTitle();
+            title.PushIcon(HUDTilteType.HeadIcon, HudSetting.Instance.m_nTeamFlagPic);
+            title.EndTitle();
+        }
+    }
+
+    private void Test(HUDTitleInfo title)
+    {
+        //加载配置信息 assets_all.text 可以直接修改配置信息来调试看结果
+        
+        title.BeginTitle();
+        title.PushBlood(HUDBloodType.Blood_Green, curHpBarValue());
+        title.EndTitle();
+        
+        title.BeginTitle();
+        //nSpriteID 就是配置里的NameID，位置的调整都在配置里HUDSetting里对应 HeadIcon
+        title.PushIcon(HUDTilteType.HeadIcon, 12);
+        title.EndTitle();
+        
+        title.BeginTitle();
+        //PlayerTitle的设置在HUDSetting里
+        title.PushTitle("dddddd", HUDTilteType.PlayerName,1);
+        title.EndTitle();
     }
 
     public float curHpBarValue()
