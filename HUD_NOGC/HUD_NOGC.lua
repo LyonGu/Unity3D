@@ -1,5 +1,7 @@
 
 --[==[
+*******其实就是把图片和文字都放到一张图集里 动态创建mesh 不使用gameObject 使用Commandbuff去drawMesh
+
 HudSetting ==》 全局设置信息配置都设置在一个prefab上，启动的是会加载读取配置
 
 HUDVertex ==> 链表结构
