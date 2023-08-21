@@ -9,6 +9,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/*
+ *
+ * //脚本工作流程
+1.下载资源
+    1)资源文件，ab包等
+    2)热更新dll
+    3)A0T泛型补充元数据dll
+2.给AOTd1补充元数据，过RuntimeAp.LoadMe ladataForAOTAssembly)
+ */
 public class LoadDll : MonoBehaviour
 {
 
