@@ -80,6 +80,37 @@ public class LoadDll : MonoBehaviour
         "System.dll",
         "System.Core.dll",
     };
+    
+    /// <summary>
+    /// 获取资源服务器地址
+    /// </summary>
+    private string GetHostServerURL()
+    {
+        //string hostServerIP = "http://10.0.2.2"; //安卓模拟器地址
+        string hostServerIP = "http://127.0.0.1";
+        // string appVersion = "v1.0";
+        string appVersion = "HotUpdates";
+
+#if UNITY_EDITOR
+        if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
+            return $"{hostServerIP}/HttpServer/CDN/Android/{appVersion}";
+        else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
+            return $"{hostServerIP}/HttpServer/CDN/IPhone/{appVersion}";
+        else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
+            return $"{hostServerIP}/HttpServer/CDN/WebGL/{appVersion}";
+        else
+            return $"{hostServerIP}/HttpServer/CDN/PC/{appVersion}";
+#else
+		if (Application.platform == RuntimePlatform.Android)
+			return $"{hostServerIP}/HttpServer/CDN/Android/{appVersion}";
+		else if (Application.platform == RuntimePlatform.IPhonePlayer)
+			return $"{hostServerIP}/HttpServer/CDN/IPhone/{appVersion}";
+		else if (Application.platform == RuntimePlatform.WebGLPlayer)
+			return $"{hostServerIP}/HttpServer/CDN/WebGL/{appVersion}";
+		else
+			return $"{hostServerIP}/HttpServer/CDN/PC/{appVersion}";
+#endif
+    }
 
     IEnumerator DownLoadAssetsByYooAssets()
     {
@@ -108,8 +139,8 @@ public class LoadDll : MonoBehaviour
         }
         else if (PlayMode == EPlayMode.HostPlayMode)
         {
-            string defaultHostServer = "http://127.0.0.1/HttpServer/CDN/PC/v1.0";
-            string fallbackHostServer = "http://127.0.0.1/HttpServer/CDN/PC/v1.0";
+            string defaultHostServer = GetHostServerURL();
+            string fallbackHostServer = GetHostServerURL();
             var initParameters = new HostPlayModeParameters();
             initParameters.QueryServices = new GameQueryServices(); //太空战机DEMO的脚本类，详细见StreamingAssetsHelper
             // initParameters.DecryptionServices = new GameDecryptionServices();
