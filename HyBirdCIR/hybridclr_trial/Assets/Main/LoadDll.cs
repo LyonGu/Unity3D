@@ -8,11 +8,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using YooAsset;
 
 /*
  *
  * //脚本工作流程
-1.下载资源
+1.下载资源  ==》 使用YooAssets进行资源加载TODO
     1)资源文件，ab包等
     2)热更新dll
     3)A0T泛型补充元数据dll
@@ -23,6 +24,8 @@ public class LoadDll : MonoBehaviour
 
     void Start()
     {
+        // YooAssets.Initialize();
+        
         StartCoroutine(DownLoadAssets(this.StartGame));
     }
 
