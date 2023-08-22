@@ -171,7 +171,8 @@ public class LoadDll : MonoBehaviour
     
         //没有需要下载的资源
         if (downloader.TotalDownloadCount == 0)
-        {        
+        {
+            StartCoroutine(LoadHotUpdateDLL());
             yield break;
         }
 
@@ -195,45 +196,9 @@ public class LoadDll : MonoBehaviour
             //下载成功
             
             //################# 加载dll，实现c#代码热更, dll为原生文件，使用加载原生文件接口
-            
-            //加载对应dll
-            var assets = new List<string>
-            {
-                "HotUpdate.dll",
-            }.Concat(AOTMetaAssemblyFiles);
+            StartCoroutine(LoadHotUpdateDLL());
 
-            foreach (var asset in assets)
-            {
-                string location = asset;
-                RawFileOperationHandle handle = package.LoadRawFileAsync(location);
-                yield return handle;
-                byte[] assetData = handle.GetRawFileData();
-                
-                Debug.Log($"dll:{asset}  size:{assetData.Length}");
-                s_assetDatas[asset] = assetData;
 
-                // string fileText = handle.GetRawFileText();
-                // string filePath = handle.GetRawFilePath();
-            }
-            
-            //加载对应AOT dll
-            LoadMetadataForAOTAssemblies();
-#if !UNITY_EDITOR
-            _hotUpdateAss = Assembly.Load(ReadBytesFromStreamingAssets("HotUpdate.dll.bytes"));
-#else
-        _hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
-#endif
-            //加载资源测试热更代码是否生效
-            
-            // 通过实例化assetbundle中的资源，还原资源上的热更新脚本
-
-            AssetOperationHandle ghandle = package.LoadAssetAsync<GameObject>("Cube");
-            ghandle.Completed += Handle_Completed;
-            
-            // AssetBundle ab = AssetBundle.LoadFromMemory(LoadDll.ReadBytesFromStreamingAssets("prefabs"));
-            // GameObject cube = ab.LoadAsset<GameObject>("Cube");
-            // GameObject.Instantiate(cube);
-            
 
         }
         else
@@ -241,7 +206,51 @@ public class LoadDll : MonoBehaviour
             //下载失败
         }
     }
-    
+
+    IEnumerator LoadHotUpdateDLL()
+    {
+        //加载对应dll
+        var assets = new List<string>
+        {
+            "HotUpdate.dll"
+        }.Concat(AOTMetaAssemblyFiles);
+        var package = YooAssets.GetPackage("DefaultPackage");
+        foreach (var asset in assets)
+        {
+            string location = asset;
+            RawFileOperationHandle handle = package.LoadRawFileAsync(location);
+            yield return handle;
+            byte[] assetData = handle.GetRawFileData();
+                
+            Debug.Log($"dll:{asset}  size:{assetData.Length}");
+            s_assetDatas[asset] = assetData;
+
+            // string fileText = handle.GetRawFileText();
+            // string filePath = handle.GetRawFilePath();
+        }
+            
+        //加载对应AOT dll
+        LoadMetadataForAOTAssemblies();
+#if !UNITY_EDITOR
+            _hotUpdateAss = Assembly.Load(ReadBytesFromStreamingAssets("HotUpdate.dll"));
+#else
+        _hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
+#endif
+        //加载资源测试热更代码是否生效
+        
+        Type entryType = _hotUpdateAss.GetType("Entry");
+        entryType.GetMethod("Start").Invoke(null, null);
+            
+        // 通过实例化assetbundle中的资源，还原资源上的热更新脚本
+       
+        AssetOperationHandle ghandle = package.LoadAssetAsync<GameObject>("Cube");
+        ghandle.Completed += Handle_Completed;
+            
+        // AssetBundle ab = AssetBundle.LoadFromMemory(LoadDll.ReadBytesFromStreamingAssets("prefabs"));
+        // GameObject cube = ab.LoadAsset<GameObject>("Cube");
+        // GameObject.Instantiate(cube);
+    }
+
     void Handle_Completed(AssetOperationHandle handle)
     {
         GameObject go = handle.InstantiateSync();

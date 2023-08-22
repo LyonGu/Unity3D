@@ -10,7 +10,8 @@ public static class Entry
 {
     public static void Start()
     {
-        Debug.Log("[Entry::Start] 看到这个日志表示你成功运行了热更新代码");
+        Debug.Log("[Entry::Start] 看到这个日志表示你成功运行了热更新代码 yes ");
+        
         Run_InstantiateByAddComponent();
         Run_AOTGeneric();
     }

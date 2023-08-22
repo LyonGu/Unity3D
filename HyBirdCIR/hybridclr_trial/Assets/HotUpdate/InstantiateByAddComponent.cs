@@ -9,6 +9,6 @@ public class InstantiateByAddComponent : MonoBehaviour
 
     void Start()
     {
-        Debug.Log($"[InstantiateByAddComponent] 这个脚本通过AddComponent的方式实例化. hexinping============");
+        Debug.Log($"[InstantiateByAddComponent] 这个脚本通过AddComponent的方式实例化");
     }
 }
