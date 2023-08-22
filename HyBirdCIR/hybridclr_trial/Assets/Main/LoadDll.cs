@@ -10,6 +10,30 @@ using UnityEngine;
 using UnityEngine.Networking;
 using YooAsset;
 
+/// <summary>
+/// 远端资源地址查询服务类 这个类是临时拷贝来的 原始的引用不到 TODO
+/// </summary>
+public class RemoteServices : IRemoteServices
+{
+    private readonly string _defaultHostServer;
+    private readonly string _fallbackHostServer;
+
+    public RemoteServices(string defaultHostServer, string fallbackHostServer)
+    {
+        _defaultHostServer = defaultHostServer;
+        _fallbackHostServer = fallbackHostServer;
+    }
+    string IRemoteServices.GetRemoteFallbackURL(string fileName)
+    {
+        return $"{_defaultHostServer}/{fileName}";
+    }
+    string IRemoteServices.GetRemoteMainURL(string fileName)
+    {
+        return $"{_fallbackHostServer}/{fileName}";
+    }
+}
+
+
 /*
  *
  * //脚本工作流程
@@ -22,11 +46,14 @@ using YooAsset;
 public class LoadDll : MonoBehaviour
 {
 
+    public EPlayMode PlayMode = EPlayMode.HostPlayMode;
+    
     void Start()
     {
-        // YooAssets.Initialize();
         
-        StartCoroutine(DownLoadAssets(this.StartGame));
+        // StartCoroutine(DownLoadAssets(this.StartGame));
+        
+        StartCoroutine(DownLoadAssetsByYooAssets());
     }
 
     #region download assets
@@ -49,10 +76,199 @@ public class LoadDll : MonoBehaviour
     }
     private static List<string> AOTMetaAssemblyFiles { get; } = new List<string>()
     {
-        "mscorlib.dll.bytes",
-        "System.dll.bytes",
-        "System.Core.dll.bytes",
+        "mscorlib.dll",
+        "System.dll",
+        "System.Core.dll",
     };
+
+    IEnumerator DownLoadAssetsByYooAssets()
+    {
+        yield return null;
+        //1 初始化 YooAssets
+        
+        // 初始化资源系统
+        YooAssets.Initialize();
+
+        // 创建默认的资源包
+        var package = YooAssets.CreatePackage("DefaultPackage");
+
+        // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
+        YooAssets.SetDefaultPackage(package);
+
+        if (PlayMode == EPlayMode.EditorSimulateMode)
+        {
+            var initParameters = new EditorSimulateModeParameters();
+            initParameters.SimulateManifestFilePath  = EditorSimulateModeHelper.SimulateBuild("DefaultPackage");
+            yield return package.InitializeAsync(initParameters);
+        }
+        else if (PlayMode == EPlayMode.OfflinePlayMode)
+        {
+            var initParameters = new OfflinePlayModeParameters();
+            yield return package.InitializeAsync(initParameters);
+        }
+        else if (PlayMode == EPlayMode.HostPlayMode)
+        {
+            string defaultHostServer = "http://127.0.0.1/HttpServer/CDN/PC/v1.0";
+            string fallbackHostServer = "http://127.0.0.1/HttpServer/CDN/PC/v1.0";
+            var initParameters = new HostPlayModeParameters();
+            initParameters.QueryServices = new GameQueryServices(); //太空战机DEMO的脚本类，详细见StreamingAssetsHelper
+            // initParameters.DecryptionServices = new GameDecryptionServices();
+            initParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+            var initOperation = package.InitializeAsync(initParameters);
+            yield return initOperation;
+    
+            if(initOperation.Status == EOperationStatus.Succeed)
+            {
+                Debug.Log("资源包初始化成功！");
+            }
+            else 
+            {
+                Debug.LogError($"资源包初始化失败：{initOperation.Error}");
+            }
+        }
+        
+        
+        //2 获取资源版本
+        var tpackage = YooAssets.GetPackage("DefaultPackage");
+        var operation = tpackage.UpdatePackageVersionAsync();
+        yield return operation;
+        string packageVersion = string.Empty;
+        if (operation.Status == EOperationStatus.Succeed)
+        {
+            //更新成功
+            packageVersion = operation.PackageVersion;
+            Debug.Log($"Updated package Version : {packageVersion}");
+        }
+        else
+        {
+            //更新失败
+            Debug.LogError(operation.Error);
+            yield break;
+        }
+        
+        //3 更新资源清单
+        // 更新成功后自动保存版本号，作为下次初始化的版本。
+        // 也可以通过operation.SavePackageVersion()方法保存。
+        bool savePackageVersion = true;
+        var operation1 = package.UpdatePackageManifestAsync(packageVersion, savePackageVersion);
+        yield return operation1;
+
+        if (operation1.Status == EOperationStatus.Succeed)
+        {
+            //更新成功
+        }
+        else
+        {
+            //更新失败
+            Debug.LogError(operation.Error);
+            yield break;
+        }
+        
+        //4资源包下载
+        int downloadingMaxNum = 10;
+        int failedTryAgain = 3;
+        var downloader = tpackage.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);
+    
+        //没有需要下载的资源
+        if (downloader.TotalDownloadCount == 0)
+        {        
+            yield break;
+        }
+
+        //需要下载的文件总数和总大小
+        int totalDownloadCount = downloader.TotalDownloadCount;
+        long totalDownloadBytes = downloader.TotalDownloadBytes;    
+
+        //注册回调方法
+        downloader.OnDownloadErrorCallback = OnDownloadErrorFunction;
+        downloader.OnDownloadProgressCallback = OnDownloadProgressUpdateFunction;
+        downloader.OnDownloadOverCallback = OnDownloadOverFunction;
+        downloader.OnStartDownloadFileCallback = OnStartDownloadFileFunction;
+
+        //开启下载
+        downloader.BeginDownload();
+        yield return downloader;
+
+        //检测下载结果
+        if (downloader.Status == EOperationStatus.Succeed)
+        {
+            //下载成功
+            
+            //################# 加载dll，实现c#代码热更, dll为原生文件，使用加载原生文件接口
+            
+            //加载对应dll
+            var assets = new List<string>
+            {
+                "HotUpdate.dll",
+            }.Concat(AOTMetaAssemblyFiles);
+
+            foreach (var asset in assets)
+            {
+                string location = asset;
+                RawFileOperationHandle handle = package.LoadRawFileAsync(location);
+                yield return handle;
+                byte[] assetData = handle.GetRawFileData();
+                
+                Debug.Log($"dll:{asset}  size:{assetData.Length}");
+                s_assetDatas[asset] = assetData;
+
+                // string fileText = handle.GetRawFileText();
+                // string filePath = handle.GetRawFilePath();
+            }
+            
+            //加载对应AOT dll
+            LoadMetadataForAOTAssemblies();
+#if !UNITY_EDITOR
+            _hotUpdateAss = Assembly.Load(ReadBytesFromStreamingAssets("HotUpdate.dll.bytes"));
+#else
+        _hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
+#endif
+            //加载资源测试热更代码是否生效
+            
+            // 通过实例化assetbundle中的资源，还原资源上的热更新脚本
+
+            AssetOperationHandle ghandle = package.LoadAssetAsync<GameObject>("Cube");
+            ghandle.Completed += Handle_Completed;
+            
+            // AssetBundle ab = AssetBundle.LoadFromMemory(LoadDll.ReadBytesFromStreamingAssets("prefabs"));
+            // GameObject cube = ab.LoadAsset<GameObject>("Cube");
+            // GameObject.Instantiate(cube);
+            
+
+        }
+        else
+        {
+            //下载失败
+        }
+    }
+    
+    void Handle_Completed(AssetOperationHandle handle)
+    {
+        GameObject go = handle.InstantiateSync();
+        Debug.Log($"Prefab name is {go.name}");
+    }
+    
+    private void OnDownloadErrorFunction(string fileName, string error)
+    {
+        Debug.Log($"DownloadError :{fileName}  error:{error}");
+    }
+
+    private void OnDownloadProgressUpdateFunction(int totalDownloadCount, int currentDownloadCount, long totalDownloadBytes,
+        long currentDownloadBytes)
+    {
+        Debug.Log($"DownloadProgress :totalDownloadCount {totalDownloadCount}  currentDownloadCount: {currentDownloadCount} " +
+                  $"totalDownloadBytes:{totalDownloadBytes} currentDownloadBytes:{currentDownloadBytes}");
+    }
+
+    private void OnDownloadOverFunction(bool isSucceed)
+    {
+        Debug.Log($"DownloadOver :isSucceed {isSucceed}");
+    }
+
+    private void OnStartDownloadFileFunction(string fileName, long sizeBytes)
+    {
+        Debug.Log($"StartDownload :fileName {fileName}  sizeBytes {sizeBytes}");
+    }
 
     IEnumerator DownLoadAssets(Action onDownloadComplete)
     {
@@ -136,4 +352,6 @@ public class LoadDll : MonoBehaviour
         GameObject cube = ab.LoadAsset<GameObject>("Cube");
         GameObject.Instantiate(cube);
     }
+
+   
 }

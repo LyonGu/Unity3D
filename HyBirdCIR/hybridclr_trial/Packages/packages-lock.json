@@ -8,7 +8,7 @@
       "hash": "1f9faf49a3ac4b6b5417188cd7579084d7563514"
     },
     "com.tuyoogame.yooasset": {
-      "version": "1.5.3-preview",
+      "version": "1.5.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
