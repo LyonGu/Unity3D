@@ -7,3 +7,26 @@ https://www.youtube.com/watch?v=iD1_JczQcFY
 https://www.youtube.com/watch?v=alU04hvz6L4
 
 https://www.youtube.com/watch?v=11c9rWRotJ8
+
+//GridBuildingSystem   
+//Awesome Grid Building System! (City Builder, RTS, Factorio, Survival)
+https://www.youtube.com/watch?v=dulosHPl82A&list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722&index=6&ab_channel=CodeMonkey
+
+
+
+//TilemapGridMap   
+//Awesome Grid Building System! (City Builder, RTS, Factorio, Survival)
+https://www.youtube.com/watch?v=dulosHPl82A&list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722&index=6&ab_channel=CodeMonkey
+
+//TestPointInsideHex 六边形地图
+https://www.youtube.com/watch?v=dqframYHfws&list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722&index=16&ab_channel=CodeMonkey
+
+//HexGrid
+//How to make a Hex Grid System Unity Tutorial! (Like Civilization, Opus Magnum, Gloomhaven)
+https://www.youtube.com/watch?v=0nXmuJuWS8I&list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722&index=16&ab_channel=CodeMonkey
+
+//Unity Pathfinding on a Hex Grid System!
+https://www.youtube.com/watch?v=XqEBu3un1ik&list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722&index=17&ab_channel=CodeMonkey
+
+//格子系统的相关视频都在这里
+https://www.youtube.com/playlist?list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722
