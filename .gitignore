@@ -562,3 +562,10 @@ HyBirdCIR/hybridclr_trial/yoo/
 HyBirdCIR/hybridclr_trial/Bundles/
 HyBirdCIR/hybridclr_trial/Apk/
 AnimationTiGao/Logs/
+GridBuildingSystem/Library/
+GridBuildingSystem/Library/
+GridBuildingSystem/Library/
+GridBuildingSystem/.idea/
+GridBuildingSystem/Temp/
+GridBuildingSystem/obj/
+*.log
