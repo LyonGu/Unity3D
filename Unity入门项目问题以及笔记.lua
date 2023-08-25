@@ -81,6 +81,21 @@
 		Vector3 dir = new Vector3(x,x,x)
 		Quaternion.Euler(0,45,0) * dir
 
+
+		//鼠标点旋转，只旋转y轴
+		if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit; 
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                var targetPoint = new  Vector3(hit.point.x, transform.position.y, hit.point.z);
+                Debug.DrawLine(transform.position, targetPoint, Color.red, 10);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPoint - transform.position), 1.0f);
+             
+            }
+        }
+
 	}
 	
 
