@@ -14,8 +14,8 @@ public class GridBuildingSystem3D : MonoBehaviour {
 
     private GridXZ<GridObject> grid;
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSOList = null;
-    private PlacedObjectTypeSO placedObjectTypeSO;
-    private PlacedObjectTypeSO.Dir dir;
+    private PlacedObjectTypeSO placedObjectTypeSO;  //当前放置对象配置数据
+    private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
     private void Awake() {
         Instance = this;
@@ -23,16 +23,23 @@ public class GridBuildingSystem3D : MonoBehaviour {
         int gridWidth = 10;
         int gridHeight = 10;
         float cellSize = 10f;
+        
+        //构建格子系统
         grid = new GridXZ<GridObject>(gridWidth, gridHeight, cellSize, new Vector3(0, 0, 0), (GridXZ<GridObject> g, int x, int y) => new GridObject(g, x, y));
 
         placedObjectTypeSO = null;// placedObjectTypeSOList[0];
     }
 
+    //每个格子对象
     public class GridObject {
 
-        private GridXZ<GridObject> grid;
-        private int x;
+        private GridXZ<GridObject> grid;  //对整个格子系统的引用
+        
+        //格子坐标
+        private int x;  
         private int y;
+        
+        //占据格子的对象引用
         public PlacedObject_Done placedObject;
 
         public GridObject(GridXZ<GridObject> grid, int x, int y) {
@@ -46,11 +53,13 @@ public class GridBuildingSystem3D : MonoBehaviour {
             return x + ", " + y + "\n" + placedObject;
         }
 
+        //给格子设置一个放置对象
         public void SetPlacedObject(PlacedObject_Done placedObject) {
             this.placedObject = placedObject;
             grid.TriggerGridObjectChanged(x, y);
         }
 
+        //清理格子的防止对象
         public void ClearPlacedObject() {
             placedObject = null;
             grid.TriggerGridObjectChanged(x, y);
@@ -60,6 +69,7 @@ public class GridBuildingSystem3D : MonoBehaviour {
             return placedObject;
         }
 
+        //格子是否能放置
         public bool CanBuild() {
             return placedObject == null;
         }
@@ -71,10 +81,11 @@ public class GridBuildingSystem3D : MonoBehaviour {
             Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
             grid.GetXZ(mousePosition, out int x, out int z);
 
+            //计算点击位置代表的格子坐标
             Vector2Int placedObjectOrigin = new Vector2Int(x, z);
             placedObjectOrigin = grid.ValidateGridPosition(placedObjectOrigin);
 
-            // Test Can Build
+            // Test Can Build  返回每个建筑物所占领的格子区域 并且判断每个格子是否可以放置建筑
             List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
             bool canBuild = true;
             foreach (Vector2Int gridPosition in gridPositionList) {
@@ -84,12 +95,15 @@ public class GridBuildingSystem3D : MonoBehaviour {
                 }
             }
 
+            //可以放置建筑
             if (canBuild) {
                 Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
                 Vector3 placedObjectWorldPosition = grid.GetWorldPosition(placedObjectOrigin.x, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
+                //
                 PlacedObject_Done placedObject = PlacedObject_Done.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
 
+                //把每个格子都标志为已经放置了建筑物
                 foreach (Vector2Int gridPosition in gridPositionList) {
                     grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
                 }
@@ -149,11 +163,13 @@ public class GridBuildingSystem3D : MonoBehaviour {
         return new Vector2Int(x, z);
     }
 
+    //获取放置对象的实时位置
     public Vector3 GetMouseWorldSnappedPosition() {
         Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
         grid.GetXZ(mousePosition, out int x, out int z);
 
         if (placedObjectTypeSO != null) {
+            //因为方向不同，锚点位置不同，一个格子有4个角，根据方向 设置根节点在哪个角
             Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
             return placedObjectWorldPosition;

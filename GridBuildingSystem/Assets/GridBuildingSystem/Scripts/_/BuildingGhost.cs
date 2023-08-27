@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// 预览建筑实时位置刷新，
 public class BuildingGhost : MonoBehaviour {
 
-    private Transform visual;
+    private Transform visual; //预览对象
     private PlacedObjectTypeSO placedObjectTypeSO;
 
     private void Start() {
@@ -12,7 +12,7 @@ public class BuildingGhost : MonoBehaviour {
 
         GridBuildingSystem3D.Instance.OnSelectedChanged += Instance_OnSelectedChanged;
     }
-
+    //只有选择建筑的时候调用
     private void Instance_OnSelectedChanged(object sender, System.EventArgs e) {
         RefreshVisual();
     }

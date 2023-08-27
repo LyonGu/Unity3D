@@ -22,10 +22,15 @@ public class PlacedObjectTypeSO : ScriptableObject {
         Right,
     }
 
+    //建筑名称
     public string nameString;
+    //建筑放置的prefab
     public Transform prefab;
+    //建筑预览的prefab
     public Transform visual;
+    //建筑水平方向所占格子数
     public int width;
+    //建筑竖直方向所占格子数
     public int height;
 
 
@@ -39,6 +44,7 @@ public class PlacedObjectTypeSO : ScriptableObject {
         }
     }
 
+    //锚点的偏移位置
     public Vector2Int GetRotationOffset(Dir dir) {
         switch (dir) {
             default:
@@ -49,6 +55,7 @@ public class PlacedObjectTypeSO : ScriptableObject {
         }
     }
 
+    //不同朝向计算所占的格子
     public List<Vector2Int> GetGridPositionList(Vector2Int offset, Dir dir) {
         List<Vector2Int> gridPositionList = new List<Vector2Int>();
         switch (dir) {

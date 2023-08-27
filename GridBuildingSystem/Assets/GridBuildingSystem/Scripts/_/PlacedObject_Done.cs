@@ -17,9 +17,10 @@ public class PlacedObject_Done : MonoBehaviour {
 
 
     private PlacedObjectTypeSO placedObjectTypeSO;
-    private Vector2Int origin;
+    private Vector2Int origin;  //格子坐标
     private PlacedObjectTypeSO.Dir dir;
-
+    
+    
     private void Setup(PlacedObjectTypeSO placedObjectTypeSO, Vector2Int origin, PlacedObjectTypeSO.Dir dir) {
         this.placedObjectTypeSO = placedObjectTypeSO;
         this.origin = origin;

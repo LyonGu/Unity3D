@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey.Utils;
 
+//格子系统 
+//TGridObject 每一个格子对象
 public class GridXZ<TGridObject> {
 
     public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
@@ -24,11 +26,11 @@ public class GridXZ<TGridObject> {
         public int z;
     }
 
-    private int width;
-    private int height;
-    private float cellSize;
+    private int width;   //格子水平数目
+    private int height;  //格子竖直数目
+    private float cellSize; //每个格子大小，这里表示正方形
     private Vector3 originPosition;
-    private TGridObject[,] gridArray;
+    private TGridObject[,] gridArray;  //用二维数组存储格子对象
 
     public GridXZ(int width, int height, float cellSize, Vector3 originPosition, Func<GridXZ<TGridObject>, int, int, TGridObject> createGridObject) {
         this.width = width;
@@ -50,7 +52,11 @@ public class GridXZ<TGridObject> {
 
             for (int x = 0; x < gridArray.GetLength(0); x++) {
                 for (int z = 0; z < gridArray.GetLength(1); z++) {
-                    debugTextArray[x, z] = UtilsClass.CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 15, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+                    debugTextArray[x, z] = UtilsClass.CreateWorldText(
+                        gridArray[x, z]?.ToString(), 
+                        null, 
+                        GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 
+                        15, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.white, 100f);
                 }
@@ -76,15 +82,18 @@ public class GridXZ<TGridObject> {
         return cellSize;
     }
 
+    //通过格子坐标获取世界坐标，格子左下角坐标
     public Vector3 GetWorldPosition(int x, int z) {
         return new Vector3(x, 0, z) * cellSize + originPosition;
     }
 
+    //通过世界坐标返回格子坐标
     public void GetXZ(Vector3 worldPosition, out int x, out int z) {
         x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
         z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
     }
 
+    //给每个格子设置一个格子对象
     public void SetGridObject(int x, int z, TGridObject value) {
         if (x >= 0 && z >= 0 && x < width && z < height) {
             gridArray[x, z] = value;
@@ -115,6 +124,7 @@ public class GridXZ<TGridObject> {
         return GetGridObject(x, z);
     }
 
+    //校验格子的有效性
     public Vector2Int ValidateGridPosition(Vector2Int gridPosition) {
         return new Vector2Int(
             Mathf.Clamp(gridPosition.x, 0, width - 1),
