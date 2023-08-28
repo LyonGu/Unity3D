@@ -77,7 +77,7 @@ namespace Animancer.Examples.Basics
             }
             else
             {
-                _Animancer.Play(_Idle);
+                _Animancer.Play(_Idle);  //就算每帧调用，也可以从当前动作继续播放，ClipTransition里可以设置
             }
         }
 
