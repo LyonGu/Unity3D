@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 using Animancer.Editor;
@@ -145,7 +145,7 @@ namespace Animancer.Units
         /************************************************************************************************************************/
 
         /// <summary>[Editor-Only] Draws this attribute's fields.</summary>
-        protected void DoFieldGUI(Rect area, GUIContent label, ref float value)
+        public void DoFieldGUI(Rect area, GUIContent label, ref float value)
         {
             var isMultiLine = area.height >= LineHeight * 2;
             area.height = LineHeight;

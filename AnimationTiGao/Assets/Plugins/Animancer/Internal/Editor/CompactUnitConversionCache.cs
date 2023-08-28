@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -26,7 +26,7 @@ namespace Animancer.Editor
     /// </example>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/CompactUnitConversionCache
     /// 
-    public sealed class CompactUnitConversionCache
+    public class CompactUnitConversionCache
     {
         /************************************************************************************************************************/
 

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -28,7 +28,7 @@ namespace Animancer
     /// 
     /// https://kybernetik.com.au/animancer/api/Animancer/DontAllowFade
     /// 
-    public sealed class DontAllowFade : Key, IUpdatable
+    public class DontAllowFade : Key, IUpdatable
     {
         /************************************************************************************************************************/
 

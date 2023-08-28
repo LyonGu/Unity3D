@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 
@@ -24,7 +24,7 @@ namespace Animancer
     /// Note that values selected using the dropdown menu are still stored as strings. Modifying the names in the
     /// script will NOT automatically update any values previously set in the Inspector.
     /// <para></para>
-    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/events/animancer#event-names">Event Names</see>
+    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/events/animancer/usage#event-names">Event Names</see>
     /// </remarks>
     /// 
     /// <example><code>

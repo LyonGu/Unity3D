@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -36,7 +36,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
 
         private void OnEnable()
         {
-            Character.ForwardSpeed = 0;
+            Character.Parameters.ForwardSpeed = 0;
             Character.Animancer.Play(_Animation);
 
             var direction = DetermineHitDirection();

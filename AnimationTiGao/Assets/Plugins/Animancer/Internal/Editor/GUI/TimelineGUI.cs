@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -12,7 +12,7 @@ namespace Animancer.Editor
     /// <summary>[Editor-Only] Draws a GUI box denoting a period of time.</summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/TimelineGUI
     /// 
-    public sealed class TimelineGUI : IDisposable
+    public class TimelineGUI : IDisposable
     {
         /************************************************************************************************************************/
         #region Fields
@@ -138,10 +138,12 @@ namespace Animancer.Editor
         {
             if (context.Property.hasMultipleDifferentValues)
             {
-                GUI.Label(_Area, "Multi-editing is not supported");
+                GUI.Label(_Area, "Multi-editing events is not supported");
                 addEventNormalizedTime = float.NaN;
                 return;
             }
+
+            var warnings = OptionalWarning.LockedEvents.DisableTemporarily();
 
             var transition = context.TransitionContext.Transition;
 
@@ -195,6 +197,8 @@ namespace Animancer.Editor
 
             if (gui != null)
                 gui.OnTimelineForegroundGUI();
+
+            warnings.Enable();
         }
 
         /************************************************************************************************************************/

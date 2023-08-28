@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -33,7 +33,7 @@ namespace Animancer.Editor
     /// </summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/AnimationBindings
     /// 
-    public sealed class AnimationBindings : AssetPostprocessor
+    public class AnimationBindings : AssetPostprocessor
     {
         /************************************************************************************************************************/
         #region Animation Types
@@ -131,7 +131,7 @@ namespace Animancer.Editor
         #endregion
         /************************************************************************************************************************/
 
-        private static bool _CanGatherBindings;
+        private static bool _CanGatherBindings = true;
 
         /// <summary>No more than one set of bindings should be gathered per frame.</summary>
         private static bool CanGatherBindings()
@@ -152,10 +152,7 @@ namespace Animancer.Editor
         /// <remarks>Note that the cache is cleared by <see cref="EditorApplication.hierarchyChanged"/>.</remarks>
         public static BindingData GetBindings(GameObject gameObject, bool forceGather = true)
         {
-            if (AnimancerEditorUtilities.InitializeCleanDictionary(ref _ObjectToBindings))
-            {
-                EditorApplication.hierarchyChanged += _ObjectToBindings.Clear;
-            }
+            AnimancerEditorUtilities.InitializeCleanDictionary(ref _ObjectToBindings);
 
             if (!_ObjectToBindings.TryGetValue(gameObject, out var bindings))
             {
@@ -193,7 +190,9 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnPostprocessAnimation(GameObject root, AnimationClip clip) => OnAnimationChanged(clip);
+        /// <summary>Called when Unity imports an animation.</summary>
+        protected virtual void OnPostprocessAnimation(GameObject root, AnimationClip clip)
+            => OnAnimationChanged(clip);
 
         /// <summary>Clears any cached values relating to the `clip` since they may no longer be correct.</summary>
         public static void OnAnimationChanged(AnimationClip clip)
@@ -222,7 +221,7 @@ namespace Animancer.Editor
         /// which can be animated and the relationships between those properties and the properties that individual
         /// <see cref="AnimationClip"/>s are trying to animate.
         /// </summary>
-        public sealed class BindingData
+        public class BindingData
         {
             /************************************************************************************************************************/
 
@@ -845,6 +844,9 @@ namespace Animancer.Editor
                 if (newMatch != match)
                     Debug.LogWarning($"{nameof(MatchType)} changed from {match} to {newMatch}" +
                         " between the initial check and the button press.");
+
+                if (animator != null)
+                    _ObjectToBindings.Remove(animator.gameObject);
             }
 
             /************************************************************************************************************************/

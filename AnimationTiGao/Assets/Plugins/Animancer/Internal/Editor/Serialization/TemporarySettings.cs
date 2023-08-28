@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -12,7 +12,7 @@ namespace Animancer.Editor
     /// Stores data which needs to survive assembly reloading (such as from script compilation), but can be discarded
     /// when the Unity Editor is closed.
     /// </summary>
-    internal sealed class TemporarySettings : ScriptableObject
+    internal class TemporarySettings : ScriptableObject
     {
         /************************************************************************************************************************/
         #region Instance
@@ -45,12 +45,12 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             OnEnableSelection();
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             OnDisableSelection();
         }

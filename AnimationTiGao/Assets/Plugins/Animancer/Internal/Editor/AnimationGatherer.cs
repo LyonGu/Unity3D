@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -15,7 +15,7 @@ namespace Animancer.Editor
     /// </summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/AnimationGatherer
     /// 
-    public sealed class AnimationGatherer : IAnimationClipCollection
+    public class AnimationGatherer : IAnimationClipCollection
     {
         /************************************************************************************************************************/
         #region Recursion Guard
@@ -216,6 +216,9 @@ namespace Animancer.Editor
         /// <summary>Gathers all animations from the `source`s fields.</summary>
         private void GatherFromObject(object source, int depth)
         {
+            if (source == null)
+                return;
+
             if (source is AnimationClip clip)
             {
                 Clips.Add(clip);

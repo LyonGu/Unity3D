@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -28,18 +28,26 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/AnimancerState
     /// 
-    public abstract partial class AnimancerState : AnimancerNode, IAnimationClipCollection
+    public abstract partial class AnimancerState : AnimancerNode,
+        IAnimationClipCollection,
+        ICopyable<AnimancerState>
     {
         /************************************************************************************************************************/
         #region Graph
         /************************************************************************************************************************/
 
         /// <summary>The <see cref="AnimancerPlayable"/> at the root of the graph.</summary>
+        /// <exception cref="InvalidOperationException">
+        /// The <see cref="Parent"/> has a different <see cref="AnimancerNode.Root"/>.
+        /// Setting the <see cref="Parent"/>'s <see cref="AnimancerNode.Root"/> will apply to its children recursively
+        /// because they must always match.
+        /// </exception>
         public void SetRoot(AnimancerPlayable root)
         {
             if (Root == root)
                 return;
 
+            // Remove from the old root.
             if (Root != null)
             {
                 Root.CancelPreUpdate(this);
@@ -48,25 +56,33 @@ namespace Animancer
                 if (_EventDispatcher != null)
                     Root.CancelPostUpdate(_EventDispatcher);
 
-                if (_Parent != null)
+                if (_Parent != null && _Parent.Root != root)
                 {
                     _Parent.OnRemoveChild(this);
                     _Parent = null;
-                }
 
-                Index = -1;
+                    Index = -1;
+                }
 
                 DestroyPlayable();
             }
-
-            Root = root;
-
-            if (root != null)
-            {
 #if UNITY_ASSERTIONS
-                GC.SuppressFinalize(this);
+            else
+            {
+                if (_Parent != null && _Parent.Root != root)
+                    throw new InvalidOperationException(
+                        "Unable to set the Root of a state which has a Parent." +
+                        " Setting the Parent's Root will apply to its children recursively" +
+                        " because they must always match.");
+            }
 #endif
 
+            // Set the root.
+            Root = root;
+
+            // Add to the new root.
+            if (root != null)
+            {
                 root.States.Register(this);
 
                 if (_EventDispatcher != null)
@@ -89,10 +105,11 @@ namespace Animancer
         /// <summary>The object which receives the output of the <see cref="Playable"/>.</summary>
         public sealed override IPlayableWrapper Parent => _Parent;
 
-        /// <summary>Connects this state to the `parent` mixer at the specified `index`.</summary>
+        /// <summary>Connects this state to the `parent` state at the specified `index`.</summary>
         /// <remarks>
-        /// Use <see cref="AnimancerLayer.AddChild(AnimancerState)"/> instead of this method to connect a state to an
-        /// available port on a layer.
+        /// If the `parent` is null, this state will be disconnected from everything.
+        /// <para></para>
+        /// Use <see cref="AnimancerLayer.AddChild(AnimancerState)"/> instead of this method to connect to a layer.
         /// </remarks>
         public void SetParent(AnimancerNode parent, int index)
         {
@@ -115,14 +132,11 @@ namespace Animancer
             CopyIKFlags(parent);
         }
 
-        /// <summary>[Internal]
-        /// Called by <see cref="AnimancerNode.OnAddChild(IList{AnimancerState}, AnimancerState)"/> if the specified
-        /// port is already occupied so it can be cleared without triggering any other calls.
-        /// </summary>
-        internal void ClearParent()
+        /// <summary>[Internal] Directly sets the <see cref="Parent"/> without triggering any other connection methods.</summary>
+        internal void SetParentInternal(AnimancerNode parent, int index = -1)
         {
-            Index = -1;
-            _Parent = null;
+            _Parent = parent;
+            Index = index;
         }
 
         /************************************************************************************************************************/
@@ -322,18 +336,23 @@ namespace Animancer
         public bool IsActive => _IsPlaying && TargetWeight > 0;
 
         /// <summary>
-        /// Returns true if this state is not playing and is at 0 <see cref="AnimancerNode.Weight"/>.
+        /// Returns true if this state isn't playing and is at 0 <see cref="AnimancerNode.Weight"/>.
         /// </summary>
         public bool IsStopped => !_IsPlaying && Weight == 0;
 
         /************************************************************************************************************************/
 
-        /// <summary>Plays this state immediately, without any blending.</summary>
+        /// <summary>
+        /// Plays this state immediately, without any blending.
+        /// <para></para>
+        /// Unlike <see cref="AnimancerPlayable.Play(AnimancerState)"/>, this method only affects this state and won't
+        /// stop any others that are playing.
+        /// </summary>
         /// <remarks>
         /// Sets <see cref="IsPlaying"/> = true, <see cref="AnimancerNode.Weight"/> = 1, and clears the
         /// <see cref="Events"/> (unless <see cref="AutomaticallyClearEvents"/> is disabled).
         /// <para></para>
-        /// This method does not change the <see cref="Time"/> so it will continue from its current value.
+        /// Doesn't change the <see cref="Time"/> so it will continue from its current value.
         /// </remarks>
         public void Play()
         {
@@ -358,7 +377,7 @@ namespace Animancer
             base.Stop();
 
             IsPlaying = false;
-            Time = 0;
+            TimeD = 0;
             if (AutomaticallyClearEvents)
                 EventDispatcher.TryClear(_EventDispatcher);
         }
@@ -387,7 +406,7 @@ namespace Animancer
         /// The current time of the <see cref="Playable"/>, retrieved by <see cref="Time"/> whenever the
         /// <see cref="_TimeFrameID"/> is different from the <see cref="AnimancerPlayable.FrameID"/>.
         /// </summary>
-        private float _Time;
+        private double _Time;
 
         /// <summary>
         /// Indicates whether the <see cref="_Time"/> needs to be assigned to the <see cref="Playable"/> next update.
@@ -419,6 +438,9 @@ namespace Animancer
         /// the animated object either freezes in place or starts again from the beginning according to whether it is
         /// looping or not.
         /// <para></para>
+        /// Events and root motion between the old and new time will be skipped when setting this value. Use
+        /// <see cref="MoveTime(float, bool)"/> instead if you don't want that behaviour.
+        /// <para></para>
         /// This property internally uses <see cref="RawTime"/> whenever the value is out of date or gets changed.
         /// <para></para>
         /// <em>Animancer Lite does not allow this value to be changed in runtime builds (except resetting it to 0).</em>
@@ -442,6 +464,13 @@ namespace Animancer
         /// </code></example>
         public float Time
         {
+            get => (float)TimeD;
+            set => TimeD = value;
+        }
+
+        /// <summary>The underlying <see cref="double"/> value of <see cref="Time"/>.</summary>
+        public double TimeD
+        {
             get
             {
                 var root = Root;
@@ -461,7 +490,8 @@ namespace Animancer
             {
 #if UNITY_ASSERTIONS
                 if (!value.IsFinite())
-                    throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Time)} must be finite");
+                    throw new ArgumentOutOfRangeException(nameof(value), value,
+                        $"{nameof(Time)} {Strings.MustBeFinite}");
 #endif
 
                 _Time = value;
@@ -475,10 +505,10 @@ namespace Animancer
                 {
                     _TimeFrameID = root.FrameID;
 
-                    // Don't allow the time to be changed during a post update because it would take effect this frame but
-                    // Weight changes wouldn't so the Time and Weight would be out of sync. For example, if en event plays
-                    // a state, the old state's Time would be 0 but its Weight would not yet be 0 so it would show its
-                    // first frame before the new animation takes effect.
+                    // Don't allow the time to be changed during a post update because it would take effect this frame
+                    // but Weight changes wouldn't so the Time and Weight would be out of sync. For example, if an
+                    // event plays a state, the old state would be stopped back at Time 0 but its Weight would not yet
+                    // be 0 so it would show its first frame before the new animation takes effect.
 
                     if (AnimancerPlayable.IsRunningPostUpdate(root))
                     {
@@ -507,17 +537,17 @@ namespace Animancer
         /// by calling <see cref="Stop"/> or playing a different animation), the next time that animation played it
         /// would immediately trigger all of its events, then play through and trigger them normally as well.
         /// </remarks>
-        protected virtual float RawTime
+        public virtual double RawTime
         {
             get
             {
                 Validate.AssertPlayable(this);
-                return (float)_Playable.GetTime();
+                return _Playable.GetTime();
             }
             set
             {
                 Validate.AssertPlayable(this);
-                var time = (double)value;
+                var time = value;
                 _Playable.SetTime(time);
                 _Playable.SetTime(time);
             }
@@ -539,7 +569,10 @@ namespace Animancer
         /// current loop while the integer part (<c>(int)NormalizedTime</c>) is the number of times the animation has
         /// been looped.
         /// <para></para>
-        /// <em>Animancer Lite does not allow this value to be changed to a value other than 0 in runtime builds.</em>
+        /// Events and root motion between the old and new time will be skipped when setting this value. Use
+        /// <see cref="MoveTime(float, bool)"/> instead if you don't want that behaviour.
+        /// <para></para>
+        /// <em>Animancer Lite does not allow this value to be changed in runtime builds (except resetting it to 0).</em>
         /// </remarks>
         ///
         /// <example><code>
@@ -560,15 +593,22 @@ namespace Animancer
         /// </code></example>
         public float NormalizedTime
         {
+            get => (float)NormalizedTimeD;
+            set => NormalizedTimeD = value;
+        }
+
+        /// <summary>The underlying <see cref="double"/> value of <see cref="NormalizedTime"/>.</summary>
+        public double NormalizedTimeD
+        {
             get
             {
                 var length = Length;
                 if (length != 0)
-                    return Time / Length;
+                    return TimeD / Length;
                 else
                     return 0;
             }
-            set => Time = value * Length;
+            set => TimeD = value * Length;
         }
 
         /************************************************************************************************************************/
@@ -577,11 +617,19 @@ namespace Animancer
         /// Sets the <see cref="Time"/> or <see cref="NormalizedTime"/>, but unlike those properties this method
         /// applies any Root Motion and Animation Events (but not Animancer Events) between the old and new time.
         /// </summary>
-        public virtual void MoveTime(float time, bool normalized)
+        public void MoveTime(float time, bool normalized)
+            => MoveTime((double)time, normalized);
+
+        /// <summary>
+        /// Sets the <see cref="Time"/> or <see cref="NormalizedTime"/>, but unlike those properties this method
+        /// applies any Root Motion and Animation Events (but not Animancer Events) between the old and new time.
+        /// </summary>
+        public virtual void MoveTime(double time, bool normalized)
         {
 #if UNITY_ASSERTIONS
             if (!time.IsFinite())
-                throw new ArgumentOutOfRangeException(nameof(time), time, $"{nameof(Time)} must be finite");
+                throw new ArgumentOutOfRangeException(nameof(time), time,
+                    $"{nameof(Time)} {Strings.MustBeFinite}");
 #endif
 
             var root = Root;
@@ -804,6 +852,38 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
+        /// <summary>Creates a copy of this state with the same <see cref="AnimancerNode.Root"/>.</summary>
+        public AnimancerState Clone()
+            => Clone(Root);
+
+        /// <summary>Creates a copy of this state with the specified <see cref="AnimancerNode.Root"/>.</summary>
+        public abstract AnimancerState Clone(AnimancerPlayable root);
+
+        /// <summary>Sets the <see cref="AnimancerNode.Root"/>.</summary>
+        /// <remarks>
+        /// This method skips several steps of <see cref="SetRoot"/> and is intended to only be called on states
+        /// immediately after their creation.
+        /// </remarks>
+        protected void SetNewCloneRoot(AnimancerPlayable root)
+        {
+            if (root == null)
+                return;
+
+            Root = root;
+            CreatePlayable();
+        }
+
+        /// <inheritdoc/>
+        void ICopyable<AnimancerState>.CopyFrom(AnimancerState copyFrom)
+        {
+            Events = copyFrom.HasEvents ? copyFrom.Events : null;
+            TimeD = copyFrom.TimeD;
+
+            ((ICopyable<AnimancerNode>)this).CopyFrom(copyFrom);
+        }
+
+        /************************************************************************************************************************/
+
         /// <summary>[<see cref="IAnimationClipCollection"/>] Gathers all the animations in this state.</summary>
         public virtual void GatherAnimationClips(ICollection<AnimationClip> clips)
         {
@@ -817,15 +897,15 @@ namespace Animancer
 
         /// <summary>
         /// Returns true if the animation is playing and has not yet passed the
-        /// <see cref="AnimancerEvent.Sequence.endEvent"/>.
+        /// <see cref="AnimancerEvent.Sequence.EndEvent"/>.
         /// </summary>
         /// <remarks>
         /// This method is called by <see cref="IEnumerator.MoveNext"/> so this object can be used as a custom yield
         /// instruction to wait until it finishes.
         /// </remarks>
-        protected internal override bool IsPlayingAndNotEnding()
+        public override bool IsPlayingAndNotEnding()
         {
-            if (!IsPlaying)
+            if (!IsPlaying || !_Playable.IsValid())
                 return false;
 
             var speed = EffectiveSpeed;
@@ -834,7 +914,7 @@ namespace Animancer
                 float endTime;
                 if (_EventDispatcher != null)
                 {
-                    endTime = _EventDispatcher.Events.endEvent.normalizedTime;
+                    endTime = _EventDispatcher.Events.NormalizedEndTime;
                     if (float.IsNaN(endTime))
                         endTime = Length;
                     else
@@ -849,7 +929,7 @@ namespace Animancer
                 float endTime;
                 if (_EventDispatcher != null)
                 {
-                    endTime = _EventDispatcher.Events.endEvent.normalizedTime;
+                    endTime = _EventDispatcher.Events.NormalizedEndTime;
                     if (float.IsNaN(endTime))
                         endTime = 0;
                     else

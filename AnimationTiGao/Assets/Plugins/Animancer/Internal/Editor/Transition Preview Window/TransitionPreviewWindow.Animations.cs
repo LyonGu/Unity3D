@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static Animancer.Editor.AnimancerGUI;
 using Object = UnityEngine.Object;
 
 namespace Animancer.Editor
@@ -18,7 +19,7 @@ namespace Animancer.Editor
         /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/transitions#previews">Previews</see>
         /// </remarks>
         [Serializable]
-        private sealed class Animations
+        private class Animations
         {
             /************************************************************************************************************************/
 
@@ -65,37 +66,30 @@ namespace Animancer.Editor
 
                 if (animancer != null)
                 {
-                    if (animancer.IsGraphPlaying)
+                    using (new EditorGUI.DisabledScope(!Transition.IsValid()))
                     {
-                        if (GUILayout.Button("Pause", EditorStyles.miniButton))
-                            animancer.PauseGraph();
-                    }
-                    else
-                    {
-                        using (new EditorGUI.DisabledScope(!Transition.IsValid()))
+                        GUILayout.BeginHorizontal();
+                        GUILayout.FlexibleSpace();
+
+                        if (animancer.IsGraphPlaying)
                         {
-                            if (GUILayout.Button("Play Transition", EditorStyles.miniButton))
-                            {
-                                if (_PreviousAnimation != null && _PreviousAnimation.length > 0)
-                                {
-                                    _Instance._Scene.Animancer.Stop();
-                                    var fromState = animancer.States.GetOrCreate(PreviousAnimationKey, _PreviousAnimation, true);
-                                    animancer.Play(fromState);
-                                    OnPlayAnimation();
-                                    fromState.Time = 0;
-
-                                    var warnings = OptionalWarning.UnsupportedEvents.DisableTemporarily();
-                                    fromState.Events.endEvent = new AnimancerEvent(1 / fromState.Length, PlayTransition);
-                                    warnings.Enable();
-                                }
-                                else
-                                {
-                                    PlayTransition();
-                                }
-
-                                _Instance._Scene.Animancer.UnpauseGraph();
-                            }
+                            if (CompactMiniButton(PauseButtonContent))
+                                animancer.PauseGraph();
                         }
+                        else
+                        {
+                            if (CompactMiniButton(StepBackwardButtonContent))
+                                StepBackward();
+
+                            if (CompactMiniButton(PlayButtonContent))
+                                PlaySequence(animancer);
+
+                            if (CompactMiniButton(StepForwardButtonContent))
+                                StepForward();
+                        }
+
+                        GUILayout.FlexibleSpace();
+                        GUILayout.EndHorizontal();
                     }
                 }
 
@@ -106,18 +100,19 @@ namespace Animancer.Editor
 
             private void DoModelGUI()
             {
-                var model = _Instance._Scene.OriginalRoot != null ? _Instance._Scene.OriginalRoot.gameObject : null;
+                var root = _Instance._Scene.OriginalRoot;
+                var model = root != null ? root.gameObject : null;
 
                 EditorGUI.BeginChangeCheck();
 
                 var warning = GetModelWarning(model);
                 var color = GUI.color;
                 if (warning != null)
-                    GUI.color = AnimancerGUI.WarningFieldColor;
+                    GUI.color = WarningFieldColor;
 
                 using (ObjectPool.Disposable.AcquireContent(out var label, "Model"))
                 {
-                    if (DoDropdownObjectField(label, true, ref model, AnimancerGUI.SpacingMode.After))
+                    if (DoDropdownObjectField(label, true, ref model, SpacingMode.After))
                     {
                         var menu = new GenericMenu();
 
@@ -192,8 +187,8 @@ namespace Animancer.Editor
                     instanceAnimators.Length <= 1)
                     return;
 
-                var area = AnimancerGUI.LayoutSingleLineRect(AnimancerGUI.SpacingMode.After);
-                var labelArea = AnimancerGUI.StealFromLeft(ref area, EditorGUIUtility.labelWidth, AnimancerGUI.StandardSpacing);
+                var area = LayoutSingleLineRect(SpacingMode.After);
+                var labelArea = StealFromLeft(ref area, EditorGUIUtility.labelWidth, StandardSpacing);
                 GUI.Label(labelArea, nameof(Animator));
 
                 var selectedAnimator = _Instance._Scene.SelectedInstanceAnimator;
@@ -279,17 +274,17 @@ namespace Animancer.Editor
             /************************************************************************************************************************/
 
             private static bool DoDropdownObjectField<T>(GUIContent label, bool showDropdown, ref T obj,
-                AnimancerGUI.SpacingMode spacingMode = AnimancerGUI.SpacingMode.None) where T : Object
+                SpacingMode spacingMode = SpacingMode.None) where T : Object
             {
-                var area = AnimancerGUI.LayoutSingleLineRect(spacingMode);
+                var area = LayoutSingleLineRect(spacingMode);
 
                 var labelWidth = EditorGUIUtility.labelWidth;
 
                 labelWidth += 2;
                 area.xMin -= 1;
 
-                var spacing = AnimancerGUI.StandardSpacing;
-                var labelArea = AnimancerGUI.StealFromLeft(ref area, labelWidth - spacing, spacing);
+                var spacing = StandardSpacing;
+                var labelArea = StealFromLeft(ref area, labelWidth - spacing, spacing);
 
                 obj = (T)EditorGUI.ObjectField(area, obj, typeof(T), true);
 
@@ -328,6 +323,28 @@ namespace Animancer.Editor
             }
 
             /************************************************************************************************************************/
+
+            private void PlaySequence(AnimancerPlayable animancer)
+            {
+                if (_PreviousAnimation != null && _PreviousAnimation.length > 0)
+                {
+                    _Instance._Scene.Animancer.Stop();
+                    var fromState = animancer.States.GetOrCreate(PreviousAnimationKey, _PreviousAnimation, true);
+                    animancer.Play(fromState);
+                    OnPlayAnimation();
+                    fromState.TimeD = 0;
+
+                    var warnings = OptionalWarning.UnsupportedEvents.DisableTemporarily();
+                    fromState.Events.EndEvent = new AnimancerEvent(1 / fromState.Length, PlayTransition);
+                    warnings.Enable();
+                }
+                else
+                {
+                    PlayTransition();
+                }
+
+                _Instance._Scene.Animancer.UnpauseGraph();
+            }
 
             private void PlayTransition()
             {
@@ -379,6 +396,26 @@ namespace Animancer.Editor
                     state.Events.NormalizedEndTime = normalizedEndTime;
                     warnings.Enable();
                 }
+            }
+
+            /************************************************************************************************************************/
+
+            private void StepBackward()
+                => StepTime(-AnimancerSettings.FrameStep);
+
+            private void StepForward()
+                => StepTime(AnimancerSettings.FrameStep);
+
+            private void StepTime(float timeOffset)
+            {
+                if (!TryShowTransitionPaused(out _, out _, out var state))
+                    return;
+
+                var length = state.Length;
+                if (length != 0)
+                    timeOffset /= length;
+
+                NormalizedTime += timeOffset;
             }
 
             /************************************************************************************************************************/
@@ -464,7 +501,7 @@ namespace Animancer.Editor
                     state.NormalizedTime = state.Weight > 0 ? value : 0;
                     animancer.Evaluate();
 
-                    AnimancerGUI.RepaintEverything();
+                    RepaintEverything();
                 }
             }
 
@@ -505,7 +542,7 @@ namespace Animancer.Editor
 
             /************************************************************************************************************************/
 
-            internal sealed class WindowMatchStateTime : Key, IUpdatable
+            internal class WindowMatchStateTime : Key, IUpdatable
             {
                 /************************************************************************************************************************/
 

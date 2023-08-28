@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -194,7 +194,7 @@ namespace Animancer
             /// Lowering this value will destroy any layers beyond the specified value.
             /// <para></para>
             /// Changing this value will cause the allocation of a new array and garbage collection of the old one, so
-            /// you should generally set the <see cref="DefaultCapacity"/> before initialising this list.
+            /// you should generally set the <see cref="DefaultCapacity"/> before initializing this list.
             /// </remarks>
             /// 
             /// <exception cref="ArgumentOutOfRangeException">The value is not greater than 0.</exception>
@@ -215,23 +215,14 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            /// <summary>[Pro-Only]
-            /// Creates and returns a new <see cref="AnimancerLayer"/>. New layers will override earlier layers by default.
-            /// </summary>
-            /// <exception cref="InvalidOperationException">
-            /// The value is set higher than the <see cref="Capacity"/>. This is simply a safety measure,
-            /// so if you do actually need more layers you can just increase the limit.
-            /// </exception>
+            /// <summary>[Pro-Only] Creates and returns a new <see cref="AnimancerLayer"/> at the end of this list.</summary>
+            /// <remarks>If the <see cref="Capacity"/> would be exceeded, it will be doubled.</remarks>
             public AnimancerLayer Add()
             {
                 var index = _Count;
 
                 if (index >= _Layers.Length)
-                    throw new InvalidOperationException(
-                        $"Attempted to increase the layer count above the current capacity" +
-                        $" ({index + 1} > {_Layers.Length}). This is simply a safety measure," +
-                        $" so if you do actually need more layers you can just increase the" +
-                        $" {nameof(Capacity)} or {nameof(DefaultCapacity)}.");
+                    Capacity *= 2;
 
                 _Count = index + 1;
                 Root._LayerMixer.SetInputCount(_Count);

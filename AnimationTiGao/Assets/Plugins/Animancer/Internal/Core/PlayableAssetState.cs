@@ -1,7 +1,8 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Audio;
@@ -16,7 +17,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/PlayableAssetState
     /// 
-    public sealed class PlayableAssetState : AnimancerState
+    public class PlayableAssetState : AnimancerState, ICopyable<PlayableAssetState>
     {
         /************************************************************************************************************************/
 
@@ -73,7 +74,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>IK cannot be dynamically enabled on a <see cref="PlayableAssetState"/>.</summary>
-        public override void CopyIKFlags(AnimancerNode node) { }
+        public override void CopyIKFlags(AnimancerNode copyFrom) { }
 
         /************************************************************************************************************************/
 
@@ -172,56 +173,61 @@ namespace Animancer
 
             _HasInitializedBindings = true;
 
-            var output = _Asset.outputs.GetEnumerator();
+            Validate.AssertPlayable(this);
+
             var graph = Root._Graph;
 
-            var bindingIndex = 0;
-            var bindingCount = _Bindings != null ? _Bindings.Count : 0;
+            var bindableIndex = 0;
+            var bindableCount = _Bindings != null ? _Bindings.Count : 0;
 
-            while (output.MoveNext())
+            foreach (var binding in _Asset.outputs)
             {
-                GetBindingDetails(output.Current, out var name, out var type, out var isMarkers);
+                GetBindingDetails(binding, out var trackName, out var trackType, out var isMarkers);
 
-                var binding = bindingIndex < bindingCount ? _Bindings[bindingIndex] : null;
+                var bindable = bindableIndex < bindableCount ? _Bindings[bindableIndex] : null;
 
 #if UNITY_ASSERTIONS
-                if (type != null && !(binding is null) && !type.IsAssignableFrom(binding.GetType()))
+                if (!isMarkers &&
+                    trackType != null &&
+                    bindable != null &&
+                    !trackType.IsAssignableFrom(bindable.GetType()))
                 {
                     Debug.LogError(
-                        $"Binding Type Mismatch: bindings[{bindingIndex}] is '{binding}' but should be a {type.FullName} for {name}",
+                        $"Binding Type Mismatch: bindings[{bindableIndex}] is '{bindable}'" +
+                        $" but should be a {trackType.FullName} for {trackName}",
                         Root.Component as Object);
-                    bindingIndex++;
+                    bindableIndex++;
                     continue;
                 }
-
-                Validate.AssertPlayable(this);
 #endif
 
-                var playable = _Playable.GetInput(bindingIndex);
+                var playable = _Playable.GetInput(bindableIndex);
 
-                if (type == typeof(Animator))// AnimationTrack.
+                if (trackType == typeof(Animator))// AnimationTrack.
                 {
-                    if (binding != null)
+                    if (bindable != null)
                     {
 #if UNITY_ASSERTIONS
-                        if (binding == Root.Component?.Animator)
+                        if (bindable == Root.Component?.Animator)
                             Debug.LogError(
                                 $"{nameof(PlayableAsset)} tracks should not be bound to the same {nameof(Animator)} as" +
-                                $" Animancer. Leaving binding {bindingIndex} empty will automatically apply its animation" +
-                                $" to the object being controlled by Animancer.",
+                                $" Animancer. Leaving the binding of the first Animation Track empty will automatically" +
+                                $" apply its animation to the object being controlled by Animancer.",
                                 Root.Component as Object);
 #endif
 
-                        var playableOutput = AnimationPlayableOutput.Create(graph, name, (Animator)binding);
+                        var playableOutput = AnimationPlayableOutput.Create(graph, trackName, (Animator)bindable);
+                        playableOutput.SetReferenceObject(binding.sourceObject);
                         playableOutput.SetSourcePlayable(playable);
                         playableOutput.SetWeight(1);
                     }
                 }
-                else if (type == typeof(AudioSource))// AudioTrack.
+                else if (trackType == typeof(AudioSource))// AudioTrack.
                 {
-                    if (binding != null)
+                    if (bindable != null)
                     {
-                        var playableOutput = AudioPlayableOutput.Create(graph, name, (AudioSource)binding);
+                        var playableOutput = AudioPlayableOutput.Create(graph, trackName, (AudioSource)bindable);
+                        playableOutput.SetReferenceObject(binding.sourceObject);
                         playableOutput.SetSourcePlayable(playable);
                         playableOutput.SetWeight(1);
                     }
@@ -229,26 +235,32 @@ namespace Animancer
                 else if (isMarkers)// Markers.
                 {
                     var animancer = Root.Component as Component;
-                    var playableOutput = ScriptPlayableOutput.Create(graph, name);
-                    playableOutput.SetUserData(animancer);
+                    var playableOutput = ScriptPlayableOutput.Create(graph, trackName);
+                    playableOutput.SetReferenceObject(binding.sourceObject);
                     playableOutput.SetSourcePlayable(playable);
                     playableOutput.SetWeight(1);
-                    foreach (var receiver in animancer.GetComponents<INotificationReceiver>())
-                    {
-                        playableOutput.AddNotificationReceiver(receiver);
-                    }
+                    playableOutput.SetUserData(animancer);
+
+                    var receivers = ObjectPool.AcquireList<INotificationReceiver>();
+                    animancer.GetComponents(receivers);
+                    for (int i = 0; i < receivers.Count; i++)
+                        playableOutput.AddNotificationReceiver(receivers[i]);
+                    ObjectPool.Release(receivers);
 
                     continue;// Don't increment the bindingIndex.
                 }
                 else// ActivationTrack, ControlTrack, PlayableTrack, SignalTrack.
                 {
-                    var playableOutput = ScriptPlayableOutput.Create(graph, name);
-                    playableOutput.SetUserData(binding);
+                    var playableOutput = ScriptPlayableOutput.Create(graph, trackName);
+                    playableOutput.SetReferenceObject(binding.sourceObject);
                     playableOutput.SetSourcePlayable(playable);
                     playableOutput.SetWeight(1);
+                    playableOutput.SetUserData(bindable);
+                    if (bindable is INotificationReceiver receiver)
+                        playableOutput.AddNotificationReceiver(receiver);
                 }
 
-                bindingIndex++;
+                bindableIndex++;
             }
         }
 
@@ -269,6 +281,60 @@ namespace Animancer
         {
             _Asset = null;
             base.Destroy();
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new PlayableAssetState(_Asset);
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<PlayableAssetState>)clone).CopyFrom(this);
+            return clone;
+        }
+
+        /// <inheritdoc/>
+        void ICopyable<PlayableAssetState>.CopyFrom(PlayableAssetState copyFrom)
+        {
+            _Length = copyFrom._Length;
+
+            ((ICopyable<AnimancerState>)this).CopyFrom(copyFrom);
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        protected override void AppendDetails(StringBuilder text, string separator)
+        {
+            base.AppendDetails(text, separator);
+
+            text.Append(separator).Append($"{nameof(Bindings)}: ");
+
+            int count;
+            if (_Bindings == null)
+            {
+                text.Append("Null");
+                count = 0;
+            }
+            else
+            {
+                count = _Bindings.Count;
+                text.Append('[')
+                    .Append(count)
+                    .Append(']');
+            }
+
+            text.Append(_HasInitializedBindings ? " (Initialized)" : " (Not Initialized)");
+
+            for (int i = 0; i < count; i++)
+            {
+                text.Append(separator)
+                    .Append($"{nameof(Bindings)}[")
+                    .Append(i)
+                    .Append("] = ")
+                    .Append(AnimancerUtilities.ToStringOrNull(_Bindings[i]));
+            }
         }
 
         /************************************************************************************************************************/

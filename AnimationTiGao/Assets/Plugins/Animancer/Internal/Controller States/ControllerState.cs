@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 using Object = UnityEngine.Object;
-
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.Animations;
-#endif
+using System.Runtime.CompilerServices;
 
 namespace Animancer
 {
@@ -22,7 +18,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/ControllerState
     /// 
-    public class ControllerState : AnimancerState
+    public partial class ControllerState : AnimancerState, ICopyable<ControllerState>
     {
         /************************************************************************************************************************/
 
@@ -50,7 +46,7 @@ namespace Animancer
         }
 
         /// <summary>The internal system which plays the <see cref="RuntimeAnimatorController"/>.</summary>
-        public AnimatorControllerPlayable Playable
+        public new AnimatorControllerPlayable Playable
         {
             get
             {
@@ -63,34 +59,51 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
-        private bool _KeepStateOnStop;
-
-        /// <summary>
-        /// If false, <see cref="Stop"/> will reset all layers to their default state. Default False.
-        /// <para></para>
-        /// The <see cref="DefaultStateHashes"/> will only be gathered the first time this property is set to false or
-        /// <see cref="GatherDefaultStates"/> is called manually.
-        /// </summary>
-        public bool KeepStateOnStop
+        /// <summary>Determines what a layer does when <see cref="Stop"/> is called.</summary>
+        public enum ActionOnStop
         {
-            get => _KeepStateOnStop;
+            /// <summary>Reset the layer to the first state it was in.</summary>
+            DefaultState,
+
+            /// <summary>Rewind the current state's time to 0.</summary>
+            RewindTime,
+
+            /// <summary>Allow the current state to stay at its current time.</summary>
+            Continue,
+        }
+
+        private ActionOnStop[] _ActionsOnStop;
+
+        /// <summary>Determines what each layer does when <see cref="Stop"/> is called.</summary>
+        /// <remarks>
+        /// If empty, all layers will reset to their <see cref="ActionOnStop.DefaultState"/>.
+        /// <para></para>
+        /// If this array is smaller than the <see cref="AnimatorControllerPlayable.GetLayerCount"/>, any additional
+        /// layers will use the last value in this array.
+        /// </remarks>
+        public ActionOnStop[] ActionsOnStop
+        {
+            get => _ActionsOnStop;
             set
             {
-                _KeepStateOnStop = value;
-                if (!value && DefaultStateHashes == null && _Playable.IsValid())
+                _ActionsOnStop = value;
+                if (_Playable.IsValid())
                     GatherDefaultStates();
             }
         }
 
         /// <summary>
         /// The <see cref="AnimatorStateInfo.shortNameHash"/> of the default state on each layer, used to reset to
-        /// those states when <see cref="Stop"/> is called if <see cref="KeepStateOnStop"/> is true.
+        /// those states when <see cref="ApplyActionsOnStop"/> is called for layers using
+        /// <see cref="ActionOnStop.DefaultState"/>.
         /// </summary>
+        /// <remarks>Gathered using <see cref="GatherDefaultStates"/>.</remarks>
         public int[] DefaultStateHashes { get; set; }
 
         /************************************************************************************************************************/
-
 #if UNITY_ASSERTIONS
+        /************************************************************************************************************************/
+
         /// <summary>[Assert-Only] Animancer Events doesn't work properly on <see cref="ControllerState"/>s.</summary>
         protected override string UnsupportedEventsMessage =>
             "Animancer Events on " + nameof(ControllerState) + "s will probably not work as expected." +
@@ -106,12 +119,24 @@ namespace Animancer
             "s so there is no way to directly control their speed." +
             " The Animator Controller Speed page explains a possible workaround for this issue:" +
             " https://kybernetik.com.au/animancer/docs/bugs/animator-controller-speed";
+
+        /************************************************************************************************************************/
 #endif
+        /************************************************************************************************************************/
+
+        /// <summary>[Assert-Conditional] Asserts that the `value` is valid.</summary>
+        /// <exception cref="ArgumentOutOfRangeException">The `value` is NaN or Infinity.</exception>
+        [System.Diagnostics.Conditional(Strings.Assertions)]
+        public void AssertParameterValue(float value, [CallerMemberName] string parameterName = null)
+        {
+            if (!value.IsFinite())
+                throw new ArgumentOutOfRangeException(parameterName, Strings.MustBeFinite);
+        }
 
         /************************************************************************************************************************/
 
         /// <summary>IK cannot be dynamically enabled on a <see cref="ControllerState"/>.</summary>
-        public override void CopyIKFlags(AnimancerNode node) { }
+        public override void CopyIKFlags(AnimancerNode copyFrom) { }
 
         /************************************************************************************************************************/
 
@@ -146,19 +171,34 @@ namespace Animancer
         }
 
         /************************************************************************************************************************/
+
+        /// <summary>The number of parameters being wrapped by this state.</summary>
+        public virtual int ParameterCount => 0;
+
+        /// <summary>Returns the hash of a parameter being wrapped by this state.</summary>
+        /// <exception cref="NotSupportedException">This state doesn't wrap any parameters.</exception>
+        public virtual int GetParameterHash(int index) => throw new NotSupportedException();
+
+        /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
         #region Public API
         /************************************************************************************************************************/
 
         /// <summary>Creates a new <see cref="ControllerState"/> to play the `controller`.</summary>
-        public ControllerState(RuntimeAnimatorController controller, bool keepStateOnStop = false)
+        public ControllerState(RuntimeAnimatorController controller)
         {
             if (controller == null)
                 throw new ArgumentNullException(nameof(controller));
 
             _Controller = controller;
-            _KeepStateOnStop = keepStateOnStop;
+        }
+
+        /// <summary>Creates a new <see cref="ControllerState"/> to play the `controller`.</summary>
+        public ControllerState(RuntimeAnimatorController controller, params ActionOnStop[] actionsOnStop)
+            : this(controller)
+        {
+            _ActionsOnStop = actionsOnStop;
         }
 
         /************************************************************************************************************************/
@@ -167,9 +207,7 @@ namespace Animancer
         protected override void CreatePlayable(out Playable playable)
         {
             playable = _Playable = AnimatorControllerPlayable.Create(Root._Graph, _Controller);
-
-            if (!_KeepStateOnStop)
-                GatherDefaultStates();
+            GatherDefaultStates();
         }
 
         /************************************************************************************************************************/
@@ -204,56 +242,60 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// The current state on layer 0, or the next state if it is currently in a transition.
+        /// Returns the current state on the specified `layer`, or the next state if it is currently in a transition.
         /// </summary>
-        public AnimatorStateInfo StateInfo
+        public AnimatorStateInfo GetStateInfo(int layerIndex)
         {
-            get
-            {
-                Validate.AssertPlayable(this);
-                return _Playable.IsInTransition(0) ?
-                    _Playable.GetNextAnimatorStateInfo(0) :
-                    _Playable.GetCurrentAnimatorStateInfo(0);
-            }
+            Validate.AssertPlayable(this);
+            return _Playable.IsInTransition(layerIndex) ?
+                _Playable.GetNextAnimatorStateInfo(layerIndex) :
+                _Playable.GetCurrentAnimatorStateInfo(layerIndex);
         }
 
         /************************************************************************************************************************/
 
         /// <summary>
-        /// The <see cref="AnimatorStateInfo.normalizedTime"/> * <see cref="AnimatorStateInfo.length"/> of the
-        /// <see cref="StateInfo"/>.
+        /// The <see cref="AnimatorStateInfo.normalizedTime"/> * <see cref="AnimatorStateInfo.length"/> of layer 0.
         /// </summary>
-        protected override float RawTime
+        public override double RawTime
         {
             get
             {
-                var info = StateInfo;
+                var info = GetStateInfo(0);
                 return info.normalizedTime * info.length;
             }
             set
             {
                 Validate.AssertPlayable(this);
-                _Playable.PlayInFixedTime(0, 0, value);
+                _Playable.PlayInFixedTime(0, 0, (float)value);
+
+                if (!IsPlaying)
+                {
+                    _Playable.Play();
+                    DelayedPause.Register(this);
+                }
             }
         }
 
         /************************************************************************************************************************/
 
-        /// <summary>The current <see cref="AnimatorStateInfo.length"/> (on layer 0).</summary>
-        public override float Length => StateInfo.length;
+        /// <summary>The current <see cref="AnimatorStateInfo.length"/> of layer 0.</summary>
+        public override float Length => GetStateInfo(0).length;
 
         /************************************************************************************************************************/
 
         /// <summary>Indicates whether the current state on layer 0 will loop back to the start when it reaches the end.</summary>
-        public override bool IsLooping => StateInfo.loop;
+        public override bool IsLooping => GetStateInfo(0).loop;
 
         /************************************************************************************************************************/
 
-        /// <summary>Gathers the <see cref="DefaultStateHashes"/> from the current states.</summary>
+        /// <summary>Gathers the <see cref="DefaultStateHashes"/> from the current states on each layer.</summary>
         public void GatherDefaultStates()
         {
             Validate.AssertPlayable(this);
+
             var layerCount = _Playable.GetLayerCount();
+
             if (DefaultStateHashes == null || DefaultStateHashes.Length != layerCount)
                 DefaultStateHashes = new int[layerCount];
 
@@ -261,41 +303,61 @@ namespace Animancer
                 DefaultStateHashes[layerCount] = _Playable.GetCurrentAnimatorStateInfo(layerCount).shortNameHash;
         }
 
+        /************************************************************************************************************************/
+
         /// <summary>
-        /// Calls the base <see cref="AnimancerState.Stop"/> and if <see cref="KeepStateOnStop"/> is false it also
-        /// calls <see cref="ResetToDefaultStates"/>.
+        /// Stops the animation and makes it inactive immediately so it no longer affects the output.
+        /// Also calls <see cref="ApplyActionsOnStop"/>.
         /// </summary>
         public override void Stop()
         {
-            if (_KeepStateOnStop)
+            // Don't call base.Stop(); because it sets Time = 0; which uses PlayInFixedTime and interferes with
+            // resetting to the default states.
+
+            Weight = 0;
+            IsPlaying = false;
+            if (AutomaticallyClearEvents)
+                Events = null;
+
+            ApplyActionsOnStop();
+
+            if (_SmoothingVelocities != null)
+                _SmoothingVelocities.Clear();
+        }
+
+        /// <summary>Applies the <see cref="ActionsOnStop"/> to their corresponding layers.</summary>
+        /// <exception cref="NullReferenceException"><see cref="DefaultStateHashes"/> is null.</exception>
+        public void ApplyActionsOnStop()
+        {
+            Validate.AssertPlayable(this);
+
+            var layerCount = Math.Min(DefaultStateHashes.Length, _Playable.GetLayerCount());
+
+            if (_ActionsOnStop == null || _ActionsOnStop.Length == 0)
             {
-                base.Stop();
+                for (int i = layerCount - 1; i >= 0; i--)
+                    _Playable.Play(DefaultStateHashes[i], i, 0);
             }
             else
             {
-                ResetToDefaultStates();
+                for (int i = layerCount - 1; i >= 0; i--)
+                {
+                    var index = i < _ActionsOnStop.Length ? i : _ActionsOnStop.Length - 1;
+                    switch (_ActionsOnStop[index])
+                    {
+                        case ActionOnStop.DefaultState:
+                            _Playable.Play(DefaultStateHashes[i], i, 0);
+                            break;
 
-                // Don't call base.Stop(); because it sets Time = 0; which uses PlayInFixedTime and interferes with
-                // resetting to the default states.
-                Weight = 0;
-                IsPlaying = false;
-                Events = null;
+                        case ActionOnStop.RewindTime:
+                            _Playable.Play(0, i, 0);
+                            break;
+
+                        case ActionOnStop.Continue:
+                            break;
+                    }
+                }
             }
-        }
-
-        /// <summary>
-        /// Resets all layers to their default state.
-        /// </summary>
-        /// <exception cref="NullReferenceException"><see cref="DefaultStateHashes"/> is null.</exception>
-        /// <exception cref="IndexOutOfRangeException">
-        /// The size of <see cref="DefaultStateHashes"/> is larger than the number of layers in the
-        /// <see cref="Controller"/>.
-        /// </exception>
-        public void ResetToDefaultStates()
-        {
-            Validate.AssertPlayable(this);
-            for (int i = DefaultStateHashes.Length - 1; i >= 0; i--)
-                _Playable.Play(DefaultStateHashes[i], i, 0);
 
             // Allowing the RawTime to be applied prevents the default state from being played because
             // Animator Controllers don't properly respond to multiple Play calls in the same frame.
@@ -318,6 +380,45 @@ namespace Animancer
         {
             _Controller = null;
             base.Destroy();
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new ControllerState(_Controller);
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<ControllerState>)clone).CopyFrom(this);
+            return clone;
+        }
+
+        /// <inheritdoc/>
+        void ICopyable<ControllerState>.CopyFrom(ControllerState copyFrom)
+        {
+            _ActionsOnStop = copyFrom._ActionsOnStop;
+
+            if (copyFrom.Root != null &&
+                Root != null)
+            {
+                var layerCount = copyFrom._Playable.GetLayerCount();
+                for (int i = 0; i < layerCount; i++)
+                {
+                    var info = copyFrom._Playable.GetCurrentAnimatorStateInfo(i);
+                    _Playable.Play(info.shortNameHash, i, info.normalizedTime);
+                }
+
+                var parameterCount = copyFrom._Playable.GetParameterCount();
+                for (int i = 0; i < parameterCount; i++)
+                {
+                    AnimancerUtilities.CopyParameterValue(
+                        copyFrom._Playable,
+                        _Playable,
+                        copyFrom._Playable.GetParameter(i));
+                }
+            }
+
+            ((ICopyable<AnimancerState>)this).CopyFrom(copyFrom);
         }
 
         /************************************************************************************************************************/
@@ -461,15 +562,73 @@ namespace Animancer
         /// <summary>Resets the specified trigger parameter to false.</summary>
         public void ResetTrigger(string name) => Playable.ResetTrigger(name);
 
+        /// <summary>Indicates whether the specified parameter is controlled by an <see cref="AnimationClip"/>.</summary>
+        public bool IsParameterControlledByCurve(int id) => Playable.IsParameterControlledByCurve(id);
+        /// <summary>Indicates whether the specified parameter is controlled by an <see cref="AnimationClip"/>.</summary>
+        public bool IsParameterControlledByCurve(string name) => Playable.IsParameterControlledByCurve(name);
+
         /// <summary>Gets the details of one of the <see cref="Controller"/>'s parameters.</summary>
         public AnimatorControllerParameter GetParameter(int index) => Playable.GetParameter(index);
         /// <summary>Gets the number of parameters in the <see cref="Controller"/>.</summary>
         public int GetParameterCount() => Playable.GetParameterCount();
 
-        /// <summary>Indicates whether the specified parameter is controlled by an <see cref="AnimationClip"/>.</summary>
-        public bool IsParameterControlledByCurve(int id) => Playable.IsParameterControlledByCurve(id);
-        /// <summary>Indicates whether the specified parameter is controlled by an <see cref="AnimationClip"/>.</summary>
-        public bool IsParameterControlledByCurve(string name) => Playable.IsParameterControlledByCurve(name);
+        /************************************************************************************************************************/
+
+        /// <summary>The number of parameters in the <see cref="Controller"/>.</summary>
+        public int parameterCount => Playable.GetParameterCount();
+
+        /************************************************************************************************************************/
+
+        private AnimatorControllerParameter[] _Parameters;
+
+        /// <summary>The parameters in the <see cref="Controller"/>.</summary>
+        /// <remarks>
+        /// This property allocates a new array when first accessed. To avoid that, you can use
+        /// <see cref="GetParameterCount"/> and <see cref="GetParameter"/> instead.
+        /// </remarks>
+        public AnimatorControllerParameter[] parameters
+        {
+            get
+            {
+                if (_Parameters == null)
+                {
+                    var count = GetParameterCount();
+                    _Parameters = new AnimatorControllerParameter[count];
+                    for (int i = 0; i < count; i++)
+                        _Parameters[i] = GetParameter(i);
+                }
+
+                return _Parameters;
+            }
+        }
+
+        /************************************************************************************************************************/
+        #endregion
+        /************************************************************************************************************************/
+        #region Smoothed Set Float
+        /************************************************************************************************************************/
+
+        private Dictionary<int, float> _SmoothingVelocities;
+
+        /// <summary>Sets the value of the specified float parameter with smoothing.</summary>
+        public float SetFloat(string name, float value, float dampTime, float deltaTime, float maxSpeed = float.PositiveInfinity)
+            => SetFloat(Animator.StringToHash(name), value, dampTime, deltaTime, maxSpeed);
+
+        /// <summary>Sets the value of the specified float parameter with smoothing.</summary>
+        public float SetFloat(int id, float value, float dampTime, float deltaTime, float maxSpeed = float.PositiveInfinity)
+        {
+            if (_SmoothingVelocities == null)
+                _SmoothingVelocities = new Dictionary<int, float>();
+
+            _SmoothingVelocities.TryGetValue(id, out var velocity);
+
+            value = Mathf.SmoothDamp(GetFloat(id), value, ref velocity, dampTime, maxSpeed, deltaTime);
+            SetFloat(id, value);
+
+            _SmoothingVelocities[id] = velocity;
+
+            return value;
+        }
 
         /************************************************************************************************************************/
         #endregion
@@ -486,6 +645,8 @@ namespace Animancer
 
         /// <summary>Gets the number of layers in the <see cref="Controller"/>.</summary>
         public int GetLayerCount() => Playable.GetLayerCount();
+        /// <summary>The number of layers in the <see cref="Controller"/>.</summary>
+        public int layerCount => Playable.GetLayerCount();
 
         /// <summary>Gets the index of the layer with the specified name.</summary>
         public int GetLayerIndex(string layerName) => Playable.GetLayerIndex(layerName);
@@ -534,253 +695,6 @@ namespace Animancer
 
         /************************************************************************************************************************/
         #endregion
-        /************************************************************************************************************************/
-        #endregion
-        /************************************************************************************************************************/
-        #region Parameter IDs
-        /************************************************************************************************************************/
-
-        /// <summary>A wrapper for the name and hash of an <see cref="AnimatorControllerParameter"/>.</summary>
-        public readonly struct ParameterID
-        {
-            /************************************************************************************************************************/
-
-            /// <summary>The name of this parameter.</summary>
-            public readonly string Name;
-
-            /// <summary>The name hash of this parameter.</summary>
-            public readonly int Hash;
-
-            /************************************************************************************************************************/
-
-            /// <summary>
-            /// Creates a new <see cref="ParameterID"/> with the specified <see cref="Name"/> and uses
-            /// <see cref="Animator.StringToHash"/> to calculate the <see cref="Hash"/>.
-            /// </summary>
-            public ParameterID(string name)
-            {
-                Name = name;
-                Hash = Animator.StringToHash(name);
-            }
-
-            /// <summary>
-            /// Creates a new <see cref="ParameterID"/> with the specified <see cref="Hash"/> and leaves the
-            /// <see cref="Name"/> null.
-            /// </summary>
-            public ParameterID(int hash)
-            {
-                Name = null;
-                Hash = hash;
-            }
-
-            /// <summary>Creates a new <see cref="ParameterID"/> with the specified <see cref="Name"/> and <see cref="Hash"/>.</summary>
-            /// <remarks>This constructor does not verify that the `hash` actually corresponds to the `name`.</remarks>
-            public ParameterID(string name, int hash)
-            {
-                Name = name;
-                Hash = hash;
-            }
-
-            /************************************************************************************************************************/
-
-            /// <summary>
-            /// Creates a new <see cref="ParameterID"/> with the specified <see cref="Name"/> and uses
-            /// <see cref="Animator.StringToHash"/> to calculate the <see cref="Hash"/>.
-            /// </summary>
-            public static implicit operator ParameterID(string name) => new ParameterID(name);
-
-            /// <summary>
-            /// Creates a new <see cref="ParameterID"/> with the specified <see cref="Hash"/> and leaves the
-            /// <see cref="Name"/> null.
-            /// </summary>
-            public static implicit operator ParameterID(int hash) => new ParameterID(hash);
-
-            /************************************************************************************************************************/
-
-            /// <summary>Returns the <see cref="Hash"/>.</summary>
-            public static implicit operator int(ParameterID parameter) => parameter.Hash;
-
-            /************************************************************************************************************************/
-
-#if UNITY_EDITOR
-            private static Dictionary<RuntimeAnimatorController, Dictionary<int, AnimatorControllerParameterType>>
-                _ControllerToParameterHashAndType;
-#endif
-
-            /// <summary>[Editor-Conditional]
-            /// Throws if the `controller` doesn't have a parameter with the specified <see cref="Hash"/>
-            /// and `type`.
-            /// </summary>
-            /// <exception cref="ArgumentException"/>
-            [System.Diagnostics.Conditional(Strings.UnityEditor)]
-            public void ValidateHasParameter(RuntimeAnimatorController controller, AnimatorControllerParameterType type)
-            {
-#if UNITY_EDITOR
-                Editor.AnimancerEditorUtilities.InitializeCleanDictionary(ref _ControllerToParameterHashAndType);
-
-                // Get the parameter details.
-                if (!_ControllerToParameterHashAndType.TryGetValue(controller, out var parameterDetails))
-                {
-                    var editorController = (AnimatorController)controller;
-                    var parameters = editorController.parameters;
-                    var count = parameters.Length;
-
-                    // Animator Controllers loaded from Asset Bundles only contain their RuntimeAnimatorController data
-                    // but not the editor AnimatorController data which we need to perform this validation.
-                    if (count == 0 &&
-                        editorController.layers.Length == 0)// Double check that the editor data is actually empty.
-                    {
-                        _ControllerToParameterHashAndType.Add(controller, null);
-                        return;
-                    }
-
-                    parameterDetails = new Dictionary<int, AnimatorControllerParameterType>();
-
-                    for (int i = 0; i < count; i++)
-                    {
-                        var parameter = parameters[i];
-                        parameterDetails.Add(parameter.nameHash, parameter.type);
-                    }
-
-                    _ControllerToParameterHashAndType.Add(controller, parameterDetails);
-                }
-
-                if (parameterDetails == null)
-                    return;
-
-                // Check that there is a parameter with the correct hash and type.
-
-                if (!parameterDetails.TryGetValue(Hash, out var parameterType))
-                {
-                    throw new ArgumentException($"{controller} has no {type} parameter matching {this}");
-                }
-
-                if (type != parameterType)
-                {
-                    throw new ArgumentException($"{controller} has a parameter matching {this}, but it is not a {type}");
-                }
-#endif
-            }
-
-            /************************************************************************************************************************/
-
-            /// <summary>Returns a string containing the <see cref="Name"/> and <see cref="Hash"/>.</summary>
-            public override string ToString()
-            {
-                return $"{nameof(ControllerState)}.{nameof(ParameterID)}" +
-                    $"({nameof(Name)}: '{Name}'" +
-                    $", {nameof(Hash)}: {Hash})";
-            }
-
-            /************************************************************************************************************************/
-        }
-
-        /************************************************************************************************************************/
-        #endregion
-        /************************************************************************************************************************/
-        #region Inspector
-        /************************************************************************************************************************/
-
-        /// <summary>The number of parameters being wrapped by this state.</summary>
-        public virtual int ParameterCount => 0;
-
-        /// <summary>Returns the hash of a parameter being wrapped by this state.</summary>
-        /// <exception cref="NotSupportedException">This state doesn't wrap any parameters.</exception>
-        public virtual int GetParameterHash(int index) => throw new NotSupportedException();
-
-        /************************************************************************************************************************/
-#if UNITY_EDITOR
-        /************************************************************************************************************************/
-
-        /// <summary>[Editor-Only] Returns a <see cref="Drawer"/> for this state.</summary>
-        protected internal override Editor.IAnimancerNodeDrawer CreateDrawer() => new Drawer(this);
-
-        /************************************************************************************************************************/
-
-        /// <inheritdoc/>
-        public sealed class Drawer : Editor.ParametizedAnimancerStateDrawer<ControllerState>
-        {
-            /************************************************************************************************************************/
-
-            /// <summary>Creates a new <see cref="Drawer"/> to manage the Inspector GUI for the `state`.</summary>
-            public Drawer(ControllerState state) : base(state) { }
-
-            /************************************************************************************************************************/
-
-            /// <inheritdoc/>
-            protected override void DoDetailsGUI()
-            {
-                GatherParameters();
-                base.DoDetailsGUI();
-            }
-
-            /************************************************************************************************************************/
-
-            private readonly List<AnimatorControllerParameter>
-                Parameters = new List<AnimatorControllerParameter>();
-
-            /// <summary>Fills the <see cref="Parameters"/> list with the current parameter details.</summary>
-            private void GatherParameters()
-            {
-                Parameters.Clear();
-
-                var count = Target.ParameterCount;
-                if (count == 0)
-                    return;
-
-                for (int i = 0; i < count; i++)
-                {
-                    var hash = Target.GetParameterHash(i);
-                    Parameters.Add(GetParameter(hash));
-                }
-            }
-
-            /************************************************************************************************************************/
-
-            private AnimatorControllerParameter GetParameter(int hash)
-            {
-                Validate.AssertPlayable(Target);
-                var parameterCount = Target._Playable.GetParameterCount();
-                for (int i = 0; i < parameterCount; i++)
-                {
-                    var parameter = Target._Playable.GetParameter(i);
-                    if (parameter.nameHash == hash)
-                        return parameter;
-                }
-
-                return null;
-            }
-
-            /************************************************************************************************************************/
-
-            /// <inheritdoc/>
-            public override int ParameterCount => Parameters.Count;
-
-            /// <inheritdoc/>
-            public override string GetParameterName(int index) => Parameters[index].name;
-
-            /// <inheritdoc/>
-            public override AnimatorControllerParameterType GetParameterType(int index) => Parameters[index].type;
-
-            /// <inheritdoc/>
-            public override object GetParameterValue(int index)
-            {
-                Validate.AssertPlayable(Target);
-                return AnimancerUtilities.GetParameterValue(Target._Playable, Parameters[index]);
-            }
-
-            /// <inheritdoc/>
-            public override void SetParameterValue(int index, object value)
-            {
-                Validate.AssertPlayable(Target);
-                AnimancerUtilities.SetParameterValue(Target._Playable, Parameters[index], value);
-            }
-
-            /************************************************************************************************************************/
-        }
-
-        /************************************************************************************************************************/
-#endif
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/

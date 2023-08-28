@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Text;
@@ -15,7 +15,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/MixerState_1
     /// 
-    public abstract class MixerState<TParameter> : ManualMixerState
+    public abstract class MixerState<TParameter> : ManualMixerState, ICopyable<MixerState<TParameter>>
     {
         /************************************************************************************************************************/
         #region Properties
@@ -33,16 +33,29 @@ namespace Animancer
         /// Setting this value takes effect immediately (during the next animation update) without any
         /// <see href="https://kybernetik.com.au/animancer/docs/manual/blending/mixers#smoothing">Smoothing</see>.
         /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException">The value is NaN or Infinity.</exception>
         public TParameter Parameter
         {
             get => _Parameter;
             set
             {
+#if UNITY_ASSERTIONS
+                var error = GetParameterError(value);
+                if (error != null)
+                    throw new ArgumentOutOfRangeException(nameof(value), error);
+#endif
+
                 _Parameter = value;
                 WeightsAreDirty = true;
                 RequireUpdate();
             }
         }
+
+        /// <summary>
+        /// Returns an error message if the given `parameter` value can't be assigned to the <see cref="Parameter"/>.
+        /// Otherwise returns null.
+        /// </summary>
+        public abstract string GetParameterError(TParameter parameter);
 
         /************************************************************************************************************************/
         #endregion
@@ -51,23 +64,21 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// Indicates whether the array of thresholds has been initialized with a size at least equal to the
-        /// <see cref="AnimancerNode.ChildCount"/>.
+        /// Has the array of thresholds been initialized with a size at least equal to the
+        /// <see cref="ManualMixerState.ChildCount"/>.
         /// </summary>
-        public bool HasThresholds => _Thresholds.Length >= ChildCount;
+        public bool HasThresholds
+            => _Thresholds.Length >= ChildCount;
 
         /************************************************************************************************************************/
 
-        /// <summary>
-        /// Returns the value of the threshold associated with the specified index.
-        /// </summary>
-        public TParameter GetThreshold(int index) => _Thresholds[index];
+        /// <summary>Returns the value of the threshold associated with the specified `index`.</summary>
+        public TParameter GetThreshold(int index)
+            => _Thresholds[index];
 
         /************************************************************************************************************************/
 
-        /// <summary>
-        /// Sets the value of the threshold associated with the specified index.
-        /// </summary>
+        /// <summary>Sets the value of the threshold associated with the specified `index`.</summary>
         public void SetThreshold(int index, TParameter threshold)
         {
             _Thresholds[index] = threshold;
@@ -84,9 +95,9 @@ namespace Animancer
         /// </summary>
         public void SetThresholds(params TParameter[] thresholds)
         {
-            if (thresholds.Length != ChildCount)
+            if (thresholds.Length < ChildCount)
                 throw new ArgumentOutOfRangeException(nameof(thresholds),
-                    $"Threshold count ({thresholds.Length}) doesn't match child count ({ChildCount}).");
+                    $"Threshold count ({thresholds.Length}) must not be less than child count ({ChildCount}).");
 
             _Thresholds = thresholds;
             OnThresholdsChanged();
@@ -95,18 +106,17 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// If the <see cref="Array.Length"/> of the <see cref="_Thresholds"/> is not equal to the
-        /// <see cref="AnimancerNode.ChildCount"/>, this method assigns a new array of that size and returns true.
+        /// If the <see cref="Array.Length"/> of the <see cref="_Thresholds"/> is below the
+        /// <see cref="AnimancerNode.ChildCount"/>, this method assigns a new array with size equal to the
+        /// <see cref="ManualMixerState.ChildCapacity"/> and returns true.
         /// </summary>
         public bool ValidateThresholdCount()
         {
-            var count = ChildCount;
-            if (_Thresholds.Length != count)
-            {
-                _Thresholds = new TParameter[count];
-                return true;
-            }
-            else return false;
+            if (_Thresholds.Length >= ChildCount)
+                return false;
+
+            _Thresholds = new TParameter[ChildCapacity];
+            return true;
         }
 
         /************************************************************************************************************************/
@@ -124,21 +134,15 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// Calls `calculate` for each of the <see cref="ManualMixerState._Children"/> and stores the returned value as
-        /// the threshold for that state.
+        /// Calls `calculate` for each of the <see cref="ManualMixerState.ChildStates"/> and stores the returned value
+        /// as the threshold for that state.
         /// </summary>
         public void CalculateThresholds(Func<AnimancerState, TParameter> calculate)
         {
             ValidateThresholdCount();
 
             for (int i = ChildCount - 1; i >= 0; i--)
-            {
-                var state = GetChild(i);
-                if (state == null)
-                    continue;
-
-                _Thresholds[i] = calculate(state);
-            }
+                _Thresholds[i] = calculate(GetChild(i));
 
             OnThresholdsChanged();
         }
@@ -159,74 +163,81 @@ namespace Animancer
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
-        #region Initialisation
+        #region Initialization
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public override void Initialize(int portCount)
+        protected override void OnChildCapacityChanged()
         {
-            base.Initialize(portCount);
-            _Thresholds = new TParameter[portCount];
+            Array.Resize(ref _Thresholds, ChildCapacity);
             OnThresholdsChanged();
-        }
-
-        /************************************************************************************************************************/
-
-        /// <summary>
-        /// Initializes the <see cref="AnimationMixerPlayable"/> and <see cref="ManualMixerState._Children"/> with one
-        /// state per clip and assigns the `thresholds`.
-        /// <para></para>
-        /// WARNING: if you keep a reference to the `thresholds` array, you must call
-        /// <see cref="OnThresholdsChanged"/> whenever any changes are made to it, otherwise this mixer may not blend
-        /// correctly.
-        /// </summary>
-        public void Initialize(AnimationClip[] clips, TParameter[] thresholds)
-        {
-            Initialize(clips);
-            _Thresholds = thresholds;
-            OnThresholdsChanged();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="AnimationMixerPlayable"/> and <see cref="ManualMixerState._Children"/> with one
-        /// state per clip and assigns the thresholds by calling `calculateThreshold` for each state.
-        /// </summary>
-        public void Initialize(AnimationClip[] clips, Func<AnimancerState, TParameter> calculateThreshold)
-        {
-            Initialize(clips);
-            CalculateThresholds(calculateThreshold);
-        }
-
-        /************************************************************************************************************************/
-
-        /// <summary>
-        /// Creates and returns a new <see cref="ClipState"/> to play the `clip` with this
-        /// <see cref="MixerState"/> as its parent, connects it to the specified `index`, and assigns the
-        /// `threshold` for it.
-        /// </summary>
-        public ClipState CreateChild(int index, AnimationClip clip, TParameter threshold)
-        {
-            SetThreshold(index, threshold);
-            return CreateChild(index, clip);
-        }
-
-        /// <summary>
-        /// Calls <see cref="AnimancerUtilities.CreateStateAndApply"/>, sets this mixer as the state's parent, and
-        /// assigns the `threshold` for it.
-        /// </summary>
-        public AnimancerState CreateChild(int index, Animancer.ITransition transition, TParameter threshold)
-        {
-            SetThreshold(index, threshold);
-            return CreateChild(index, transition);
         }
 
         /************************************************************************************************************************/
 
         /// <summary>Assigns the `state` as a child of this mixer and assigns the `threshold` for it.</summary>
-        public void SetChild(int index, AnimancerState state, TParameter threshold)
+        public void Add(AnimancerState state, TParameter threshold)
         {
-            SetChild(index, state);
-            SetThreshold(index, threshold);
+            Add(state);
+            SetThreshold(state.Index, threshold);
+        }
+
+        /// <summary>
+        /// Creates and returns a new <see cref="ClipState"/> to play the `clip` as a child of this mixer, and assigns
+        /// the `threshold` for it.
+        /// </summary>
+        public ClipState Add(AnimationClip clip, TParameter threshold)
+        {
+            var state = Add(clip);
+            SetThreshold(state.Index, threshold);
+            return state;
+        }
+
+        /// <summary>
+        /// Calls <see cref="AnimancerUtilities.CreateStateAndApply"/> then 
+        /// <see cref="Add(AnimancerState, TParameter)"/>.
+        /// </summary>
+        public AnimancerState Add(Animancer.ITransition transition, TParameter threshold)
+        {
+            var state = Add(transition);
+            SetThreshold(state.Index, threshold);
+            return state;
+        }
+
+        /// <summary>Calls one of the other <see cref="Add(object, TParameter)"/> overloads as appropriate.</summary>
+        public AnimancerState Add(object child, TParameter threshold)
+        {
+            if (child is AnimationClip clip)
+                return Add(clip, threshold);
+
+            if (child is ITransition transition)
+                return Add(transition, threshold);
+
+            if (child is AnimancerState state)
+            {
+                Add(state, threshold);
+                return state;
+            }
+
+            throw new ArgumentException($"Unable to add '{AnimancerUtilities.ToStringOrNull(child)}' as child of '{this}'.");
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        void ICopyable<MixerState<TParameter>>.CopyFrom(MixerState<TParameter> copyFrom)
+        {
+            ((ICopyable<ManualMixerState>)this).CopyFrom(copyFrom);
+
+            var childCount = copyFrom.ChildCount;
+            if (copyFrom._Thresholds != null)
+            {
+                _Thresholds = new TParameter[childCount];
+                var count = Math.Min(childCount, copyFrom._Thresholds.Length);
+                Array.Copy(copyFrom._Thresholds, _Thresholds, count);
+            }
+
+            Parameter = copyFrom.Parameter;
         }
 
         /************************************************************************************************************************/
@@ -248,7 +259,8 @@ namespace Animancer
             AppendParameter(text, Parameter);
 
             text.Append(separator).Append("Thresholds: ");
-            for (int i = 0; i < _Thresholds.Length; i++)
+            var thresholdCount = Math.Min(ChildCapacity, _Thresholds.Length);
+            for (int i = 0; i < thresholdCount; i++)
             {
                 if (i > 0)
                     text.Append(", ");

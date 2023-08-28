@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -7,7 +7,7 @@ using UnityEditor;
 namespace Animancer.Editor
 {
     /// <summary>[Editor-Only] A wrapper around a <see cref="SerializedProperty"/> representing an array field.</summary>
-    public sealed class SerializedArrayProperty
+    public class SerializedArrayProperty
     {
         /************************************************************************************************************************/
 

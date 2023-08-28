@@ -1,4 +1,4 @@
-// Serialization // Copyright 2021 Kybernetik //
+// Serialization // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-// Shared File Last Modified: 2020-05-17.
+// Shared File Last Modified: 2021-12-11.
 namespace Animancer.Editor
 // namespace InspectorGadgets.Editor
 {
@@ -20,7 +20,7 @@ namespace Animancer.Editor
         /// reference fails.
         /// </summary>
         [Serializable]
-        public sealed class ObjectReference
+        public class ObjectReference
         {
             /************************************************************************************************************************/
 
@@ -73,16 +73,12 @@ namespace Animancer.Editor
             /// </summary>
             public static implicit operator ObjectReference(Object obj) => new ObjectReference(obj);
 
-            /// <summary>
-            /// Returns the target <see cref="Object"/>.
-            /// </summary>
+            /// <summary>Returns the target <see cref="Object"/>.</summary>
             public static implicit operator Object(ObjectReference reference) => reference.Object;
 
             /************************************************************************************************************************/
 
-            /// <summary>
-            /// Creates a new array of <see cref="ObjectReference"/>s representing the `objects`.
-            /// </summary>
+            /// <summary>Creates a new array of <see cref="ObjectReference"/>s representing the `objects`.</summary>
             public static ObjectReference[] Convert(params Object[] objects)
             {
                 var references = new ObjectReference[objects.Length];
@@ -105,9 +101,7 @@ namespace Animancer.Editor
 
             /************************************************************************************************************************/
 
-            /// <summary>
-            /// Indicates whether both arrays refer to the same set of objects.
-            /// </summary>
+            /// <summary>Indicates whether both arrays refer to the same set of objects.</summary>
             public static bool AreSameObjects(ObjectReference[] references, Object[] objects)
             {
                 if (references == null)
@@ -131,7 +125,8 @@ namespace Animancer.Editor
             /************************************************************************************************************************/
 
             /// <summary>Returns a string describing this object.</summary>
-            public override string ToString() => "Serialization.ObjectReference [" + _InstanceID + "] " + _Object;
+            public override string ToString()
+                => $"Serialization.ObjectReference [{_InstanceID}] {_Object}";
 
             /************************************************************************************************************************/
         }
@@ -139,7 +134,8 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Returns true if the `reference` and <see cref="ObjectReference.Object"/> are not null.</summary>
-        public static bool IsValid(this ObjectReference reference) => reference?.Object != null;
+        public static bool IsValid(this ObjectReference reference)
+            => reference?.Object != null;
 
         /************************************************************************************************************************/
     }

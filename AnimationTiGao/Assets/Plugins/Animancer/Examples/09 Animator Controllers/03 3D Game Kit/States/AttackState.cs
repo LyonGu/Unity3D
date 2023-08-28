@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -24,8 +24,8 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         [SerializeField] private UnityEvent _OnEnd;// See the Read Me.
         [SerializeField] private ClipTransition[] _Animations;
 
-        private int _AttackIndex = int.MaxValue;
-        private ClipTransition _Attack;
+        private int _CurrentAnimationIndex = int.MaxValue;
+        private ClipTransition _CurrentAnimation;
 
         /************************************************************************************************************************/
 
@@ -36,7 +36,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
 
         /************************************************************************************************************************/
 
-        public override bool CanEnterState => Character.IsGrounded;
+        public override bool CanEnterState => Character.Movement.IsGrounded;
 
         /************************************************************************************************************************/
 
@@ -46,19 +46,19 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         /// </summary>
         private void OnEnable()
         {
-            if (_AttackIndex >= _Animations.Length - 1 ||
-                _Animations[_AttackIndex].State.Weight == 0)
+            if (_CurrentAnimationIndex >= _Animations.Length - 1 ||
+                _Animations[_CurrentAnimationIndex].State.Weight == 0)
             {
-                _AttackIndex = 0;
+                _CurrentAnimationIndex = 0;
             }
             else
             {
-                _AttackIndex++;
+                _CurrentAnimationIndex++;
             }
 
-            _Attack = _Animations[_AttackIndex];
-            Character.Animancer.Play(_Attack);
-            Character.ForwardSpeed = 0;
+            _CurrentAnimation = _Animations[_CurrentAnimationIndex];
+            Character.Animancer.Play(_CurrentAnimation);
+            Character.Parameters.ForwardSpeed = 0;
             _OnStart.Invoke();
         }
 
@@ -80,7 +80,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
             if (Character.CheckMotionState())
                 return;
 
-            Character.TurnTowards(Character.Brain.Movement, _TurnSpeed);
+            Character.Movement.TurnTowards(Character.Parameters.MovementDirection, _TurnSpeed);
         }
 
         /************************************************************************************************************************/
@@ -94,7 +94,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         // middle of an attack.
 
         public override bool CanExitState
-            => _Attack.State.NormalizedTime >= _Attack.State.Events.NormalizedEndTime;
+            => _CurrentAnimation.State.NormalizedTime >= _CurrentAnimation.State.Events.NormalizedEndTime;
 
         /************************************************************************************************************************/
     }

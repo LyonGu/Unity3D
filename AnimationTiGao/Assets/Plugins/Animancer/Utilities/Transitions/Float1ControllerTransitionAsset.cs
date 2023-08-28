@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using UnityEngine;
@@ -13,8 +13,8 @@ namespace Animancer
     {
         /// <inheritdoc/>
         [Serializable]
-        public class UnShared :
-            AnimancerTransitionAsset.UnShared<Float1ControllerTransitionAsset, Float1ControllerTransition, Float1ControllerState>,
+        public new class UnShared :
+            UnShared<Float1ControllerTransitionAsset, Float1ControllerTransition, Float1ControllerState>,
             Float1ControllerState.ITransition
         { }
     }
@@ -22,7 +22,8 @@ namespace Animancer
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/Float1ControllerTransition
     [Serializable]
-    public class Float1ControllerTransition : ControllerTransition<Float1ControllerState>, Float1ControllerState.ITransition
+    public class Float1ControllerTransition : ControllerTransition<Float1ControllerState>,
+        Float1ControllerState.ITransition, ICopyable<Float1ControllerTransition>
     {
         /************************************************************************************************************************/
 
@@ -48,7 +49,23 @@ namespace Animancer
 
         /// <inheritdoc/>
         public override Float1ControllerState CreateState()
-            => State = new Float1ControllerState(Controller, _ParameterName, KeepStateOnStop);
+            => State = new Float1ControllerState(Controller, _ParameterName, ActionsOnStop);
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public virtual void CopyFrom(Float1ControllerTransition copyFrom)
+        {
+            CopyFrom((ControllerTransition<Float1ControllerState>)copyFrom);
+
+            if (copyFrom == null)
+            {
+                _ParameterName = default;
+                return;
+            }
+
+            _ParameterName = copyFrom._ParameterName;
+        }
 
         /************************************************************************************************************************/
         #region Drawer

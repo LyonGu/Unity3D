@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -26,7 +26,7 @@ namespace Animancer
     /// 
     /// https://kybernetik.com.au/animancer/api/Animancer/AnimancerPlayable
     /// 
-    public sealed partial class AnimancerPlayable : PlayableBehaviour,
+    public partial class AnimancerPlayable : PlayableBehaviour,
         IEnumerator, IPlayableWrapper, IAnimationClipCollection
     {
         /************************************************************************************************************************/
@@ -237,7 +237,10 @@ namespace Animancer
 
         private bool _KeepChildrenConnected;
 
-        /// <summary>Should playables stay connected to the graph at all times?</summary>
+        /// <summary>
+        /// Should playables stay connected to the graph at all times?
+        /// Otherwise they will be disconnected when their  <see cref="AnimancerNode.Weight"/> is 0.
+        /// </summary>
         /// 
         /// <remarks>
         /// Humanoid Rigs default this value to <c>false</c> so that playables will be disconnected from the graph
@@ -315,16 +318,7 @@ namespace Animancer
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
-        #region Initialisation
-        /************************************************************************************************************************/
-
-        /// <summary>
-        /// Since <see cref="ScriptPlayable{T}.Create(PlayableGraph, int)"/> needs to clone an existing instance, we
-        /// keep a static template to avoid allocating an extra garbage one every time. This is why the fields are
-        /// assigned in <see cref="OnPlayableCreate"/> rather than being readonly with field initializers.
-        /// </summary>
-        private static readonly AnimancerPlayable Template = new AnimancerPlayable();
-
+        #region Initialization
         /************************************************************************************************************************/
 
         /// <summary>
@@ -348,22 +342,39 @@ namespace Animancer
             var graph = PlayableGraph.Create();
 #endif
 
-            return ScriptPlayable<AnimancerPlayable>.Create(graph, Template, 2)
-                .GetBehaviour();
+            return Create(graph);
         }
+
+        /************************************************************************************************************************/
+
+        /// <summary>
+        /// Since <see cref="ScriptPlayable{T}.Create(PlayableGraph, int)"/> needs to clone an existing instance, we
+        /// keep a static template to avoid allocating an extra garbage one every time. This is why the fields are
+        /// assigned in <see cref="OnPlayableCreate"/> rather than being readonly with field initializers.
+        /// </summary>
+        private static readonly AnimancerPlayable Template = new AnimancerPlayable();
+
+        /// <summary>Creates an <see cref="AnimancerPlayable"/> in an existing <see cref="PlayableGraph"/>.</summary>
+        public static AnimancerPlayable Create(PlayableGraph graph)
+            => Create(graph, Template);
 
         /************************************************************************************************************************/
 
         /// <summary>Creates an <see cref="AnimancerPlayable"/> in an existing <see cref="PlayableGraph"/>.</summary>
-        public static AnimancerPlayable Create(PlayableGraph graph)
-        {
-            return ScriptPlayable<AnimancerPlayable>.Create(graph, Template, 2)
+        /// <example>
+        /// When inheriting from <see cref="AnimancerPlayable"/>, it is recommended to give your class a field like the
+        /// following to use as the `template` for this method:
+        /// <code>
+        /// private static readonly MyAnimancerPlayable Template = new MyAnimancerPlayable();
+        /// </code></example>
+        protected static T Create<T>(PlayableGraph graph, T template)
+            where T : AnimancerPlayable, new()
+            => ScriptPlayable<T>.Create(graph, template, 2)
                 .GetBehaviour();
-        }
 
         /************************************************************************************************************************/
 
-        /// <summary>[Internal] Called by Unity as it creates this <see cref="AnimancerPlayable"/>.</summary>
+        /// <summary>[Internal] Called by Unity when it creates this <see cref="AnimancerPlayable"/>.</summary>
         public override void OnPlayableCreate(Playable playable)
         {
             _RootPlayable = playable;
@@ -424,7 +435,7 @@ namespace Animancer
             for (int i = 0; i < outputCount; i++)
             {
                 output = _Graph.GetOutput(i);
-                if (output.GetSourcePlayable().IsPlayableOfType<ScriptPlayable<AnimancerPlayable>>())
+                if (output.GetSourcePlayable().Equals(_RootPlayable))
                     return true;
             }
 
@@ -485,7 +496,11 @@ namespace Animancer
             // Generic Rigs can blend with an underlying Animator Controller but Humanoids can't.
             SkipFirstFade = isHumanoid || animator.runtimeAnimatorController == null;
 
+#pragma warning disable CS0618 // Type or member is obsolete.
+            // Unity 2022 marked this method as [Obsolete] even though it's the only way to use Animate Physics mode.
             AnimationPlayableUtilities.Play(animator, _RootPlayable, _Graph);
+#pragma warning restore CS0618 // Type or member is obsolete.
+
             _IsGraphPlaying = true;
         }
 
@@ -493,9 +508,8 @@ namespace Animancer
 
         /// <summary>[Pro-Only]
         /// Inserts a `playable` after the root of the <see cref="Graph"/> so that it can modify the final output.
-        /// <para></para>
-        /// It can be removed using <see cref="AnimancerUtilities.RemovePlayable"/>.
         /// </summary>
+        /// <remarks>It can be removed using <see cref="AnimancerUtilities.RemovePlayable"/>.</remarks>
         public void InsertOutputPlayable(Playable playable)
         {
             var output = _Graph.GetOutput(0);
@@ -506,9 +520,10 @@ namespace Animancer
 
         /// <summary>[Pro-Only]
         /// Inserts an animation job after the root of the <see cref="Graph"/> so that it can modify the final output.
-        /// <para></para>
-        /// It can can be removed by passing the returned value into <see cref="AnimancerUtilities.RemovePlayable"/>.
         /// </summary>
+        /// <remarks>
+        /// It can can be removed by passing the returned value into <see cref="AnimancerUtilities.RemovePlayable"/>.
+        /// </remarks>
         public AnimationScriptPlayable InsertOutputJob<T>(T data) where T : struct, IAnimationJob
         {
             var playable = AnimationScriptPlayable.Create(_Graph, data, 1);
@@ -682,9 +697,7 @@ namespace Animancer
         /// This method is safe to call repeatedly without checking whether the `state` was already playing.
         /// </remarks>
         public AnimancerState Play(AnimancerState state)
-        {
-            return GetLocalLayer(state).Play(state);
-        }
+            => GetLocalLayer(state).Play(state);
 
         /************************************************************************************************************************/
         // Cross Fade.
@@ -1294,7 +1307,7 @@ namespace Animancer
         /// <see cref="PrepareFrame"/> method gets called after all other playables are updated in order to call
         /// <see cref="IUpdatable.Update"/> on the <see cref="_PostUpdatables"/>.
         /// </summary>
-        private sealed class PostUpdate : PlayableBehaviour
+        private class PostUpdate : PlayableBehaviour
         {
             /************************************************************************************************************************/
 
@@ -1320,7 +1333,7 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            /// <summary>Called by Unity as it creates this <see cref="AnimancerPlayable"/>.</summary>
+            /// <summary>[Internal] Called by Unity when it creates this <see cref="AnimancerPlayable"/>.</summary>
             public override void OnPlayableCreate(Playable playable) => _Playable = playable;
 
             /************************************************************************************************************************/
@@ -1464,8 +1477,14 @@ namespace Animancer
             if (initial == null)
                 return false;
 
+#if UNITY_2023_1_OR_NEWER
+            var wasAnimatePhysics = initial.Value == AnimatorUpdateMode.Fixed;
+            var isAnimatePhysics = current == AnimatorUpdateMode.Fixed;
+#else
             var wasAnimatePhysics = initial.Value == AnimatorUpdateMode.AnimatePhysics;
             var isAnimatePhysics = current == AnimatorUpdateMode.AnimatePhysics;
+#endif
+
             return wasAnimatePhysics != isAnimatePhysics;
         }
 

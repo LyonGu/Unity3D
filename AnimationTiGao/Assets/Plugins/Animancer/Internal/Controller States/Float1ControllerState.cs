@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Animancer
     /// <seealso cref="Float3ControllerState"/>
     /// https://kybernetik.com.au/animancer/api/Animancer/Float1ControllerState
     /// 
-    public sealed class Float1ControllerState : ControllerState
+    public class Float1ControllerState : ControllerState
     {
         /************************************************************************************************************************/
 
@@ -39,22 +39,32 @@ namespace Animancer
         /// Gets and sets a float parameter in the <see cref="ControllerState.Controller"/> using the
         /// <see cref="ParameterID"/>.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value is NaN or Infinity.</exception>
         public float Parameter
         {
             get => Playable.GetFloat(_ParameterID.Hash);
-            set => Playable.SetFloat(_ParameterID.Hash, value);
+            set
+            {
+                AssertParameterValue(value);
+                Playable.SetFloat(_ParameterID.Hash, value);
+            }
         }
 
         /************************************************************************************************************************/
 
         /// <summary>Creates a new <see cref="Float1ControllerState"/> to play the `controller`.</summary>
         public Float1ControllerState(RuntimeAnimatorController controller, ParameterID parameter,
-            bool keepStateOnStop = false)
-            : base(controller, keepStateOnStop)
+            params ActionOnStop[] actionsOnStop)
+            : base(controller, actionsOnStop)
         {
             _ParameterID = parameter;
             _ParameterID.ValidateHasParameter(controller, AnimatorControllerParameterType.Float);
         }
+
+        /// <summary>Creates a new <see cref="Float1ControllerState"/> to play the `controller`.</summary>
+        public Float1ControllerState(RuntimeAnimatorController controller, ParameterID parameter)
+            : this(controller, parameter, null)
+        { }
 
         /************************************************************************************************************************/
 
@@ -63,6 +73,17 @@ namespace Animancer
 
         /// <inheritdoc/>
         public override int GetParameterHash(int index) => _ParameterID;
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new Float1ControllerState(Controller, _ParameterID);
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<ControllerState>)clone).CopyFrom(this);
+            return clone;
+        }
 
         /************************************************************************************************************************/
     }

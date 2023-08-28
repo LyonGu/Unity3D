@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -19,7 +19,7 @@ namespace Animancer.Editor
         /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/transitions#previews">Previews</see>
         /// </remarks>
         [Serializable]
-        internal sealed class Settings : AnimancerSettings.Group
+        internal class Settings : AnimancerSettings.Group
         {
             /************************************************************************************************************************/
 
@@ -34,6 +34,7 @@ namespace Animancer.Editor
                 EditorGUI.indentLevel++;
 
                 DoMiscGUI();
+                DoEnvironmentGUI();
                 DoModelsGUI();
                 DoHierarchyGUI();
 
@@ -58,6 +59,73 @@ namespace Animancer.Editor
             private bool _AutoClose = true;
 
             public static bool AutoClose => Instance._AutoClose;
+
+            /************************************************************************************************************************/
+
+            [SerializeField]
+            [Tooltip("Should the scene lighting be enabled?")]
+            private bool _SceneLighting = false;
+
+            public static bool SceneLighting
+            {
+                get => Instance._SceneLighting;
+                set
+                {
+                    if (SceneLighting == value)
+                        return;
+
+                    var property = Instance.GetSerializedProperty(nameof(_SceneLighting));
+                    property.boolValue = value;
+                    AnimancerSettings.SerializedObject.ApplyModifiedProperties();
+                }
+            }
+
+            /************************************************************************************************************************/
+
+            [SerializeField]
+            [Tooltip("Should the skybox be visible?")]
+            private bool _ShowSkybox = false;
+
+            public static bool ShowSkybox
+            {
+                get => Instance._ShowSkybox;
+                set
+                {
+                    if (ShowSkybox == value)
+                        return;
+
+                    var property = Instance.GetSerializedProperty(nameof(_ShowSkybox));
+                    property.boolValue = value;
+                    AnimancerSettings.SerializedObject.ApplyModifiedProperties();
+                }
+            }
+
+            /************************************************************************************************************************/
+            #endregion
+            /************************************************************************************************************************/
+            #region Environment
+            /************************************************************************************************************************/
+
+            [SerializeField]
+            [Tooltip("If set, the default preview scene lighting will be replaced with this prefab.")]
+            private GameObject _SceneEnvironment;
+
+            public static GameObject SceneEnvironment => Instance._SceneEnvironment;
+
+            /************************************************************************************************************************/
+
+            private static void DoEnvironmentGUI()
+            {
+                EditorGUI.BeginChangeCheck();
+
+                Instance.DoPropertyField(nameof(_SceneEnvironment));
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    AnimancerSettings.SerializedObject.ApplyModifiedProperties();
+                    InstanceScene.OnEnvironmentPrefabChanged();
+                }
+            }
 
             /************************************************************************************************************************/
             #endregion

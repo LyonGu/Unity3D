@@ -1,4 +1,4 @@
-// Serialization // Copyright 2021 Kybernetik //
+// Serialization // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -11,7 +11,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-// Shared File Last Modified: 2021-10-02
+// Shared File Last Modified: 2023-02-24
 namespace Animancer.Editor
 // namespace InspectorGadgets.Editor
 // namespace UltEvents.Editor
@@ -165,12 +165,12 @@ namespace Animancer.Editor
                 case SerializedPropertyType.ArraySize:
                     return property.intValue == default;
 
-                case SerializedPropertyType.Vector2: return property.vector2Value == default;
-                case SerializedPropertyType.Vector3: return property.vector3Value == default;
-                case SerializedPropertyType.Vector4: return property.vector4Value == default;
+                case SerializedPropertyType.Vector2: return property.vector2Value.Equals(default);
+                case SerializedPropertyType.Vector3: return property.vector3Value.Equals(default);
+                case SerializedPropertyType.Vector4: return property.vector4Value.Equals(default);
 
-                case SerializedPropertyType.Quaternion: return property.quaternionValue == default;
-                case SerializedPropertyType.Color: return property.colorValue == default;
+                case SerializedPropertyType.Quaternion: return property.quaternionValue.Equals(default);
+                case SerializedPropertyType.Color: return property.colorValue.Equals(default);
                 case SerializedPropertyType.AnimationCurve: return property.animationCurveValue == default;
 
                 case SerializedPropertyType.Rect: return property.rectValue == default;
@@ -776,6 +776,9 @@ namespace Animancer.Editor
         public static void RemoveArrayElement(SerializedProperty property, int index)
         {
             var count = property.arraySize;
+            if ((uint)index >= count)
+                return;
+
             property.DeleteArrayElementAtIndex(index);
             if (property.arraySize == count)
                 property.DeleteArrayElementAtIndex(index);

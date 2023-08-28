@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -20,7 +20,7 @@ namespace Animancer
         /// </remarks>
         /// https://kybernetik.com.au/animancer/api/Animancer/Sequence
         /// 
-        public partial class Sequence : IEnumerable<AnimancerEvent>
+        public partial class Sequence : IEnumerable<AnimancerEvent>, ICopyable<Sequence>
         {
             /************************************************************************************************************************/
             #region Fields and Properties
@@ -37,25 +37,25 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            /// <summary>All of the <see cref="AnimancerEvent"/>s in this sequence (excluding the <see cref="endEvent"/>).</summary>
+            /// <summary>All of the <see cref="AnimancerEvent"/>s in this sequence (excluding the <see cref="EndEvent"/>).</summary>
             /// <remarks>This field should never be null. It should use <see cref="Array.Empty{T}"/> instead.</remarks>
             private AnimancerEvent[] _Events;
 
             /************************************************************************************************************************/
 
-            /// <summary>[Pro-Only] The number of events in this sequence (excluding the <see cref="endEvent"/>).</summary>
+            /// <summary>[Pro-Only] The number of events in this sequence (excluding the <see cref="EndEvent"/>).</summary>
             public int Count { get; private set; }
 
             /************************************************************************************************************************/
 
-            /// <summary>Indicates whether the sequence has any events in it (including the <see cref="endEvent"/>).</summary>
+            /// <summary>Indicates whether the sequence has any events in it (including the <see cref="EndEvent"/>).</summary>
             public bool IsEmpty
             {
                 get
                 {
                     return
-                        endEvent.callback == null &&
-                        float.IsNaN(endEvent.normalizedTime) &&
+                        _EndEvent.callback == null &&
+                        float.IsNaN(_EndEvent.normalizedTime) &&
                         Count == 0;
                 }
             }
@@ -65,14 +65,13 @@ namespace Animancer
             /// <summary>The initial <see cref="Capacity"/> that will be used if another value is not specified.</summary>
             public const int DefaultCapacity = 8;
 
-            /// <summary>[Pro-Only]
-            /// The size of the internal array used to hold events.
-            /// <para></para>
+            /// <summary>[Pro-Only] The size of the internal array used to hold events.</summary>
+            /// <remarks>
             /// When set, the array is reallocated to the given size.
             /// <para></para>
             /// By default, the <see cref="Capacity"/> starts at 0 and increases to the <see cref="DefaultCapacity"/>
             /// when the first event is added.
-            /// </summary>
+            /// </remarks>
             public int Capacity
             {
                 get => _Events.Length;
@@ -100,28 +99,88 @@ namespace Animancer
             }
 
             /************************************************************************************************************************/
+            #region Modification Detection
+            /************************************************************************************************************************/
+
+            private int _Version;
 
             /// <summary>[Pro-Only]
             /// The number of times the contents of this sequence have been modified. This applies to general events,
-            /// but not the <see cref="endEvent"/>.
+            /// but not the <see cref="EndEvent"/>.
             /// </summary>
-            public int Version { get; private set; }
+            public int Version
+            {
+                get => _Version;
+                private set
+                {
+                    _Version = value;
+                    OnSequenceModified();
+                }
+            }
 
+            /************************************************************************************************************************/
+
+#if UNITY_ASSERTIONS
+            /// <summary>[Assert-Only]
+            /// If this property is set, any attempt to modify this sequence will trigger
+            /// <see cref="OptionalWarning.LockedEvents"/> (which will include this value in its message).
+            /// </summary>
+            /// <remarks>This value can be set by <see cref="SetShouldNotModifyReason"/>.</remarks>
+            public string ShouldNotModifyReason { get; private set; }
+#endif
+
+            /************************************************************************************************************************/
+
+            /// <summary>[Assert-Conditional]
+            /// Sets the <see cref="ShouldNotModifyReason"/> for <see cref="OptionalWarning.LockedEvents"/>.
+            /// </summary>
+            /// <remarks>
+            /// If the warning is triggered, the message is formatted as:
+            /// "The <see cref="Sequence"/> being modified should not be modified because " + 
+            /// <see cref="ShouldNotModifyReason"/>.
+            /// </remarks>
+            [System.Diagnostics.Conditional(Strings.Assertions)]
+            public void SetShouldNotModifyReason(string reason)
+            {
+#if UNITY_ASSERTIONS
+                ShouldNotModifyReason = reason;
+#endif
+            }
+
+            /************************************************************************************************************************/
+
+            /// <summary>[Assert-Conditional] Logs <see cref="OptionalWarning.LockedEvents"/> if necessary.</summary>
+            [System.Diagnostics.Conditional(Strings.Assertions)]
+            public void OnSequenceModified()
+            {
+#if UNITY_ASSERTIONS
+                if (string.IsNullOrEmpty(ShouldNotModifyReason) ||
+                    OptionalWarning.LockedEvents.IsDisabled())
+                    return;
+
+                OptionalWarning.LockedEvents.Log(
+                    $"The {nameof(AnimancerEvent)}.{nameof(Sequence)} being modified should not be modified because " +
+                    ShouldNotModifyReason +
+                    $"\n\nThis warning can be prevented by calling state.Events.{nameof(SetShouldNotModifyReason)}(null);" +
+                    $" before making any modifications.");
+
+                // Clear the reason so it doesn't trigger this warning again. No point in wasting performance.
+                ShouldNotModifyReason = null;
+#endif
+            }
+
+            /************************************************************************************************************************/
+            #endregion
             /************************************************************************************************************************/
             #region End Event
             /************************************************************************************************************************/
+
+            private AnimancerEvent _EndEvent = new AnimancerEvent(float.NaN, null);
 
             /// <summary>
             /// A <see cref="callback "/> that will be triggered every frame after the <see cref="normalizedTime"/> has
             /// passed. If you want it to only get triggered once, you can either have the event clear itself or just
             /// use a regular event instead.
-            /// <para></para>
-            /// Interrupting the animation does not trigger this event.
-            /// <para></para>
-            /// By default, the <see cref="normalizedTime"/> will be <see cref="float.NaN"/> so that it can choose the
-            /// correct value based on the current play direction: forwards ends at 1 and backwards ends at 0.
-            /// <para></para>
-            /// <em>Animancer Lite does not allow the <see cref="normalizedTime"/> to be changed in Runtime Builds.</em>
             /// </summary>
             ///
             /// <example><code>
@@ -132,7 +191,7 @@ namespace Animancer
             ///     state.Events.OnEnd = OnAnimationEnd;
             ///
             ///     // Or set the time and callback at the same time:
-            ///     state.Events.endEvent = new AnimancerEvent(0.75f, OnAnimationEnd);
+            ///     state.Events.EndEvent = new AnimancerEvent(0.75f, OnAnimationEnd);
             /// }
             ///
             /// void OnAnimationEnd()
@@ -143,31 +202,62 @@ namespace Animancer
             ///
             /// <remarks>
             /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/events/end">End Events</see>
+            /// <para></para>
+            /// Interrupting the animation does not trigger this event.
+            /// <para></para>
+            /// By default, the <see cref="normalizedTime"/> will be <see cref="float.NaN"/> so that it can choose the
+            /// correct value based on the current play direction: forwards ends at 1 and backwards ends at 0.
+            /// <para></para>
+            /// <em>Animancer Lite does not allow the <see cref="normalizedTime"/> to be changed in Runtime Builds.</em>
             /// </remarks>
             /// 
             /// <seealso cref="OnEnd"/>
             /// <seealso cref="NormalizedEndTime"/>
-            public AnimancerEvent endEvent = new AnimancerEvent(float.NaN, null);
+            public AnimancerEvent EndEvent
+            {
+                get => _EndEvent;
+                set
+                {
+                    _EndEvent = value;
+                    OnSequenceModified();
+                }
+            }
 
             /************************************************************************************************************************/
 
-            /// <summary>Shorthand for the <c>endEvent.callback</c>.</summary>
-            /// <seealso cref="endEvent"/>
+            /// <summary>Shorthand for the <c>EndEvent.callback</c>.</summary>
+            /// <seealso cref="EndEvent"/>
             /// <seealso cref="NormalizedEndTime"/>
-            public ref Action OnEnd => ref endEvent.callback;
+            public Action OnEnd
+            {
+                get => _EndEvent.callback;
+                set
+                {
+                    _EndEvent.callback = value;
+                    OnSequenceModified();
+                }
+            }
 
             /************************************************************************************************************************/
 
-            /// <summary>[Pro-Only] Shorthand for <c>endEvent.normalizedTime</c>.</summary>
+            /// <summary>[Pro-Only] Shorthand for <c>EndEvent.normalizedTime</c>.</summary>
             /// <remarks>
             /// This value is <see cref="float.NaN"/> by default so that the actual time can be determined based on the
             /// <see cref="AnimancerNode.EffectiveSpeed"/>: positive speed ends at 1 and negative speed ends at 0.
             /// <para></para>
             /// Use <see cref="AnimancerState.NormalizedEndTime"/> to access that value.
             /// </remarks>
-            /// <seealso cref="endEvent"/>
+            /// <seealso cref="EndEvent"/>
             /// <seealso cref="OnEnd"/>
-            public ref float NormalizedEndTime => ref endEvent.normalizedTime;
+            public float NormalizedEndTime
+            {
+                get => _EndEvent.normalizedTime;
+                set
+                {
+                    _EndEvent.normalizedTime = value;
+                    OnSequenceModified();
+                }
+            }
 
             /************************************************************************************************************************/
 
@@ -184,7 +274,7 @@ namespace Animancer
             public static float GetDefaultNormalizedStartTime(float speed) => speed < 0 ? 1 : 0;
 
             /// <summary>
-            /// The default <see cref="normalizedTime"/> for an <see cref="endEvent"/> when playing forwards is 1 (the
+            /// The default <see cref="normalizedTime"/> for an <see cref="EndEvent"/> when playing forwards is 1 (the
             /// end of the animation) and when playing backwards is 0 (the start of the animation).
             /// <para></para>
             /// `speed` 0 or <see cref="float.NaN"/> will also return 1.
@@ -199,7 +289,7 @@ namespace Animancer
 
             private string[] _Names;
 
-            /// <summary>[Pro-Only] The names of the events (excluding the <see cref="endEvent"/>).</summary>
+            /// <summary>[Pro-Only] The names of the events (excluding the <see cref="EndEvent"/>).</summary>
             /// <remarks>This array can be <c>null</c>.</remarks>
             public ref string[] Names => ref _Names;
 
@@ -346,7 +436,7 @@ namespace Animancer
             /// Throws an <see cref="ArgumentOutOfRangeException"/> if the <see cref="normalizedTime"/> of any events
             /// is less than 0 or greater than or equal to 1.
             /// <para></para>
-            /// This does not include the <see cref="endEvent"/> since it works differently to other events.
+            /// This does not include the <see cref="EndEvent"/> since it works differently to other events.
             /// </summary>
             [System.Diagnostics.Conditional(Strings.Assertions)]
             public void AssertNormalizedTimes(AnimancerState state)
@@ -416,12 +506,12 @@ namespace Animancer
                         text.Append(',');
                     text.Append(" [End] ");
                 }
-                endEvent.AppendDetails(text);
+                _EndEvent.AppendDetails(text);
 
                 if (multiLine)
                     text.Append("\n}\n");
                 else
-                    text.Append(" } )");
+                    text.Append(" }");
 
                 return text.ReleaseToString();
             }
@@ -430,7 +520,7 @@ namespace Animancer
 
             /// <summary>[Pro-Only]
             /// Returns a <see cref="FastEnumerator{T}"/> for the events in this sequence excluding the
-            /// <see cref="endEvent"/>.
+            /// <see cref="EndEvent"/>.
             /// </summary>
             public FastEnumerator<AnimancerEvent> GetEnumerator()
                 => new FastEnumerator<AnimancerEvent>(_Events, Count);
@@ -741,7 +831,8 @@ namespace Animancer
             {
 #if UNITY_ASSERTIONS
                 if (!normalizedTime.IsFinite())
-                    throw new ArgumentOutOfRangeException(nameof(normalizedTime), normalizedTime, $"{nameof(normalizedTime)} must be finite");
+                    throw new ArgumentOutOfRangeException(nameof(normalizedTime), normalizedTime,
+                        $"{nameof(normalizedTime)} {Strings.MustBeFinite}");
 #endif
 
                 var animancerEvent = _Events[index];
@@ -799,7 +890,7 @@ namespace Animancer
             /// <exception cref="ArgumentException">There is no event with the specified `name`.</exception>
             /// <seealso cref="IndexOfRequired(string, int)"/>
             public int SetNormalizedTime(string name, float normalizedTime)
-                => SetNormalizedTime(IndexOfRequired(name), normalizedTime);
+            => SetNormalizedTime(IndexOfRequired(name), normalizedTime);
 
             /// <summary>[Pro-Only] Sets the <see cref="normalizedTime"/> of the matching `animancerEvent`.</summary>
             /// <remarks>
@@ -910,7 +1001,8 @@ namespace Animancer
                         var names = new string[capacity];
 
                         Array.Copy(_Names, 0, names, 0, Math.Min(_Names.Length, index));
-                        if (Count > index)
+                        if (index <= Count &&
+                            index < _Names.Length)
                             Array.Copy(_Names, index, names, index + 1, Count - index);
 
                         _Names = names;
@@ -993,7 +1085,7 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            /// <summary>Removes all events, including the <see cref="endEvent"/>.</summary>
+            /// <summary>Removes all events, including the <see cref="EndEvent"/>.</summary>
             public void Clear()
             {
                 if (_Names != null)
@@ -1003,7 +1095,7 @@ namespace Animancer
                 Count = 0;
                 Version++;
 
-                endEvent = new AnimancerEvent(float.NaN, null);
+                _EndEvent = new AnimancerEvent(float.NaN, null);
             }
 
             /************************************************************************************************************************/
@@ -1012,11 +1104,10 @@ namespace Animancer
             #region Copying
             /************************************************************************************************************************/
 
-            /// <summary>Copies all the events from the `source` to replace the previous contents of this sequence.</summary>
-            /// <remarks>To create a new <see cref="Sequence"/> as a copy of another, use the constructor instead.</remarks>
-            public void CopyFrom(Sequence source)
+            /// <inheritdoc/>
+            public void CopyFrom(Sequence copyFrom)
             {
-                if (source == null)
+                if (copyFrom == null)
                 {
                     if (_Names != null)
                         Array.Clear(_Names, 0, _Names.Length);
@@ -1024,22 +1115,13 @@ namespace Animancer
                     Array.Clear(_Events, 0, Count);
                     Count = 0;
                     Capacity = 0;
-                    endEvent = default;
+                    _EndEvent = default;
                     return;
                 }
 
-                if (source._Names == null)
-                {
-                    _Names = null;
-                }
-                else
-                {
-                    var nameCount = source._Names.Length;
-                    AnimancerUtilities.SetLength(ref _Names, nameCount);
-                    Array.Copy(source._Names, 0, _Names, 0, nameCount);
-                }
+                AnimancerUtilities.CopyExactArray(copyFrom._Names, ref _Names);
 
-                var sourceCount = source.Count;
+                var sourceCount = copyFrom.Count;
 
                 if (Count > sourceCount)
                     Array.Clear(_Events, Count, sourceCount - Count);
@@ -1048,9 +1130,39 @@ namespace Animancer
 
                 Count = sourceCount;
 
-                Array.Copy(source._Events, 0, _Events, 0, sourceCount);
+                Array.Copy(copyFrom._Events, 0, _Events, 0, sourceCount);
 
-                endEvent = source.endEvent;
+                _EndEvent = copyFrom._EndEvent;
+            }
+
+            /************************************************************************************************************************/
+
+            /// <summary>[Pro-Only] Copies the <see cref="AnimationClip.events"/> into this <see cref="Sequence"/>.</summary>
+            /// <remarks>
+            /// The <see cref="callback"/> of the new events will be empty and can be set by
+            /// <see cref="SetCallback(string, Action)"/>.
+            /// <para></para>
+            /// If you are going to play the `animation`, consider disabling <see cref="Animator.fireEvents"/> so that
+            /// the events copied by this method are not triggered as <see cref="AnimationEvent"/>s. Otherwise they
+            /// would still trigger in addition to the <see cref="AnimancerEvent"/>s copied here.
+            /// </remarks>
+            public void AddAllEvents(AnimationClip animation)
+            {
+                if (animation == null)
+                    return;
+
+                var length = animation.length;
+
+                var animationEvents = animation.events;
+                Capacity += animationEvents.Length;
+
+                var index = -1;
+                for (int i = 0; i < animationEvents.Length; i++)
+                {
+                    var animationEvent = animationEvents[i];
+                    index = Add(index + 1, new AnimancerEvent(animationEvent.time / length, DummyCallback));
+                    SetName(index, animationEvent.functionName);
+                }
             }
 
             /************************************************************************************************************************/
@@ -1061,6 +1173,24 @@ namespace Animancer
             public void CopyTo(AnimancerEvent[] array, int index)
             {
                 Array.Copy(_Events, 0, array, index, Count);
+            }
+
+            /************************************************************************************************************************/
+
+            /// <summary>Are all events in this sequence identical to the ones in the `other` sequence?</summary>
+            public bool ContentsAreEqual(Sequence other)
+            {
+                if (_EndEvent != other._EndEvent)
+                    return false;
+
+                if (Count != other.Count)
+                    return false;
+
+                for (int i = Count - 1; i >= 0; i--)
+                    if (this[i] != other[i])
+                        return false;
+
+                return true;
             }
 
             /************************************************************************************************************************/

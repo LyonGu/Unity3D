@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -20,13 +20,13 @@ namespace Animancer.Editor
     /// The default location is <em>Assets/Plugins/Animancer/Editor</em>, but you can freely move it (and the whole
     /// Animancer folder) anywhere in your project.
     /// <para></para>
-    /// These settings can also be accessed in <see cref="AnimancerToolsWindow.Settings"/> panel in the
-    /// <see cref="Animancer.Editor.AnimancerToolsWindow"/> (<c>Window/Animation/Animancer Tools</c>).
+    /// These settings can also be accessed via the Settings in the <see cref="Tools.AnimancerToolsWindow"/>
+    /// (<c>Window/Animation/Animancer Tools</c>).
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/AnimancerSettings
     /// 
     [HelpURL(Strings.DocsURLs.APIDocumentation + "." + nameof(Editor) + "/" + nameof(AnimancerSettings))]
-    public sealed class AnimancerSettings : ScriptableObject
+    public class AnimancerSettings : ScriptableObject
     {
         /************************************************************************************************************************/
 
@@ -125,7 +125,8 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnEnable()
+        /// <summary>Initializes the serialized fields.</summary>
+        protected virtual void OnEnable()
         {
             if (_TransitionPreviewWindow == null)
                 _TransitionPreviewWindow = new TransitionPreviewWindow.Settings();
@@ -168,6 +169,17 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         [SerializeField]
+        [Seconds(Rule = Validate.Value.IsNotNegative)]
+        [DefaultValue(0.02f)]
+        [Tooltip("The amount of time that will be added by a single frame step")]
+        private float _FrameStep = 0.02f;
+
+        /// <summary>The amount of time that will be added by a single frame step (in seconds).</summary>
+        public static float FrameStep => Instance._FrameStep;
+
+        /************************************************************************************************************************/
+
+        [SerializeField]
         [Tooltip("The frame rate to use for new animations")]
         private float _NewAnimationFrameRate = 12;
 
@@ -176,9 +188,18 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
+        [SerializeField]
+        [Tooltip("Should Animancer Event Callbacks be hidden in the Inspector?")]
+        private bool _HideEventCallbacks;
+
+        /// <summary>Should Animancer Event Callbacks be hidden in the Inspector?</summary>
+        public static bool HideEventCallbacks => Instance._HideEventCallbacks;
+
+        /************************************************************************************************************************/
+
         /// <summary>A custom Inspector for <see cref="AnimancerSettings"/>.</summary>
         [CustomEditor(typeof(AnimancerSettings), true), CanEditMultipleObjects]
-        public sealed class Editor : UnityEditor.Editor
+        public class Editor : UnityEditor.Editor
         {
             /************************************************************************************************************************/
 
@@ -208,6 +229,6 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
     }
-}
+    }
 
 #endif

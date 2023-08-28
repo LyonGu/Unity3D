@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using Animancer.Units;
 using UnityEngine;
@@ -24,7 +24,7 @@ namespace Animancer
         /// <summary>The standard prefix for <see cref="AddComponentMenu"/> for the examples.</summary>
         public const string ExamplesMenuPrefix = MenuPrefix + "Examples/";
 
-        /// <summary>The menu path of the <see cref="Editor.AnimancerToolsWindow"/>.</summary>
+        /// <summary>The menu path of the <see cref="Editor.Tools.AnimancerToolsWindow"/>.</summary>
         public const string AnimancerToolsMenuPath = "Window/Animation/Animancer Tools";
 
         /// <summary>
@@ -52,6 +52,19 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
+        /// <summary>An error message for when <see cref="AnimancerUtilities.IsFinite(float)"/> fails.</summary>
+        public const string MustBeFinite = "must not be NaN or Infinity";
+
+        /************************************************************************************************************************/
+
+#if UNITY_ASSERTIONS
+        /// <summary>[Assert-Only] A message for <see cref="OptionalWarning.AnimatorDisabled"/>.</summary>
+        public const string AnimatorDisabledMessage
+            = "The " + nameof(Animator) + " is disabled so Animancer won't be able to play animations.";
+#endif
+
+        /************************************************************************************************************************/
+
         /// <summary>URLs of various documentation pages.</summary>
         /// https://kybernetik.com.au/animancer/api/Animancer/DocsURLs
         /// 
@@ -71,6 +84,9 @@ namespace Animancer
             /// <summary>The email address which handles support for Animancer.</summary>
             public const string DeveloperEmail = "animancer@kybernetik.com.au";
 
+            /// <summary>The URL of the file which lists Animancer's latest version.</summary>
+            public const string LatestVersion = Documentation + "/latest-version.txt";
+
             /************************************************************************************************************************/
 
             public const string OptionalWarning = APIDocumentation + "/" + nameof(Animancer.OptionalWarning);
@@ -86,12 +102,16 @@ namespace Animancer
             public const string SharedEventSequences = AnimancerEvents + "/shared";
             public const string AnimatorControllers = Docs + "manual/animator-controllers";
             public const string AnimatorControllersNative = AnimatorControllers + "#native";
+            public const string Fading = Docs + "manual/blending/fading";
+            public const string FadeModes = Fading + "/modes";
 
             /************************************************************************************************************************/
 #endif
             /************************************************************************************************************************/
 #if UNITY_EDITOR
             /************************************************************************************************************************/
+
+            public const string KeepChildrenConnected = APIDocumentation + "/" + nameof(AnimancerPlayable) + "/FEFD6C35";
 
             public const string Examples = Docs + "examples";
             public const string UnevenGround = Docs + "examples/ik/uneven-ground";
@@ -108,7 +128,6 @@ namespace Animancer
             public const string Inspector = Docs + "manual/playing/inspector";
             public const string States = Docs + "manual/playing/states";
 
-            public const string Fading = Docs + "manual/blending/fading";
             public const string Layers = Docs + "manual/blending/layers";
 
             public const string EndEvents = Docs + "manual/events/end";
@@ -159,8 +178,10 @@ namespace Animancer
                 MiddleClickReset;
 
             public const string NormalizedStartTime = ProOnlyTag +
-                "• Enabled = always start at this time." +
-                "\n• Disabled = continue from the current time." +
+                "• Enabled = use " + nameof(FadeMode) + "." + nameof(FadeMode.FromStart) +
+                " and always restart at this time." +
+                "\n• Disabled = use " + nameof(FadeMode) + "." + nameof(FadeMode.FixedSpeed) +
+                " and continue from the current time if already playing." +
                 "\n• " + AnimationTimeAttribute.Tooltip;
 
             public const string EndTime = ProOnlyTag +

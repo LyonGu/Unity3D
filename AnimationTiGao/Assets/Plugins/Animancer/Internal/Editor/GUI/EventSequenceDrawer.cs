@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -14,7 +14,7 @@ namespace Animancer.Editor
     /// <summary>[Editor-Only] Draws the Inspector GUI for a <see cref="Sequence"/>.</summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/EventSequenceDrawer
     ///
-    public sealed class EventSequenceDrawer
+    public class EventSequenceDrawer
     {
         /************************************************************************************************************************/
 
@@ -72,7 +72,7 @@ namespace Animancer.Editor
             }
 
             count++;
-            count += CalculateLineCount(events.endEvent.callback);
+            count += CalculateLineCount(events.EndEvent.callback);
 
             return count;
         }
@@ -132,7 +132,7 @@ namespace Animancer.Editor
                 Draw(ref area, name, events[i]);
             }
 
-            Draw(ref area, "End Event", events.endEvent);
+            Draw(ref area, "End Event", events.EndEvent);
 
             EditorGUI.indentLevel--;
 
@@ -149,8 +149,8 @@ namespace Animancer.Editor
         public static string GetSummary(Sequence events)
         {
             var cache =
-                float.IsNaN(events.endEvent.normalizedTime) &&
-                AnimancerEvent.IsNullOrDummy(events.endEvent.callback)
+                float.IsNaN(events.NormalizedEndTime) &&
+                AnimancerEvent.IsNullOrDummy(events.OnEnd)
                 ? SummaryCache : EndSummaryCache;
             return cache.Convert(events.Count);
         }

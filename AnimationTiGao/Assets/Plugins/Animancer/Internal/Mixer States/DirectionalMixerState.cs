@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Text;
@@ -17,7 +17,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/DirectionalMixerState
     /// 
-    public class DirectionalMixerState : MixerState<Vector2>
+    public class DirectionalMixerState : MixerState<Vector2>, ICopyable<DirectionalMixerState>
     {
         /************************************************************************************************************************/
 
@@ -34,6 +34,12 @@ namespace Animancer
             get => Parameter.y;
             set => Parameter = new Vector2(Parameter.x, value);
         }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override string GetParameterError(Vector2 value)
+            => value.IsFinite() ? null : $"value.x and value.y {Strings.MustBeFinite}";
 
         /************************************************************************************************************************/
 
@@ -64,7 +70,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// Recalculates the weights of all <see cref="MixerState.ChildStates"/> based on the current value of the
+        /// Recalculates the weights of all <see cref="ManualMixerState.ChildStates"/> based on the current value of the
         /// <see cref="MixerState{TParameter}.Parameter"/> and the thresholds.
         /// </summary>
         protected override void ForceRecalculateWeights()
@@ -175,11 +181,18 @@ namespace Animancer
                     var thresholdJ = GetThreshold(j);
                     var magnitudeJ = _ThresholdMagnitudes[j];
 
+#if UNITY_ASSERTIONS
+                    if (thresholdI == thresholdJ)
+                        throw new ArgumentException(
+                            $"Mixer has multiple identical thresholds.\n{GetDescription()}");
+#endif
+
                     var averageMagnitude = (magnitudeI + magnitudeJ) * 0.5f;
 
                     // Convert the thresholds to polar coordinates (distance, angle) and interpolate the weight based on those.
 
                     var differenceIToJ = magnitudeJ - magnitudeI;
+
                     var angleIToJ = SignedAngle(thresholdI, thresholdJ);
 
                     var polarIToJ = new Vector2(
@@ -210,6 +223,30 @@ namespace Animancer
             return Mathf.Atan2(
                 a.x * b.y - a.y * b.x,
                 a.x * b.x + a.y * b.y);
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new DirectionalMixerState();
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<DirectionalMixerState>)clone).CopyFrom(this);
+            return clone;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        void ICopyable<DirectionalMixerState>.CopyFrom(DirectionalMixerState copyFrom)
+        {
+            _ThresholdMagnitudes = copyFrom._ThresholdMagnitudes;
+            _BlendFactorsDirty = copyFrom._BlendFactorsDirty;
+            if (!_BlendFactorsDirty)
+                _BlendFactors = copyFrom._BlendFactors;
+
+            ((ICopyable<MixerState<Vector2>>)this).CopyFrom(copyFrom);
         }
 
         /************************************************************************************************************************/

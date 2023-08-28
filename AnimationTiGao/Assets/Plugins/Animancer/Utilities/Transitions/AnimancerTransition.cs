@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using Animancer.Units;
 using System;
@@ -18,7 +18,7 @@ namespace Animancer
     /// 
     [Serializable]
     public abstract class AnimancerTransition<TState> :
-        ITransition<TState>, ITransitionDetailed, ITransitionWithEvents
+        ITransition<TState>, ITransitionDetailed, ITransitionWithEvents, ICopyable<AnimancerTransition<TState>>
         where TState : AnimancerState
     {
         /************************************************************************************************************************/
@@ -84,11 +84,8 @@ namespace Animancer
         {
             get
             {
-#if UNITY_ASSERTIONS
                 if (_Events == null)
-                    throw new NullReferenceException(
-                        $"{nameof(AnimancerTransition<TState>)}.{nameof(SerializedEvents)} is null.");
-#endif
+                    _Events = new AnimancerEvent.Sequence.Serializable();
 
                 return _Events.Events;
             }
@@ -177,6 +174,15 @@ namespace Animancer
         {
             state.Events = _Events;
 
+#if UNITY_ASSERTIONS
+            if (state.HasEvents)
+                state.Events.SetShouldNotModifyReason("it was created by a Transition." +
+                    $"\n\nTransitions give the played {nameof(AnimancerState)} a reference to their Events," +
+                    $" meaning that any modifications to the state.Events will also affect the transition.Events" +
+                    $" and persist when that Transition is played in the future. This is a common source of logic bugs" +
+                    $" so when a Transition is played it marks its Events as no longer expecting to be modified.");
+#endif
+
             BaseState = state;
 
             if (_State != state)
@@ -208,6 +214,22 @@ namespace Animancer
                 return $"{name} ({type})";
             else
                 return type;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public virtual void CopyFrom(AnimancerTransition<TState> copyFrom)
+        {
+            if (copyFrom == null)
+            {
+                _FadeDuration = AnimancerPlayable.DefaultFadeDuration;
+                _Events = default;
+                return;
+            }
+
+            _FadeDuration = copyFrom._FadeDuration;
+            _Events = copyFrom._Events.Clone();
         }
 
         /************************************************************************************************************************/

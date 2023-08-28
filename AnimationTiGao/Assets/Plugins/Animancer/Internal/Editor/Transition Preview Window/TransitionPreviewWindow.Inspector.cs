@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -16,7 +16,7 @@ namespace Animancer.Editor
         /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/transitions#previews">Previews</see>
         /// </remarks>
         [CustomEditor(typeof(TransitionPreviewWindow))]
-        internal sealed class Inspector : UnityEditor.Editor
+        internal class Inspector : UnityEditor.Editor
         {
             /************************************************************************************************************************/
 

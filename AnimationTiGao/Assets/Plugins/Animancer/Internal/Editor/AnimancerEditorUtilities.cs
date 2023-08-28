@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -55,7 +55,10 @@ namespace Animancer.Editor
         /// <summary>Finds an asset of the specified type anywhere in the project.</summary>
         public static T FindAssetOfType<T>() where T : Object
         {
-            var filter = typeof(Component).IsAssignableFrom(typeof(T)) ? $"t:{nameof(GameObject)}" : $"t:{typeof(T).Name}";
+            var filter = typeof(Component).IsAssignableFrom(typeof(T))
+                ? $"t:{nameof(GameObject)}"
+                : $"t:{typeof(T).Name}";
+
             var guids = AssetDatabase.FindAssets(filter);
             if (guids.Length == 0)
                 return null;
@@ -505,8 +508,10 @@ namespace Animancer.Editor
         #region Dummy Animancer Component
         /************************************************************************************************************************/
 
-        /// <summary>[Editor-Only] An <see cref="IAnimancerComponent"/> which is not actually a <see cref="Component"/>.</summary>
-        public sealed class DummyAnimancerComponent : IAnimancerComponent
+        /// <summary>[Editor-Only]
+        /// An <see cref="IAnimancerComponent"/> which is not actually a <see cref="Component"/>.
+        /// </summary>
+        public class DummyAnimancerComponent : IAnimancerComponent
         {
             /************************************************************************************************************************/
 

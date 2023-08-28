@@ -1,11 +1,13 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Animancer.Editor
 {
@@ -116,8 +118,9 @@ namespace Animancer.Editor
         #region Layout
         /************************************************************************************************************************/
 
-        /// <summary>Wrapper around <see cref="UnityEditorInternal.InternalEditorUtility.RepaintAllViews"/>.</summary>
-        public static void RepaintEverything() => UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+        /// <summary>Calls <see cref="UnityEditorInternal.InternalEditorUtility.RepaintAllViews"/>.</summary>
+        public static void RepaintEverything()
+            => UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
 
         /************************************************************************************************************************/
 
@@ -156,17 +159,17 @@ namespace Animancer.Editor
 
                 case SpacingMode.After:
                     rect = GUILayoutUtility.GetRect(0, LineHeight + StandardSpacing);
-                    rect.yMax -= StandardSpacing;
+                    rect.height -= StandardSpacing;
                     return rect;
 
                 case SpacingMode.BeforeAndAfter:
                     rect = GUILayoutUtility.GetRect(0, LineHeight + StandardSpacing * 2);
                     rect.yMin += StandardSpacing;
-                    rect.yMax -= StandardSpacing;
+                    rect.height -= StandardSpacing;
                     return rect;
 
                 default:
-                    throw new ArgumentException($"Unknown {nameof(StandardSpacing)}: " + spacing, nameof(spacing));
+                    throw new ArgumentException($"Unsupported {nameof(StandardSpacing)}: " + spacing, nameof(spacing));
             }
         }
 
@@ -298,6 +301,22 @@ namespace Animancer.Editor
         }
 
         /************************************************************************************************************************/
+
+        /// <summary>Clears the <see cref="Selection.objects"/> then returns it to its current state.</summary>
+        /// <remarks>
+        /// This forces the <see cref="UnityEditorInternal.ReorderableList"/> drawer to adjust to height changes which
+        /// it unfortunately doesn't do on its own..
+        /// </remarks>
+        public static void ReSelectCurrentObjects()
+        {
+            var selection = Selection.objects;
+            Selection.objects = Array.Empty<Object>();
+            EditorApplication.delayCall += () =>
+                EditorApplication.delayCall += () =>
+                    Selection.objects = selection;
+        }
+
+        /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
         #region Labels
@@ -424,6 +443,65 @@ namespace Animancer.Editor
         }
 
         /************************************************************************************************************************/
+
+        /// <summary>Calls <see cref="EditorGUIUtility.IconContent(string)"/> if the `content` was null.</summary>
+        public static GUIContent IconContent(ref GUIContent content, string name)
+        {
+            if (content == null)
+                content = EditorGUIUtility.IconContent(name);
+            return content;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <summary>Draws a button using <see cref="EditorStyles.miniButton"/> and <see cref="DontExpandWidth"/>.</summary>
+        public static bool CompactMiniButton(GUIContent content)
+            => GUILayout.Button(content, EditorStyles.miniButton, DontExpandWidth);
+
+        /// <summary>Draws a button using <see cref="EditorStyles.miniButton"/>.</summary>
+        public static bool CompactMiniButton(Rect area, GUIContent content)
+            => GUI.Button(area, content, EditorStyles.miniButton);
+
+        /************************************************************************************************************************/
+
+        private static GUIContent
+            _PlayButtonContent,
+            _PauseButtonContent,
+            _StepBackwardButtonContent,
+            _StepForwardButtonContent;
+
+        /// <summary><see cref="IconContent(ref GUIContent, string)"/> for a play button.</summary>
+        public static GUIContent PlayButtonContent
+            => IconContent(ref _PlayButtonContent, "PlayButton");
+
+        /// <summary><see cref="IconContent(ref GUIContent, string)"/> for a pause button.</summary>
+        public static GUIContent PauseButtonContent
+            => IconContent(ref _PauseButtonContent, "PauseButton");
+
+        /// <summary><see cref="IconContent(ref GUIContent, string)"/> for a step backward button.</summary>
+        public static GUIContent StepBackwardButtonContent
+            => IconContent(ref _StepBackwardButtonContent, "Animation.PrevKey");
+
+        /// <summary><see cref="IconContent(ref GUIContent, string)"/> for a step forward button.</summary>
+        public static GUIContent StepForwardButtonContent
+            => IconContent(ref _StepForwardButtonContent, "Animation.NextKey");
+
+        /************************************************************************************************************************/
+
+        private static float _PlayButtonWidth;
+
+        /// <summary>The default width of <see cref="PlayButtonContent"/> using <see cref="EditorStyles.miniButton"/>.</summary>
+        public static float PlayButtonWidth
+        {
+            get
+            {
+                if (_PlayButtonWidth <= 0)
+                    EditorStyles.miniButton.CalcMinMaxWidth(PlayButtonContent, out _PlayButtonWidth, out _);
+                return _PlayButtonWidth;
+            }
+        }
+
+        /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
         #region Events
@@ -436,19 +514,18 @@ namespace Animancer.Editor
         public static bool TryUseClickEvent(Rect area, int button = -1)
         {
             var currentEvent = Event.current;
-            if (currentEvent.type == EventType.MouseUp &&
-                (button < 0 || currentEvent.button == button) &&
-                area.Contains(currentEvent.mousePosition))
-            {
-                GUI.changed = true;
-                currentEvent.Use();
+            if (currentEvent.type != EventType.MouseUp ||
+                (button >= 0 && currentEvent.button != button) ||
+                !area.Contains(currentEvent.mousePosition))
+                return false;
 
-                if (currentEvent.button == 2)
-                    Deselect();
+            GUI.changed = true;
+            currentEvent.Use();
 
-                return true;
-            }
-            else return false;
+            if (currentEvent.button == 2)
+                Deselect();
+
+            return true;
         }
 
         /// <summary>

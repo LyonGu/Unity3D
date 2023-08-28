@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using Object = UnityEngine.Object;
+using static Animancer.Editor.AnimancerGUI;
 
 namespace Animancer.Editor
 {
@@ -47,15 +48,14 @@ namespace Animancer.Editor
             if (!Target.IsValid)
                 return;
 
-            AnimancerGUI.BeginVerticalBox(RegionStyle);
+            BeginVerticalBox(RegionStyle);
             {
                 DoHeaderGUI();
                 DoDetailsGUI();
             }
-            AnimancerGUI.EndVerticalBox(RegionStyle);
+            EndVerticalBox(RegionStyle);
 
             CheckContextMenu(GUILayoutUtility.GetLastRect());
-
         }
 
         /************************************************************************************************************************/
@@ -65,7 +65,7 @@ namespace Animancer.Editor
         /// </summary>
         protected virtual void DoHeaderGUI()
         {
-            var area = AnimancerGUI.LayoutSingleLineRect(AnimancerGUI.SpacingMode.Before);
+            var area = LayoutSingleLineRect(SpacingMode.Before);
             DoLabelGUI(area);
             DoFoldoutGUI(area);
         }
@@ -90,10 +90,9 @@ namespace Animancer.Editor
         /// </summary>
         protected void DoNodeDetailsGUI()
         {
-            var area = AnimancerGUI.LayoutSingleLineRect(AnimancerGUI.SpacingMode.Before);
-            area.xMin += EditorGUI.indentLevel * AnimancerGUI.IndentSize;
+            var area = LayoutSingleLineRect(SpacingMode.Before);
+            area.xMin += EditorGUI.indentLevel * IndentSize;
             var xMin = area.xMin;
-            var xMax = area.xMax;
 
             var labelWidth = EditorGUIUtility.labelWidth;
             var indentLevel = EditorGUI.indentLevel;
@@ -103,16 +102,17 @@ namespace Animancer.Editor
             var state = Target as AnimancerState;
             if (state != null)
             {
-                var label = AnimancerGUI.BeginTightLabel("Is Playing");
-                area.width = EditorGUIUtility.labelWidth + 16;
-                state.IsPlaying = EditorGUI.Toggle(area, label, state.IsPlaying);
-                AnimancerGUI.EndTightLabel();
+                var buttonArea = StealFromLeft(ref area, PlayButtonWidth, StandardSpacing);
 
-                area.x += area.width;
-                area.xMax = xMax;
+                var content = state.IsPlaying
+                    ? PauseButtonContent
+                    : PlayButtonContent;
+
+                if (CompactMiniButton(buttonArea, content))
+                    state.IsPlaying = !state.IsPlaying;
             }
 
-            AnimancerGUI.SplitHorizontally(area, "Speed", "Weight",
+            SplitHorizontally(area, "Speed", "Weight",
                 out var speedWidth, out var weightWidth, out var speedRect, out var weightRect);
 
             // Speed.
@@ -121,7 +121,7 @@ namespace Animancer.Editor
             var speed = EditorGUI.FloatField(speedRect, "Speed", Target.Speed);
             if (EditorGUI.EndChangeCheck())
                 Target.Speed = speed;
-            if (AnimancerGUI.TryUseClickEvent(speedRect, 2))
+            if (TryUseClickEvent(speedRect, 2))
                 Target.Speed = Target.Speed != 1 ? 1 : 0;
 
             // Weight.
@@ -130,7 +130,7 @@ namespace Animancer.Editor
             var weight = EditorGUI.FloatField(weightRect, "Weight", Target.Weight);
             if (EditorGUI.EndChangeCheck())
                 SetWeight(Mathf.Max(weight, 0));
-            if (AnimancerGUI.TryUseClickEvent(weightRect, 2))
+            if (TryUseClickEvent(weightRect, 2))
                 SetWeight(Target.Weight != 1 ? 1 : 0);
 
             // Not really sure why this is necessary.
@@ -143,13 +143,13 @@ namespace Animancer.Editor
             {
                 using (new EditorGUI.DisabledScope(true))
                 {
-                    area = AnimancerGUI.LayoutSingleLineRect(AnimancerGUI.SpacingMode.Before);
+                    area = LayoutSingleLineRect(SpacingMode.Before);
                     area.xMin = xMin;
 
-                    var label = AnimancerGUI.BeginTightLabel("Real Speed");
-                    EditorGUIUtility.labelWidth = AnimancerGUI.CalculateLabelWidth(label);
+                    var label = BeginTightLabel("Real Speed");
+                    EditorGUIUtility.labelWidth = CalculateLabelWidth(label);
                     EditorGUI.FloatField(area, label, speed);
-                    AnimancerGUI.EndTightLabel();
+                    EndTightLabel();
                 }
             }
             else// Add a dummy ID so that subsequent IDs don't change when the Real Speed appears or disappears.
@@ -211,13 +211,13 @@ namespace Animancer.Editor
         /// <summary>Draws the <see cref="AnimancerNode.FadeSpeed"/> and <see cref="AnimancerNode.TargetWeight"/>.</summary>
         private void DoFadeDetailsGUI()
         {
-            var area = AnimancerGUI.LayoutSingleLineRect(AnimancerGUI.SpacingMode.Before);
+            var area = LayoutSingleLineRect(SpacingMode.Before);
             area = EditorGUI.IndentedRect(area);
 
-            var speedLabel = AnimancerGUI.GetNarrowText("Fade Speed");
-            var targetLabel = AnimancerGUI.GetNarrowText("Target Weight");
+            var speedLabel = GetNarrowText("Fade Speed");
+            var targetLabel = GetNarrowText("Target Weight");
 
-            AnimancerGUI.SplitHorizontally(area, speedLabel, targetLabel,
+            SplitHorizontally(area, speedLabel, targetLabel,
                 out var speedWidth, out var weightWidth, out var speedRect, out var weightRect);
 
             var labelWidth = EditorGUIUtility.labelWidth;
@@ -229,7 +229,7 @@ namespace Animancer.Editor
             // Fade Speed.
             EditorGUIUtility.labelWidth = speedWidth;
             Target.FadeSpeed = EditorGUI.DelayedFloatField(speedRect, speedLabel, Target.FadeSpeed);
-            if (AnimancerGUI.TryUseClickEvent(speedRect, 2))
+            if (TryUseClickEvent(speedRect, 2))
             {
                 Target.FadeSpeed = Target.FadeSpeed != 0 || AnimancerPlayable.DefaultFadeDuration == 0 ?
                     0 :
@@ -239,7 +239,7 @@ namespace Animancer.Editor
             // Target Weight.
             EditorGUIUtility.labelWidth = weightWidth;
             Target.TargetWeight = Mathf.Max(0, EditorGUI.FloatField(weightRect, targetLabel, Target.TargetWeight));
-            if (AnimancerGUI.TryUseClickEvent(weightRect, 2))
+            if (TryUseClickEvent(weightRect, 2))
             {
                 if (Target.TargetWeight != Target.Weight)
                     Target.TargetWeight = Target.Weight;
@@ -271,7 +271,7 @@ namespace Animancer.Editor
         /// </summary>
         protected void CheckContextMenu(Rect clickArea)
         {
-            if (!AnimancerGUI.TryUseClickEvent(clickArea, 1))
+            if (!TryUseClickEvent(clickArea, 1))
                 return;
 
             var menu = new GenericMenu();

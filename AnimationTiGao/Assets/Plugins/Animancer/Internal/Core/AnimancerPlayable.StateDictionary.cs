@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -17,7 +17,7 @@ namespace Animancer
         /// </remarks>
         /// https://kybernetik.com.au/animancer/api/Animancer/StateDictionary
         /// 
-        public sealed class StateDictionary : IEnumerable<AnimancerState>, IAnimationClipCollection
+        public class StateDictionary : IEnumerable<AnimancerState>, IAnimationClipCollection
         {
             /************************************************************************************************************************/
 
@@ -26,21 +26,20 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            /// <summary>
-            /// Determines the <see cref="IEqualityComparer{T}"/> used by every new <see cref="StateDictionary"/> when
-            /// it is created. Changing this value will not affect existing instances.
-            /// <list type="bullet">
-            /// <item>The default is false, which will use a <see cref="FastComparer"/>.</item>
-            /// <item>Setting it to true will use a <see cref="FastReferenceComparer"/>, which is faster but does not
-            /// work for value types such as enums because it uses <see cref="object.ReferenceEquals"/>.</item>
-            /// </list>
-            /// </summary>
-            public static bool ReferenceKeysOnly { get; set; }
+            /// <summary>The <see cref="IEqualityComparer{T}"/> used by every new <see cref="StateDictionary"/>.</summary>
+            /// <remarks>
+            /// By default, this will use <see cref="FastComparer.Instance"/>.
+            /// <para></para>
+            /// Setting it to <see cref="FastReferenceComparer.Instance"/> would make it slightly faster, but would
+            /// not work for value types such as enums.
+            /// <para></para>
+            /// Changing this value will not affect existing instances.
+            /// </remarks>
+            public static IEqualityComparer<object> EqualityComparer { get; set; } = FastComparer.Instance;
 
             /// <summary><see cref="AnimancerState.Key"/> mapped to <see cref="AnimancerState"/>.</summary>
             private readonly Dictionary<object, AnimancerState>
-                States = new Dictionary<object, AnimancerState>(
-                    ReferenceKeysOnly ? (IEqualityComparer<object>)FastReferenceComparer.Instance : FastComparer.Instance);
+                States = new Dictionary<object, AnimancerState>(EqualityComparer);
 
             /************************************************************************************************************************/
 
@@ -56,41 +55,40 @@ namespace Animancer
             #region Create
             /************************************************************************************************************************/
 
-            /// <summary>
-            /// Creates and returns a new <see cref="ClipState"/> to play the `clip`.
-            /// <para></para>
-            /// To create a state on a different layer, use <c>animancer.Layers[x].CreateState(clip)</c> instead.
-            /// </summary>
+            /// <summary>Creates and returns a new <see cref="ClipState"/> to play the `clip`.</summary>
             /// <remarks>
+            /// To create a state on a specific layer, use <c>animancer.Layers[x].CreateState(clip)</c> instead.
+            /// <para></para>
             /// <see cref="GetKey"/> is used to determine the <see cref="AnimancerState.Key"/>.
             /// </remarks>
-            public ClipState Create(AnimationClip clip) => Root.Layers[0].CreateState(clip);
+            public ClipState Create(AnimationClip clip)
+                => Create(Root.GetKey(clip), clip);
 
             /// <summary>
             /// Creates and returns a new <see cref="ClipState"/> to play the `clip` and registers it with the `key`.
-            /// <para></para>
-            /// To create a state on a different layer, use <c>animancer.Layers[x].CreateState(key, clip)</c> instead.
             /// </summary>
-            public ClipState Create(object key, AnimationClip clip) => Root.Layers[0].CreateState(key, clip);
+            /// <remarks>
+            /// To create a state on a specific layer, use <c>animancer.Layers[x].CreateState(key, clip)</c> instead.
+            /// </remarks>
+            public ClipState Create(object key, AnimationClip clip)
+            {
+                var state = new ClipState(clip);
+                state.SetRoot(Root);
+                state._Key = key;
+                Register(state);
+                return state;
+            }
 
             /************************************************************************************************************************/
 
-            /// <summary>
-            /// Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.
-            /// <para></para>
-            /// If you only want to create a single state, use <see cref="AnimancerLayer.CreateState(AnimationClip)"/>.
-            /// </summary>
+            /// <summary>Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.</summary>
             public void CreateIfNew(AnimationClip clip0, AnimationClip clip1)
             {
                 GetOrCreate(clip0);
                 GetOrCreate(clip1);
             }
 
-            /// <summary>
-            /// Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.
-            /// <para></para>
-            /// If you only want to create a single state, use <see cref="AnimancerLayer.CreateState(AnimationClip)"/>.
-            /// </summary>
+            /// <summary>Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.</summary>
             public void CreateIfNew(AnimationClip clip0, AnimationClip clip1, AnimationClip clip2)
             {
                 GetOrCreate(clip0);
@@ -98,11 +96,7 @@ namespace Animancer
                 GetOrCreate(clip2);
             }
 
-            /// <summary>
-            /// Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.
-            /// <para></para>
-            /// If you only want to create a single state, use <see cref="AnimancerLayer.CreateState(AnimationClip)"/>.
-            /// </summary>
+            /// <summary>Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified clips.</summary>
             public void CreateIfNew(AnimationClip clip0, AnimationClip clip1, AnimationClip clip2, AnimationClip clip3)
             {
                 GetOrCreate(clip0);
@@ -112,7 +106,6 @@ namespace Animancer
             }
 
             /// <summary>Calls <see cref="GetOrCreate(AnimationClip, bool)"/> for each of the specified `clips`.</summary>
-            /// <remarks>To create a single state, use <see cref="AnimancerLayer.CreateState(AnimationClip)"/> instead.</remarks>
             public void CreateIfNew(params AnimationClip[] clips)
             {
                 if (clips == null)
@@ -269,7 +262,7 @@ namespace Animancer
                 }
                 else
                 {
-                    state = Root.Layers[0].CreateState(key, clip);
+                    state = Create(key, clip);
                 }
 
                 return state;
@@ -280,9 +273,9 @@ namespace Animancer
             /// <summary>Returns an error message explaining that a state already exists with the specified `key`.</summary>
             public static string GetClipMismatchError(object key, AnimationClip oldClip, AnimationClip newClip)
                 => $"A state already exists using the specified '{nameof(key)}', but has a different {nameof(AnimationClip)}:" +
-                $"\n - Key: {key}" +
-                $"\n - Old Clip: {oldClip}" +
-                $"\n - New Clip: {newClip}";
+                $"\n• Key: {key}" +
+                $"\n• Old Clip: {oldClip}" +
+                $"\n• New Clip: {newClip}";
 
             /************************************************************************************************************************/
 

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 using Animancer.Editor;
@@ -214,7 +214,7 @@ namespace Animancer.Units
 
         /// <summary>[Editor-Only] Options to determine how <see cref="AnimationTimeAttribute"/> displays.</summary>
         [Serializable]
-        public sealed class Settings
+        public class Settings
         {
             /************************************************************************************************************************/
 

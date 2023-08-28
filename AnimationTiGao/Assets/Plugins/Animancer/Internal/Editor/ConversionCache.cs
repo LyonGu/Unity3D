@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -17,11 +17,11 @@ namespace Animancer.Editor
     /// <remarks>This class doesn't use any Editor-Only functionality, but it's unlikely to be useful at runtime.</remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/ConversionCache_2
     /// 
-    public sealed class ConversionCache<TKey, TValue>
+    public class ConversionCache<TKey, TValue>
     {
         /************************************************************************************************************************/
 
-        private sealed class CachedValue
+        private class CachedValue
         {
             public int lastFrameAccessed;
             public TValue value;

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 
@@ -6,9 +6,9 @@ namespace Animancer
 {
     /// <summary>Determines how <see cref="AnimancerLayer.Play(AnimancerState, float, FadeMode)"/> works.</summary>
     /// <remarks>
-    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/blending/fading">Fading</see>
+    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/blending/fading/modes">Fade Modes</see>
     /// <para></para>
-    /// Example: <see href="https://kybernetik.com.au/animancer/docs/examples/basics/playing-and-fading">Playing and Fading</see>
+    /// Example: <see href="https://kybernetik.com.au/animancer/docs/examples/basics/transitions">Transitions</see>
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/FadeMode
     /// 
@@ -40,7 +40,7 @@ namespace Animancer
         ///
         /// <exception cref="ArgumentOutOfRangeException">
         /// More states have been created for the <see cref="AnimancerState.Clip"/> than the
-        /// <see cref="AnimancerLayer.MaxStateDepth"/> allows.
+        /// <see cref="AnimancerLayer.MaxCloneCount"/> allows.
         /// </exception>
         FixedSpeed,
 
@@ -70,22 +70,29 @@ namespace Animancer
         FixedDuration,
 
         /// <summary>
-        /// If the state is not currently at 0 <see cref="AnimancerNode.Weight"/>, this mode will use
-        /// <see cref="AnimancerLayer.GetOrCreateWeightlessState"/> to get a copy of it that is at 0 weight so it can
-        /// fade the copy in while the original fades out with all other states.
-        /// <para></para>
+        /// If the <see cref="AnimancerNode.Weight"/> is above the <see cref="AnimancerLayer.WeightlessThreshold"/>,
+        /// this mode will use <see cref="AnimancerLayer.GetOrCreateWeightlessState"/> to get a copy of it that is at 0
+        /// weight so it can fade the copy in while the original fades out with all other states. This allows an
+        /// animation to fade into itself.
+        /// </summary>
+        ///
+        /// <example>
+        /// This mode can be useful when you want to repeat an action while the previous animation is still fading out.
+        /// For example, if you play an 'Attack' animation, it ends and starts fading back to 'Idle', and while it is
+        /// doing so you want to start another 'Attack' with the same animation. The previous 'Attack' can't simply
+        /// snap back to the start, so you can use this mode to create a second 'Attack' state to fade in while the old
+        /// one fades out.
+        /// </example>
+        /// 
+        /// <remarks>
         /// Using this mode repeatedly on subsequent frames will probably have undesirable effects because it will
         /// create a new state each time. In such a situation you most likely want <see cref="FixedSpeed"/> instead.
         /// <para></para>
         /// This mode only works for <see cref="ClipState"/>s.
-        /// </summary>
-        ///
-        /// <example>
-        /// This can be useful when you want to repeat an action while the previous animation is still fading out.
-        /// For example, if you play an 'Attack' animation, it ends and starts fading back to 'Idle', and while it is
-        /// doing so you want to start another 'Attack'. The previous 'Attack' can't simply snap back to the start, so
-        /// you can use this method to create a second 'Attack' state to fade in while the old one fades out.
-        /// </example>
+        /// <para></para>
+        /// The <see href="https://kybernetik.com.au/animancer/docs/manual/blending/fading/modes">Fade Modes</see> page
+        /// explains this mode in more detail.
+        /// </remarks>
         FromStart,
 
         /// <summary>

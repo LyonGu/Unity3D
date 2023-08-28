@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -196,12 +196,22 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Draws the root property of a transition with an optional main property on the same line.</summary>
-        public void DoHeaderGUI(ref Rect area, SerializedProperty rootProperty, SerializedProperty mainProperty,
-            GUIContent label, bool isPreviewing)
+        protected virtual void DoHeaderGUI(
+            ref Rect area,
+            SerializedProperty rootProperty,
+            SerializedProperty mainProperty,
+            GUIContent label,
+            bool isPreviewing)
         {
             area.height = AnimancerGUI.LineHeight;
             var labelArea = area;
             AnimancerGUI.NextVerticalArea(ref area);
+
+#if UNITY_2022_2_OR_NEWER
+            EditorGUI.indentLevel++;
+            labelArea = EditorGUI.IndentedRect(labelArea);
+            EditorGUI.indentLevel--;
+#endif
 
             if (rootProperty.propertyType != SerializedPropertyType.ManagedReference)
                 DoPreviewButtonGUI(ref labelArea, rootProperty, isPreviewing);
@@ -222,7 +232,15 @@ namespace Animancer.Editor
                 EditorGUI.EndProperty();
 
                 if (_Mode != Mode.AlwaysExpanded)
-                    rootProperty.isExpanded = EditorGUI.Foldout(labelArea, rootProperty.isExpanded, GUIContent.none, true);
+                {
+                    var hierarchyMode = EditorGUIUtility.hierarchyMode;
+                    EditorGUIUtility.hierarchyMode = true;
+
+                    rootProperty.isExpanded =
+                        EditorGUI.Foldout(labelArea, rootProperty.isExpanded, GUIContent.none, true);
+
+                    EditorGUIUtility.hierarchyMode = hierarchyMode;
+                }
             }
         }
 
@@ -237,6 +255,12 @@ namespace Animancer.Editor
                 return;
 
             var fullArea = area;
+
+            var labelWidth = EditorGUIUtility.labelWidth;
+#if UNITY_2022_2_OR_NEWER
+            EditorGUIUtility.labelWidth -= AnimancerGUI.LineHeight - AnimancerGUI.StandardSpacing - 1;
+#endif
+
             labelArea = AnimancerGUI.StealFromLeft(ref area, EditorGUIUtility.labelWidth, AnimancerGUI.StandardSpacing);
 
             var mainPropertyReferenceIsMissing =
@@ -250,13 +274,17 @@ namespace Animancer.Editor
             {
                 if (rootProperty.isExpanded || _Mode == Mode.AlwaysExpanded)
                 {
+#if !UNITY_2022_2_OR_NEWER
                     EditorGUI.indentLevel++;
+#endif
 
                     AnimancerGUI.NextVerticalArea(ref fullArea);
                     using (ObjectPool.Disposable.AcquireContent(out var label, mainProperty))
                         EditorGUI.PropertyField(fullArea, mainProperty, label, true);
 
+#if !UNITY_2022_2_OR_NEWER
                     EditorGUI.indentLevel--;
+#endif
                 }
             }
             else
@@ -268,6 +296,10 @@ namespace Animancer.Editor
 
                 EditorGUI.indentLevel = indentLevel;
             }
+
+#if UNITY_2022_2_OR_NEWER
+            EditorGUIUtility.labelWidth = labelWidth;
+#endif
 
             EditorGUIUtility.hierarchyMode = hierarchyMode;
 
@@ -438,13 +470,17 @@ namespace Animancer.Editor
                 if (TryDoStartTimeField(ref area, rootProperty, property, content))
                     return;
 
+#if !UNITY_2022_2_OR_NEWER
                 if (!EditorGUIUtility.hierarchyMode)
                     EditorGUI.indentLevel++;
+#endif
 
                 EditorGUI.PropertyField(area, property, content, true);
 
+#if !UNITY_2022_2_OR_NEWER
                 if (!EditorGUIUtility.hierarchyMode)
                     EditorGUI.indentLevel--;
+#endif
             }
         }
 
@@ -494,7 +530,7 @@ namespace Animancer.Editor
         /// <summary>Details of an <see cref="ITransition"/>.</summary>
         /// https://kybernetik.com.au/animancer/api/Animancer.Editor/DrawerContext
         /// 
-        public sealed class DrawerContext : IDisposable
+        public class DrawerContext : IDisposable
         {
             /************************************************************************************************************************/
 

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -14,7 +14,7 @@ namespace Animancer.Editor
     /// An object that holds a serialized callback (a <see cref="UnityEvent"/> by default) so that empty ones can be
     /// drawn in the GUI without allocating array space for them until they actually contain something.
     /// </summary>
-    internal sealed class DummySerializableCallback : ScriptableObject
+    internal class DummySerializableCallback : ScriptableObject
     {
         /************************************************************************************************************************/
 

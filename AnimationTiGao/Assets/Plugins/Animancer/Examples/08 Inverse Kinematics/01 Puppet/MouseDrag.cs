@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -21,26 +21,39 @@ namespace Animancer.Examples.InverseKinematics
 
         private void Update()
         {
-            // On click, do a raycast and grab whatever it hits and calculate how far away it is.
-            if (Input.GetMouseButtonDown(0))
+            // On click, do a raycast from the mouse, grab whatever it hits, and calculate how far away it is.
+            if (ExampleInput.LeftMouseDown)
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = Camera.main.ScreenPointToRay(ExampleInput.MousePosition);
                 if (Physics.Raycast(ray, out var hit))
                 {
                     _Dragging = hit.transform;
-                    _Distance = Vector3.Distance(_Dragging.position, Camera.main.transform.position);
+
+                    var cameraTransform = Camera.main.transform;
+                    _Distance = Vector3.Dot(_Dragging.position - cameraTransform.position, cameraTransform.forward);
                 }
+
+                return;
             }
             // While holding the button, move the object in line with the mouse ray.
-            else if (_Dragging != null && Input.GetMouseButton(0))
+            else if (_Dragging != null && ExampleInput.LeftMouseHold)
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                _Dragging.position = Camera.main.transform.position + ray.direction * _Distance;
+                var ray = Camera.main.ScreenPointToRay(ExampleInput.MousePosition);
+
+                var cameraTransform = Camera.main.transform;
+                var forward = cameraTransform.forward;
+
+                var dot = Vector3.Dot(ray.direction, forward);
+                if (dot > 0)
+                {
+                    var planeCenter = cameraTransform.position + forward * _Distance;
+                    var intersection = ray.origin + ray.direction * Vector3.Dot(planeCenter - ray.origin, forward) / dot;
+                    _Dragging.position = intersection;
+                    return;
+                }
             }
-            else
-            {
-                _Dragging = null;
-            }
+
+            _Dragging = null;
         }
 
         /************************************************************************************************************************/

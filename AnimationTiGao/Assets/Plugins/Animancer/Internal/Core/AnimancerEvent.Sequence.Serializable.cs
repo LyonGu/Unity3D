@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -42,9 +42,9 @@ namespace Animancer
             /// https://kybernetik.com.au/animancer/api/Animancer/Serializable
             /// 
             [Serializable]
-            public class Serializable
+            public class Serializable : ICopyable<Serializable>
 #if UNITY_EDITOR
-                : ISerializationCallbackReceiver
+                , ISerializationCallbackReceiver
 #endif
             {
                 /************************************************************************************************************************/
@@ -96,7 +96,7 @@ namespace Animancer
 
                 /// <summary>
                 /// The runtime <see cref="Sequence"/> compiled from this <see cref="Serializable"/>.
-                /// Each call after the first will return the same value.
+                /// Each call after the first will return the same reference.
                 /// </summary>
                 /// <remarks>
                 /// Unlike <see cref="GetEventsOptional"/>, this property will create an empty
@@ -122,7 +122,7 @@ namespace Animancer
 
                 /// <summary>
                 /// Returns the runtime <see cref="Sequence"/> compiled from this <see cref="Serializable"/>.
-                /// Each call after the first will return the same value.
+                /// Each call after the first will return the same reference.
                 /// </summary>
                 /// <remarks>
                 /// This method returns null if the sequence would be empty anyway and is used by the implicit
@@ -147,7 +147,7 @@ namespace Animancer
 
                     _Events = new Sequence(timeCount)
                     {
-                        endEvent = endEvent,
+                        EndEvent = endEvent,
                         Count = timeCount,
                         _Names = _Names,
                     };
@@ -220,7 +220,7 @@ namespace Animancer
 
                 /************************************************************************************************************************/
 
-                /// <summary>Returns the <see cref="normalizedTime"/> of the <see cref="endEvent"/>.</summary>
+                /// <summary>Returns the <see cref="normalizedTime"/> of the <see cref="EndEvent"/>.</summary>
                 /// <remarks>If the value is not set, the value is determined by <see cref="GetDefaultNormalizedEndTime"/>.</remarks>
                 public float GetNormalizedEndTime(float speed = 1)
                 {
@@ -232,13 +232,31 @@ namespace Animancer
 
                 /************************************************************************************************************************/
 
-                /// <summary>Sets the <see cref="normalizedTime"/> of the <see cref="endEvent"/>.</summary>
+                /// <summary>Sets the <see cref="normalizedTime"/> of the <see cref="EndEvent"/>.</summary>
                 public void SetNormalizedEndTime(float normalizedTime)
                 {
                     if (_NormalizedTimes.IsNullOrEmpty())
                         _NormalizedTimes = new float[] { normalizedTime };
                     else
                         _NormalizedTimes[_NormalizedTimes.Length - 1] = normalizedTime;
+                }
+
+                /************************************************************************************************************************/
+
+                /// <inheritdoc/>
+                public void CopyFrom(Serializable copyFrom)
+                {
+                    if (copyFrom == null)
+                    {
+                        _NormalizedTimes = default;
+                        _Callbacks = default;
+                        _Names = default;
+                        return;
+                    }
+
+                    AnimancerUtilities.CopyExactArray(copyFrom._NormalizedTimes, ref _NormalizedTimes);
+                    AnimancerUtilities.CopyExactArray(copyFrom._Callbacks, ref _Callbacks);
+                    AnimancerUtilities.CopyExactArray(copyFrom._Names, ref _Names);
                 }
 
                 /************************************************************************************************************************/

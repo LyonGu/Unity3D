@@ -1,8 +1,9 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -30,13 +31,15 @@ namespace Animancer.Editor
         {
             if (_DefaultEditor == null)
             {
-                if (DefaultEditorType == null)
+                if (DefaultEditorType == null || AnimancerEditorUtilities.IsChangingPlayMode)
                 {
                     editor = null;
                     return false;
                 }
 
                 _DefaultEditor = CreateEditor(targets, DefaultEditorType);
+                _DefaultEditor.hideFlags = HideFlags.DontSave;
+                DestroyOnPlayModeStateChanged(_DefaultEditor);
             }
 
             editor = _DefaultEditor;
@@ -45,9 +48,32 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
+            _DestroyOnPlayModeStateChanged?.Remove(_DefaultEditor);
             DestroyImmediate(_DefaultEditor);
+        }
+
+        /************************************************************************************************************************/
+
+        private static HashSet<Object> _DestroyOnPlayModeStateChanged;
+
+        private static void DestroyOnPlayModeStateChanged(Object obj)
+        {
+            if (_DestroyOnPlayModeStateChanged == null)
+            {
+                _DestroyOnPlayModeStateChanged = new HashSet<Object>();
+
+                EditorApplication.playModeStateChanged += (change) =>
+                {
+                    foreach (var destroy in _DestroyOnPlayModeStateChanged)
+                        DestroyImmediate(destroy);
+
+                    _DestroyOnPlayModeStateChanged.Clear();
+                };
+            }
+
+            _DestroyOnPlayModeStateChanged.Add(obj);
         }
 
         /************************************************************************************************************************/
@@ -85,6 +111,9 @@ namespace Animancer.Editor
 
             if (GUILayout.Button("Open Animation Window"))
                 EditorApplication.ExecuteMenuItem("Window/Animation/Animation");
+
+            if (GUILayout.Button("Open Animancer Tools"))
+                Tools.AnimancerToolsWindow.Open();
 
             var targets = this.targets;
             if (targets.Length == 1)
@@ -152,7 +181,8 @@ namespace Animancer.Editor
 
         private void InitializeSpritePreview(UnityEditor.Editor editor, AnimationClip clip)
         {
-            if (_HasInitializedSpritePreview)
+            if (_HasInitializedSpritePreview
+                || editor == null)
                 return;
 
             _HasInitializedSpritePreview = true;

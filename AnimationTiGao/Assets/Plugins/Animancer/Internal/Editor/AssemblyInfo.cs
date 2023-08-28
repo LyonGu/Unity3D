@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -7,8 +7,8 @@ using System.Reflection;
 [assembly: AssemblyDescription("An animation system for Unity which is based on the Playables API.")]
 [assembly: AssemblyProduct("Animancer Pro")]
 [assembly: AssemblyCompany("Kybernetik")]
-[assembly: AssemblyCopyright("Copyright © Kybernetik 2021")]
-[assembly: AssemblyVersion("7.2.0.0")]
+[assembly: AssemblyCopyright("Copyright © Kybernetik 2022")]
+[assembly: AssemblyVersion("7.4.2.25")]
 
 #if UNITY_EDITOR
 
@@ -16,6 +16,8 @@ using System.Reflection;
     Justification = "Not supported by older Unity versions.")]
 [assembly: SuppressMessage("Style", "IDE0019:Use pattern matching",
     Justification = "Not supported by older Unity versions.")]
+[assembly: SuppressMessage("Style", "IDE0031:Use null propagation",
+    Justification = "Doesn't work properly on UnityEngine.Objects.")]
 [assembly: SuppressMessage("Style", "IDE0039:Use local function",
     Justification = "Not supported by older Unity versions.")]
 [assembly: SuppressMessage("Style", "IDE0044:Make field readonly",

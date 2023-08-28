@@ -1,6 +1,8 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -58,9 +60,16 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
-        /// <summary>[Animancer Extension] Returns true as long as the `value` is not NaN or Infinity.</summary>
+        /// <summary>[Animancer Extension] Is the `value` not NaN or Infinity?</summary>
         /// <remarks>Newer versions of the .NET framework apparently have a <c>float.IsFinite</c> method.</remarks>
         public static bool IsFinite(this float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+
+        /// <summary>[Animancer Extension] Is the `value` not NaN or Infinity?</summary>
+        /// <remarks>Newer versions of the .NET framework apparently have a <c>double.IsFinite</c> method.</remarks>
+        public static bool IsFinite(this double value) => !double.IsNaN(value) && !double.IsInfinity(value);
+
+        /// <summary>[Animancer Extension] Are all components of the `value` not NaN or Infinity?</summary>
+        public static bool IsFinite(this Vector2 value) => value.x.IsFinite() && value.y.IsFinite();
 
         /************************************************************************************************************************/
 
@@ -78,6 +87,22 @@ namespace Animancer
                 return $"Null ({obj.GetType()})";
 
             return obj.ToString();
+        }
+
+        /************************************************************************************************************************/
+
+        /// <summary>Ensures that the length and contents of `copyTo` match `copyFrom`.</summary>
+        public static void CopyExactArray<T>(T[] copyFrom, ref T[] copyTo)
+        {
+            if (copyFrom == null)
+            {
+                copyTo = null;
+                return;
+            }
+
+            var length = copyFrom.Length;
+            SetLength(ref copyTo, length);
+            Array.Copy(copyFrom, copyTo, length);
         }
 
         /************************************************************************************************************************/
@@ -253,6 +278,54 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
+        /// <summary>Copies the value of the `parameter` from `copyFrom` to `copyTo`.</summary>
+        public static void CopyParameterValue(Animator copyFrom, Animator copyTo, AnimatorControllerParameter parameter)
+        {
+            switch (parameter.type)
+            {
+                case AnimatorControllerParameterType.Float:
+                    copyTo.SetFloat(parameter.nameHash, copyFrom.GetFloat(parameter.nameHash));
+                    break;
+
+                case AnimatorControllerParameterType.Int:
+                    copyTo.SetInteger(parameter.nameHash, copyFrom.GetInteger(parameter.nameHash));
+                    break;
+
+                case AnimatorControllerParameterType.Bool:
+                case AnimatorControllerParameterType.Trigger:
+                    copyTo.SetBool(parameter.nameHash, copyFrom.GetBool(parameter.nameHash));
+                    break;
+
+                default:
+                    throw CreateUnsupportedArgumentException(parameter.type);
+            }
+        }
+
+        /// <summary>Copies the value of the `parameter` from `copyFrom` to `copyTo`.</summary>
+        public static void CopyParameterValue(AnimatorControllerPlayable copyFrom, AnimatorControllerPlayable copyTo, AnimatorControllerParameter parameter)
+        {
+            switch (parameter.type)
+            {
+                case AnimatorControllerParameterType.Float:
+                    copyTo.SetFloat(parameter.nameHash, copyFrom.GetFloat(parameter.nameHash));
+                    break;
+
+                case AnimatorControllerParameterType.Int:
+                    copyTo.SetInteger(parameter.nameHash, copyFrom.GetInteger(parameter.nameHash));
+                    break;
+
+                case AnimatorControllerParameterType.Bool:
+                case AnimatorControllerParameterType.Trigger:
+                    copyTo.SetBool(parameter.nameHash, copyFrom.GetBool(parameter.nameHash));
+                    break;
+
+                default:
+                    throw CreateUnsupportedArgumentException(parameter.type);
+            }
+        }
+
+        /************************************************************************************************************************/
+
         /// <summary>Gets the value of the `parameter` in the `animator`.</summary>
         public static object GetParameterValue(Animator animator, AnimatorControllerParameter parameter)
         {
@@ -269,7 +342,7 @@ namespace Animancer
                     return animator.GetBool(parameter.nameHash);
 
                 default:
-                    throw new ArgumentException($"Unsupported {nameof(AnimatorControllerParameterType)}: " + parameter.type);
+                    throw CreateUnsupportedArgumentException(parameter.type);
             }
         }
 
@@ -289,7 +362,7 @@ namespace Animancer
                     return playable.GetBool(parameter.nameHash);
 
                 default:
-                    throw new ArgumentException($"Unsupported {nameof(AnimatorControllerParameterType)}: " + parameter.type);
+                    throw CreateUnsupportedArgumentException(parameter.type);
             }
         }
 
@@ -320,7 +393,7 @@ namespace Animancer
                     break;
 
                 default:
-                    throw new ArgumentException($"Unsupported {nameof(AnimatorControllerParameterType)}: " + parameter.type);
+                    throw CreateUnsupportedArgumentException(parameter.type);
             }
         }
 
@@ -349,7 +422,7 @@ namespace Animancer
                     break;
 
                 default:
-                    throw new ArgumentException($"Unsupported {nameof(AnimatorControllerParameterType)}: " + parameter.type);
+                    throw CreateUnsupportedArgumentException(parameter.type);
             }
         }
 
@@ -358,13 +431,42 @@ namespace Animancer
         /// <summary>
         /// Creates a <see cref="NativeArray{T}"/> containing a single element so that it can be used like a reference
         /// in Unity's C# Job system which does not allow regular reference types.
-        /// <para></para>
-        /// Note that you must call <see cref="NativeArray{T}.Dispose()"/> when you are done with the array.
         /// </summary>
+        /// <remarks>Note that you must call <see cref="NativeArray{T}.Dispose()"/> when you're done with the array.</remarks>
         public static NativeArray<T> CreateNativeReference<T>() where T : struct
         {
             return new NativeArray<T>(1, Allocator.Persistent, NativeArrayOptions.ClearMemory);
         }
+
+        /************************************************************************************************************************/
+
+        /// <summary>
+        /// Creates a <see cref="NativeArray{T}"/> of <see cref="TransformStreamHandle"/>s for each of the `transforms`.
+        /// </summary>
+        /// <remarks>Note that you must call <see cref="NativeArray{T}.Dispose()"/> when you're done with the array.</remarks>
+        public static NativeArray<TransformStreamHandle> ConvertToTransformStreamHandles(
+            IList<Transform> transforms, Animator animator)
+        {
+            var count = transforms.Count;
+
+            var boneHandles = new NativeArray<TransformStreamHandle>(
+                count, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+
+            for (int i = 0; i < count; i++)
+                boneHandles[i] = animator.BindStreamTransform(transforms[i]);
+
+            return boneHandles;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <summary>Returns a string stating that the `value` is unsupported.</summary>
+        public static string GetUnsupportedMessage<T>(T value)
+            => $"Unsupported {typeof(T).FullName}: {value}";
+
+        /// <summary>Returns an exception stating that the `value` is unsupported.</summary>
+        public static ArgumentException CreateUnsupportedArgumentException<T>(T value)
+            => new ArgumentException(GetUnsupportedMessage(value));
 
         /************************************************************************************************************************/
         #endregion
@@ -390,9 +492,8 @@ namespace Animancer
         /// </summary>
         public static T GetOrAddAnimancerComponent<T>(this Animator animator) where T : Component, IAnimancerComponent
         {
-            var animancer = animator.GetComponent<T>();
-            if (animancer != null)
-                return animancer;
+            if (animator.TryGetComponent<T>(out var component))
+                return component;
             else
                 return animator.AddAnimancerComponent<T>();
         }

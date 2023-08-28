@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using UnityEngine;
@@ -14,8 +14,8 @@ namespace Animancer
     {
         /// <inheritdoc/>
         [Serializable]
-        public class UnShared :
-            AnimancerTransitionAsset.UnShared<LinearMixerTransitionAsset, LinearMixerTransition, LinearMixerState>,
+        public new class UnShared :
+            UnShared<LinearMixerTransitionAsset, LinearMixerTransition, LinearMixerState>,
             LinearMixerState.ITransition
         { }
     }
@@ -23,7 +23,8 @@ namespace Animancer
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/LinearMixerTransition
     [Serializable]
-    public class LinearMixerTransition : MixerTransition<LinearMixerState, float>, LinearMixerState.ITransition
+    public class LinearMixerTransition : MixerTransition<LinearMixerState, float>,
+        LinearMixerState.ITransition, ICopyable<LinearMixerTransition>
     {
         /************************************************************************************************************************/
 
@@ -81,8 +82,8 @@ namespace Animancer
         /// <inheritdoc/>
         public override void Apply(AnimancerState state)
         {
-            State.ExtrapolateSpeed = _ExtrapolateSpeed;
             base.Apply(state);
+            State.ExtrapolateSpeed = _ExtrapolateSpeed;
         }
 
         /************************************************************************************************************************/
@@ -142,6 +143,22 @@ namespace Animancer
         }
 
         /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public virtual void CopyFrom(LinearMixerTransition copyFrom)
+        {
+            CopyFrom((MixerTransition<LinearMixerState, float>)copyFrom);
+
+            if (copyFrom == null)
+            {
+                _ExtrapolateSpeed = true;
+                return;
+            }
+
+            _ExtrapolateSpeed = copyFrom._ExtrapolateSpeed;
+        }
+
+        /************************************************************************************************************************/
         #region Drawer
 #if UNITY_EDITOR
         /************************************************************************************************************************/
@@ -167,12 +184,10 @@ namespace Animancer
                     if (previousThreshold.floatValue >= currentThreshold.floatValue)
                     {
                         if (_SortingErrorContent == null)
-                        {
                             _SortingErrorContent = new GUIContent(Editor.AnimancerGUI.LoadIcon("console.erroricon.sml"))
                             {
                                 tooltip = "Linear Mixer Thresholds must always be unique and sorted in ascending order (click to sort)"
                             };
-                        }
 
                         if (_SortingErrorStyle == null)
                             _SortingErrorStyle = new GUIStyle(GUI.skin.label)

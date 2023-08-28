@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -13,7 +13,12 @@ namespace Animancer
     /// <summary>Base class for <see cref="Playable"/> wrapper objects in an <see cref="AnimancerPlayable"/>.</summary>
     /// https://kybernetik.com.au/animancer/api/Animancer/AnimancerNode
     /// 
-    public abstract class AnimancerNode : Key, IUpdatable, IEnumerable<AnimancerState>, IEnumerator, IPlayableWrapper
+    public abstract class AnimancerNode : Key,
+        IUpdatable,
+        IEnumerable<AnimancerState>,
+        IEnumerator,
+        IPlayableWrapper,
+        ICopyable<AnimancerNode>
     {
         /************************************************************************************************************************/
         #region Playable
@@ -22,18 +27,16 @@ namespace Animancer
         /// <summary>
         /// The internal object this node manages in the <see cref="PlayableGraph"/>.
         /// <para></para>
-        /// Must be set by <see cref="CreatePlayable()"/>. Failure to do so will throw the following exception throughout
-        /// the system when using this node: "<see cref="ArgumentException"/>: The playable passed as an argument is
-        /// invalid. To create a valid playable, please use the appropriate Create method".
+        /// Must be set by <see cref="CreatePlayable()"/>. Failure to do so will throw the following exception
+        /// throughout the system when using this node: "<see cref="ArgumentException"/>: The playable passed as an
+        /// argument is invalid. To create a valid playable, please use the appropriate Create method".
         /// </summary>
         protected internal Playable _Playable;
 
-        /// <summary>[Internal] The <see cref="Playable"/> managed by this node.</summary>
-        Playable IPlayableWrapper.Playable => _Playable;
+        /// <summary>The internal <see cref="UnityEngine.Playables.Playable"/> managed by this node.</summary>
+        public Playable Playable => _Playable;
 
-        /// <summary>
-        /// Indicates whether the <see cref="_Playable"/> is usable (properly initialized and not destroyed).
-        /// </summary>
+        /// <summary>Is the <see cref="Playable"/> usable (properly initialized and not destroyed)?</summary>
         public bool IsValid => _Playable.IsValid();
 
         /************************************************************************************************************************/
@@ -108,13 +111,46 @@ namespace Animancer
         }
 
         /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        void ICopyable<AnimancerNode>.CopyFrom(AnimancerNode copyFrom)
+        {
+            _Weight = copyFrom._Weight;
+            _IsWeightDirty = true;
+
+            TargetWeight = copyFrom.TargetWeight;
+            FadeSpeed = copyFrom.FadeSpeed;
+
+            Speed = copyFrom.Speed;
+
+            CopyIKFlags(copyFrom);
+
+#if UNITY_ASSERTIONS
+            SetDebugName(copyFrom.DebugName);
+#endif
+        }
+
+        /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
         #region Graph
         /************************************************************************************************************************/
 
+        private AnimancerPlayable _Root;
+
         /// <summary>The <see cref="AnimancerPlayable"/> at the root of the graph.</summary>
-        public AnimancerPlayable Root { get; internal set; }
+        public AnimancerPlayable Root
+        {
+            get => _Root;
+            internal set
+            {
+                _Root = value;
+
+#if UNITY_ASSERTIONS
+                GC.SuppressFinalize(this);
+#endif
+            }
+        }
 
         /************************************************************************************************************************/
 
@@ -170,6 +206,12 @@ namespace Animancer
         /// </summary>
         private System.Diagnostics.StackTrace _ConstructorStackTrace;
 
+        /// <summary>[Assert-Only]
+        /// Returns the stack trace of the constructor (or null if <see cref="TraceConstructor"/> was false).
+        /// </summary>
+        public static System.Diagnostics.StackTrace GetConstructorStackTrace(AnimancerNode node)
+            => node._ConstructorStackTrace;
+
         /************************************************************************************************************************/
 
         /// <summary>[Assert-Only] Checks <see cref="OptionalWarning.UnusedNode"/>.</summary>
@@ -216,8 +258,8 @@ namespace Animancer
                 throw new InvalidOperationException(
                     $"Invalid {nameof(AnimancerNode)}.{nameof(Index)}" +
                     " when attempting to connect to its parent:" +
-                    "\n    Node: " + this +
-                    "\n    Parent: " + parent);
+                    "\n• Node: " + this +
+                    "\n• Parent: " + parent);
 
             Validate.AssertPlayable(this);
 #endif
@@ -248,9 +290,10 @@ namespace Animancer
             if (Index < 0)
                 throw new InvalidOperationException(
                     $"Invalid {nameof(AnimancerNode)}.{nameof(Index)}" +
-                    " when attempting to connect to its parent:" +
-                    "\n    Node: " + this +
-                    "\n    Parent: " + parent);
+                    $" when attempting to connect to its parent:" +
+                    $"\n• {nameof(Index)}: {Index}" +
+                    $"\n• Node: {this}" +
+                    $"\n• Parent: {this}");
 #endif
 
             _IsWeightDirty = true;
@@ -298,9 +341,7 @@ namespace Animancer
         protected internal virtual void Update(out bool needsMoreUpdates)
         {
             UpdateFade(out needsMoreUpdates);
-
             ApplyWeight();
-
         }
 
         /************************************************************************************************************************/
@@ -312,7 +353,7 @@ namespace Animancer
         /// This method is called by <see cref="IEnumerator.MoveNext"/> so this object can be used as a custom yield
         /// instruction to wait until it finishes.
         /// </remarks>
-        protected internal abstract bool IsPlayingAndNotEnding();
+        public abstract bool IsPlayingAndNotEnding();
 
         bool IEnumerator.MoveNext() => IsPlayingAndNotEnding();
 
@@ -346,7 +387,7 @@ namespace Animancer
         /// <exception cref="NotSupportedException">This node can't have children.</exception>
         protected internal virtual void OnAddChild(AnimancerState state)
         {
-            state.ClearParent();
+            state.SetParentInternal(null);
             throw new NotSupportedException(this + " can't have children.");
         }
 
@@ -354,7 +395,7 @@ namespace Animancer
         /// <exception cref="NotSupportedException">This node can't have children.</exception>
         protected internal virtual void OnRemoveChild(AnimancerState state)
         {
-            state.ClearParent();
+            state.SetParentInternal(null);
             throw new NotSupportedException(this + " can't have children.");
         }
 
@@ -368,21 +409,21 @@ namespace Animancer
 
             if (states[index] != null)
             {
-                state.ClearParent();
+                state.SetParentInternal(null);
                 throw new InvalidOperationException(
                     $"Tried to add a state to an already occupied port on {this}:" +
-                    $"\n    {nameof(Index)}: {index}" +
-                    $"\n    Old State: {states[index]} " +
-                    $"\n    New State: {state}");
+                    $"\n• {nameof(Index)}: {index}" +
+                    $"\n• Old State: {states[index]} " +
+                    $"\n• New State: {state}");
             }
 
 #if UNITY_ASSERTIONS
             if (state.Root != Root)
                 Debug.LogError(
                     $"{nameof(AnimancerNode)}.{nameof(Root)} mismatch:" +
-                    $"\n    {nameof(state)}: {state}" +
-                    $"\n    {nameof(state)}.{nameof(state.Root)}: {state.Root}" +
-                    $"\n    {nameof(Parent)}.{nameof(Root)}: {Root}", Root?.Component as Object);
+                    $"\n• {nameof(state)}: {state}" +
+                    $"\n• {nameof(state)}.{nameof(state.Root)}: {state.Root}" +
+                    $"\n• {nameof(Parent)}.{nameof(Root)}: {Root}", Root?.Component as Object);
 #endif
 
             states[index] = state;
@@ -723,6 +764,102 @@ namespace Animancer
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
+        #region Speed
+        /************************************************************************************************************************/
+
+        private float _Speed = 1;
+
+        /// <summary>[Pro-Only] How fast the <see cref="AnimancerState.Time"/> is advancing every frame (default 1).</summary>
+        /// 
+        /// <remarks>
+        /// A negative value will play the animation backwards.
+        /// <para></para>
+        /// To pause an animation, consider setting <see cref="AnimancerState.IsPlaying"/> to false instead of setting
+        /// this value to 0.
+        /// <para></para>
+        /// <em>Animancer Lite does not allow this value to be changed in runtime builds.</em>
+        /// </remarks>
+        ///
+        /// <example><code>
+        /// void PlayAnimation(AnimancerComponent animancer, AnimationClip clip)
+        /// {
+        ///     var state = animancer.Play(clip);
+        ///
+        ///     state.Speed = 1;// Normal speed.
+        ///     state.Speed = 2;// Double speed.
+        ///     state.Speed = 0.5f;// Half speed.
+        ///     state.Speed = -1;// Normal speed playing backwards.
+        /// }
+        /// </code></example>
+        /// 
+        /// <exception cref="ArgumentOutOfRangeException">The value is not finite.</exception>
+        public float Speed
+        {
+            get => _Speed;
+            set
+            {
+                if (_Speed == value)
+                    return;
+
+#if UNITY_ASSERTIONS
+                if (!value.IsFinite())
+                    throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Speed)} {Strings.MustBeFinite}");
+
+                OptionalWarning.UnsupportedSpeed.Log(UnsupportedSpeedMessage, Root?.Component);
+#endif
+                _Speed = value;
+
+                if (_Playable.IsValid())
+                    _Playable.SetSpeed(value);
+            }
+        }
+
+#if UNITY_ASSERTIONS
+        /// <summary>[Assert-Only]
+        /// Returns null if the <see cref="Speed"/> property will work properly on this type of node, or a message
+        /// explaining why it won't work.
+        /// </summary>
+        protected virtual string UnsupportedSpeedMessage => null;
+#endif
+
+        /************************************************************************************************************************/
+
+        /// <summary>
+        /// The multiplied <see cref="Speed"/> of each of this node's parents down the hierarchy, excluding the root
+        /// <see cref="AnimancerPlayable.Speed"/>.
+        /// </summary>
+        private float ParentEffectiveSpeed
+        {
+            get
+            {
+                var parent = Parent;
+                if (parent == null)
+                    return 1;
+
+                var speed = parent.Speed;
+
+                while ((parent = parent.Parent) != null)
+                {
+                    speed *= parent.Speed;
+                }
+
+                return speed;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="Speed"/> of this node multiplied by the <see cref="Speed"/> of each of its parents to
+        /// determine the actual speed it's playing at.
+        /// </summary>
+        public float EffectiveSpeed
+        {
+            get => Speed * ParentEffectiveSpeed;
+            set => Speed = value / ParentEffectiveSpeed;
+        }
+
+        /************************************************************************************************************************/
+        #endregion
+        /************************************************************************************************************************/
         #region Inverse Kinematics
         /************************************************************************************************************************/
 
@@ -747,21 +884,16 @@ namespace Animancer
         /// <item>If <see cref="ApplyParentFootIK"/> is true, copy <see cref="ApplyFootIK"/>.</item>
         /// </list>
         /// </summary>
-        public virtual void CopyIKFlags(AnimancerNode node)
+        public virtual void CopyIKFlags(AnimancerNode copyFrom)
         {
             if (Root == null)
                 return;
 
             if (ApplyParentAnimatorIK)
-            {
-                ApplyAnimatorIK = node.ApplyAnimatorIK;
-                if (ApplyParentFootIK)
-                    ApplyFootIK = node.ApplyFootIK;
-            }
-            else if (ApplyParentFootIK)
-            {
-                ApplyFootIK = node.ApplyFootIK;
-            }
+                ApplyAnimatorIK = copyFrom.ApplyAnimatorIK;
+
+            if (ApplyParentFootIK)
+                ApplyFootIK = copyFrom.ApplyFootIK;
         }
 
         /************************************************************************************************************************/
@@ -831,99 +963,6 @@ namespace Animancer
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
-        #region Speed
-        /************************************************************************************************************************/
-
-        private float _Speed = 1;
-
-        /// <summary>[Pro-Only] How fast the <see cref="AnimancerState.Time"/> is advancing every frame (default 1).</summary>
-        /// 
-        /// <remarks>
-        /// A negative value will play the animation backwards.
-        /// <para></para>
-        /// To pause an animation, consider setting <see cref="AnimancerState.IsPlaying"/> to false instead of setting
-        /// this value to 0.
-        /// <para></para>
-        /// <em>Animancer Lite does not allow this value to be changed in runtime builds.</em>
-        /// </remarks>
-        ///
-        /// <example><code>
-        /// void PlayAnimation(AnimancerComponent animancer, AnimationClip clip)
-        /// {
-        ///     var state = animancer.Play(clip);
-        ///
-        ///     state.Speed = 1;// Normal speed.
-        ///     state.Speed = 2;// Double speed.
-        ///     state.Speed = 0.5f;// Half speed.
-        ///     state.Speed = -1;// Normal speed playing backwards.
-        /// }
-        /// </code></example>
-        /// 
-        /// <exception cref="ArgumentOutOfRangeException">The value is not finite.</exception>
-        public float Speed
-        {
-            get => _Speed;
-            set
-            {
-#if UNITY_ASSERTIONS
-                if (!value.IsFinite())
-                    throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Speed)} must be finite");
-
-                OptionalWarning.UnsupportedSpeed.Log(UnsupportedSpeedMessage, Root?.Component);
-#endif
-                _Speed = value;
-
-                if (_Playable.IsValid())
-                    _Playable.SetSpeed(value);
-            }
-        }
-
-#if UNITY_ASSERTIONS
-        /// <summary>[Assert-Only]
-        /// Returns null if the <see cref="Speed"/> property will work properly on this type of node, or a message
-        /// explaining why it won't work.
-        /// </summary>
-        protected virtual string UnsupportedSpeedMessage => null;
-#endif
-
-        /************************************************************************************************************************/
-
-        /// <summary>
-        /// The multiplied <see cref="Speed"/> of each of this node's parents down the hierarchy, excluding the root
-        /// <see cref="AnimancerPlayable.Speed"/>.
-        /// </summary>
-        private float ParentEffectiveSpeed
-        {
-            get
-            {
-                var parent = Parent;
-                if (parent == null)
-                    return 1;
-
-                var speed = parent.Speed;
-
-                while ((parent = parent.Parent) != null)
-                {
-                    speed *= parent.Speed;
-                }
-
-                return speed;
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="Speed"/> of this node multiplied by the <see cref="Speed"/> of each of its parents to
-        /// determine the actual speed it's playing at.
-        /// </summary>
-        public float EffectiveSpeed
-        {
-            get => Speed * ParentEffectiveSpeed;
-            set => Speed = value / ParentEffectiveSpeed;
-        }
-
-        /************************************************************************************************************************/
-        #endregion
-        /************************************************************************************************************************/
         #region Descriptions
         /************************************************************************************************************************/
 
@@ -983,7 +1022,10 @@ namespace Animancer
                 foreach (var child in this)
                 {
                     text.Append(separator).Append('[').Append(i++).Append("] ");
-                    child.AppendDescription(text, indentedSeparator);
+                    if (child != null)
+                        child.AppendDescription(text, indentedSeparator);
+                    else
+                        text.Append("null");
                 }
             }
         }
@@ -1031,6 +1073,9 @@ namespace Animancer
         /// </summary>
         public static void AppendIKDetails(StringBuilder text, string separator, IPlayableWrapper node)
         {
+            if (!node.Playable.IsValid())
+                return;
+
             text.Append(separator).Append("InverseKinematics: ");
             if (node.ApplyAnimatorIK)
             {

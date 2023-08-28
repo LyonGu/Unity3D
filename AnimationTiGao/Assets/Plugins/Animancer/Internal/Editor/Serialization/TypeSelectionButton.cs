@@ -1,4 +1,4 @@
-// Animancer // Copyright 2021 Kybernetik //
+// Animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -145,7 +145,8 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Adds a menu function to assign a new instance of the `newType` to the `property`.</summary>
-        private static void AddTypeSelector(GenericMenu menu, SerializedProperty property, Type fieldType, Type selectedType, Type newType)
+        private static void AddTypeSelector(
+            GenericMenu menu, SerializedProperty property, Type fieldType, Type selectedType, Type newType)
         {
             var label = GetSelectorLabel(fieldType, newType);
             var state = selectedType == newType ? MenuFunctionState.Selected : MenuFunctionState.Normal;

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -25,7 +25,7 @@ namespace Animancer
         float NormalizedStartTime { get; set; }
 
         /// <summary>The maximum amount of time the animation is expected to take (in seconds).</summary>
-        /// <remarks>The actual duration can vary in states like <see cref="MixerState"/>.</remarks>
+        /// <remarks>The actual duration can vary in states like <see cref="ManualMixerState"/>.</remarks>
         float MaximumDuration { get; }
 
         /// <summary>The <see cref="AnimancerNode.Speed"/> to play the animation at.</summary>

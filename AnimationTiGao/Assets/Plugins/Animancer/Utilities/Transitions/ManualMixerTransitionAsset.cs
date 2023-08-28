@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using Animancer.Units;
 using System;
@@ -16,8 +16,8 @@ namespace Animancer
     {
         /// <inheritdoc/>
         [Serializable]
-        public class UnShared :
-            AnimancerTransitionAsset.UnShared<ManualMixerTransitionAsset, ManualMixerTransition, ManualMixerState>,
+        public new class UnShared :
+            UnShared<ManualMixerTransitionAsset, ManualMixerTransition, ManualMixerState>,
             ManualMixerState.ITransition
         { }
     }
@@ -25,7 +25,8 @@ namespace Animancer
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/ManualMixerTransition_1
     [Serializable]
-    public abstract class ManualMixerTransition<TMixer> : AnimancerTransition<TMixer>, IMotion, IAnimationClipCollection
+    public abstract class ManualMixerTransition<TMixer> : AnimancerTransition<TMixer>,
+        IMotion, IAnimationClipCollection, ICopyable<ManualMixerTransition<TMixer>>
         where TMixer : ManualMixerState
     {
         /************************************************************************************************************************/
@@ -84,7 +85,7 @@ namespace Animancer
         private bool[] _SynchronizeChildren;
 
         /// <summary>[<see cref="SerializeField"/>]
-        /// The flags to be used in <see cref="MixerState.InitializeSynchronizedChildren"/>.
+        /// The flags to be used in <see cref="ManualMixerState.InitializeSynchronizedChildren"/>.
         /// </summary>
         /// <remarks>The array can be null or empty. Any elements not in the array will be treated as true.</remarks>
         public ref bool[] SynchronizeChildren => ref _SynchronizeChildren;
@@ -218,16 +219,17 @@ namespace Animancer
         public virtual void InitializeState()
         {
             var mixer = State;
+            var childCount = mixer.ChildCount;
 
-            var auto = MixerState.AutoSynchronizeChildren;
+            var auto = ManualMixerState.SynchronizeNewChildren;
             try
             {
-                MixerState.AutoSynchronizeChildren = false;
-                mixer.Initialize(_Animations);
+                ManualMixerState.SynchronizeNewChildren = false;
+                mixer.AddRange(_Animations);
             }
             finally
             {
-                MixerState.AutoSynchronizeChildren = auto;
+                ManualMixerState.SynchronizeNewChildren = auto;
             }
 
             mixer.InitializeSynchronizedChildren(_SynchronizeChildren);
@@ -242,10 +244,9 @@ namespace Animancer
                         mixer.Root?.Component as Object);
 #endif
 
-                var children = mixer.ChildStates;
-                var count = Math.Min(children.Count, _Speeds.Length);
-                while (--count >= 0)
-                    children[count].Speed = _Speeds[count];
+                var count = Math.Min(_Animations.Length, _Speeds.Length);
+                for (int i = count - 1; i >= 0; i--)
+                    mixer.GetChild(childCount + i).Speed = _Speeds[i];
             }
         }
 
@@ -267,7 +268,30 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>Adds the <see cref="Animations"/> to the collection.</summary>
-        void IAnimationClipCollection.GatherAnimationClips(ICollection<AnimationClip> clips) => clips.GatherFromSource(_Animations);
+        void IAnimationClipCollection.GatherAnimationClips(ICollection<AnimationClip> clips)
+            => clips.GatherFromSource(_Animations);
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public virtual void CopyFrom(ManualMixerTransition<TMixer> copyFrom)
+        {
+            CopyFrom((AnimancerTransition<TMixer>)copyFrom);
+
+            if (copyFrom == null)
+            {
+                _Speed = 1;
+                _Animations = default;
+                _Speeds = default;
+                _SynchronizeChildren = default;
+                return;
+            }
+
+            _Speed = copyFrom._Speed;
+            AnimancerUtilities.CopyExactArray(copyFrom._Animations, ref _Animations);
+            AnimancerUtilities.CopyExactArray(copyFrom._Speeds, ref _Speeds);
+            AnimancerUtilities.CopyExactArray(copyFrom._SynchronizeChildren, ref _SynchronizeChildren);
+        }
 
         /************************************************************************************************************************/
     }

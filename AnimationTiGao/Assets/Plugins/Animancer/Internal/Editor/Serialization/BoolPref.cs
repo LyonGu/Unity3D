@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -11,11 +11,11 @@ namespace Animancer.Editor
     /// A simple wrapper around <see cref="EditorPrefs"/> to get and set a bool.
     /// <para></para>
     /// If you are interested in a more comprehensive pref wrapper that supports more types, you should check out
-    /// <see href="https://kybernetik.com.au/inspector-gadgets">Inspector Gadgets</see>.
+    /// <see href="https://kybernetik.com.au/inspector-gadgets/docs/other/auto-prefs">Inspector Gadgets - Auto Prefs</see>.
     /// </summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/BoolPref
     /// 
-    public sealed class BoolPref
+    public class BoolPref
     {
         /************************************************************************************************************************/
 

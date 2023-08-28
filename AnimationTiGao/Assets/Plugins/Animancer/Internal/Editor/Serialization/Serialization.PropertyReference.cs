@@ -1,4 +1,4 @@
-// Serialization // Copyright 2021 Kybernetik //
+// Serialization // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-// Shared File Last Modified: 2021-07-24.
+// Shared File Last Modified: 2021-12-11.
 namespace Animancer.Editor
 // namespace InspectorGadgets.Editor
 {
@@ -16,7 +16,7 @@ namespace Animancer.Editor
     {
         /// <summary>[Editor-Only] A serializable reference to a <see cref="SerializedProperty"/>.</summary>
         [Serializable]
-        public sealed class PropertyReference
+        public class PropertyReference
         {
             /************************************************************************************************************************/
 

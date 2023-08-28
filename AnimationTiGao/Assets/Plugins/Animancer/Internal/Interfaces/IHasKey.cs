@@ -1,10 +1,10 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 namespace Animancer
 {
     /// <summary>Exposes a <see cref="Key"/> object that can be used for dictionaries and hash sets.</summary>
     /// <remarks>
-    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/playing/states#keys">Keys</see>
+    /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/playing/keys">Keys</see>
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/IHasKey
     /// 

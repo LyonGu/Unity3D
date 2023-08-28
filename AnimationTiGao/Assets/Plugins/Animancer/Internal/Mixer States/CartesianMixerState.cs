@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Text;
@@ -17,7 +17,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/CartesianMixerState
     /// 
-    public class CartesianMixerState : MixerState<Vector2>
+    public class CartesianMixerState : MixerState<Vector2>, ICopyable<CartesianMixerState>
     {
         /************************************************************************************************************************/
 
@@ -34,6 +34,12 @@ namespace Animancer
             get => Parameter.y;
             set => Parameter = new Vector2(Parameter.x, value);
         }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override string GetParameterError(Vector2 value)
+            => value.IsFinite() ? null : $"value.x and value.y {Strings.MustBeFinite}";
 
         /************************************************************************************************************************/
 
@@ -58,7 +64,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
-        /// Recalculates the weights of all <see cref="MixerState.ChildStates"/> based on the current value of the
+        /// Recalculates the weights of all <see cref="ManualMixerState.ChildStates"/> based on the current value of the
         /// <see cref="MixerState{TParameter}.Parameter"/> and the <see cref="MixerState{TParameter}._Thresholds"/>.
         /// </summary>
         protected override void ForceRecalculateWeights()
@@ -143,13 +149,42 @@ namespace Animancer
                 {
                     var thresholdIToJ = GetThreshold(j) - thresholdI;
 
-                    thresholdIToJ *= 1f / thresholdIToJ.sqrMagnitude;
+#if UNITY_ASSERTIONS
+                    if (thresholdIToJ == default)
+                        throw new ArgumentException(
+                            $"Mixer has multiple identical thresholds.\n{GetDescription()}");
+#endif
+
+                    thresholdIToJ /= thresholdIToJ.sqrMagnitude;
 
                     // Each factor is used in [i][j] with it's opposite in [j][i].
                     blendFactors[j] = thresholdIToJ;
                     _BlendFactors[j][i] = -thresholdIToJ;
                 }
             }
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new CartesianMixerState();
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<CartesianMixerState>)clone).CopyFrom(this);
+            return clone;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        void ICopyable<CartesianMixerState>.CopyFrom(CartesianMixerState copyFrom)
+        {
+            _BlendFactorsDirty = copyFrom._BlendFactorsDirty;
+            if (!_BlendFactorsDirty)
+                _BlendFactors = copyFrom._BlendFactors;
+
+            ((ICopyable<MixerState<Vector2>>)this).CopyFrom(copyFrom);
         }
 
         /************************************************************************************************************************/

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System.Collections.Generic;
 
@@ -7,7 +7,7 @@ namespace Animancer
     /// <summary>A simple stack implementation that tracks an active index without actually adding or removing objects.</summary>
     /// https://kybernetik.com.au/animancer/api/Animancer/LazyStack_1
     /// 
-    public sealed class LazyStack<T> where T : new()
+    public class LazyStack<T> where T : new()
     {
         /************************************************************************************************************************/
 

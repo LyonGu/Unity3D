@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace Animancer
     /// <see cref="EqualityComparer{T}.Default"/> for types derived from <see cref="UnityEngine.Object"/>.
     /// </summary>
     /// <remarks>
-    /// This class is used when <see cref="AnimancerPlayable.StateDictionary.ReferenceKeysOnly"/> is false.
+    /// This class is used in <see cref="AnimancerPlayable.StateDictionary.EqualityComparer"/> by default.
     /// <para></para>
     /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/playing/states#performance">Performance</see>
     /// </remarks>
@@ -36,7 +36,7 @@ namespace Animancer
     /// <see cref="FastComparer"/>. Unfortunately this means it will not work for boxed value types (such as enums).
     /// </summary>
     /// <remarks>
-    /// This class is used when <see cref="AnimancerPlayable.StateDictionary.ReferenceKeysOnly"/> is true.
+    /// This class can be used in <see cref="AnimancerPlayable.StateDictionary.EqualityComparer"/>.
     /// <para></para>
     /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/playing/states#performance">Performance</see>
     /// </remarks>

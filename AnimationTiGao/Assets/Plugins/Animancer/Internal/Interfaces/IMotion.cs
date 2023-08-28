@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -12,11 +12,11 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>The initial <see cref="Motion.averageAngularSpeed"/> that the created state will have.</summary>
-        /// <remarks>The actual average can vary in states like <see cref="MixerState"/>.</remarks>
+        /// <remarks>The actual average can vary in states like <see cref="ManualMixerState"/>.</remarks>
         float AverageAngularSpeed { get; }
 
         /// <summary>The initial <see cref="Motion.averageSpeed"/> that the created state will have.</summary>
-        /// <remarks>The actual average can vary in states like <see cref="MixerState"/>.</remarks>
+        /// <remarks>The actual average can vary in states like <see cref="ManualMixerState"/>.</remarks>
         Vector3 AverageVelocity { get; }
 
         /************************************************************************************************************************/

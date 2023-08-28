@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -44,6 +44,7 @@ namespace Animancer.FSM
             else
                 UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
 #endif
+
             enabled = true;
         }
 
@@ -61,6 +62,7 @@ namespace Animancer.FSM
             if (!enabled)
                 Debug.LogError($"{nameof(StateBehaviour)} was already disabled before {nameof(OnExitState)}: {this}", this);
 #endif
+
             enabled = false;
         }
 

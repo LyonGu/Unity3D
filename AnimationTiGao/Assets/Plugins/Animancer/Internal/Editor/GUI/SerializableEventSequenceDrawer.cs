@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -17,7 +17,7 @@ namespace Animancer.Editor
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/SerializableEventSequenceDrawer
     /// 
     [CustomPropertyDrawer(typeof(Sequence), true)]
-    public sealed class SerializableEventSequenceDrawer : PropertyDrawer
+    public class SerializableEventSequenceDrawer : PropertyDrawer
     {
         /************************************************************************************************************************/
 
@@ -54,6 +54,9 @@ namespace Animancer.Editor
         /// </summary>
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            if (property.hasMultipleDifferentValues)
+                return AnimancerGUI.LineHeight;
+
             using (var context = Context.Get(property))
             {
                 var height = AnimancerGUI.LineHeight;
@@ -85,10 +88,13 @@ namespace Animancer.Editor
             height += EventTimeAttribute.GetPropertyHeight(null, null) + AnimancerGUI.StandardSpacing;
 
             // Callback.
-            height += index < context.Callbacks.Count ?
-                EditorGUI.GetPropertyHeight(context.Callbacks.GetElement(index), null, false) :
-                DummySerializableCallback.Height;
-            height += AnimancerGUI.StandardSpacing;
+            if (!AnimancerSettings.HideEventCallbacks || context.Callbacks.Count > 0)
+            {
+                height += index < context.Callbacks.Count ?
+                    EditorGUI.GetPropertyHeight(context.Callbacks.GetElement(index), null, false) :
+                    DummySerializableCallback.Height;
+                height += AnimancerGUI.StandardSpacing;
+            }
 
             return height;
         }
@@ -102,12 +108,12 @@ namespace Animancer.Editor
             {
                 DoHeaderGUI(ref area, label, context);
 
-                if (!property.hasMultipleDifferentValues)
-                {
-                    EditorGUI.indentLevel++;
-                    DoAllEventsGUI(ref area, context);
-                    EditorGUI.indentLevel--;
-                }
+                if (property.hasMultipleDifferentValues)
+                    return;
+
+                EditorGUI.indentLevel++;
+                DoAllEventsGUI(ref area, context);
+                EditorGUI.indentLevel--;
 
                 var sequence = context.Sequence?.InitializedEvents;
                 if (sequence != null)
@@ -125,6 +131,11 @@ namespace Animancer.Editor
 
         private void DoHeaderGUI(ref Rect area, GUIContent label, Context context)
         {
+#if UNITY_2022_2_OR_NEWER
+            if (!EditorGUIUtility.hierarchyMode)
+                EditorGUI.indentLevel--;
+#endif
+
             area.height = AnimancerGUI.LineHeight;
             var headerArea = area;
             AnimancerGUI.NextVerticalArea(ref area);
@@ -175,6 +186,11 @@ namespace Animancer.Editor
                 EditorGUI.Foldout(headerArea, context.Property.isExpanded, GUIContent.none, true);
             if (EditorGUI.EndChangeCheck())
                 context.SelectedEvent = -1;
+
+#if UNITY_2022_2_OR_NEWER
+            if (!EditorGUIUtility.hierarchyMode)
+                EditorGUI.indentLevel++;
+#endif
         }
 
         /************************************************************************************************************************/
@@ -192,6 +208,8 @@ namespace Animancer.Editor
                 return;
 
             var rootControlID = GUIUtility.GetControlID(EventTimeHash - 1, FocusType.Passive);
+
+            var warnings = OptionalWarning.LockedEvents.DisableTemporarily();
 
             var eventCount = Mathf.Max(1, context.Times.Count);
             for (int i = 0; i < eventCount; i++)
@@ -223,6 +241,8 @@ namespace Animancer.Editor
                     GUIUtility.ExitGUI();
                 }
             }
+
+            warnings.Enable();
         }
 
         /************************************************************************************************************************/
@@ -292,7 +312,12 @@ namespace Animancer.Editor
                 var nameProperty = context.Names.GetElement(index);
 
                 EditorGUI.BeginProperty(fieldArea, GUIContent.none, nameProperty);
-                name = nameProperty.stringValue = DoEventNameTextField(fieldArea, context, nameProperty.stringValue);
+
+                EditorGUI.BeginChangeCheck();
+                name = DoEventNameTextField(fieldArea, context, nameProperty.stringValue);
+                if (EditorGUI.EndChangeCheck())
+                    nameProperty.stringValue = name;
+
                 EditorGUI.EndProperty();
             }
             else
@@ -524,6 +549,9 @@ namespace Animancer.Editor
         /// <summary>Draws the GUI fields for the event at the specified `index`.</summary>
         public static void DoCallbackGUI(ref Rect area, Context context, int index, bool autoSort, string callbackLabel)
         {
+            if (AnimancerSettings.HideEventCallbacks && context.Callbacks.Count == 0)
+                return;
+
             EditorGUI.BeginChangeCheck();
 
             using (ObjectPool.Disposable.AcquireContent(out var label, callbackLabel))
@@ -598,7 +626,7 @@ namespace Animancer.Editor
                     var events = context.Sequence?.InitializedEvents;
                     if (events != null)
                     {
-                        var animancerEvent = index < events.Count ? events[index] : events.endEvent;
+                        var animancerEvent = index < events.Count ? events[index] : events.EndEvent;
                         if (AnimancerEvent.IsNullOrDummy(animancerEvent.callback))
                         {
                             context.Callbacks.Property.serializedObject.ApplyModifiedProperties();
@@ -830,7 +858,7 @@ namespace Animancer.Editor
                 var events = context.Sequence?.InitializedEvents;
                 if (events != null)
                 {
-                    events.endEvent = new AnimancerEvent(float.NaN, null);
+                    events.EndEvent = new AnimancerEvent(float.NaN, null);
                 }
             }
             else// Otherwise remove it.
@@ -887,7 +915,7 @@ namespace Animancer.Editor
         /************************************************************************************************************************/
 
         /// <summary>Details of an <see cref="AnimancerEvent.Sequence.Serializable"/>.</summary>
-        public sealed class Context : IDisposable
+        public class Context : IDisposable
         {
             /************************************************************************************************************************/
 
@@ -993,7 +1021,7 @@ namespace Animancer.Editor
                 Names.Property = property.FindPropertyRelative(Sequence.NamesField);
                 Callbacks.Property = property.FindPropertyRelative(Sequence.CallbacksField);
 
-                if (Names.Count >= Times.Count)
+                if (Names.Count > Times.Count)
                     Names.Count = Times.Count;
                 if (Callbacks.Count > Times.Count)
                     Callbacks.Count = Times.Count;

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Animancer
     /// <seealso cref="Float2ControllerState"/>
     /// https://kybernetik.com.au/animancer/api/Animancer/Float3ControllerState
     /// 
-    public sealed class Float3ControllerState : ControllerState
+    public class Float3ControllerState : ControllerState
     {
         /************************************************************************************************************************/
 
@@ -39,10 +39,15 @@ namespace Animancer
         /// Gets and sets a float parameter in the <see cref="ControllerState.Controller"/> using the
         /// <see cref="ParameterXID"/>.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value is NaN or Infinity.</exception>
         public float ParameterX
         {
             get => Playable.GetFloat(_ParameterXID.Hash);
-            set => Playable.SetFloat(_ParameterXID.Hash, value);
+            set
+            {
+                AssertParameterValue(value);
+                Playable.SetFloat(_ParameterXID.Hash, value);
+            }
         }
 
         /************************************************************************************************************************/
@@ -64,10 +69,15 @@ namespace Animancer
         /// Gets and sets a float parameter in the <see cref="ControllerState.Controller"/> using the
         /// <see cref="ParameterYID"/>.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value is NaN or Infinity.</exception>
         public float ParameterY
         {
             get => Playable.GetFloat(_ParameterYID.Hash);
-            set => Playable.SetFloat(_ParameterYID.Hash, value);
+            set
+            {
+                AssertParameterValue(value);
+                Playable.SetFloat(_ParameterYID.Hash, value);
+            }
         }
 
         /************************************************************************************************************************/
@@ -89,10 +99,15 @@ namespace Animancer
         /// Gets and sets a float parameter in the <see cref="ControllerState.Controller"/> using the
         /// <see cref="ParameterZID"/>.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value is NaN or Infinity.</exception>
         public float ParameterZ
         {
             get => Playable.GetFloat(_ParameterZID.Hash);
-            set => Playable.SetFloat(_ParameterZID.Hash, value);
+            set
+            {
+                AssertParameterValue(value);
+                Playable.SetFloat(_ParameterZID.Hash, value);
+            }
         }
 
         /************************************************************************************************************************/
@@ -115,8 +130,8 @@ namespace Animancer
 
         /// <summary>Creates a new <see cref="Float3ControllerState"/> to play the `controller`.</summary>
         public Float3ControllerState(RuntimeAnimatorController controller,
-            ParameterID parameterX, ParameterID parameterY, ParameterID parameterZ, bool keepStateOnStop = false)
-            : base(controller, keepStateOnStop)
+            ParameterID parameterX, ParameterID parameterY, ParameterID parameterZ, params ActionOnStop[] actionsOnStop)
+            : base(controller, actionsOnStop)
         {
             _ParameterXID = parameterX;
             _ParameterXID.ValidateHasParameter(Controller, AnimatorControllerParameterType.Float);
@@ -127,6 +142,12 @@ namespace Animancer
             _ParameterZID = parameterZ;
             _ParameterZID.ValidateHasParameter(Controller, AnimatorControllerParameterType.Float);
         }
+
+        /// <summary>Creates a new <see cref="Float3ControllerState"/> to play the `controller`.</summary>
+        public Float3ControllerState(RuntimeAnimatorController controller,
+            ParameterID parameterX, ParameterID parameterY, ParameterID parameterZ)
+            : this(controller, parameterX, parameterY, parameterZ, null)
+        { }
 
         /************************************************************************************************************************/
 
@@ -143,6 +164,17 @@ namespace Animancer
                 case 2: return _ParameterZID;
                 default: throw new ArgumentOutOfRangeException(nameof(index));
             };
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new Float3ControllerState(Controller, _ParameterXID, _ParameterYID, _ParameterZID);
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<ControllerState>)clone).CopyFrom(this);
+            return clone;
         }
 
         /************************************************************************************************************************/

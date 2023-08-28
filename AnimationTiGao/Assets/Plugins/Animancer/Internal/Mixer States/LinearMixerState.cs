@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Text;
@@ -20,7 +20,7 @@ namespace Animancer
     /// </remarks>
     /// https://kybernetik.com.au/animancer/api/Animancer/LinearMixerState
     /// 
-    public class LinearMixerState : MixerState<float>
+    public class LinearMixerState : MixerState<float>, ICopyable<LinearMixerState>
     {
         /************************************************************************************************************************/
 
@@ -64,56 +64,29 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
-        /// <summary>
-        /// Initializes the <see cref="AnimationMixerPlayable"/> and <see cref="ManualMixerState._Children"/> with one
-        /// state per clip and assigns thresholds evenly spaced between the specified min and max (inclusive).
-        /// </summary>
-        public void Initialize(AnimationClip[] clips, float minThreshold = 0, float maxThreshold = 1)
-        {
-#if UNITY_ASSERTIONS
-            if (minThreshold >= maxThreshold)
-                throw new ArgumentException($"{nameof(minThreshold)} must be less than {nameof(maxThreshold)}");
-#endif
+        /// <inheritdoc/>
+        public override string GetParameterError(float value)
+            => value.IsFinite() ? null : Strings.MustBeFinite;
 
-            base.Initialize(clips);
-            AssignLinearThresholds(minThreshold, maxThreshold);
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override AnimancerState Clone(AnimancerPlayable root)
+        {
+            var clone = new LinearMixerState();
+            clone.SetNewCloneRoot(root);
+            ((ICopyable<LinearMixerState>)clone).CopyFrom(this);
+            return clone;
         }
 
         /************************************************************************************************************************/
 
-        /// <summary>
-        /// Initializes the <see cref="AnimationMixerPlayable"/> with two ports and connects two states to them for
-        /// the specified clips at the specified thresholds (default 0 and 1).
-        /// </summary>
-        public void Initialize(AnimationClip clip0, AnimationClip clip1,
-            float threshold0 = 0, float threshold1 = 1)
+        /// <inheritdoc/>
+        void ICopyable<LinearMixerState>.CopyFrom(LinearMixerState copyFrom)
         {
-            Initialize(2);
-            CreateChild(0, clip0);
-            CreateChild(1, clip1);
-            SetThresholds(threshold0, threshold1);
-#if UNITY_ASSERTIONS
-            AssertThresholdsSorted();
-#endif
-        }
+            _ExtrapolateSpeed = copyFrom._ExtrapolateSpeed;
 
-        /************************************************************************************************************************/
-
-        /// <summary>
-        /// Initializes the <see cref="AnimationMixerPlayable"/> with three ports and connects three states to them for
-        /// the specified clips at the specified thresholds (default -1, 0, and 1).
-        /// </summary>
-        public void Initialize(AnimationClip clip0, AnimationClip clip1, AnimationClip clip2,
-            float threshold0 = -1, float threshold1 = 0, float threshold2 = 1)
-        {
-            Initialize(3);
-            CreateChild(0, clip0);
-            CreateChild(1, clip1);
-            CreateChild(2, clip2);
-            SetThresholds(threshold0, threshold1, threshold2);
-#if UNITY_ASSERTIONS
-            AssertThresholdsSorted();
-#endif
+            ((ICopyable<MixerState<float>>)this).CopyFrom(copyFrom);
         }
 
         /************************************************************************************************************************/
@@ -158,7 +131,7 @@ namespace Animancer
             var childCount = ChildCount;
             for (int i = 0; i < childCount; i++)
             {
-                var state = GetChild(i);
+                var state = ChildStates[i];
                 if (state == null)
                     continue;
 
@@ -166,15 +139,17 @@ namespace Animancer
                 if (next > previous)
                     previous = next;
                 else
-                    throw new ArgumentException("Thresholds are out of order." +
-                        " They must be sorted from lowest to highest with no equal values.");
+                    throw new ArgumentException(
+                        (next == previous ? "Mixer has multiple identical thresholds." : "Mixer has thresholds out of order.") +
+                        " They must be sorted from lowest to highest with no equal values." +
+                        "\n" + GetDescription());
             }
         }
 
         /************************************************************************************************************************/
 
         /// <summary>
-        /// Recalculates the weights of all <see cref="ManualMixerState._Children"/> based on the current value of the
+        /// Recalculates the weights of all <see cref="ManualMixerState.ChildStates"/> based on the
         /// <see cref="MixerState{TParameter}.Parameter"/> and the thresholds.
         /// </summary>
         protected override void ForceRecalculateWeights()
@@ -189,10 +164,12 @@ namespace Animancer
             // Go through all states, figure out how much weight to give those with thresholds adjacent to the
             // current parameter value using linear interpolation, and set all others to 0 weight.
 
-            var index = 0;
-            var previousState = GetNextState(ref index);
-            if (previousState == null)
+            var childCount = ChildCount;
+            if (childCount == 0)
                 goto ResetExtrapolatedSpeed;
+
+            var index = 0;
+            var previousState = ChildStates[index];
 
             var parameter = Parameter;
             var previousThreshold = GetThreshold(index);
@@ -209,13 +186,9 @@ namespace Animancer
             }
             else
             {
-                var childCount = ChildCount;
                 while (++index < childCount)
                 {
-                    var nextState = GetNextState(ref index);
-                    if (nextState == null)
-                        break;
-
+                    var nextState = ChildStates[index];
                     var nextThreshold = GetThreshold(index);
 
                     if (parameter > previousThreshold && parameter <= nextThreshold)
@@ -253,8 +226,12 @@ namespace Animancer
         /// <summary>
         /// Assigns the thresholds to be evenly spaced between the specified min and max (inclusive).
         /// </summary>
-        public void AssignLinearThresholds(float min = 0, float max = 1)
+        public LinearMixerState AssignLinearThresholds(float min = 0, float max = 1)
         {
+#if UNITY_ASSERTIONS
+            if (min >= max)
+                throw new ArgumentException($"{nameof(min)} must be less than {nameof(max)}");
+#endif
             var childCount = ChildCount;
 
             var thresholds = new float[childCount];
@@ -270,6 +247,8 @@ namespace Animancer
             }
 
             SetThresholds(thresholds);
+
+            return this;
         }
 
         /************************************************************************************************************************/

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using Animancer.Units;
 using System;
@@ -21,7 +21,7 @@ namespace Animancer
     [AddComponentMenu(Strings.MenuPrefix + "Solo Animation")]
     [DefaultExecutionOrder(DefaultExecutionOrder)]
     [HelpURL(Strings.DocsURLs.APIDocumentation + "/" + nameof(SoloAnimation))]
-    public sealed class SoloAnimation : MonoBehaviour, IAnimationClipSource
+    public class SoloAnimation : MonoBehaviour, IAnimationClipSource
     {
         /************************************************************************************************************************/
         #region Fields and Properties
@@ -88,8 +88,13 @@ namespace Animancer
         /// </remarks>
         public bool StopOnDisable
         {
+#if UNITY_2022_2_OR_NEWER
+            get => !_Animator.keepAnimatorStateOnDisable;
+            set => _Animator.keepAnimatorStateOnDisable = !value;
+#else
             get => !_Animator.keepAnimatorControllerStateOnDisable;
             set => _Animator.keepAnimatorControllerStateOnDisable = !value;
+#endif
         }
 
         /************************************************************************************************************************/
@@ -215,7 +220,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         [SerializeField, Tooltip("Should the " + nameof(Clip) + " be automatically applied to the object in Edit Mode?")]
-        private bool _ApplyInEditMode = true;
+        private bool _ApplyInEditMode;
 
         /// <summary>[Editor-Only] Should the <see cref="Clip"/> be automatically applied to the object in Edit Mode?</summary>
         public ref bool ApplyInEditMode => ref _ApplyInEditMode;
@@ -230,7 +235,7 @@ namespace Animancer
         /// Called by the Unity Editor when this component is first added (in Edit Mode) and whenever the Reset command
         /// is executed from its context menu.
         /// </remarks>
-        private void Reset()
+        protected virtual void Reset()
         {
             gameObject.GetComponentInParentOrChildren(ref _Animator);
         }
@@ -241,7 +246,7 @@ namespace Animancer
         /// Applies the <see cref="Speed"/>, <see cref="FootIK"/>, and <see cref="ApplyInEditMode"/>.
         /// </summary>
         /// <remarks>Called in Edit Mode whenever this script is loaded or a value is changed in the Inspector.</remarks>
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (IsInitialized)
             {
@@ -286,8 +291,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>Plays the <see cref="Clip"/> on the target <see cref="Animator"/>.</summary>
-        /// <remarks>Called by Unity when this component becomes enabled and active.</remarks>
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             IsPlaying = true;
         }
@@ -297,8 +301,7 @@ namespace Animancer
         /// <summary>
         /// Checks if the animation is done so it can pause the <see cref="PlayableGraph"/> to improve performance.
         /// </summary>
-        /// <remarks>Called by Unity every frame while this component is enabled and active.</remarks>
-        private void Update()
+        protected virtual void Update()
         {
             if (!IsPlaying)
                 return;
@@ -317,8 +320,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>Ensures that the <see cref="_Graph"/> is properly cleaned up.</summary>
-        /// <remarks>Called by Unity when this component becomes disabled or inactive.</remarks>
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             IsPlaying = false;
 
@@ -333,8 +335,7 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>Ensures that the <see cref="PlayableGraph"/> is properly cleaned up.</summary>
-        /// <remarks>Called by Unity when this component is destroyed.</remarks>
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (IsInitialized)
                 _Graph.Destroy();
@@ -369,8 +370,11 @@ namespace Animancer
 
 namespace Animancer.Editor
 {
+    /// <summary>[Editor-Only] A custom Inspector for <see cref="SoloAnimation"/>.</summary>
+    /// https://kybernetik.com.au/animancer/api/Animancer.Editor/SoloAnimationEditor
+    /// 
     [UnityEditor.CustomEditor(typeof(SoloAnimation)), UnityEditor.CanEditMultipleObjects]
-    internal sealed class SoloAnimationEditor : UnityEditor.Editor
+    public class SoloAnimationEditor : UnityEditor.Editor
     {
         /************************************************************************************************************************/
 
@@ -388,6 +392,7 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
+        /// <inheritdoc/>
         public override void OnInspectorGUI()
         {
             DoSerializedFieldsGUI();
@@ -420,6 +425,7 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
+        /// <summary>Ensures that the cached references relating to the target's <see cref="Animator"/> are correct.</summary>
         private void RefreshSerializedAnimator()
         {
             var targets = this.targets;
@@ -531,7 +537,8 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnDisable()
+        /// <summary>Cleans up cached references relating to the target's <see cref="Animator"/>.</summary>
+        protected virtual void OnDisable()
         {
             if (_SerializedAnimator != null)
             {

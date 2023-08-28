@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -21,6 +21,14 @@ namespace Animancer.Examples.AnimatorControllers
 
         /************************************************************************************************************************/
 
+        private void Awake()
+        {
+            // This example's documentation explains why this warning exists so we don't need it enabled.
+            OptionalWarning.NativeControllerHumanoid.Disable();
+        }
+
+        /************************************************************************************************************************/
+
         private static readonly int MoveParameterID = Animator.StringToHash("Move");
 
         // Called by a UI Toggle.
@@ -38,16 +46,7 @@ namespace Animancer.Examples.AnimatorControllers
         // Called by a UI Button.
         public void PlaySeparateAnimation()
         {
-#if UNITY_EDITOR
-            // Disable this warning since this example is intentionally showing the reason why the warning exists.
-            var warnings = OptionalWarning.NativeControllerHumanoid.DisableTemporarily();
-
             _Animancer.Play(_SeparateAnimation);
-
-            warnings.Enable();
-#else
-            _Animancer.Play(_SeparateAnimation);
-#endif
         }
 
         /************************************************************************************************************************/

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
@@ -30,8 +30,7 @@ namespace Animancer.Examples.InverseKinematics
         }
 
         /************************************************************************************************************************/
-        //After we enable ApplyAnimatorIK, Unity will call the OnAnimatorIK method every frame in any scripts
-        //attached to the same object as the Animator.
+
         private void OnAnimatorIK(int layerIndex)
         {
             _Animancer.Animator.bodyPosition = _BodyTarget.position;

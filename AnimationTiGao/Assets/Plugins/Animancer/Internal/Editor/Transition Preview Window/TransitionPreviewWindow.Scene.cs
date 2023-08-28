@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -29,7 +29,7 @@ namespace Animancer.Editor
         /// Documentation: <see href="https://kybernetik.com.au/animancer/docs/manual/transitions#previews">Previews</see>
         /// </remarks>
         [Serializable]
-        public sealed class Scene
+        public class Scene
         {
             /************************************************************************************************************************/
             #region Fields and Properties
@@ -47,6 +47,12 @@ namespace Animancer.Editor
 
             /// <summary>The root of the model in the preview scene. A child of the <see cref="PreviewSceneRoot"/>.</summary>
             public Transform InstanceRoot { get; private set; }
+
+            /// <summary>
+            /// An instance of the <see cref="Settings.SceneEnvironment"/>.
+            /// A child of the <see cref="PreviewSceneRoot"/>.
+            /// </summary>
+            public GameObject EnvironmentInstance { get; private set; }
 
             /************************************************************************************************************************/
 
@@ -123,7 +129,7 @@ namespace Animancer.Editor
             /************************************************************************************************************************/
             #endregion
             /************************************************************************************************************************/
-            #region Initialisation
+            #region Initialization
             /************************************************************************************************************************/
 
             /// <summary>Initializes this <see cref="Scene"/>.</summary>
@@ -151,6 +157,19 @@ namespace Animancer.Editor
                     $"{nameof(Animancer)}.{nameof(TransitionPreviewWindow)}", HideAndDontSave).transform;
                 SceneManager.MoveGameObjectToScene(PreviewSceneRoot.gameObject, _Scene);
                 _Instance.customParentForDraggedObjects = PreviewSceneRoot;
+
+                OnEnvironmentPrefabChanged();
+            }
+
+            /************************************************************************************************************************/
+
+            internal void OnEnvironmentPrefabChanged()
+            {
+                DestroyImmediate(EnvironmentInstance);
+
+                var prefab = Settings.SceneEnvironment;
+                if (prefab != null)
+                    EnvironmentInstance = Instantiate(prefab, PreviewSceneRoot);
             }
 
             /************************************************************************************************************************/
@@ -200,10 +219,13 @@ namespace Animancer.Editor
                     if (behaviour is Animator)
                         continue;
 
+                    var type = behaviour.GetType();
+                    if (type.IsDefined(typeof(ExecuteAlways), true) ||
+                        type.IsDefined(typeof(ExecuteInEditMode), true))
+                        continue;
+
                     behaviour.enabled = false;
                     behaviour.hideFlags |= HideFlags.NotEditable;
-                    if (behaviour is MonoBehaviour mono)
-                        mono.runInEditMode = false;
                 }
             }
 

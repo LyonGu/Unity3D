@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 //#define ANIMANCER_LOG_OBJECT_POOLING
 
@@ -184,7 +184,7 @@ namespace Animancer
             public static ObjectPool<GUIContent>.Disposable AcquireContent(out GUIContent content,
                 string text = null, string tooltip = null, bool narrowText = true)
             {
-                var disposable = new ObjectPool<GUIContent>.Disposable(out content, onRelease: (c) =>
+                var disposable = new ObjectPool<GUIContent>.Disposable(out content, onRelease: c =>
                 {
                     c.text = null;
                     c.tooltip = null;

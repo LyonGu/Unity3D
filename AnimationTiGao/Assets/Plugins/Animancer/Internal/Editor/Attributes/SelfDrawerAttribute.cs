@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using UnityEngine;
 
@@ -44,7 +44,7 @@ namespace Animancer.Editor
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/SelfDrawerDrawer
     /// 
     [CustomPropertyDrawer(typeof(SelfDrawerAttribute), true)]
-    internal sealed class SelfDrawerDrawer : PropertyDrawer
+    public class SelfDrawerDrawer : PropertyDrawer
     {
         /************************************************************************************************************************/
 

@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Text;
@@ -157,6 +157,13 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>
+        /// Returns either the <see cref="AnimancerPlayable.DefaultFadeDuration"/> or the
+        /// <see cref="AnimancerState.RemainingDuration"/> of the <see cref="CurrentState"/> (whichever is higher).
+        /// </summary>
+        public static float GetFadeOutDuration()
+            => GetFadeOutDuration(CurrentState, AnimancerPlayable.DefaultFadeDuration);
+
+        /// <summary>
         /// Returns either the `minDuration` or the <see cref="AnimancerState.RemainingDuration"/> of the
         /// <see cref="CurrentState"/> (whichever is higher).
         /// </summary>
@@ -208,23 +215,26 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <summary>Are the <see cref="normalizedTime"/> and <see cref="callback"/> equal?</summary>
-        public static bool operator ==(AnimancerEvent a, AnimancerEvent b) =>
-            a.normalizedTime == b.normalizedTime &&
-            a.callback == b.callback;
+        public static bool operator ==(AnimancerEvent a, AnimancerEvent b)
+            => a.Equals(b);
 
         /// <summary>Are the <see cref="normalizedTime"/> and <see cref="callback"/> not equal?</summary>
-        public static bool operator !=(AnimancerEvent a, AnimancerEvent b) => !(a == b);
+        public static bool operator !=(AnimancerEvent a, AnimancerEvent b)
+            => !a.Equals(b);
 
         /************************************************************************************************************************/
 
         /// <summary>[<see cref="IEquatable{AnimancerEvent}"/>]
-        /// Are the <see cref="normalizedTime"/> and <see cref="callback"/> of this event equal to those of the
-        /// `animancerEvent`?
+        /// Are the <see cref="normalizedTime"/> and <see cref="callback"/> of this event equal to `other`?
         /// </summary>
-        public bool Equals(AnimancerEvent animancerEvent) => this == animancerEvent;
+        public bool Equals(AnimancerEvent other)
+            => callback == other.callback
+            && (normalizedTime == other.normalizedTime || (float.IsNaN(normalizedTime) && float.IsNaN(other.normalizedTime)));
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) => obj is AnimancerEvent animancerEvent && this == animancerEvent;
+        public override bool Equals(object obj)
+            => obj is AnimancerEvent animancerEvent
+            && Equals(animancerEvent);
 
         /// <inheritdoc/>
         public override int GetHashCode()

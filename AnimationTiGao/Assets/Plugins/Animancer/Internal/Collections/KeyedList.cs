@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections;
@@ -13,22 +13,24 @@ namespace Animancer
     {
         /************************************************************************************************************************/
 
-        /// <summary>An object with a <see cref="Animancer.Key"/> so it can be used in a <see cref="Key.KeyedList{T}"/>.</summary>
+        /// <summary>An object with a <see cref="Animancer.Key"/> so it can be used in a <see cref="KeyedList{T}"/>.</summary>
         /// <example>
-        /// It is usually easiest to just inherit from <see cref="Animancer.Key"/>, but if that is not possible then the
-        /// recommended implementation looks like this:
+        /// It's usually easiest to just inherit from <see cref="Animancer.Key"/>, but otherwise the recommended
+        /// implementation looks like this:
         /// <para></para><code>
         /// class MyClass : Key.IListItem
         /// {
-        ///     private readonly Key Key = new Key();
-        ///     Key Key.IListItem.Key => Key;
+        ///     Key Key.IListItem.Key { get; } = new Key();
+        ///     // Don't use expression bodied ...Key => new... because that would create a new one every time.
         /// }
         /// </code></example>
         /// https://kybernetik.com.au/animancer/api/Animancer/IListItem
         /// 
         public interface IListItem
         {
-            /// <summary>The <see cref="Animancer.Key"/> which stores the <see cref="KeyedList{T}"/> index of this object.</summary>
+            /// <summary>
+            /// The <see cref="Animancer.Key"/> which stores the <see cref="KeyedList{T}"/> index of this object.
+            /// </summary>
             Key Key { get; }
         }
 
@@ -66,7 +68,7 @@ namespace Animancer
         /// </remarks>
         /// https://kybernetik.com.au/animancer/api/Animancer/KeyedList_1
         /// 
-        public sealed class KeyedList<T> : IList<T>, ICollection where T : class, IListItem
+        public class KeyedList<T> : IList<T>, ICollection where T : class, IListItem
         {
             /************************************************************************************************************************/
 

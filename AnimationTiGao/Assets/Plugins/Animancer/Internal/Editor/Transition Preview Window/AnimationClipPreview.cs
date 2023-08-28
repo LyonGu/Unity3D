@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
@@ -18,7 +18,7 @@ namespace Animancer.Editor
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/AnimationClipPreview
     /// 
     [HelpURL(Strings.DocsURLs.APIDocumentation + "." + nameof(Editor) + "/" + nameof(AnimationClipPreview))]
-    internal sealed class AnimationClipPreview : ScriptableObject
+    internal class AnimationClipPreview : ScriptableObject
     {
         /************************************************************************************************************************/
 
@@ -29,7 +29,7 @@ namespace Animancer.Editor
 
         [Serializable]
         [Obsolete("Only intended for internal use.")]// Prevent this type from showing up in [SerializeReference] fields.
-        private sealed class Transition : ITransitionDetailed, IAnimationClipCollection
+        private class Transition : ITransitionDetailed, IAnimationClipCollection
         {
             /************************************************************************************************************************/
 

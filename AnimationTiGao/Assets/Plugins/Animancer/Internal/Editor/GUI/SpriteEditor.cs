@@ -1,7 +1,8 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
+using Animancer.Editor.Tools;
 using Animancer.Units;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ using Object = UnityEngine.Object;
 namespace Animancer.Editor
 {
     /// <summary>[Editor-Only]
-    /// A custom Inspector for <see cref="Sprite"/>s allows you to directly edit them instead of just showing their
-    /// details like the default one does.
+    /// A custom Inspector for <see cref="Sprite"/>s which allows you to directly edit them instead of just showing
+    /// their details like the default one does.
     /// </summary>
     /// https://kybernetik.com.au/animancer/api/Animancer.Editor/SpriteEditor
     /// 
@@ -55,15 +56,16 @@ namespace Animancer.Editor
 
             public Target(Object target)
             {
-                Sprite = (Sprite)target;
+                Sprite = target as Sprite;
                 AssetPath = AssetDatabase.GetAssetPath(target);
-                Importer = (TextureImporter)AssetImporter.GetAtPath(AssetPath);
+                Importer = AssetImporter.GetAtPath(AssetPath) as TextureImporter;
             }
         }
 
         /************************************************************************************************************************/
 
-        private void OnEnable()
+        /// <summary>Initializes this editor.</summary>
+        protected virtual void OnEnable()
         {
             var targets = this.targets;
             _Targets = new Target[targets.Length];
@@ -121,7 +123,8 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void OnDisable()
+        /// <summary>Cleans up this editor.</summary>
+        protected virtual void OnDisable()
         {
             CleanUpPreview();
 
@@ -148,8 +151,12 @@ namespace Animancer.Editor
             get
             {
                 for (int i = 0; i < _Targets.Length; i++)
-                    if (_Targets[i].Importer.spriteImportMode != SpriteImportMode.Multiple)
+                {
+                    var importer = _Targets[i].Importer;
+                    if (importer == null ||
+                        importer.spriteImportMode != SpriteImportMode.Multiple)
                         return false;
+                }
 
                 return true;
             }
@@ -209,7 +216,7 @@ namespace Animancer.Editor
             var changed = EditorGUI.EndChangeCheck();// Exclude the Rename button from the main change check.
 
             if (GUILayout.Button("Rename Tool", EditorStyles.miniButton, AnimancerGUI.DontExpandWidth))
-                AnimancerToolsWindow.Open(typeof(AnimancerToolsWindow.RenameSprites));
+                AnimancerToolsWindow.Open(typeof(RenameSpritesTool));
 
             EditorGUI.BeginChangeCheck();
             if (changed)
@@ -242,7 +249,7 @@ namespace Animancer.Editor
             for (int i = 1; i < targets.Length; i++)
             {
                 sprite = targets[i] as Sprite;
-                if (sprite == null || sprite.rect.size != size)
+                if (sprite == null || !sprite.rect.size.Equals(size))
                     EditorGUI.showMixedValue = true;
             }
 
@@ -289,15 +296,15 @@ namespace Animancer.Editor
             for (int i = 0; i < _Targets.Length; i++)
             {
                 var target = _Targets[i];
-                var spriteSheet = target.Importer.spritesheet;
-                Apply(target.Sprite, spriteSheet, ref hasError);
+                if (target.Sprite == null ||
+                    target.Importer == null)
+                    continue;
+
+                var data = new SpriteDataEditor(target.Importer);
+                Apply(data, target.Sprite, ref hasError);
 
                 if (!hasError)
-                {
-                    target.Importer.spritesheet = spriteSheet;
-                    EditorUtility.SetDirty(target.Importer);
-                    target.Importer.SaveAndReimport();
-                }
+                    data.Apply();
             }
 
             for (int i = 0; i < targets.Length; i++)
@@ -309,9 +316,9 @@ namespace Animancer.Editor
 
         /************************************************************************************************************************/
 
-        private void Apply(Sprite sprite, SpriteMetaData[] spriteSheet, ref bool hasError)
+        private void Apply(SpriteDataEditor data, Sprite sprite, ref bool hasError)
         {
-            if (spriteSheet.Length == 0)
+            if (data.SpriteCount == 0)
             {
                 if (!_Name.hasMultipleDifferentValues)
                 {
@@ -326,25 +333,26 @@ namespace Animancer.Editor
                 return;
             }
 
-            var dataIndex = AnimancerToolsWindow.SpriteModifierPanel.GetDataIndex(spriteSheet, sprite);
-            if (dataIndex < 0)
+            var index = data.IndexOf(sprite);
+            if (index < 0)
+            {
+                hasError = true;
                 return;
-
-            ref var spriteData = ref spriteSheet[dataIndex];
+            }
 
             if (!_Name.hasMultipleDifferentValues)
-                spriteData.name = _Name.stringValue;
+                data.SetName(index, _Name.stringValue);
 
             if (!_Rect.hasMultipleDifferentValues)
-                spriteData.rect = _Rect.rectValue;
+                data.SetRect(index, _Rect.rectValue);
 
             if (!_Pivot.hasMultipleDifferentValues)
-                spriteData.pivot = _Pivot.vector2Value;
+                data.SetPivot(index, _Pivot.vector2Value);
 
             if (!_Border.hasMultipleDifferentValues)
-                spriteData.border = _Border.vector4Value;
+                data.SetBorder(index, _Border.vector4Value);
 
-            if (!AnimancerToolsWindow.SpriteModifierPanel.ValidateBounds(spriteData, sprite))
+            if (!data.ValidateBounds(index, sprite))
                 hasError = true;
         }
 
@@ -356,7 +364,7 @@ namespace Animancer.Editor
         /// A wrapper around a <see cref="SerializedProperty"/> to display it using two float fields where one is
         /// normalized and the other is not.
         /// </summary>
-        private sealed class NormalizedPixelField
+        private class NormalizedPixelField
         {
             /************************************************************************************************************************/
 
@@ -428,7 +436,7 @@ namespace Animancer.Editor
         #region Normalized Pixel Field Attribute
         /************************************************************************************************************************/
 
-        private sealed class NormalizedPixelFieldAttribute : UnitsAttribute
+        private class NormalizedPixelFieldAttribute : UnitsAttribute
         {
             /************************************************************************************************************************/
 

@@ -1,12 +1,11 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2021 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 #if UNITY_EDITOR
 
-using System;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using static Animancer.Editor.AnimancerPlayableDrawer;
+using Object = UnityEngine.Object;
 
 namespace Animancer.Editor
 {
@@ -20,24 +19,27 @@ namespace Animancer.Editor
         /// <summary>
         /// Creates a new <see cref="AnimancerStateDrawer{T}"/> to manage the Inspector GUI for the `target`.
         /// </summary>
-        public AnimancerStateDrawer(T target) => Target = target;
+        public AnimancerStateDrawer(T target)
+            => Target = target;
 
         /************************************************************************************************************************/
 
         /// <summary>The <see cref="GUIStyle"/> used for the area encompassing this drawer is <c>null</c>.</summary>
-        protected override GUIStyle RegionStyle => null;
+        protected override GUIStyle RegionStyle
+            => null;
 
         /************************************************************************************************************************/
 
         /// <summary>Determines whether the <see cref="AnimancerState.MainObject"/> field can occupy the whole line.</summary>
-        private bool IsAssetUsedAsKey =>
-            string.IsNullOrEmpty(Target.DebugName) &&
-            (Target.Key == null || ReferenceEquals(Target.Key, Target.MainObject));
+        private bool IsAssetUsedAsKey
+            => string.IsNullOrEmpty(Target.DebugName)
+            && (Target.Key == null || ReferenceEquals(Target.Key, Target.MainObject));
 
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        protected override bool AutoNormalizeSiblingWeights => AutoNormalizeWeights;
+        protected override bool AutoNormalizeSiblingWeights
+            => AutoNormalizeWeights;
 
         /************************************************************************************************************************/
 
@@ -112,7 +114,9 @@ namespace Animancer.Editor
             }
 
             // Green = Playing, Yelow = Paused.
-            GUI.color = isPlaying ? new Color(0.15f, 0.7f, 0.15f, 0.35f) : new Color(0.7f, 0.7f, 0.15f, 0.35f);
+            GUI.color = isPlaying
+                ? new Color(0.15f, 0.7f, 0.15f, 0.35f)
+                : new Color(0.7f, 0.7f, 0.15f, 0.35f);
 
             area = EditorGUI.IndentedRect(area);
 
@@ -244,11 +248,14 @@ namespace Animancer.Editor
             DoLoopCounterGUI(ref area, length);
 
             EditorGUI.BeginChangeCheck();
+
             label = AnimancerGUI.BeginTightLabel(label);
             time = EditorGUI.Slider(area, label, time, 0, max);
             AnimancerGUI.EndTightLabel();
+
             if (AnimancerGUI.TryUseClickEvent(area, 2))
                 time = 0;
+
             if (EditorGUI.EndChangeCheck())
             {
                 if (normalized)
@@ -386,8 +393,8 @@ namespace Animancer.Editor
                         () => events.Remove(index));
                 }
 
-                AddEventFunctions(menu, "End Event", events.endEvent,
-                    () => events.endEvent = new AnimancerEvent(float.NaN, null), null);
+                AddEventFunctions(menu, "End Event", events.EndEvent,
+                    () => events.EndEvent = new AnimancerEvent(float.NaN, null), null);
             }
         }
 
