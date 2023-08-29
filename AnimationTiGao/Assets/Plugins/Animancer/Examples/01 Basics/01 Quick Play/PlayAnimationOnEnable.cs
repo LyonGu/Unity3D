@@ -25,9 +25,19 @@ namespace Animancer.Examples.Basics
 
         /************************************************************************************************************************/
 
+        private AnimancerState _animancerState;
         private void OnEnable()
         {
-            _Animancer.Play(_Animation);
+            AnimancerState state = _Animancer.Play(_Animation);
+            _animancerState = state;
+            state.Events.OnEnd = PlayEnd;
+        }
+
+        private void PlayEnd()
+        {
+            Debug.Log($"{Time.frameCount} PlayEnd=================");
+            if (_animancerState != null)
+                _animancerState.Events.OnEnd = null;
         }
 
         /************************************************************************************************************************/

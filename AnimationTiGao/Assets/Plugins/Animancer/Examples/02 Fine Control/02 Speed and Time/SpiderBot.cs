@@ -58,6 +58,7 @@ namespace Animancer.Examples.FineControl
 
         private void Awake()
         {
+            //ClipTransition 只需要在初始化时添加事件
             _WakeUp.Events.OnEnd = OnWakeUpEnd;
 
             // Start paused at the beginning of the animation.

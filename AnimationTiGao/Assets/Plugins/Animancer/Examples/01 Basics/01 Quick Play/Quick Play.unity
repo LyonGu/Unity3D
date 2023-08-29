@@ -758,6 +758,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: thief_unity_knife
       objectReference: {fileID: 0}
+    - target: {fileID: 3397319441458139359, guid: 513acac8a86c44e4589c491181a9f5d6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 513acac8a86c44e4589c491181a9f5d6, type: 3}
 --- !u!1001 &1950737956165373903
