@@ -45,4 +45,58 @@ Animance笔记部分
 	}
 	
 	2 根据一个AnimationClip 返回AnimancerState，==》 var state = _Animancer.States[_Open];
+	
+	3 暂停播放，让动作卡在第一帧
+	{
+			// 让动作卡在第一帧 _WakeUp为ClipTransition
+            _Animancer.Play(_WakeUp); 
+            _Animancer.Playable.PauseGraph(); //暂停动画更新
+            _Animancer.Evaluate(); //手动调度
+			
+			
+			_Animancer.Playable.UnpauseGraph(); //恢复动画更新
+	}
+	
+	4 倒着播放
+	{ 
+			//倒着播 _WakeUp为ClipTransition
+            var state = _Animancer.Play(_WakeUp);
+            state.Speed = -1;
+
+            //state.Weight == 0   动画还没播放
+            if (state.Weight == 0 || state.NormalizedTime > 1)
+            {
+                state.NormalizedTime = 1;
+            }
+	}
+	
+	5 控制动画刷新帧率
+	{
+		要阻止 Unity 正常更新动画，请调用animancerComponent.Playable.PauseGraph();.
+		要手动更新动画，请调用animancerComponent.Evaluate(deltaTime);
+		
+		以较低的速率更新动画也会影响动画事件和Animancer 事件
+	}
+	
+	6 自定义过渡数据
+	{
+		[Serializable]
+        public class MotionTransition : ClipTransition
+        {
+            /************************************************************************************************************************/
+
+            [SerializeField, Tooltip("Should Root Motion be enabled when this animation plays?")]
+            private bool _ApplyRootMotion;
+
+            /************************************************************************************************************************/
+
+            public override void Apply(AnimancerState state)
+            {
+                base.Apply(state);
+                state.Root.Component.Animator.applyRootMotion = _ApplyRootMotion;
+            }
+
+            /************************************************************************************************************************/
+        }
+	}
 }
