@@ -24,3 +24,25 @@ TimeLine
 	https://zhuanlan.zhihu.com/p/488738592
 	https://www.233tw.com/unity/36598
 }
+
+Animance笔记部分
+{
+	1 给动作加事件
+	{
+		1 如果只有一个动作，事件不会清除，需要手动清除，否则会每帧调用，底层是根据时间判断 prepareframe里调用
+		2 如果事件处理逻辑里会切换到其他动作，上一个动作的事件就不会继续调用，但是再次切回到上个动作后，事件还是会处理
+		3 正向播放和倒着播放都会触发事件
+		4 每当我们播放新动画时，所有这些AnimancerState.Events通常都会被清除，
+		  所以如果要想某个动作有事件
+		  {
+			如果是使用_Animancer.Play(_AnimationClip)方式播放，需要每次都设置事件  
+				 AnimancerState state = _Animancer.Play(_Animation);
+				state.Events.OnEnd = PlayEnd;
+				
+			如果是使用_Animancer.Play(ClipTransition) 方式播放，就只需要给ClipTransition注册事件（注册一次就行），之后每次播放都会触发事件
+					_Action.Events.OnEnd = OnActionEnd; //_Action是ClipTransition类型
+		  }
+	}
+	
+	2 根据一个AnimationClip 返回AnimancerState，==》 var state = _Animancer.States[_Open];
+}

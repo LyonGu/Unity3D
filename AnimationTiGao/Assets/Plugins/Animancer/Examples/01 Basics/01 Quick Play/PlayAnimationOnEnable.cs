@@ -2,6 +2,7 @@
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
+using System;
 using UnityEngine;
 
 namespace Animancer.Examples.Basics
@@ -22,7 +23,7 @@ namespace Animancer.Examples.Basics
 
         [SerializeField] private AnimancerComponent _Animancer;
         [SerializeField] private AnimationClip _Animation;
-
+        [SerializeField] private AnimationClip _Animation1;
         /************************************************************************************************************************/
 
         private AnimancerState _animancerState;
@@ -38,6 +39,19 @@ namespace Animancer.Examples.Basics
             Debug.Log($"{Time.frameCount} PlayEnd=================");
             if (_animancerState != null)
                 _animancerState.Events.OnEnd = null;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                _Animancer.Play(_Animation1);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                _Animancer.Play(_Animation);
+            }
         }
 
         /************************************************************************************************************************/

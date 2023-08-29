@@ -58,22 +58,25 @@ namespace Animancer.Examples.FineControl
 
         private void Awake()
         {
-            //ClipTransition 只需要在初始化时添加事件
+            //ClipTransition 只需要在初始化时添加事件  正向播和反向播都会触发
             _WakeUp.Events.OnEnd = OnWakeUpEnd;
 
-            // Start paused at the beginning of the animation.
+            // Start paused at the beginning of the animation. 让动作卡在第一帧
             _Animancer.Play(_WakeUp);
-            _Animancer.Playable.PauseGraph();
+            _Animancer.Playable.PauseGraph(); //暂停动画更新
 
             // Normally Unity would evaluate the Playable Graph every frame and apply its output to the model,
             // but that won't happen since it is paused so we manually call Evaluate to make it apply the first frame.
-            _Animancer.Evaluate();
+            _Animancer.Evaluate(); //手动调度
         }
 
         /************************************************************************************************************************/
 
         private void OnWakeUpEnd()
         {
+            Debug.Log($"{Time.frameCount} OnWakeUpEnd============ ");
+            
+            //_WakeUp.Events.Clear(); 清除事件
             if (_WakeUp.State.Speed > 0)
                 _Animancer.Play(_Move);
             else
@@ -129,11 +132,13 @@ namespace Animancer.Examples.FineControl
 
             _IsMoving = false;
 
+            //倒着播
             var state = _Animancer.Play(_WakeUp);
             state.Speed = -1;
 
             // If it was past the last frame, skip back to the last frame now that it is playing backwards.
             // Otherwise just play backwards from the current time.
+            //state.Weight == 0   动画还没播放
             if (state.Weight == 0 || state.NormalizedTime > 1)
             {
                 state.NormalizedTime = 1;
