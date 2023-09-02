@@ -42,6 +42,7 @@ namespace Animancer.Examples.DirectionalSprites
 
         private void Awake()
         {
+             //定义同步组，不同动画来回切换，都从该动画最后一次播放帧开始继续播放
             _MovementSynchronization = new TimeSynchronizationGroup(_Animancer) { _Walk, _Run, _Push };
         }
 
@@ -58,7 +59,7 @@ namespace Animancer.Examples.DirectionalSprites
                 // Snap the movement to the exact directions we have animations for.
                 // When using DirectionalAnimationSets this means the character will only move up/right/down/left.
                 // But DirectionalAnimationSet8s will allow diagonal movement as well.
-                _Movement = _CurrentAnimationSet.Snap(_Movement);
+                _Movement = _CurrentAnimationSet.Snap(_Movement);  //匹配最合适的动作
                 _Movement = Vector2.ClampMagnitude(_Movement, 1);
             }
             else

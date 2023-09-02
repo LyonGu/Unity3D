@@ -65,6 +65,7 @@ namespace Animancer.Examples.Locomotion
                 // The movement direction is in world space, so we need to convert it to the bot's local space to be
                 // appropriate for its current rotation. We do this by using dot-products to determine how much of that
                 // direction lies along each axis. This would be unnecessary if we did not rotate at all.
+                //Dot ==> _MovementDirection在transform.right方向上的投影
                 _MoveState.Parameter = new Vector2(
                     Vector3.Dot(transform.right, _MovementDirection),
                     Vector3.Dot(transform.forward, _MovementDirection));
@@ -95,7 +96,7 @@ namespace Animancer.Examples.Locomotion
             var direction = raycastHit.point - transform.position;
             direction.y = 0;
 
-            // Calculate how far we could move this frame at max speed.
+            // Calculate how far we could move this frame at max speed.  是靠物理驱动的移动，使用Time.fixedDeltaTime
             var movementThisFrame = _MovementSpeed * _SprintMultiplier * Time.fixedDeltaTime;
 
             // If we are close to the destination, stop moving.
