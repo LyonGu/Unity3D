@@ -32,7 +32,7 @@ namespace Animancer.Examples.StateMachines
         protected override void OnValidate()
         {
             base.OnValidate();
-
+            //自动设置引用
             gameObject.GetComponentInParentOrChildren(ref _Character);
         }
 #endif

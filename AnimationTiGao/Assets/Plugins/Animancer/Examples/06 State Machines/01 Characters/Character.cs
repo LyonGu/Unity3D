@@ -31,6 +31,8 @@ namespace Animancer.Examples.StateMachines
 
         private void Awake()
         {
+            //设置状态机初始状态，并播放动作，
+            //会调用设置的默认状态_DefaultState，然后调用OnEnterState方法激活启动对应脚本(IdleState)，然后播放动作
             StateMachine.InitializeAfterDeserialize();
         }
 
