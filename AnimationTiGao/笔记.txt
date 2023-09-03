@@ -25,6 +25,12 @@ TimeLine
 	https://www.233tw.com/unity/36598
 }
 
+
+勾选“Bake into Pose” ==》body Transform
+不勾选“Bake into Pose”，勾选“Apply Root Motion” ==> 变换是作为Root Transform，所以因为这里勾选了Apply Root Motion，变换会应用到模型
+不勾选“Bake into Pose”，不勾选“Apply Root Motion”==> 这里变化还是作为Root Transform，但是因为没有勾选Apply Root Motion，所以变换将不被应用，所以模型将一直在原地
+https://blog.csdn.net/chy555chy/article/details/78843808
+
 Animance笔记部分
 {
 	1 给动作加事件
@@ -45,6 +51,7 @@ Animance笔记部分
 	}
 	
 	2 根据一个AnimationClip 返回AnimancerState，==》 var state = _Animancer.States[_Open];
+	==》 _Animancer.States.Current 获取当前的AnimancerState
 	
 	3 暂停播放，让动作卡在第一帧
 	{

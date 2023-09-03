@@ -49,7 +49,7 @@ namespace Animancer.Examples.StateMachines
 
         private void UpdateAction()
         {
-            //如果角色已经处于目标状态，将重新进入目标状态。不会判断目标状态跟当前状态是否相同
+            //如果角色已经处于目标状态，将重新进入目标状态。不会判断目标状态跟当前状态是否相同·                                                                    
             if (ExampleInput.LeftMouseUp)
                 _Character.StateMachine.TryResetState(_Action);  
         }

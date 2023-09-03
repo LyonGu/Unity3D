@@ -23,13 +23,16 @@ namespace Animancer.Examples.StateMachines
         [SerializeField] private Animator _Animator;
 
         /************************************************************************************************************************/
-
+        
+        //用于处理动画移动以修改根运动的回调。 该回调在处理完状态机和动画后 （但在 OnAnimatorIK 之前）的每个帧中调用。
+        //该方法会禁用Animator的rootMotion，需要手动调用 _Animator.ApplyBuiltinRootMotion();
         private void OnAnimatorMove()
         {
             if (_Animator.applyRootMotion)
             {
                 _Rigidbody.MovePosition(_Rigidbody.position + _Animator.deltaPosition);
                 _Rigidbody.MoveRotation(_Rigidbody.rotation * _Animator.deltaRotation);
+                // _Animator.ApplyBuiltinRootMotion();
             }
         }
 

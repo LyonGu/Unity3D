@@ -45,6 +45,7 @@ namespace Animancer.Examples.StateMachines
         private void UpdateSpeed()
         {
             var target = Character.Parameters.WantsToRun ? 1 : 0;
+            //Parameter 类型为float
             _Animation.State.Parameter = Mathf.MoveTowards(
                 _Animation.State.Parameter,
                 target,
@@ -60,20 +61,23 @@ namespace Animancer.Examples.StateMachines
             if (movement == default)
                 return;
 
-            // Determine the angle we want to turn towards.
-            // Without going into the maths behind it, Atan2 gives us the angle of a vector in radians.
-            // So we just feed in the x and z values because we want an angle around the y axis,
-            // then convert the result to degrees because Transform.eulerAngles uses degrees.
+            // // Determine the angle we want to turn towards.
+            // // Without going into the maths behind it, Atan2 gives us the angle of a vector in radians.
+            // // So we just feed in the x and z values because we want an angle around the y axis,
+            // // then convert the result to degrees because Transform.eulerAngles uses degrees.
             var targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
-
-            // Determine how far we can turn this frame (in degrees).
+            //
+            // // Determine how far we can turn this frame (in degrees).
             var turnDelta = _TurnSpeed * Time.deltaTime;
-
+            
             // Get the current rotation, move its y value towards the target, and apply it back to the Transform.
             var transform = Character.Animancer.transform;
             var eulerAngles = transform.eulerAngles;
             eulerAngles.y = Mathf.MoveTowardsAngle(eulerAngles.y, targetAngle, turnDelta);
             transform.eulerAngles = eulerAngles;
+            
+            //这一句就ok了
+            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 2 * Time.deltaTime);
         }
 
         /************************************************************************************************************************/
