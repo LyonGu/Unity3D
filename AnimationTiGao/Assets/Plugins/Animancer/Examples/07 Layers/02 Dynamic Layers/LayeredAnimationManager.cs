@@ -55,6 +55,7 @@ namespace Animancer.Examples.Layers
 
         public void PlayAction(ITransition transition)
         {
+            //_ActionLayer层上播放动画
             _ActionLayer.Play(transition);
 
             if (_CanPlayActionFullBody)
@@ -66,6 +67,7 @@ namespace Animancer.Examples.Layers
         private void PlayActionFullBody(float fadeDuration)
         {
             var actionState = _ActionLayer.CurrentState;
+            //在_BaseLayer层上播放_ActionLayer层的动画
             var baseState = _BaseLayer.Play(actionState.Clip, fadeDuration);
             baseState.NormalizedTime = actionState.NormalizedTime;
         }

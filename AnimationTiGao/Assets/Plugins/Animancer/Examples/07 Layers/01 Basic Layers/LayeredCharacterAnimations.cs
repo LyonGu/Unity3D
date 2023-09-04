@@ -34,7 +34,7 @@ namespace Animancer.Examples.Layers
         private void Awake()
         {
             _BaseLayer = _Animancer.Layers[0];
-            _ActionLayer = _Animancer.Layers[1];// First access to a layer creates it.
+            _ActionLayer = _Animancer.Layers[1];// First access to a layer creates it. 当您第一次访问图层时，会自动创建图层
 
             _ActionLayer.SetMask(_ActionMask);
             _ActionLayer.SetDebugName("Action Layer");
@@ -54,6 +54,7 @@ namespace Animancer.Examples.Layers
 
         private void UpdateMovement()
         {
+            //指定特定层播放动画
             float forward = ExampleInput.WASD.y;
             if (forward > 0)
             {
@@ -71,6 +72,7 @@ namespace Animancer.Examples.Layers
         {
             if (ExampleInput.LeftMouseUp)
             {
+                //射击图层播放
                 _ActionLayer.Play(_Action);
             }
         }
@@ -79,6 +81,7 @@ namespace Animancer.Examples.Layers
 
         private void OnActionEnd()
         {
+            //恢复到第0层
             _ActionLayer.StartFade(0, _ActionFadeOutDuration);
         }
 

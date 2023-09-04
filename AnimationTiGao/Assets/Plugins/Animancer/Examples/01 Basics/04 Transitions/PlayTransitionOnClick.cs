@@ -22,7 +22,7 @@ namespace Animancer.Examples.Basics
         [SerializeField] private AnimancerComponent _Animancer;
         [SerializeField] private ClipTransition _Idle;
         [SerializeField] private ClipTransition _Action;
-
+        
         /************************************************************************************************************************/
 
         private void OnEnable()

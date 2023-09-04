@@ -117,7 +117,7 @@ Animance笔记部分
 	8 状态缓冲==》另一种用状态机切换状态的方式
 	{
 	
-		//在0.5s内会不断尝试进入状态，成功进入就不尝试了
+		
         [SerializeField, Seconds] private float _InputTimeOut = 0.5f;
 		
 		//创建一个状态缓冲
@@ -132,5 +132,17 @@ Animance笔记部分
 		 //使用缓冲 切换到装备状态, 并不会立即执行，等到_InputTimeOut结束才执行
 		//Doesn't actually attempt to enter the state until <see cref="Update(float)"/> is called.
 		_InputBuffer.Buffer(_Equip, _InputTimeOut);
+	}
+	
+	9 在Animance中使用Animator
+	{
+		_Animancer.Animator
+		
+		HybridAnimancerComponent ==》 这个组件可以用Animancer改造Animator ，可以播放controle内部定义的动作
+		{
+			 HybridAnimancer.PlayController(); //调用AnimatorContoller
+		}
+		
+		使用Animance播放其他动作
 	}
 }
