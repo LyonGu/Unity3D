@@ -51,7 +51,7 @@ namespace Animancer.Examples.StateMachines
             {
                 // There are several different ways of accessing the state change details:
                 // var nextState = StateChange<CharacterState>.NextState;
-                // var nextState = this.GetNextState();
+                // var nextState = this.GetNextState<CharacterState>();
                 var nextState = _Character.StateMachine.NextState; //NextState 对应的就是目标状态
                 // Debug.Log($"Next State is { nextState.GetType().Name}");
                 if (nextState == this)

@@ -29,16 +29,22 @@ namespace Animancer.Examples.Basics
         private AnimancerState _animancerState;
         private void OnEnable()
         {
-            AnimancerState state = _Animancer.Play(_Animation);
+            AnimancerState state = _Animancer.Play(_Animation1);
             _animancerState = state;
-            state.Events.OnEnd = PlayEnd;
+            
+            //OnEnd事件 不管动作是否循环，只要时间超过动画长度就会每帧调用
+            // state.Events.OnEnd = PlayEnd;
+
+            //循环动画，每次都会触发
+            state.Events.Add(0.4f, PlayEnd);
+           
         }
 
         private void PlayEnd()
         {
             Debug.Log($"{Time.frameCount} PlayEnd=================");
-            if (_animancerState != null)
-                _animancerState.Events.OnEnd = null;
+            // if (_animancerState != null)
+            //     _animancerState.Events.OnEnd = null;
         }
 
         private void Update()
