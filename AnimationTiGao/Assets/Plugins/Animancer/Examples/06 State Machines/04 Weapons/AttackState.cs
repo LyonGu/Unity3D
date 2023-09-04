@@ -60,7 +60,7 @@ namespace Animancer.Examples.StateMachines
 
             var state = attackAnimations[_AttackIndex].State;
             if (state == null ||
-                state.Weight == 0)
+                state.Weight == 0)  //state.Weight 对应动作不在播放时
                 return true;
 
             return false;

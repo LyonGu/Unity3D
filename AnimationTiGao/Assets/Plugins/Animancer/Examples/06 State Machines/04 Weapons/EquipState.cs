@@ -35,6 +35,12 @@ namespace Animancer.Examples.StateMachines
             // In most situations, events on a transition should be set only once on startup.
             // Animancer would log a warning about that because it's a common source of bugs.
             // But in this example, we know what we're doing so we just disable the warning.
+            /*
+             *我们在每次使用武器时将结束事件分配给武器的动画。在大多数情况下，过渡事件应在启动时仅设置一次，
+             * 因为任何更改都会累积修改过渡事件。Animancer 会记录一个警告，因为它是错误的常见来源，
+             * 但在这个例子中，我们知道我们在做什么，所以我们只是禁用警告
+             * 
+             */
             OptionalWarning.LockedEvents.Disable();
         }
 

@@ -22,6 +22,8 @@ namespace Animancer.Examples.StateMachines
         [SerializeField] private Character _Character;
         [SerializeField] private CharacterState _Move;
         [SerializeField] private CharacterState _Attack;
+        
+        //在0.5s内会不断尝试进入状态，成功进入就不尝试了
         [SerializeField, Seconds] private float _InputTimeOut = 0.5f;
         [SerializeField] private EquipState _Equip;
         [SerializeField] private Weapon[] _Weapons;
@@ -32,6 +34,7 @@ namespace Animancer.Examples.StateMachines
 
         private void Awake()
         {
+            //创建一个状态缓冲
             _InputBuffer = new StateMachine<CharacterState>.InputBuffer(_Character.StateMachine);
         }
 
@@ -95,6 +98,9 @@ namespace Animancer.Examples.StateMachines
                     equippedWeaponIndex = 0;
 
                 _Equip.NextWeapon = _Weapons[equippedWeaponIndex];
+                
+                //使用缓冲 切换到装备状态, 并不会立即执行，等到_InputTimeOut结束才执行
+                //Doesn't actually attempt to enter the state until <see cref="Update(float)"/> is called.
                 _InputBuffer.Buffer(_Equip, _InputTimeOut);
             }
         }
@@ -105,6 +111,7 @@ namespace Animancer.Examples.StateMachines
         {
             if (ExampleInput.LeftMouseDown)
             {
+                //使用缓冲 切换到攻击状态
                 _InputBuffer.Buffer(_Attack, _InputTimeOut);
             }
         }

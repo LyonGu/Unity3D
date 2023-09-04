@@ -106,4 +106,31 @@ Animance笔记部分
             /************************************************************************************************************************/
         }
 	}
+	
+	7 动作时从头开始播放还是从上次最后的位置播放
+	{
+		开始时间
+			动画Idle的Start Time切换未勾选，这意味着如果它已经在播放，它将简单地从当前时间继续。这将使用默认的FadeMode.FixedSpeed.
+			动画Action的Start Time切换被勾选，这意味着当您播放它时它将始终设置为指定值（在本例中为 0）。FadeMode.FromStart这将按照上面描述的方式使用（在快速射击部分）。
+	}
+	
+	8 状态缓冲==》另一种用状态机切换状态的方式
+	{
+	
+		//在0.5s内会不断尝试进入状态，成功进入就不尝试了
+        [SerializeField, Seconds] private float _InputTimeOut = 0.5f;
+		
+		//创建一个状态缓冲
+        _InputBuffer = new StateMachine<CharacterState>.InputBuffer(_Character.StateMachine);
+			
+		private void Update()
+        {
+        
+            _InputBuffer.Update();
+        }
+		
+		 //使用缓冲 切换到装备状态, 并不会立即执行，等到_InputTimeOut结束才执行
+		//Doesn't actually attempt to enter the state until <see cref="Update(float)"/> is called.
+		_InputBuffer.Buffer(_Equip, _InputTimeOut);
+	}
 }
