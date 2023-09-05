@@ -4,7 +4,7 @@
 
 using Animancer;
 using UnityEngine;
-
+//角色控制类
 namespace PlatformerGameKit.Characters.Brains
 {
     /// <summary>Base class for components that decide what a <see cref="Characters.Character"/> wants to do.</summary>
