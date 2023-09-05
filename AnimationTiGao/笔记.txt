@@ -35,8 +35,8 @@ Animance笔记部分
 {
 	1 给动作加事件
 	{
-		1 如果只有一个动作，事件不会清除，需要手动清除，否则会每帧调用，底层是根据时间判断 prepareframe里调用，根据时间统计的
-		2 如果事件处理逻辑里会切换到其他动作，上一个动作的事件就不会继续调用，但是再次切回到上个动作后，事件还是会处理
+		####1 如果只有一个动作，事件不会清除，需要手动清除，否则会每帧调用，底层是根据时间判断 prepareframe里调用，根据时间统计的
+		####2 如果事件处理逻辑里会切换到其他动作，上一个动作的事件就不会继续调用，但是再次切回到上个动作后，事件还是会处理
 		3 正向播放和倒着播放都会触发事件
 		4 每当我们播放新动画时，所有这些AnimancerState.Events通常都会被清除，
 		  所以如果要想某个动作有事件
@@ -50,6 +50,8 @@ Animance笔记部分
 		  }
 		  
 		  
+		  调用AnimancerComponent.Play或Stop会自动清除所有状态的事件，除非AnimancerState.AutomaticallyClearEvents设置为false
+		  
 		   _GolfSwing.Events.SetCallback("Hit", HitBall); ==> 编辑器下设置帧事件名称，代码里设置回调
 		   
 		 
@@ -57,12 +59,23 @@ Animance笔记部分
 		   {
 				在动画经过指定时间后的每一帧上，无论动画是否循环。
 				On every frame when the animation has passed the specified time, regardless of whether the animation is looping or not.
+				
+				 //OnEnd事件 不管动作是否循环，只要时间超过动画长度就会每帧调用
 		   }
+		   
+		   更改AnimancerState.Time（或NormalizedTime）可防止该状态在该帧期间触发任何更多事件。如果您希望触发旧时间和新时间之间的事件，可以改用AnimancerState.MoveTime
 		   
 	}
 	
 	2 根据一个AnimationClip 返回AnimancerState，==》 var state = _Animancer.States[_Open];
 	==》 _Animancer.States.Current 获取当前的AnimancerState
+	{
+	  public readonly StateMachine<CharacterState>.WithDefault
+            StateMachine = new StateMachine<CharacterState>.WithDefault();
+			
+		//通过状态机获取当前状态
+		StateMachine.CurrentState
+	}
 	
 	3 暂停播放，让动作卡在第一帧
 	{
@@ -143,19 +156,26 @@ Animance笔记部分
 		 //使用缓冲 切换到装备状态, 并不会立即执行，等到_InputTimeOut结束才执行
 		//Doesn't actually attempt to enter the state until <see cref="Update(float)"/> is called.
 		_InputBuffer.Buffer(_Equip, _InputTimeOut);
+		
+		TrySetState(state) ==> 如果切换失败就不继续尝试了
+		_InputBuffer(state, timeOut) ==》如果切换失败，会临时存储state，在一段时间内继续尝试切换
+
 	}
 	
 	9 在Animance中使用Animator
 	{
 		_Animancer.Animator
 		
-		HybridAnimancerComponent ==》 这个组件可以用Animancer改造Animator ，可以播放controle内部定义的动作
+		HybridAnimancerComponent ==》 这个组件可以用Animancer改造Animator ，可以播放controle内部定义的动作  好东西，基本接口都保持一致了
 		{
 			 HybridAnimancer.PlayController(); //调用AnimatorContoller
 		}
 		
 		使用Animance播放其他动作
+		https://kybernetik.com.au/animancer/docs/manual/animator-controllers/
 	}
+	
+	10 SpriteRender组件也能使用Animance控制，播放精灵帧动画，同时也要使用Animator组件
 	
 	
 	还是多看看文档吧 https://kybernetik.com.au/animancer/docs/manual/

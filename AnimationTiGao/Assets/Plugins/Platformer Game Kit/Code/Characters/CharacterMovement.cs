@@ -5,7 +5,8 @@
 using Animancer;
 using PlatformerGameKit.Characters.Brains;
 using UnityEngine;
-
+//移动脚本
+//DefaultExecutionOrder 是动态调整代码执行顺序的属性，越小的越先执行
 namespace PlatformerGameKit.Characters
 {
     /// <summary>Base class for moving a <see cref="Character"/>.</summary>

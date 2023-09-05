@@ -3,7 +3,7 @@
 using Animancer;
 using System;
 using UnityEngine;
-
+//AttackTransition里提前绘制了很多攻击碰撞区域
 namespace PlatformerGameKit
 {
     /// <summary>A <see cref="ClipTransition"/> with <see cref="HitData"/>.</summary>
@@ -40,12 +40,13 @@ namespace PlatformerGameKit
 
         /************************************************************************************************************************/
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 启动的时候就会调用
         public override void Apply(AnimancerState state)
         {
             if (!_HasInitializedEvents)
             {
                 _HasInitializedEvents = true;
+                //还会初始化碰撞区域
                 HitData.InitializeEvents(Hits, SerializedEvents.Events, Clip.length);
             }
 

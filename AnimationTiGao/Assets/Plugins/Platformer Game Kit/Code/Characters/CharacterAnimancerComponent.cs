@@ -24,6 +24,7 @@ namespace PlatformerGameKit.Characters
         private SpriteRenderer _Renderer;
         public SpriteRenderer Renderer => _Renderer;
 
+        //角色对象的引用
         [SerializeField]
         private Character _Character;
         public Character Character => _Character;
@@ -47,6 +48,7 @@ namespace PlatformerGameKit.Characters
         /// </summary>
         private void Awake()
         {
+            //精灵帧动画不允许Fade，
             DontAllowFade.Assert(this);
         }
 #endif
@@ -60,6 +62,7 @@ namespace PlatformerGameKit.Characters
             set => _Renderer.flipX = value;
         }
 
+        //朝向左时翻转X 表现上
         /// <summary>The horizontal direction the <see cref="Renderer"/> is facing.</summary>
         /// <remarks><c>1</c> for the right or <c>-1</c> for the left.</remarks>
         public float FacingX
@@ -105,7 +108,7 @@ namespace PlatformerGameKit.Characters
         /************************************************************************************************************************/
         #region Hit Boxes
         /************************************************************************************************************************/
-
+        //需要记录一次攻击动作里已经攻击过的对象，一次攻击动作只能对目标造成一次伤害
         private Dictionary<HitData, HitTrigger> _ActiveHits;
         private HashSet<Hit.ITarget> _IgnoreHits;
 

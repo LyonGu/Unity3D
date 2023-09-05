@@ -5,6 +5,7 @@
 using Animancer.Units;
 using UnityEngine;
 
+//地面角色移动脚本，主角是用这个
 namespace PlatformerGameKit.Characters
 {
     /// <summary>Moves a ground-based <see cref="Character"/>.</summary>
@@ -26,7 +27,7 @@ namespace PlatformerGameKit.Characters
         [SerializeField, Seconds] private float _WalkSmoothing = 0;
         [SerializeField, Seconds] private float _RunSmoothing = 0.15f;
         [SerializeField, Seconds] private float _AirSmoothing = 0.3f;
-        [SerializeField, Seconds] private float _FrictionlessSmoothing = 0.3f;
+        [SerializeField, Seconds] private float _FrictionlessSmoothing = 0.3f; //适用于光滑表面
         [SerializeField] private float _GripFriction = 0.4f;
 
         private float _SmoothingSpeed;
@@ -56,10 +57,12 @@ namespace PlatformerGameKit.Characters
             var currentState = Character.StateMachine.CurrentState;
 
             var targetSpeed = Character.Run ? _RunSpeed : _WalkSpeed;
+            //用这个MovementSpeedMultiplier变量控制是否能水平移动，妙啊，不同状态可以重载
             targetSpeed *= brainMovement * currentState.MovementSpeedMultiplier;
 
             if (!Character.Body.IsGrounded)
             {
+                //在空中的速度计算
                 velocity.x = PlatformerUtilities.SmoothDamp(velocity.x, targetSpeed, ref _SmoothingSpeed, _AirSmoothing);
                 return velocity;
             }
@@ -67,6 +70,7 @@ namespace PlatformerGameKit.Characters
             var direction = Vector2.right;
             var ground = Character.Body.GroundContact;
 
+            //计算平滑系数，根据地面摩擦力
             var smoothing = CalculateGroundSmoothing(ground.Collider.friction);
 
             // Calculate the horizontal speed, excluding the movement of the platform.
@@ -88,6 +92,12 @@ namespace PlatformerGameKit.Characters
 
         /************************************************************************************************************************/
 
+        //确定角色需要多长时间才能达到所需的速度
+        /*
+         * 0 给出即时加速度。每当您改变方向时，您都会立即开始全速移动
+         * 0.15 会使角色在改变方向时滑动一点，这样你在跑步时的精细控制就会减少
+         * 0.3 会导致在冰上和空气中产生更多滑动
+         */
         /// <summary>Calculates the speed smoothing time based on the running state and contact friction.</summary>
         private float CalculateGroundSmoothing(float friction)
         {

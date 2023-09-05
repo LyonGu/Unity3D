@@ -15,7 +15,9 @@ namespace PlatformerGameKit.Characters.States
     /// Documentation: <see href="https://kybernetik.com.au/platformer/docs/characters/states">States</see>
     /// </remarks>
     /// https://kybernetik.com.au/platformer/api/PlatformerGameKit.Characters.States/CharacterState
-    /// 
+    ///
+    ///
+    /// 继承IOwnedState，在状态里就能拿到对应的状态机引用
     [HelpURL(APIDocumentation + nameof(CharacterState))]
     public abstract class CharacterState : StateBehaviour, IOwnedState<CharacterState>
     {

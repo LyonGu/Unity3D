@@ -172,6 +172,7 @@ namespace PlatformerGameKit
         public static Vector2 AngleToDirection(float angle, Quaternion rotation, bool flipX = false)
         {
             var direction = AngleToDirection(angle, flipX);
+            //让direction沿着rotation旋转
             return rotation * direction;
         }
 

@@ -6,7 +6,7 @@ using Animancer;
 using PlatformerGameKit.Characters.Brains;
 using System;
 using UnityEngine;
-
+//角色移动以及碰撞检测基类，不同角色自己继承
 namespace PlatformerGameKit.Characters
 {
     /// <summary>Manages the <see cref="Collider2D"/> and <see cref="Rigidbody2D"/> of a <see cref="Character"/>.</summary>
@@ -146,6 +146,7 @@ namespace PlatformerGameKit.Characters
             set => throw new NotSupportedException($"Can't set {GetType().FullName}.{nameof(GripAngle)}.");
         }
 
+        //坡度
         /// <summary>The maximum height that this body can snap up or down a step to remain on the ground.</summary>
         public virtual float StepHeight
         {

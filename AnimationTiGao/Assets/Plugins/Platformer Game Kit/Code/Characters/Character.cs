@@ -32,19 +32,22 @@ namespace PlatformerGameKit.Characters
         public const string APIDocumentation = Strings.APIDocumentation + "." + nameof(Characters) + "/";
 
         /************************************************************************************************************************/
-
+        //动画控制脚本
         [SerializeField]
         private CharacterAnimancerComponent _Animancer;
         public CharacterAnimancerComponent Animancer => _Animancer;
 
+        //碰撞以及移动 物理组件
         [SerializeField]
         private CharacterBody2D _Body;
         public CharacterBody2D Body => _Body;
 
+        //血量脚本
         [SerializeField]
         private Health _Health;
         public Health Health => _Health;
 
+        //角色默认状态
         [SerializeField]
         private CharacterState _Idle;
         public CharacterState Idle => _Idle;
@@ -63,7 +66,7 @@ namespace PlatformerGameKit.Characters
 #endif
 
         /************************************************************************************************************************/
-
+        //角色移动方向
         private Vector2 _MovementDirection;
 
         /// <summary>The direction this character wants to move.</summary>
@@ -76,14 +79,14 @@ namespace PlatformerGameKit.Characters
                 _MovementDirection.y = Mathf.Clamp(value.y, -1, 1);
             }
         }
-
+        //水平移动
         /// <summary>The horizontal direction this character wants to move.</summary>
         public float MovementDirectionX
         {
             get => _MovementDirection.x;
             set => _MovementDirection.x = Mathf.Clamp(value, -1, 1);
         }
-
+        //竖直移动
         /// <summary>The vertical direction this character wants to move.</summary>
         public float MovementDirectionY
         {
@@ -107,6 +110,7 @@ namespace PlatformerGameKit.Characters
         /// <summary>Initializes this character.</summary>
         protected virtual void Awake()
         {
+            //状态机默认状态设置
             StateMachine.DefaultState = _Idle;
 
 #if UNITY_ASSERTIONS

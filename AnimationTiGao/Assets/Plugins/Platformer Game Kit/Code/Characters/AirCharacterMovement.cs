@@ -4,7 +4,7 @@
 
 using Animancer.Units;
 using UnityEngine;
-
+//空中移动组件
 namespace PlatformerGameKit.Characters
 {
     /// <summary>Moves a flying <see cref="Character"/>.</summary>
@@ -22,8 +22,8 @@ namespace PlatformerGameKit.Characters
         /************************************************************************************************************************/
 
         [SerializeField, MetersPerSecond] private float _HorizontalSpeed = 8;
-        [SerializeField, MetersPerSecond] private float _AscentSpeed = 4;
-        [SerializeField, MetersPerSecond] private float _DescentSpeed = 6;
+        [SerializeField, MetersPerSecond] private float _AscentSpeed = 4; //上升速度
+        [SerializeField, MetersPerSecond] private float _DescentSpeed = 6; //下落速度
         [SerializeField, Seconds] private float _Smoothing = 0.1f;
 
         private Vector2 _SmoothingVelocity;

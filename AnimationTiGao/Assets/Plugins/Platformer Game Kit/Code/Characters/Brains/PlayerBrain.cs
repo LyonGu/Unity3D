@@ -8,6 +8,7 @@ using PlatformerGameKit.Characters.States;
 using UnityEngine;
 using static Animancer.Validate.Value;
 
+//玩家输入控制
 namespace PlatformerGameKit.Characters.Brains
 {
     /// <summary>

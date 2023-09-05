@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Animancer.Validate;
 
+//玩家主角：检测是否在地上，使用物理引擎驱动
 namespace PlatformerGameKit.Characters
 {
     /// <summary>Moves a ground-based <see cref="Character"/> with a <see cref="BoxCollider2D"/>.</summary>
@@ -26,7 +27,12 @@ namespace PlatformerGameKit.Characters
         [SerializeField, Range(0, 90)]
         private float _GripAngle = 49;
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 确定斜坡有多陡才能仍算作地面
+        /*
+         *确定斜坡有多陡才能仍算作地面。 如果比这个陡峭，角色就会像墙一样滑落。
+         * 该值以度为单位测量。 这并没有真正在示例场景中使用，因为它们没有任何斜坡。
+         * 
+         */
         public override float GripAngle
         {
             get => _GripAngle;
@@ -40,7 +46,12 @@ namespace PlatformerGameKit.Characters
         private float _GripProductThreshold;
 
         /************************************************************************************************************************/
-
+        /*
+         *当角色接地并尝试朝上方或下方此距离内的表面移动时，他们会自动捕捉到该表面并保持接地状态，而不是被其阻挡（如墙壁）或空中（如壁架）。
+         * 该值应略大于台阶的实际高度，以允许物理引擎使用的浮点数学存在微小的误差。
+         *
+         * 爬坡高度
+         */
         [SerializeField, Meters]
         private float _StepHeight = 0.55f;
 
@@ -97,7 +108,7 @@ namespace PlatformerGameKit.Characters
         public override Vector2 Gravity => Physics2D.gravity * _GravityScale;
 
         /************************************************************************************************************************/
-
+        //接触地面
         private PlatformContact2D _GroundContact;
 
         /// <inheritdoc/>
@@ -170,7 +181,7 @@ namespace PlatformerGameKit.Characters
             {
                 var velocity = Velocity;
                 velocity.y = 0;
-                Velocity = velocity;
+                Velocity = velocity; //设置速度 物理引擎驱动移动
                 IsGrounded = true;
             }
             else
@@ -191,7 +202,7 @@ namespace PlatformerGameKit.Characters
             if (IsGrounded ||
                 !enabled)
                 return;
-
+            //判断是否在地上
             var count = collision.GetContacts(Contacts);
             for (int i = 0; i < count; i++)
             {
