@@ -2,7 +2,10 @@
 
 using PlatformerGameKit.Characters;
 using System;
-
+/*
+ *    翻转Character.MovementDirectionX以指向另一个方向
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="LeafNode"/> which inverts the <see cref="Character.MovementDirectionX"/>.</summary>

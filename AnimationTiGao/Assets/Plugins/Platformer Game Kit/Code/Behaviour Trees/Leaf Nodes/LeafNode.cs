@@ -1,7 +1,7 @@
 // Platformer Game Kit // https://kybernetik.com.au/platformer // Copyright 2021-2023 Kybernetik //
 
 using System;
-
+//叶子节点：执行独立逻辑并且没有任何子节点
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>An <see cref="IBehaviourNode"/> which executes some logic.</summary>

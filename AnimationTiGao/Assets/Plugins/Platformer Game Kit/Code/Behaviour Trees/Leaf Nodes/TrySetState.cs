@@ -4,7 +4,11 @@ using PlatformerGameKit.Characters;
 using PlatformerGameKit.Characters.States;
 using System;
 using UnityEngine;
-
+// 尝试更改Character.StateMachine的状态
+/*
+ * IsEnemyInFront 条件成功后，所有敌人都会使用此节点进入攻击状态，但它适用于任何角色状态。
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

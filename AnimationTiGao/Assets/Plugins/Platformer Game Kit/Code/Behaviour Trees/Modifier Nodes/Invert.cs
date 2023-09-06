@@ -2,6 +2,17 @@
 
 using System;
 
+/*
+ *    反转节点
+ *     Executes the child and reverses its result so Result.Pass becomes Result.Fail and vice-versa. Result.Pending is unchanged.
+ *
+ *     switch (Child.Execute())
+        {
+            case Result.Pending: return Result.Pending;
+            case Result.Pass: return Result.Fail;
+            case Result.Fail: return Result.Pass;
+        }
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

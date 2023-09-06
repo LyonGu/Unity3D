@@ -2,6 +2,14 @@
 
 using System;
 
+/*
+ *  顺序节点，必须子节点都满足才返回通过
+ *    Executes each child until one returns Result.Pending or Result.Fail similar to the && operator in C#.
+ *     if (Children[0].Execute() &&
+            Children[1].Execute() &&
+            Children[2].Execute() &&
+            ...
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="GroupNode"/> which executes each child until one returns <see cref="Result.Fail"/>.</summary>

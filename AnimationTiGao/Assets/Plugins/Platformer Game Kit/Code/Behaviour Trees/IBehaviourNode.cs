@@ -12,7 +12,7 @@ namespace PlatformerGameKit.BehaviourTrees
     /// Behaviour Tree Brains - Core Concept</see>
     /// </remarks>
     /// https://kybernetik.com.au/platformer/api/PlatformerGameKit.BehaviourTrees/IBehaviourNode
-    /// 
+    /// 所有行为树节点都继承这个接口
     public interface IBehaviourNode : IPolymorphic
     {
         /************************************************************************************************************************/

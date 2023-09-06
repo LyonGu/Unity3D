@@ -40,6 +40,7 @@ namespace PlatformerGameKit.Characters.Brains
         /// <summary>Executes the <see cref="_OnAwake"/> behaviour tree.</summary>
         protected virtual void Awake()
         {
+            //把Character作为参数存到Context中，然后在行为树节点里就可以直接引用  var character = Context<Character>.Current;
             using (new Context<Character>(Character))
                 _OnAwake?.Execute();
         }

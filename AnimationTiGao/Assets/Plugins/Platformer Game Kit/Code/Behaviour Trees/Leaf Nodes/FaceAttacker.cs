@@ -3,6 +3,11 @@
 using PlatformerGameKit.Characters;
 using System;
 
+/*
+ *    面向攻击者
+ *    注册对 Health.OnCurrentHealthChanged 事件的回调，以便当角色受到来自后面的攻击时，他们会转身面对攻击者
+ *     该节点由 Naga 敌人在其“On Awake”树中使用，而不是在“On Fixed Update”中使用，因为它只需要注册一次
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

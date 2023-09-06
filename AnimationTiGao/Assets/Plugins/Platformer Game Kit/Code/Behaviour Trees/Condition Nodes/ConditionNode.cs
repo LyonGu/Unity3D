@@ -2,6 +2,10 @@
 
 using System;
 
+/*
+ *    ConditionNodes 类似于叶节点，但它们立即检查条件以返回 Result.Pass 或 Result.Fail（而不是 Result.Pending）
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>
@@ -21,7 +25,7 @@ namespace PlatformerGameKit.BehaviourTrees
         /************************************************************************************************************************/
 
         /// <summary>Accesses the <see cref="Condition"/> and calls <see cref="BehaviourTreeUtilities.ToResult"/>.</summary>
-        public Result Execute() => Condition.ToResult();
+        public Result Execute() => Condition.ToResult(); //给bool值添加了扩展方法
 
         /// <summary>
         /// Called by <see cref="Execute"/> to run this node's main logic. <c>true</c> returns

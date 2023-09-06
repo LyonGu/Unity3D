@@ -5,7 +5,10 @@ using PlatformerGameKit.Characters;
 using System;
 using UnityEngine;
 using static Animancer.Validate;
-
+/*
+ *    检查角色前面是否有一堵墙。通常用于Sequence中，然后是 TurnAround。
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="ConditionNode"/> which checks if a wall is in front of the character.</summary>
@@ -65,7 +68,6 @@ namespace PlatformerGameKit.BehaviourTrees
 
                 var baseAngle = character.MovementDirectionX < 0 ? 0 : 180;
                 filter.SetNormalAngle(baseAngle - _WallAngle, baseAngle + _WallAngle);
-
                 var count = Physics2D.BoxCast(
                     origin, size, character.Body.Rotation, character.MovementDirection, filter, PlatformerUtilities.OneRaycastHit, _Range);
                 PlatformerUtilities.DrawBoxCast(origin, size, character.MovementDirection, Color.red);

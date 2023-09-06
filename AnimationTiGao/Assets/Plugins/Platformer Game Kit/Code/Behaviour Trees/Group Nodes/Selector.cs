@@ -2,6 +2,14 @@
 
 using System;
 
+/*
+ *    选择节点, 只要子节点一个满足就行
+ *     Executes each child until one returns Result.Pass similar to the || operator in C#.
+ *     if (Children[0].Execute() ||
+        Children[1].Execute() ||
+        Children[2].Execute() ||
+        ...
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

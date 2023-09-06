@@ -5,6 +5,10 @@ using System;
 using UnityEngine;
 using static Animancer.Validate;
 
+/*
+ *    Returns Result.Pending and increments a timer before returning Result.Pass once and resetting the timer.
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

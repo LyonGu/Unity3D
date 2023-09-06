@@ -6,6 +6,11 @@ using System;
 using UnityEngine;
 using static Animancer.Validate;
 
+/*
+ *
+ *     检查角色面前是否有可以站立的地面。通常用于Sequence中，然后是 TurnAround。
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="ConditionNode"/> which checks if there is ground in front of the character.</summary>

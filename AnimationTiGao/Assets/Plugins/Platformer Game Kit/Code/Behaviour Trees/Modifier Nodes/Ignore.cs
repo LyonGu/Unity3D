@@ -3,6 +3,14 @@
 using System;
 using UnityEngine;
 
+/*
+ * 子节点执行了，但是返回固定结果
+ *Executes the child then ignores its result and returns a fixed result.
+ *     [SerializeField] Result _Result;
+        ...
+        Child.Execute();
+        return _Result;
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

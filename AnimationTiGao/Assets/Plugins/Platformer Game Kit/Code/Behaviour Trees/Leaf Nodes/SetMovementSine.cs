@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using static Animancer.Validate;
 
+//设置Character.MovementDirectionY，使它们以正弦波方式上下飞行
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>

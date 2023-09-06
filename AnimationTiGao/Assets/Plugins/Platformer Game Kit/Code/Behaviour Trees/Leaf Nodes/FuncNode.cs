@@ -2,6 +2,11 @@
 
 using System;
 
+/*
+ *  Func<TResult> 节点
+ * 
+ *  Invokes a System.Func<Result> Delegate. Returns the result of the invocation. This node is not serializable.
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="LeafNode"/> which invokes a <see cref="Func{T}"/>.</summary>

@@ -7,6 +7,10 @@ using System;
 using UnityEngine;
 using static Animancer.Validate;
 
+//此节点：判断前方是否有敌人
+/*
+ * 检查角色的敌人是否在他们面前（对于怪物，玩家是他们的敌人）。一般用在Sequence中，后面跟TrySetState来攻击敌人
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="ConditionNode"/> which checks if an enemy is in front of the character.</summary>
@@ -50,6 +54,7 @@ namespace PlatformerGameKit.BehaviourTrees
                 };
 
                 var colliders = ObjectPool.AcquireList<Collider2D>();
+                //都是使用这个判断 Physics2D.OverlapBox
                 Physics2D.OverlapBox(center, bounds.size, rigidbody.rotation, filter, colliders);
                 for (int i = 0; i < colliders.Count; i++)
                 {

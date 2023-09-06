@@ -4,6 +4,11 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
+/*
+ *
+ * Invokes a UnityEvent. Returns Result.Pass as long as no Exception is thrown. Otherwise Result.Fail.
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="LeafNode"/> which invokes a <see cref="UnityEvent"/>.</summary>

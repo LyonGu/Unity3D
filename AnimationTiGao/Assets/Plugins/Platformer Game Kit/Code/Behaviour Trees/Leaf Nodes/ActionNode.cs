@@ -1,7 +1,11 @@
 // Platformer Game Kit // https://kybernetik.com.au/platformer // Copyright 2021-2023 Kybernetik //
 
 using System;
-
+/*
+ *  Action 委托节点，执行无异常就返回通过，
+ *  Invokes a System.Action Delegate. Returns Result.Pass as long as no Exception is thrown. Otherwise Result.Fail. This node is not serializable.
+ * 
+ */
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>A <see cref="LeafNode"/> which invokes an <see cref="System.Action"/>.</summary>

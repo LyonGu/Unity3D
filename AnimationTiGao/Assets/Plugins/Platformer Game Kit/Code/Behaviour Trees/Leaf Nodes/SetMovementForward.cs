@@ -2,7 +2,7 @@
 
 using PlatformerGameKit.Characters;
 using System;
-
+//将Character.MovementDirectionX 设置为他们当前面向的方向
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>
