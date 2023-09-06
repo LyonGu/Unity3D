@@ -5,7 +5,7 @@
 using Animancer;
 using System;
 using UnityEngine;
-
+//下落过程中的抓墙状态
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="CharacterState"/> that slows the falling speed by grabbing a wall.</summary>
@@ -23,6 +23,7 @@ namespace PlatformerGameKit.Characters.States
         [SerializeField]
         private ClipTransition _Animation;
 
+        //水平线与接触法线之间允许的最大角度，以将其视为墙
         [SerializeField]
         [Range(0, 90)]
         [Tooltip("The maximum angle allowed between horizontal and a contact normal for it to be considered a wall")]
@@ -84,8 +85,8 @@ namespace PlatformerGameKit.Characters.States
         {
             var velocity = Character.Body.Velocity;
             var friction = Character.Run ? _RunFriction : _Friction;
-            velocity.y *= 1 - Math.Min(friction * Time.deltaTime, 1);
-            Character.Body.Velocity = velocity;
+            velocity.y *= 1 - Math.Min(friction * Time.deltaTime, 1); //使用摩擦力影响竖直方向上的速度
+            Character.Body.Velocity = velocity;  //物理的设置都在FixedUpdate中
         }
 
         /************************************************************************************************************************/

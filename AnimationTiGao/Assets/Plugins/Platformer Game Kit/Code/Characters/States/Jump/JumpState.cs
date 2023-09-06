@@ -5,7 +5,7 @@
 using Animancer;
 using Animancer.Units;
 using UnityEngine;
-
+//从地面进行基本的固定高度跳跃
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="CharacterState"/> that plays a jump animation and applies some upwards force.</summary>
@@ -50,6 +50,7 @@ namespace PlatformerGameKit.Characters.States
 
         protected virtual void Awake()
         {
+            //动作做完直接进入Idle，状态，恢复 Character.Body.enabled = true;
             _Animation.Events.OnEnd += Character.StateMachine.ForceSetDefaultState;
         }
 
@@ -64,7 +65,7 @@ namespace PlatformerGameKit.Characters.States
             base.OnEnterState();
 
             Character.Body.Velocity = CalculateJumpVelocity();
-            Character.Body.enabled = false;
+            Character.Body.enabled = false; //跳跃的时候禁止移动组建，跳跃结束恢复
 
             Character.Animancer.Play(_Animation);
         }

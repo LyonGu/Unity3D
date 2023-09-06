@@ -5,7 +5,7 @@
 using Animancer;
 using Animancer.Units;
 using UnityEngine;
-
+//从墙上跳下来，就好像它们是在地面上一样
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="HoldJumpState"/> which allows the character to jump off walls.</summary>

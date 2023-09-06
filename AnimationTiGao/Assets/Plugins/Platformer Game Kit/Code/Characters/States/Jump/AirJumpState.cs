@@ -3,7 +3,7 @@
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 using UnityEngine;
-
+//在需要接触地面之前在空中跳跃有限次数
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="HoldJumpState"/> which allows the character to jump a limited number of times in the air.</summary>

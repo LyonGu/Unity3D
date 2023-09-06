@@ -166,10 +166,15 @@ namespace PlatformerGameKit.Characters
         }
 
         /************************************************************************************************************************/
-
+        // protected  void OnEnable()
+        // {
+        //     Debug.Log($"{Time.frameCount} {GetType().Name} OnEnable=============");
+        //     int a = 10;
+        // }
         /// <summary>Sets <see cref="IsGrounded"/> to false.</summary>
         protected virtual void OnDisable()
         {
+            // Debug.Log($"{Time.frameCount} {GetType().Name} OnDisable=============");
             IsGrounded = false;
         }
 

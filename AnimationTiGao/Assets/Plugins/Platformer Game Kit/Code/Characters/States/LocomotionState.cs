@@ -31,7 +31,7 @@ namespace PlatformerGameKit.Characters.States
         private ClipTransition _Run;
         public ClipTransition Run => _Run;
         
-        //上升下落 （跳跃中）
+        //上升下落中 （跳跃中）
         [SerializeField]
         private ClipTransition _Fall;
         public ClipTransition Fall => _Fall;
@@ -79,6 +79,7 @@ namespace PlatformerGameKit.Characters.States
 
         protected virtual void Update()
         {
+            //ClipTransition在面板上的设置start time属性不能勾选，否则永远播第一帧 看起来不动
             Character.Animancer.Play(CurrentAnimation);
         }
 

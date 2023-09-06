@@ -5,7 +5,7 @@
 using Animancer.Units;
 using UnityEngine;
 using static Animancer.Validate;
-
+//按住跳跃按钮可以跳得更高。
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="JumpState"/> which allows you to hold the button down to jump higher.</summary>
