@@ -7,7 +7,7 @@
 
 using Animancer;
 using UnityEngine;
-
+//角色首次出现时用于炫耀的状态。
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>
@@ -25,7 +25,7 @@ namespace PlatformerGameKit.Characters.States
     public sealed class IntroductionState : CharacterState
     {
         /************************************************************************************************************************/
-
+        //播放TimeLine
         [SerializeField] private PlayableAssetTransition _Animation;
 
         /************************************************************************************************************************/
@@ -47,7 +47,8 @@ namespace PlatformerGameKit.Characters.States
         }
 
         /************************************************************************************************************************/
-
+        
+        //这个状态不能被打断
         public override bool CanExitState => false;
 
         /************************************************************************************************************************/

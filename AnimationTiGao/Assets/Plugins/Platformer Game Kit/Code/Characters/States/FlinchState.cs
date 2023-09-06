@@ -5,7 +5,7 @@
 using Animancer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+//受击状态
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>

@@ -3,7 +3,7 @@
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 using UnityEngine;
-
+//可以移动的Idle状态
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>An <see cref="IdleState"/> that can move.</summary>

@@ -5,7 +5,7 @@
 using Animancer;
 using Animancer.Units;
 using UnityEngine;
-
+//着地状态
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="CharacterState"/> that plays a landing animation.</summary>
@@ -59,6 +59,7 @@ namespace PlatformerGameKit.Characters.States
 
         private void OnGroundedChanged(bool isGrounded)
         {
+            //离开地面状态发生变化时判断
             if (isGrounded &&
                 Context<ContactPoint2D>.Current.relativeVelocity.y >= _RequiredDownSpeed)
                 Character.StateMachine.TrySetState(this);

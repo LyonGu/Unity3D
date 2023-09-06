@@ -30,7 +30,8 @@ namespace PlatformerGameKit.Characters.States
         [SerializeField]
         private ClipTransition _Run;
         public ClipTransition Run => _Run;
-
+        
+        //上升下落 （跳跃中）
         [SerializeField]
         private ClipTransition _Fall;
         public ClipTransition Fall => _Fall;
