@@ -6,6 +6,7 @@ using Animancer;
 using PlatformerGameKit.BehaviourTrees;
 using UnityEngine;
 
+//这个类就是表现行为树
 namespace PlatformerGameKit.Characters.Brains
 {
     /// <summary>A <see cref="CharacterBrain"/> that uses a behaviour tree.</summary>
@@ -29,6 +30,7 @@ namespace PlatformerGameKit.Characters.Brains
         /// <summary>[Editor-Only] Initializes default values for the fields.</summary>
         protected virtual void Reset()
         {
+            //SetMovementForward 将Character.MovementDirectionX 设置为当前面向的方向
             _OnAwake = new SetMovementForward();
             _OnFixedUpdate = new Selector();
             ((IPolymorphicReset)_OnFixedUpdate).Reset();

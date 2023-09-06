@@ -25,6 +25,7 @@ namespace PlatformerGameKit.BehaviourTrees
         public override Result Execute()
         {
             var character = Context<Character>.Current;
+            //移动组件 UpdateVelocity里会用到
             character.MovementDirection = character.Animancer.Facing;
             return Result.Pass;
         }

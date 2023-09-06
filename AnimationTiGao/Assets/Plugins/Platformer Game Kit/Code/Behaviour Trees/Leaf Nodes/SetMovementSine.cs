@@ -28,7 +28,7 @@ namespace PlatformerGameKit.BehaviourTrees
         [SerializeField]
         [Meters(Rule = Value.IsFinite)]
         [Tooltip("The height of the sine wave")]
-        private float _Amplitude = 1;
+        private float _Amplitude = 1; //振幅
 
         /// <summary>The height of the sine wave.</summary>
         public ref float Amplitude => ref _Amplitude;
@@ -36,7 +36,7 @@ namespace PlatformerGameKit.BehaviourTrees
         [SerializeField]
         [Meters(Rule = Value.IsFinite)]
         [Tooltip("The spacing between peaks of the sine wave")]
-        private float _Frequency = 1;
+        private float _Frequency = 1; //频率
 
         /// <summary>The spacing between peaks of the sine wave.</summary>
         public ref float Frequency => ref _Frequency;
@@ -52,7 +52,7 @@ namespace PlatformerGameKit.BehaviourTrees
 
 #if UNITY_2020_1_OR_NEWER
             if (float.IsNaN(_BaseAltitude))
-                _BaseAltitude = character.Body.Position.y;
+                _BaseAltitude = character.Body.Position.y;  //character.Body.Position 跟 transform.position一致的
 #else
             // [SerializeReference] fields in Unity 2019 don't run their field initializers during deserialization.
             if (_BaseAltitude == 0)

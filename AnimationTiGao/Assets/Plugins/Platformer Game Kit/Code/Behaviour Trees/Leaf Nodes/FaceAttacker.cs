@@ -33,6 +33,7 @@ namespace PlatformerGameKit.BehaviourTrees
         public override Result Execute()
         {
             _Character = Context<Character>.Current;
+            //放在awake里执行，只注册一遍
             _Character.Health.OnHitReceived += TurnToFaceAttacker;
             return Result.Pass;
         }

@@ -45,6 +45,7 @@ namespace PlatformerGameKit.BehaviourTrees
                 var rigidbody = character.Body.Rigidbody;
 
                 var bounds = character.Body.Collider.bounds;
+                //中心点往前方向平移_Range
                 var center = (Vector2)bounds.center + character.MovementDirection * _Range;
 
                 var filter = new ContactFilter2D
