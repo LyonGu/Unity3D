@@ -498,10 +498,83 @@
 	}
 
 
+	18 DefaultExecutionOrder 是动态调整代码执行顺序的属性，越小的越先执行
+
+	19 物理检测相关
+	{
+		https://blog.csdn.net/qq_39162826/article/details/120198438
+		
+		private Vector3 checkCenter = new Vector3(0, -0.45f, 0);
+    	private Vector3 checkSize = new Vector3(1, 0.1f, 1);
+
+		第三个参数用transform.rotation就行
+		Physics.OverlapBox(transform.position, transform.GetComponent<BoxCollider>().size, transform.rotation)
+
+		两种方法检测 FixedUpdate里
+		{
+	
+			 void FixedUpdate()
+		    {
+		        
+		        // Collider[] _colliders = Physics.OverlapBox(transform.position + checkCenter, checkSize*0.5f, transform.rotation, 1<<LayerMask.NameToLayer("Ground"));
+		        // if (_colliders.Length > 0)
+		        // {
+		        //     Debug.Log($"{Time.frameCount} ==== 碰到了物体个数  {_colliders.Length}");
+		        //     for (int i = 0; i < _colliders.Length; i++)
+		        //     {
+		        //         Debug.Log($"{Time.frameCount} ==== 碰到了物体名字 {_colliders[i].transform.name}");
+		        //     }
+		        // }
+		        
+		        int count = Physics.OverlapBoxNonAlloc(transform.position + checkCenter, checkSize*0.5f, _colliders, transform.rotation, 1<<LayerMask.NameToLayer("Ground"));
+		        if (count > 0)
+		        {
+		            Debug.Log($"{Time.frameCount} ==== 碰到了物体个数  {count}");
+		            for (int i = 0; i < count; i++)
+		            {
+		                Debug.Log($"{Time.frameCount} ==== 碰到了物体名字 {_colliders[i].transform.name}");
+		            }
+		        }
+		        
+		    }
+
+
+		    /*
+			     *    var matrix = Gizmos.matrix;
+			            Color color = Gizmos.color;   
+			            Gizmos.color = Color.yellow;  
+			            Gizmos.matrix = transform.localToWorldMatrix;
+			            //这里的m_localCenter是本地坐标系下的中心坐标
+			            Gizmos.DrawWireCube(m_localCenter, m_size);
+			            Gizmos.color = color;
+			            Gizmos.matrix = matrix;
+			                 * 
+			     */
+			    private void OnDrawGizmos()
+			    {
+			        var matrix = Gizmos.matrix;
+			        Gizmos.matrix = transform.localToWorldMatrix; //如果立方体发生旋转也支持
+			        Gizmos.color = Color.red;
+			        // Gizmos.DrawWireCube(Vector3.zero, transform.GetComponent<BoxCollider>().size);
+			        Gizmos.DrawWireCube(checkCenter, checkSize); //**** Gizmos.DrawWireCube接口绘制是Physics.OverlapBox里size的2倍
+			        Gizmos.matrix = matrix;
+			    }
+		}
+	}
+
+
 	
             
             
 
-//DefaultExecutionOrder 是动态调整代码执行顺序的属性，越小的越先执行
+//
+
+
+//https://blog.csdn.net/qq_39162826/article/details/120198438
+
+Physics.OverlapBox 方法使用
+{
+	
+}
 
 ]==============]
