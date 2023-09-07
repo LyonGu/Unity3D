@@ -9,7 +9,7 @@ using Animancer.Units;
 using PlatformerGameKit.Characters;
 using System;
 using UnityEngine;
-
+//这个是用来构造攻击动作里的受击数据的，给攻击检测触发器（HitTrigger）使用
 namespace PlatformerGameKit
 {
     /// <summary>Information about when and how to activate a <see cref="HitTrigger"/> during an attack animation.</summary>
@@ -123,7 +123,7 @@ namespace PlatformerGameKit
                 Debug.Assert(start < end, $"{nameof(HitData)}.{nameof(StartTime)} must be less than its {nameof(EndTime)}.");
                 //start时加一个HitBox数据
                 //end时加删除对应的HitBox数据
-                //TODO events.Add
+                
                 previousIndex = events.Add(previousIndex + 1, start, () =>
                 {
                     var attacker = CharacterAnimancerComponent.GetCurrent();
