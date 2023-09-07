@@ -4,7 +4,7 @@
 
 using System;
 using UnityEngine;
-
+//玩家的攻击状态，具有地面、空中和向上瞄准时的连击和单独的动画。
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>An <see cref="AttackState"/> that can perform various different attack combos.</summary>
@@ -115,6 +115,7 @@ namespace PlatformerGameKit.Characters.States
         {
             get
             {
+                //_InputBuffer.Buffer内部调用的是StateMachine.TryResetState，会进行条件检测，调用到CanExitState
                 // If the brain is trying to re-enter this state, combo the next attack when the current one ends.
                 if (Character.StateMachine.NextState == this)
                     _Combo = true;

@@ -5,7 +5,7 @@
 using Animancer;
 using Animancer.Units;
 using UnityEngine;
-//从墙上跳下来，就好像它们是在地面上一样
+//从墙上跳下来，就好像它们是在地面上一样：它可以在靠近墙壁的空中使用，也可以远离墙壁而不是向上施加跳跃力
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="HoldJumpState"/> which allows the character to jump off walls.</summary>
@@ -77,7 +77,7 @@ namespace PlatformerGameKit.Characters.States
         }
 
         /************************************************************************************************************************/
-
+        //检测能不能靠近墙跳
         private bool CheckForWallJump(Vector2 direction)
         {
             var bounds = Character.Body.Collider.bounds;

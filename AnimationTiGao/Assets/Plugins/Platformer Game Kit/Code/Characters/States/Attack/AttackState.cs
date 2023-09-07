@@ -15,12 +15,12 @@ namespace PlatformerGameKit.Characters.States
     {
         /************************************************************************************************************************/
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 攻击状态不能转向
         public override bool CanTurn => false;
 
         /************************************************************************************************************************/
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 攻击状态不能退出
         public override bool CanExitState => false;
 
         /************************************************************************************************************************/
@@ -29,6 +29,7 @@ namespace PlatformerGameKit.Characters.States
         public override void OnExitState()
         {
             base.OnExitState();
+            //当状态结束时，它会清除所有仍处于活动状态的 Hit Box
             Character.Animancer.EndHitSequence();
         }
 

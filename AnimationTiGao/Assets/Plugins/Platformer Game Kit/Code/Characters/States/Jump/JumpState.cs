@@ -29,6 +29,7 @@ namespace PlatformerGameKit.Characters.States
         private float _Inertia = 0.25f;
         public float Inertia => _Inertia;
 
+        //跳跃的最大高度
         [SerializeField, Meters]
         [Tooltip("The peak height of the jump arc")]
         private float _Height = 3;
@@ -64,6 +65,7 @@ namespace PlatformerGameKit.Characters.States
         {
             base.OnEnterState();
 
+            //计算答到最大高度需要的速度
             Character.Body.Velocity = CalculateJumpVelocity();
             Character.Body.enabled = false; //跳跃的时候禁止移动组建，跳跃结束恢复
 
@@ -93,7 +95,7 @@ namespace PlatformerGameKit.Characters.States
             velocity.y += CalculateJumpSpeed(height);
             return velocity;
         }
-
+        //v * v = 2*g*h
         public float CalculateJumpSpeed(float height)
         {
             var gravity = Character.Body.Gravity.y;

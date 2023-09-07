@@ -4,7 +4,7 @@
 
 using Animancer;
 using UnityEngine;
-
+//播放动画然后返回空闲状态的一般操作
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>A <see cref="CharacterState"/> that plays an animation then returns to idle.</summary>

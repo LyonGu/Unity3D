@@ -3,7 +3,7 @@
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value.
 
 using UnityEngine;
-
+//攻击状态有不同的动画，具体取决于它是想向左攻击还是向右攻击。
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>An <see cref="AttackState"/> with separate animations for left and right.</summary>
