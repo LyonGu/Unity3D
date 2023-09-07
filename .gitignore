@@ -570,3 +570,5 @@ GridBuildingSystem/Temp/
 GridBuildingSystem/obj/
 *.log
 Mesh_Cutter/Library
+Unity3DGameKitLite_To_Animancer/Library/
+Unity3DGameKitLite_To_Animancer/Temp/
