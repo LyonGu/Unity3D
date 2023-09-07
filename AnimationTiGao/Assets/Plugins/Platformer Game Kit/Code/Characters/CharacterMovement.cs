@@ -21,7 +21,7 @@ namespace PlatformerGameKit.Characters
     {
         /************************************************************************************************************************/
 
-        /// <summary>
+        /// <summary> 执行顺序 CharacterBrain > CharacterMovement > CharacterBody2D
         /// Run after brains to use their input but before <see cref="CharacterBody2D"/> to set the
         /// <see cref="CharacterBody2D.Velocity"/> before it gets used.
         /// </summary>
@@ -51,6 +51,7 @@ namespace PlatformerGameKit.Characters
         protected virtual void FixedUpdate()
         {
             var previousVelocity = _Character.Body.Velocity;
+            //不同子类必须重载这个方法UpdateVelocity
             var velocity = UpdateVelocity(previousVelocity);
 
             // Ensure that a very small velocity is actually zero so the Rigidbody can go to sleep to improve performance.

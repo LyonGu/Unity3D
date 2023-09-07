@@ -53,7 +53,7 @@ namespace PlatformerGameKit.Characters
 
         protected override Vector2 UpdateVelocity(Vector2 velocity)
         {
-            var brainMovement = Character.MovementDirection.x;
+            var brainMovement = Character.MovementDirection.x;  //角色的方向由输入脚本控制
             var currentState = Character.StateMachine.CurrentState;
 
             var targetSpeed = Character.Run ? _RunSpeed : _WalkSpeed;
@@ -75,10 +75,10 @@ namespace PlatformerGameKit.Characters
 
             // Calculate the horizontal speed, excluding the movement of the platform.
             var platformVelocity = ground.Velocity;
-            velocity -= platformVelocity;
-            var currentSpeed = Vector2.Dot(direction, velocity);
+            velocity -= platformVelocity;  //这里考虑了相对速度
+            var currentSpeed = Vector2.Dot(direction, velocity); //velocity在direction方向上的投影
 
-            // Remove the old horizontal speed from the velocity.
+            // Remove the old horizontal speed from the velocity. ？？？？
             velocity -= direction * currentSpeed;
 
             // Move the horizontal speed towards the target.

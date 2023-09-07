@@ -24,7 +24,8 @@ namespace PlatformerGameKit.Characters
     {
         /************************************************************************************************************************/
 
-        /// <summary>Run after being controlled but before states react to <see cref="IsGrounded"/>.</summary>
+        //执行顺序 CharacterBrain > CharacterBody2D > states
+        /// <summary>Run after being controlled (CharacterBrain类) but before states react to <see cref="IsGrounded"/>.</summary>
         public const int DefaultExecutionOrder = CharacterBrain.DefaultExecutionOrder + 1000;
 
         /************************************************************************************************************************/
@@ -118,7 +119,7 @@ namespace PlatformerGameKit.Characters
             {
                 if (_IsGrounded == value)
                     return;
-
+                //变化了才会赋值，然后通知外部
                 _IsGrounded = value;
                 OnGroundedChanged?.Invoke(value);
             }
@@ -128,7 +129,22 @@ namespace PlatformerGameKit.Characters
         public event Action<bool> OnGroundedChanged;
 
         /************************************************************************************************************************/
-
+        //用来筛选碰撞结果的， https://docs.unity3d.com/cn/2019.2/ScriptReference/ContactFilter2D.html
+        /*
+         *      isFiltering	鉴于接触筛选器的当前状态，确定其是否将筛选所有结果。
+                layerMask	*** 设置接触筛选器，使其筛选的结果仅包含层遮罩定义的层上的 Collider2D。
+                maxDepth	设置接触筛选器，使其筛选的结果仅包含 Z 坐标（深度）小于该值的 Collider2D。
+                maxNormalAngle	*** 设置接触筛选器，使其筛选的结果仅包含碰撞法线角度小于该角度的接触。
+                minDepth	设置接触筛选器，使其筛选的结果仅包含 Z 坐标（深度）大于该值的 Collider2D。
+                minNormalAngle	*** 设置接触筛选器，使其筛选的结果仅包含碰撞法线角度大于该角度的接触。
+                useDepth	将接触筛选器设置为使用 minDepth 和 maxDepth 按深度筛选结果。
+                useLayerMask	*** 将接触筛选器设置为按层遮罩筛选结果。
+                useNormalAngle	将接触筛选器设置为使用 minNormalAngle 和 maxNormalAngle 按碰撞的法线角度筛选结果。
+                useOutsideDepth	将接触筛选器设置为在 minDepth 和 maxDepth 范围内或在此范围外进行筛选。
+                useOutsideNormalAngle	将接触筛选器设置为在 minNormalAngle 和 maxNormalAngle 范围内或在此范围外进行筛选。
+                useTriggers	进行设置，以便根据触发碰撞体的涉及情况筛选接触结果。
+         * 
+         */
         private ContactFilter2D _TerrainFilter;
 
         /// <summary>A <see cref="ContactFilter2D"/> using the layer mask of the layers that this object collides with.</summary>
