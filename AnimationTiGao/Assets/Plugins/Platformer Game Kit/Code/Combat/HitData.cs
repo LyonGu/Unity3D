@@ -121,11 +121,13 @@ namespace PlatformerGameKit
                 var end = hit._EndTime * inverseAnimationLength;
 
                 Debug.Assert(start < end, $"{nameof(HitData)}.{nameof(StartTime)} must be less than its {nameof(EndTime)}.");
-
+                //start时加一个HitBox数据
+                //end时加删除对应的HitBox数据
+                //TODO events.Add
                 previousIndex = events.Add(previousIndex + 1, start, () =>
                 {
                     var attacker = CharacterAnimancerComponent.GetCurrent();
-                    attacker.AddHitBox(hit);
+                    attacker.AddHitBox(hit); //添加受击检测区域
                 });
 
                 if (end < normalizedEndTime)

@@ -2,7 +2,7 @@
 
 using Animancer.Units;
 using UnityEngine;
-
+//相机震动
 namespace PlatformerGameKit
 {
     /// <summary>A system for shaking the camera.</summary>

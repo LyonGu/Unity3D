@@ -4,7 +4,7 @@
 
 using System;
 using UnityEngine;
-//玩家的攻击状态，具有地面、空中和向上瞄准时的连击和单独的动画。
+//玩家的攻击状态，具有地面、空中和向上瞄准时的连击和单独的动画。 ==》连续攻击
 namespace PlatformerGameKit.Characters.States
 {
     /// <summary>An <see cref="AttackState"/> that can perform various different attack combos.</summary>

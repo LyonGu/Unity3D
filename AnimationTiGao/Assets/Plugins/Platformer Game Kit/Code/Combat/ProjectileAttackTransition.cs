@@ -41,11 +41,13 @@ namespace PlatformerGameKit
         private Projectile _ProjectilePrefab;
         public ref Projectile ProjectilePrefab => ref _ProjectilePrefab;
 
+        //子弹出生点
         [SerializeField]
         [Tooltip("The local position where the projectile will be created")]
         private Vector2 _LaunchPoint;
         public ref Vector2 LaunchPoint => ref _LaunchPoint;
 
+        //子弹伤害
         [SerializeField, MetersPerSecond]
         [Tooltip("The initial speed the projectile will be given")]
         private float _LaunchSpeed;
@@ -106,6 +108,7 @@ namespace PlatformerGameKit
             var facing = attacker.Facing;
             var facingLeft = attacker.FacingLeft;
 
+            //计算子弹出生点位置
             var position = CalculateLaunchPosition(attacker.Character.Body.Position, facingLeft);
 
             var angle = Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg;

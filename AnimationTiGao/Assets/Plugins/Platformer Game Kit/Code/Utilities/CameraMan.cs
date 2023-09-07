@@ -3,7 +3,7 @@
 using Animancer;
 using Animancer.Units;
 using UnityEngine;
-
+//相机跟随
 namespace PlatformerGameKit
 {
     /// <summary>A camera movement manager for a 2D platformer.</summary>

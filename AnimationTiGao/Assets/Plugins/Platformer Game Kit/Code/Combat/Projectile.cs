@@ -4,7 +4,7 @@ using Animancer;
 using Animancer.Units;
 using System.Collections.Generic;
 using UnityEngine;
-
+//弹射物prefab
 namespace PlatformerGameKit
 {
     /// <summary>A component which uses trigger messages to <see cref="Hit"/> things.</summary>
@@ -99,7 +99,7 @@ namespace PlatformerGameKit
             if (target != null)
             {
                 var hit = new Hit(transform, Team, Damage, Force, Direction, Ignore);
-
+                //如果有目标但不接受撞击，则该射弹会穿过目标。TODO?? 物理为什么会穿过，层级忽略吗？？？
                 // If the collider has a target but it doesn't accept the hit, this projectile passes through them.
                 if (!hit.TryHit(target))
                     return;
