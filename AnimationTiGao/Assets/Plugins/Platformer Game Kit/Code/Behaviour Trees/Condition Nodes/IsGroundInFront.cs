@@ -71,7 +71,7 @@ namespace PlatformerGameKit.BehaviourTrees
                     origin += velocity * Time.deltaTime;
 
                 var distance = stepHeight * 2;
-
+                //每一个FixUpdate里向下打一条射线检测
                 if (Physics2D.Raycast(origin, Vector2.down, distance, _Layers))
                 {
 #if UNITY_EDITOR

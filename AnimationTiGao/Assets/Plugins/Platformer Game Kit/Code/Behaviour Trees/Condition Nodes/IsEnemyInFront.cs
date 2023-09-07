@@ -45,13 +45,13 @@ namespace PlatformerGameKit.BehaviourTrees
                 var rigidbody = character.Body.Rigidbody;
 
                 var bounds = character.Body.Collider.bounds;
-                //中心点往前方向平移_Range
+                //中心点往前进方向平移_Range
                 var center = (Vector2)bounds.center + character.MovementDirection * _Range;
 
                 var filter = new ContactFilter2D
                 {
                     layerMask = HitTrigger.HitLayers,
-                    useLayerMask = true,
+                    useLayerMask = true,  //使用layerMask进行检测过滤
                 };
 
                 var colliders = ObjectPool.AcquireList<Collider2D>();
@@ -62,6 +62,7 @@ namespace PlatformerGameKit.BehaviourTrees
                     var hit = new Hit(character.transform, character.Health.Team, 0, 0, default);
                     if (hit.CanHit(colliders[i]))
                     {
+                        //判断是否是敌人，用阵营判断
                         ObjectPool.Release(colliders);
                         return true;
                     }

@@ -3,7 +3,7 @@
 using Animancer;
 using System;
 using UnityEngine;
-
+//容器节点：包含选择节点以及顺序节点
 namespace PlatformerGameKit.BehaviourTrees
 {
     /// <summary>
