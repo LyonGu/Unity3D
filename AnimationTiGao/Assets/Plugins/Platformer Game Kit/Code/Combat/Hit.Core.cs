@@ -22,18 +22,22 @@ namespace PlatformerGameKit
         /// <summary>An object that can be <see cref="Hit"/>.</summary>
         public interface ITarget
         {
+            //检测受击者是否能够被击
             /// <summary>Can this object be affected by the current <see cref="Hit"/> details?</summary>
             bool CanBeHit(ref Hit hit);
 
+            //CanBeHit为true时，计算受击者承受伤害
             /// <summary>Applies the effects of the current <see cref="Hit"/> to this object.</summary>
             void ReceiveHit(ref Hit hit);
         }
 
         /************************************************************************************************************************/
 
+        //受击目标
         /// <summary>The object being hit.</summary>
         public ITarget target;
 
+        //受击忽略目标
         /// <summary>Objects that cannot be hit.</summary>
         public ICollection<ITarget> ignore;
 
@@ -130,6 +134,7 @@ namespace PlatformerGameKit
                 target == null)// Could have been changed or set to null by CanBeHit.
                 return false;
 
+            //不能再次受击
             if (dontHitAgain)
                 ignore?.Add(target);
 

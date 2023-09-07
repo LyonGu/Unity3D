@@ -13,19 +13,23 @@ namespace PlatformerGameKit
     public partial struct Hit
     {
         /************************************************************************************************************************/
-
+        //攻击者Transform
         /// <summary>The object causing this hit.</summary>
         public Transform source;
 
+        //攻击者阵营
         /// <summary>The <see cref="Team"/> that the <see cref="source"/> is on.</summary>
         public Team team;
 
+        //攻击伤害
         /// <summary>The amount of damage this hit will deal.</summary>
         public int damage;
 
+        //击中时给的作用力
         /// <summary>The amount of knockback force applied to the object being hit.</summary>
         public float force;
 
+        //作用力施加方向
         /// <summary>The direction in which the <see cref="force"/> is applied.</summary>
         /// <remarks>This vector is normalized.</remarks>
         public Vector2 direction;

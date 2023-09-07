@@ -6,7 +6,7 @@ using Animancer;
 using PlatformerGameKit.Characters;
 using System.Collections.Generic;
 using UnityEngine;
-
+//攻击检测对象，播放攻击时产生 利用物理检测判断是否能产生伤害
 namespace PlatformerGameKit
 {
     /// <summary>A component which uses a <see cref="PolygonCollider2D"/> trigger to <see cref="Hit"/> things.</summary>
@@ -104,6 +104,7 @@ namespace PlatformerGameKit
 
             var instance = GetInstance();
 
+            //放在模型对象的下面
             instance.Parent = character.Animancer.transform;
             instance.Character = character;
             instance.Data = data;
@@ -113,10 +114,12 @@ namespace PlatformerGameKit
             var area = data.Area;
             if (!flipX)
             {
+                //给多边形碰撞体赋值，构造碰撞区域
                 instance.Collider.points = area;
             }
             else
             {
+                //反转x轴
                 var points = ObjectPool.AcquireList<Vector2>();
 
                 var count = area.Length;
@@ -248,7 +251,7 @@ namespace PlatformerGameKit
         }
 
         /************************************************************************************************************************/
-
+        //碰撞检测
         private void OnTriggerEnter2D(Collider2D collider)
             => OnTriggerStay2D(collider);
 
@@ -300,23 +303,30 @@ namespace PlatformerGameKit
                 using (new UnityEditor.EditorGUI.DisabledScope(true))
                 {
                     var target = (HitTrigger)this.target;
+                    if(target == null)
+                        return;
                     UnityEditor.EditorGUILayout.ObjectField("Parent", target.Parent, typeof(Transform), true);
                     UnityEditor.EditorGUILayout.ObjectField("Character", target.Character, typeof(Character), true);
                     UnityEditor.EditorGUILayout.LabelField("Hit Data", target.Data?.ToString());
 
                     UnityEditor.EditorGUILayout.LabelField("Ignore");
                     UnityEditor.EditorGUI.indentLevel++;
-                    foreach (var item in target.Ignore)
+                    if (target != null)
                     {
-                        if (item is Object obj)
+                        foreach (var item in target.Ignore)
                         {
-                            UnityEditor.EditorGUILayout.ObjectField(obj, typeof(Object), true);
-                        }
-                        else
-                        {
-                            UnityEditor.EditorGUILayout.LabelField(item.ToString());
+                            if (item is Object obj)
+                            {
+                                UnityEditor.EditorGUILayout.ObjectField(obj, typeof(Object), true);
+                            }
+                            else
+                            {
+                                UnityEditor.EditorGUILayout.LabelField(item.ToString());
+                            }
                         }
                     }
+
+                    
                     UnityEditor.EditorGUI.indentLevel--;
                 }
             }
