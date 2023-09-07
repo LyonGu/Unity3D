@@ -57,11 +57,13 @@ namespace PlatformerGameKit.Characters.States
             {
                 if (hit.force > 0 && Character.Body != null)
                 {
+                    //强制切换状态，不进行条件检测
                     Character.StateMachine.ForceSetState(this);
                     Character.Body.Velocity += hit.direction * hit.force / Character.Body.Mass;
                 }
                 else if (hit.damage > 0)
                 {
+                    //强制切换状态，不进行条件检测
                     Character.StateMachine.ForceSetState(this);
                 }
             };

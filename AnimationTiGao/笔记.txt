@@ -177,6 +177,14 @@ Animance笔记部分
 	
 	10 SpriteRender组件也能使用Animance控制，播放精灵帧动画，同时也要使用Animator组件
 	
+	11 状态机切换状态接口不同比较
+	{
+		StateMachine.TrySetState ==》 会比较目标状态跟当前状态是否一样，不一样才会执行切换逻辑(判断当前状态是否能退出以及目标状态是否能进入，都满足才会切换 其实调用的是TryResetState)
+		StateMachine.TryResetState ==》直接执行切换逻辑判断 判断当前状态是否能退出以及目标状态是否能进入，都满足才会切换
+		
+		StateMachine.ForceSetState ==》强制切换状态，不会去检测是否可以切换状态的逻辑
+	}
+	
 	
 	还是多看看文档吧 https://kybernetik.com.au/animancer/docs/manual/
 }

@@ -44,7 +44,7 @@ namespace Animancer.FSM
             else
                 UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
 #endif
-
+            Debug.Log($" OnEnterState ==== {GetType()}");
             enabled = true;
         }
 
@@ -57,7 +57,7 @@ namespace Animancer.FSM
         {
             if (this == null)
                 return;
-
+            Debug.Log($" OnExitState ==== {GetType()}");
 #if UNITY_ASSERTIONS
             if (!enabled)
                 Debug.LogError($"{nameof(StateBehaviour)} was already disabled before {nameof(OnExitState)}: {this}", this);
