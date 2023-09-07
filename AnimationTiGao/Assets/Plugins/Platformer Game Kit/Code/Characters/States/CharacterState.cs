@@ -56,7 +56,7 @@ namespace PlatformerGameKit.Characters.States
 #endif
 
         /************************************************************************************************************************/
-
+        //这个系数为0可以很好控制不移动
         public virtual float MovementSpeedMultiplier => 0;
 
         public virtual bool CanTurn => MovementSpeedMultiplier != 0;

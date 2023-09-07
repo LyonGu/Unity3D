@@ -50,6 +50,7 @@ namespace PlatformerGameKit.Characters.States
 
         private void Awake()
         {
+            //Character.StateMachine.ForceSetDefaultState 强制切换到默认状态
             _FlinchAnimation.Events.OnEnd += Character.StateMachine.ForceSetDefaultState;
             _DieAnimation.Events.OnEnd += () => Destroy(Character.gameObject);
 
@@ -57,13 +58,13 @@ namespace PlatformerGameKit.Characters.States
             {
                 if (hit.force > 0 && Character.Body != null)
                 {
-                    //强制切换状态，不进行条件检测
+                    //强制切换状态，不进行条件检测，会执行退出上一个状态的逻辑
                     Character.StateMachine.ForceSetState(this);
                     Character.Body.Velocity += hit.direction * hit.force / Character.Body.Mass;
                 }
                 else if (hit.damage > 0)
                 {
-                    //强制切换状态，不进行条件检测
+                    //强制切换状态，不进行条件检测，会执行退出上一个状态的逻辑
                     Character.StateMachine.ForceSetState(this);
                 }
             };

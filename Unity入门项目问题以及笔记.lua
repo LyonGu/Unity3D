@@ -503,7 +503,7 @@
 	19 物理检测相关
 	{
 		https://blog.csdn.net/qq_39162826/article/details/120198438
-		
+
 		private Vector3 checkCenter = new Vector3(0, -0.45f, 0);
     	private Vector3 checkSize = new Vector3(1, 0.1f, 1);
 
@@ -556,6 +556,8 @@
 			        Gizmos.matrix = transform.localToWorldMatrix; //如果立方体发生旋转也支持
 			        Gizmos.color = Color.red;
 			        // Gizmos.DrawWireCube(Vector3.zero, transform.GetComponent<BoxCollider>().size);
+			         //Scene窗口里绘制考虑了scale影响,但Physics.OverlapBox接口transform.GetComponent<BoxCollider>().size跟scale不同步的，checkSize也要缩小一半
+        			// Gizmos.DrawWireCube(Vector3.zero, transform.GetComponent<BoxCollider>().size);
 			        Gizmos.DrawWireCube(checkCenter, checkSize); //**** Gizmos.DrawWireCube接口绘制是Physics.OverlapBox里size的2倍
 			        Gizmos.matrix = matrix;
 			    }

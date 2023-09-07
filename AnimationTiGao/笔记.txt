@@ -159,6 +159,8 @@ Animance笔记部分
 		
 		TrySetState(state) ==> 如果切换失败就不继续尝试了
 		_InputBuffer(state, timeOut) ==》如果切换失败，会临时存储state，在一段时间内继续尝试切换
+		
+		==>内部调用的是StateMachine.TryResetState
 
 	}
 	
@@ -182,7 +184,9 @@ Animance笔记部分
 		StateMachine.TrySetState ==》 会比较目标状态跟当前状态是否一样，不一样才会执行切换逻辑(判断当前状态是否能退出以及目标状态是否能进入，都满足才会切换 其实调用的是TryResetState)
 		StateMachine.TryResetState ==》直接执行切换逻辑判断 判断当前状态是否能退出以及目标状态是否能进入，都满足才会切换
 		
-		StateMachine.ForceSetState ==》强制切换状态，不会去检测是否可以切换状态的逻辑
+		StateMachine.ForceSetState ==》强制切换状态，不会去检测是否可以切换状态的逻辑 ，会执行退出上一个状态的逻辑
+		
+		返回第一个可以进入的状态 Character.StateMachine.CanSetState(_States)
 	}
 	
 	

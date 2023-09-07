@@ -34,7 +34,7 @@ namespace PlatformerGameKit.Characters.States
         {
             if (!_Animation.IsValid)
                 return;
-
+            //Character.StateMachine.ForceSetDefaultState 强制切换到默认状态
             _Animation.Events.OnEnd = Character.StateMachine.ForceSetDefaultState;
             Character.StateMachine.TrySetState(this);
         }
