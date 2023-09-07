@@ -138,6 +138,7 @@ namespace Animancer.FSM
             {
                 if (IsActive)
                 {
+                    //TimeOut时间内一直检测是否能进入目标状态，进入后就清除目标状态，其实可以加个state!=null的逻辑
                     if (TryEnterState())
                     {
                         Clear();
