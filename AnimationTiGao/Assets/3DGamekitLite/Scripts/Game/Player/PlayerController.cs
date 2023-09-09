@@ -502,6 +502,7 @@ namespace Gamekit3D
                 Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, -Vector3.up);
                 if (Physics.Raycast(ray, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
                 {
+                    //Vector3.ProjectOnPlane ==》 计算m_Animator.deltaPosition向量在hit.normal垂直的平面上的投影向量
                     // ... and get the movement of the root motion rotated to lie along the plane of the ground.
                     movement = Vector3.ProjectOnPlane(m_Animator.deltaPosition, hit.normal);
                     

@@ -17,7 +17,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
     public sealed class AirborneState : CharacterState
     {
         /************************************************************************************************************************/
-
+        
         [SerializeField] private LinearMixerTransition _Animations;
         [SerializeField, MetersPerSecond] private float _JumpSpeed = 10;
         [SerializeField, MetersPerSecond] private float _JumpAbortSpeed = 10;

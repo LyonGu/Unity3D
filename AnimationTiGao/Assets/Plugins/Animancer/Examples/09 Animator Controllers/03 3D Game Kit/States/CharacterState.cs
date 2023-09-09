@@ -65,7 +65,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         /// </summary>
         public virtual bool StickToGround => true;
 
-        /// <summary>
+        /// <summary>是否使用RootMotion，利用虚函数 不同状态可以自己定义，秒啊 因为有些状态有些状态不需要
         /// Some states (such as <see cref="AirborneState"/>) will want to apply their own source of root motion, but
         /// most will just use the root motion from the animations.
         /// </summary>

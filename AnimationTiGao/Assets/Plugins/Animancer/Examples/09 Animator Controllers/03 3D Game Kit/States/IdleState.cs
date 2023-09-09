@@ -91,6 +91,8 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
             var index = UnityEngine.Random.Range(0, _RandomAnimations.Length);
             var animation = _RandomAnimations[index];
             Character.Animancer.Play(animation);
+            
+            //自定义转换效果
             CustomFade.Apply(Character.Animancer, Easing.Function.SineInOut);
         }
 

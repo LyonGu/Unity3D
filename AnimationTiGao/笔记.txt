@@ -75,6 +75,14 @@ Animance笔记部分
 			
 		//通过状态机获取当前状态
 		StateMachine.CurrentState
+		
+		//_MainAnimation是一个ClipTranslation
+		var state = Character.Animancer.States.Current;
+        if (state == _MainAnimation.State &&
+            state.Time >= _RandomizeTime)
+        {
+            PlayRandomAnimation();
+        }
 	}
 	
 	3 暂停播放，让动作卡在第一帧
@@ -187,6 +195,23 @@ Animance笔记部分
 		StateMachine.ForceSetState ==》强制切换状态，不会去检测是否可以切换状态的逻辑 ，会执行退出上一个状态的逻辑
 		
 		返回第一个可以进入的状态 Character.StateMachine.CanSetState(_States)
+	}
+	
+	12 混合树
+	{
+		一维混合树
+		{
+			LinearMixerTransition
+			LinearMixerTransitionAsset.UnShared
+		}
+		
+		二维混合树
+		{
+			MixerTransition2D 
+			https://kybernetik.com.au/animancer/docs/examples/animator-controllers/3d-game-kit/landing/
+		}
+		
+		
 	}
 	
 	

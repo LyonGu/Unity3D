@@ -25,9 +25,11 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         }
 
         /************************************************************************************************************************/
-
+        //xz方向速度大小，向量的模
         public float ForwardSpeed { get; set; }
         public float DesiredForwardSpeed { get; set; }
+        
+        //Y方向速度大小，向量的模
         public float VerticalSpeed { get; set; }
 
         /************************************************************************************************************************/

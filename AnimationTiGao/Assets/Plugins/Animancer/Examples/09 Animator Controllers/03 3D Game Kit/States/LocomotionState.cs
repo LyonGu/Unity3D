@@ -74,6 +74,15 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
             if (!_LocomotionMixer.State.IsActive)
                 return;
 
+            /*
+             *    //Find the difference between the current rotation of the player and the desired rotation of he player in radians.
+                    float angleCurrent  = Mathf.Atan2(transform.forward.x,transform.forward.z)*Mathf.Rad2Deg;
+                    float targetAngle = Mathf.Atan2(resultingForward.x,resultingForward.z)*Mathf.Rad2Deg;
+                    m_AngleDiff = Mathf.DeltaAngle(angleCurrent,targetAngle);
+                    m_TargetRotation = targetRotation;
+             * 
+             */
+            //根据输入方向，获取当前角度以及目标角度，
             if (!Character.Movement.GetTurnAngles(Character.Parameters.MovementDirection, out var currentAngle, out var targetAngle))
                 return;
 
@@ -82,13 +91,14 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
             // If we are moving fast enough.
             if (Character.Parameters.ForwardSpeed > _QuickTurnMoveSpeed)
             {
-                // And turning sharp enough.
+                // And turning sharp enough. 播放转向动画
                 var deltaAngle = Mathf.DeltaAngle(currentAngle, targetAngle);
                 if (Mathf.Abs(deltaAngle) > _QuickTurnAngle)
                 {
-                    // Determine which way we are turning.
+                    // Determine which way we are turning. 计算向左转还是向右转
                     var turn = deltaAngle < 0 ? _QuickTurnLeft : _QuickTurnRight;
-
+                    
+                    // 转向状态未开始
                     // Make sure the desired turn is not already active so we don't keep using it repeatedly.
                     if (turn.State == null || turn.State.Weight == 0)
                     {

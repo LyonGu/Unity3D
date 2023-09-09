@@ -47,15 +47,17 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         private void OnEnable()
         {
             Character.Parameters.ForwardSpeed = Character.Parameters.DesiredForwardSpeed;
-
+            //根据xz方向速度大小以及Y轴速度大小来确定着落逻辑
             if (Character.Parameters.VerticalSpeed <= _HardLandingVerticalSpeed &&
                 Character.Parameters.ForwardSpeed >= _HardLandingForwardSpeed)
             {
+                //直接播动画
                 _IsSoftLanding = false;
                 Character.Animancer.Play(_HardLanding);
             }
             else
             {
+                //播一个二维混合树
                 _IsSoftLanding = true;
                 Character.Animancer.Play(_SoftLanding);
                 _SoftLanding.State.Parameter = new Vector2(

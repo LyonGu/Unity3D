@@ -98,7 +98,9 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
             }
 
             var transform = this.transform;
+            //当前角度
             currentAngle = transform.eulerAngles.y;
+            //目标角度
             targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             return true;
         }

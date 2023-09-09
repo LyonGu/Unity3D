@@ -230,7 +230,7 @@ namespace PlatformerGameKit.Characters
         }
 
         /************************************************************************************************************************/
-
+        //rigidbody没有爬坡功能，自己实现的
         private bool TrySnapToGround()
         {
             // Don't even bother casting if the step height is too small because it would be super unreliable anyway.
@@ -244,7 +244,7 @@ namespace PlatformerGameKit.Characters
 
             var castDistance = _StepHeight * 2;
             var castSize = new Vector2(size.x, size.y - castDistance);
-
+        
             var origin = position;
             origin.x += velocity.x * Time.deltaTime;
             origin.y += _StepHeight;
@@ -256,7 +256,7 @@ namespace PlatformerGameKit.Characters
             PlatformerUtilities.DrawBoxCast(
                 origin, castSize, Vector2.down * castDistance, new Color(0, 1, 0), _DebugLineDuration);
 #endif
-
+            //向下发射射线
             var count = Physics2D.BoxCast(
                 origin, castSize, Rotation, Vector2.down, _GroundFilter, PlatformerUtilities.OneRaycastHit, castDistance);
             if (count == 0)// No Hit.
@@ -306,7 +306,7 @@ namespace PlatformerGameKit.Characters
 
                 // Set the position so that corners in the way don't block the movement then call MovePosition so that
                 // the Rigidbody interpolation works and so it doesn't apply the velocity again this frame.
-                Position = origin;
+                Position = origin; //设置刚体的位置
                 Rigidbody.MovePosition(origin);
 
 #if UNITY_EDITOR
