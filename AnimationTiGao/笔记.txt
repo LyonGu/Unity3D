@@ -214,6 +214,18 @@ Animance笔记部分
 		
 	}
 	
+	13  返回AnimancerState
+	{
+		AnimancerState state = _Animancer.Play(AnimationClip);  //state 其实是一个 ClipState
+		AnimancerState state = _Animancer.Play(ClipTransition);  //state 其实是一个 ClipState
+		
+		返回的state对象可以拿到很多详细信息
+		//state.Length
+        //state.Speed
+        //state.Clip
+        //state.IsLooping
+	}
+	
 	
 	还是多看看文档吧 https://kybernetik.com.au/animancer/docs/manual/
 }

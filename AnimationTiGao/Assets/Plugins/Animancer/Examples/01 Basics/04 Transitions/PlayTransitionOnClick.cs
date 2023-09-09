@@ -33,7 +33,8 @@ namespace Animancer.Examples.Basics
 
             // The Fade Duration of this transition will be ignored because nothing else is playing yet so there is
             // nothing to fade from.
-            _Animancer.Play(_Idle);
+            //state 其实是一个 ClipState
+            AnimancerState state = _Animancer.Play(_Idle);
         }
 
         /************************************************************************************************************************/

@@ -29,7 +29,8 @@ namespace Animancer.Examples.Basics
         private AnimancerState _animancerState;
         private void OnEnable()
         {
-            AnimancerState state = _Animancer.Play(_Animation1);
+            //state 其实是一个 ClipState
+            AnimancerState state = _Animancer.Play(_Animation);
             _animancerState = state;
             
             //OnEnd事件 不管动作是否循环，只要时间超过动画长度就会每帧调用
@@ -38,7 +39,13 @@ namespace Animancer.Examples.Basics
             //循环动画，每次都会触发
             state.Events.Add(0.4f, PlayEnd);
            
+            //state.Length
+            //state.Speed
+            //state.Clip
+            //state.IsLooping
+            // var state = new ClipState(clip);
         }
+        
 
         private void PlayEnd()
         {
