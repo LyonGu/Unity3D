@@ -71,7 +71,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         /// </summary>
         public virtual Vector3 RootMotion => _Character.Animancer.Animator.deltaPosition;
 
-        /// <summary>
+        /// <summary>  表明某个状态是否每帧使用rootmotion
         /// Indicates whether the root motion applied each frame while this state is active should be constrained to
         /// only move in the specified <see cref="CharacterBrain.Movement"/>. Otherwise the root motion can
         /// move the <see cref="Character"/> in any direction. Default is true.

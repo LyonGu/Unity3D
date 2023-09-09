@@ -121,9 +121,11 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
         }
 
         /************************************************************************************************************************/
-
+        //在Update之后调用OnAnimatorMove
+        //*******必须挂在跟Animator组件同一个对象上
         private void OnAnimatorMove()
         {
+            //这个GetRootMotion方法封装的太好了
             var movement = GetRootMotion();
             CheckGround(ref movement);
             UpdateGravity(ref movement);
@@ -131,6 +133,7 @@ namespace Animancer.Examples.AnimatorControllers.GameKit
 
             IsGrounded = _CharacterController.isGrounded;
 
+            //_Character.Animancer.Animator.deltaRotation;  //旋转还是使用rootMotion？？TODO
             transform.rotation *= _Character.Animancer.Animator.deltaRotation;
         }
 
