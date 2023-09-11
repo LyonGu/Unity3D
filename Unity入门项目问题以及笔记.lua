@@ -95,6 +95,8 @@
              
             }
         }
+		
+		Vector3.ProjectOnPlane(movement, hit.normal); ==》 求出向量movement在被法线hit.normal垂直的平面上的投影
 
 	}
 	
