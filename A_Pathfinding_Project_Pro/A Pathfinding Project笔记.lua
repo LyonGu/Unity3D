@@ -101,7 +101,7 @@
 	https://arongranberg.com/astar/documentation/stable/modifiers2.html
 
 	SimpleSmoothModifier
-	RaycastModifier
+	RaycastModifier ==》 grid graphs
 	FunnelModifier  ==》 The funnel modifier is a modifier for simplifying paths on navmeshes or grid graphs is a fast and exact way.
 	RadiusModifier  ==》  grid graphs  point graph
 	StartEndModifier
@@ -148,12 +148,30 @@
 8 *******如果要跟其他物体交互，需要添加Collider组件以及Ridgbody组件 并且开启运动学（跟Unity的导航系统一样）
 
 
+9 局部避让
+{
+	Unity 的 NavMesh Agent 内置了局部回避功能。
+	在此包中，局部回避由名为RVOController的单独组件处理。
+	如果你将它附加到一个已经有移动脚本的对象上，那么它会被自动拾取，并且局部回避将像使用 Unity 的包一样工作。
+	您还需要RVOSimulator组件的单个全局实例，它处理所有计算并具有全局模拟设置。
+}
+
+10 计算路径
+{
+    Seeker.StartPath ==> 当前仅仅只能计算一条，后面会取消前面正在计算中的路径请求
+	AstarPath.StartPath。如果您想同时计算很多路径，这非常有用
+}
+
+
 TODO
 {
    学习目标
    {
-		基础操作：构建图数据(所有类型)，设置标签 成本  navMeshLink
+		基础操作：构建图数据(所有类型)，设置标签 成本  网格外链接
 		动态更新地图数据：navmesh Cutting
+		局部避让:RVOController RVOSimulator
+		
+		AIPath、RichAI和AILerp。 ==》源码看下
 		
 		代码操作
 		
@@ -161,4 +179,6 @@ TODO
    }
    
    #####最好的方式应该是只得到路径点，移动自己控制不用他内置的脚本，但局部避让ROV的自己实现？？？？
+   
+   自定义局部避让 https://arongranberg.com/astar/documentation/stable/localavoidanceintegration.html
 }
