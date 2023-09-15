@@ -135,6 +135,26 @@
 	
 	默认情况下，导航网格切割不考虑旋转或缩放。如果您想这样做，可以将useRotationAndScale字段设置为 true。这有点慢，但差别不是很大。
 	在 3.x 中，导航网格切割只能与重铸图一起使用，但在 4.x 中，它们可以与重铸图和导航网格图一起使用。
+	
+	
+	#######根据一个物体的collider来更新局部地图 需要确保物体能被图识别 对象的图层包含在碰撞测试蒙版或高度测试蒙版中
+	{
+		方法一：
+		Bounds bounds = GetComponent<Collider>().bounds;
+		AstarPath.active.UpdateGraphs(bounds);
+		
+		方法二：
+		// As an example, use the bounding box from the attached collider
+		Bounds bounds = GetComponent<Collider>().bounds;
+		var guo = new GraphUpdateObject(bounds);
+
+		// Set some settings
+		guo.updatePhysics = true;
+		AstarPath.active.UpdateGraphs(guo);
+	}
+	
+	
+	您在 Unity 编辑器中处理已知图形，则使用 GraphUpdateScene 组件通常是最简单的。例如，您可以轻松更改特定区域的标签，而无需任何代码
 }
 
 
