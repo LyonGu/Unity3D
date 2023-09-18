@@ -182,6 +182,13 @@
 	AstarPath.StartPath。如果您想同时计算很多路径，这非常有用
 }
 
+11 GraphUpdateScene 这个组件可以动态改变地图数据：改变可行走性，改变tag。改变行车成本（这个插件里叫惩罚）
+{
+	使用脚本应用更改 GetComponent<GraphUpdateScene>().Apply (); 
+	
+	修改了地图区域的tag后让AI不能移动到对应区域，seeker组件里对应的tag标签要设置成不可行走
+}
+
 
 TODO
 {
