@@ -35,6 +35,7 @@ namespace Pathfinding.Examples {
 				// Update the graph below the door
 				// Set the tag of the nodes below the door
 				// To something indicating that the door is open or closed
+				// 使用代码动态更新tag GraphUpdateObject
 				GraphUpdateObject guo = new GraphUpdateObject(bounds);
 				int tag = open ? opentag : closedtag;
 
@@ -43,7 +44,22 @@ namespace Pathfinding.Examples {
 
 				guo.modifyTag = true;
 				guo.setTag = tag;
-				guo.updatePhysics = false;
+				
+				/*
+				 * /// Use physics checks to update nodes.
+					/// When updating a grid graph and this is true, the nodes' position and walkability will be updated using physics checks
+					/// with settings from "Collision Testing" and "Height Testing".
+					///
+					/// When updating a PointGraph, setting this to true will make it re-evaluate all connections in the graph which passes through the <see cref="bounds"/>.
+					///
+					/// This has no effect when updating GridGraphs if <see cref="modifyWalkability"/> is turned on.
+					/// You should not combine <see cref="updatePhysics"/> and <see cref="modifyWalkability"/>.
+					///
+					/// On RecastGraphs, having this enabled will trigger a complete recalculation of all tiles intersecting the bounds.
+					/// This is quite slow (but powerful). If you only want to update e.g penalty on existing nodes, leave it disabled.
+				 * 
+				 */
+				guo.updatePhysics = false; //设置会true，会刷新地图数据，如果只是简单更改tag或者penalty 可以设置为false
 
 				AstarPath.active.UpdateGraphs(guo);
 			}

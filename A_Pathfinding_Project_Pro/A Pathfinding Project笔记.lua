@@ -189,7 +189,32 @@
 {
 	使用脚本应用更改 GetComponent<GraphUpdateScene>().Apply (); 
 	
-	修改了地图区域的tag后让AI不能移动到对应区域，seeker组件里对应的tag标签要设置成不可行走
+	修改了地图区域的tag后让AI不能移动到对应区域，seeker组件里对应的tag标签要设置成不可行走、
+	
+	GraphUpdateObject guo = new GraphUpdateObject(bounds);
+	int tag = open ? opentag : closedtag;
+
+	// There are only 32 tags
+	if (tag > 31) { Debug.LogError("tag > 31"); return; }
+
+	guo.modifyTag = true;
+	guo.setTag = tag;
+	
+	/*
+	 * /// Use physics checks to update nodes.
+		/// When updating a grid graph and this is true, the nodes' position and walkability will be updated using physics checks
+		/// with settings from "Collision Testing" and "Height Testing".
+		///
+		/// When updating a PointGraph, setting this to true will make it re-evaluate all connections in the graph which passes through the <see cref="bounds"/>.
+		///
+		/// This has no effect when updating GridGraphs if <see cref="modifyWalkability"/> is turned on.
+		/// You should not combine <see cref="updatePhysics"/> and <see cref="modifyWalkability"/>.
+		///
+		/// On RecastGraphs, having this enabled will trigger a complete recalculation of all tiles intersecting the bounds.
+		/// This is quite slow (but powerful). If you only want to update e.g penalty on existing nodes, leave it disabled.
+	 * 
+	 */
+	guo.updatePhysics = false; //设置会true，会刷新地图数据，如果只是简单更改tag或者penalty 可以设置为false
 }
 
 
@@ -208,6 +233,12 @@ TODO
 		自己扩展移动脚本
 		
 		动态更新地图数据时的性能压力
+		
+		尝试
+		{
+			1 自己写移动脚本，然后插件计算路径，还得支持ROV
+			2 完全使用插件现成功能，但是得实现自己的移动脚本，可以继承一个移动脚本
+		}
    }
    
    #####最好的方式应该是只得到路径点，移动自己控制不用他内置的脚本，但局部避让ROV的自己实现？？？？
@@ -215,6 +246,7 @@ TODO
 		网上有一种使用方法: 使用Unity内置的NavAngent来做局部动规避，寻路路径使用这个插件里的算法，移动用自己的脚本控制
 		
 		我觉得最好能用这么一个搞定 TODO
+		
    }
    
    自定义局部避让 https://arongranberg.com/astar/documentation/stable/localavoidanceintegration.html
