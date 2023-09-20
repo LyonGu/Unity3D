@@ -20,7 +20,7 @@ namespace Pathfinding {
 
 		void OnEnable () {
 			ai = GetComponent<IAstarAI>();
-			// Update the destination right before searching for a path as well.
+			// Update the destination right before searching for a path as well. 在搜索路径之前更新目的地
 			// This is enough in theory, but this script will also update the destination every
 			// frame as the destination is used for debugging and may be used for other things by other
 			// scripts as well. So it makes sense that it is up to date every frame.

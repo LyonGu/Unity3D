@@ -236,9 +236,39 @@ TODO
 		
 		尝试
 		{
-			1 自己写移动脚本，然后插件计算路径，还得支持ROV
+			1 自己写移动脚本，然后插件计算路径，还得支持RVO  （寻路以及RVO 插件控制？） 感觉RVO相关的组件可以放到自己写的对象上吗？
 			2 完全使用插件现成功能，但是得实现自己的移动脚本，可以继承一个移动脚本
 		}
+		
+		使用AstarPath代替Seeker计算路线，然后给移动脚本赋值 
+		
+		
+		寻路控制
+		{
+
+			寻路中停止：禁用移动脚本，
+			动态开启寻路
+			
+			刚开始有寻路目标，然后中途停止，恢复后也不继续移动 （怎样清理移动目标）能不能把路径数据给清理了就不会移动了 ClearPath
+			{
+				先禁用移动组件OnDisable里会清理路径数据（会调用clearPath）
+				
+				
+				开启前把public AutoRepathPolicy autoRepath = new AutoRepathPolicy(); 设置Mode为Never或者把目标位置设置float.PositiveInfinity，再次开启后就不会自动去计算寻路路径了
+				destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+			}
+		}
+		
+		seeker底层的计算路径也是用
+		{
+			ABPath p = ABPath.Construct(start, end, null);
+			SetPath(p, false);
+			
+			每一帧都会计算路径，内部对象池复用了ABPath对象，每次在计算完路径后会释放当前的ABPath对象（OnPathComplete）
+		}
+		
+		
+		var p = ABPath.Construct (transform.position, transform.position+transform.forward*10, null); ==》 这个方式计算路径更加灵活
    }
    
    #####最好的方式应该是只得到路径点，移动自己控制不用他内置的脚本，但局部避让ROV的自己实现？？？？

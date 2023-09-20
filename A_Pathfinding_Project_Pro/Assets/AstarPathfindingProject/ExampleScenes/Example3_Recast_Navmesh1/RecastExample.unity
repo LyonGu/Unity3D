@@ -1609,6 +1609,7 @@ GameObject:
   - component: {fileID: 526}
   - component: {fileID: 528}
   - component: {fileID: 105}
+  - component: {fileID: 531}
   m_Layer: 8
   m_Name: Bot
   m_TagString: Untagged
@@ -8294,6 +8295,19 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58ffc16c0c485d4ebb858dfe50cae6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Ai: {fileID: 104}
 --- !u!114 &532
 MonoBehaviour:
   m_ObjectHideFlags: 0
