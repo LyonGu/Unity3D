@@ -11,7 +11,7 @@
 		支持 3D 游戏和 2D 游戏中的移动。
 	}
 	
-	RichAI : 支持offmesh-link
+	RichAI : 支持offmesh-link  
 	{
 		专为导航网格/重铸图形而设计，不适用于任何其他图形类型。
 		在基于导航网格的图形上跟踪路径方面，它比 AIPath 脚本更好，它可以更好地处理被推离其路径的情况，并且通常更顺利地跟踪路径。
@@ -161,12 +161,7 @@
 }
 
 
-7 移动脚本
-{
-	感觉不需要CharacterControl脚本呀，为啥所有的例子里都用了这个
-	
-	
-}
+
 
 8 *******如果要跟其他物体交互，需要添加Collider组件以及Ridgbody组件 并且开启运动学（跟Unity的导航系统一样）
 
@@ -238,6 +233,9 @@ TODO
 		{
 			1 自己写移动脚本，然后插件计算路径，还得支持RVO  （寻路以及RVO 插件控制？） 感觉RVO相关的组件可以放到自己写的对象上吗？
 			2 完全使用插件现成功能，但是得实现自己的移动脚本，可以继承一个移动脚本
+			
+			RVOController 可以算出运用rvo算法后的最后偏移量，让后给其他脚本使用
+			https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_r_v_o_1_1_r_v_o_controller.php
 		}
 		
 		使用AstarPath代替Seeker计算路线，然后给移动脚本赋值 
@@ -265,6 +263,9 @@ TODO
 			SetPath(p, false);
 			
 			每一帧都会计算路径，内部对象池复用了ABPath对象，每次在计算完路径后会释放当前的ABPath对象（OnPathComplete）
+			
+			
+			StartPathInternal==》计算MultiTargetPath 每帧都会创建一个数组
 		}
 		
 		
@@ -280,4 +281,13 @@ TODO
    }
    
    自定义局部避让 https://arongranberg.com/astar/documentation/stable/localavoidanceintegration.html
+   
+   
+   7 移动脚本
+	{
+		感觉不需要CharacterControl脚本呀，为啥所有的例子里都用了这个
+		{
+			CharacterControl自带碰撞器，防止角色爬上楼梯后掉下去 ==》 我给他加上一个碰撞器不用CharacterControl为啥还是会掉下去？？？？？
+		}
+	}
 }

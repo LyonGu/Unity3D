@@ -120,12 +120,19 @@ namespace Pathfinding.RVO {
 		/// Agents with lower values will avoid other agents less and thus you can make 'high priority agents' by
 		/// giving them a lower value.
 		/// </summary>
+		/*
+		 /// 预测未来与代理发生冲突的最大估计秒数。
+		 /// 事实证明，这个变量对于控制代理回避优先级也非常有用。
+		 /// 具有较低值的代理将较少避开其他代理，因此您可以通过 
+		 /// 给它们一个较低的值来创建“高优先级代理”
+		 
+		 */
 		float AgentTimeHorizon { get; set; }
 
 		/// <summary>Max number of estimated seconds to look into the future for collisions with obstacles</summary>
 		float ObstacleTimeHorizon { get; set; }
 
-		/// <summary>
+		/// <summary> 减小该值可以带来更好的性能，增加该值可以带来更好的模拟质量
 		/// Max number of agents to take into account.
 		/// Decreasing this value can lead to better performance, increasing it can lead to better quality of the simulation.
 		/// </summary>

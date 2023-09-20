@@ -82,6 +82,7 @@ namespace Pathfinding.Examples {
 		public void RecalculatePath () {
 			canSearchAgain = false;
 			nextRepath = Time.time+repathRate*(Random.value+0.5f);
+			//计算路径，OnPathComplete为计算完毕之后的回调
 			seeker.StartPath(transform.position, target, OnPathComplete);
 		}
 
@@ -89,10 +90,10 @@ namespace Pathfinding.Examples {
 			ABPath p = _p as ABPath;
 
 			canSearchAgain = true;
-
-			if (path != null) path.Release(this);
+			//释放上一条路径  另一种方式
+			if (path != null) path.Release(this); 
 			path = p;
-			p.Claim(this);
+			p.Claim(this); 
 
 			if (p.error) {
 				wp = 0;
@@ -106,13 +107,13 @@ namespace Pathfinding.Examples {
 			p1.y = p2.y;
 			float d = (p2-p1).magnitude;
 			wp = 0;
-
+			//返回路径点
 			vectorPath = p.vectorPath;
 			Vector3 waypoint;
 
 			if (moveNextDist > 0) {
 				for (float t = 0; t <= d; t += moveNextDist*0.6f) {
-					wp--;
+					wp--;  //计算下一个点下标
 					Vector3 pos = p1 + (p2-p1)*t;
 
 					do {
@@ -142,13 +143,13 @@ namespace Pathfinding.Examples {
 				var p1 = vectorPath[wp-1];
 				var p2 = vectorPath[wp];
 
-				// Calculate the intersection with the circle. This involves some math.
+				// Calculate the intersection with the circle. This involves some math. 计算与圆的交点。这涉及到一些数学知识
 				var t = VectorMath.LineCircleIntersectionFactor(controller.To2D(transform.position), controller.To2D(p1), controller.To2D(p2), moveNextDist);
 				// Clamp to a point on the segment
 				t = Mathf.Clamp01(t);
 				Vector3 waypoint = Vector3.Lerp(p1, p2, t);
 
-				// Calculate distance to the end of the path
+				// Calculate distance to the end of the path 计算到路径终点的距离
 				float remainingDistance = controller.To2D(waypoint - pos).magnitude + controller.To2D(waypoint - p2).magnitude;
 				for (int i = wp; i < vectorPath.Count - 1; i++) remainingDistance += controller.To2D(vectorPath[i+1] - vectorPath[i]).magnitude;
 
@@ -157,6 +158,12 @@ namespace Pathfinding.Examples {
 				// it should stop when it reaches the target point, this will produce good avoidance
 				// behavior near the end of the path. When not close to the end point it will act just
 				// as being commanded to move in a particular direction, not toward a particular point
+				/*
+				 *
+				 *  将目标设置为当前航路点方向上的一个点，
+				 *  距离等于沿路径的剩余距离。由于 rvo 代理假设它应该在到达目标点时停止，因此这将在路径末端附近产生良好的回避行为。当不接近终点时，它只会按照指令向特定方向移动，而不是向特定点移动
+				 * 
+				 */
 				var rvoTarget = (waypoint - pos).normalized * remainingDistance + pos;
 				// When within [slowdownDistance] units from the target, use a progressively lower speed
 				var desiredSpeed = Mathf.Clamp01(remainingDistance / slowdownDistance) * maxSpeed;
@@ -169,6 +176,7 @@ namespace Pathfinding.Examples {
 
 			// Get a processed movement delta from the rvo controller and move the character.
 			// This is based on information from earlier frames.
+			// **********使用rvo算法计算出运动的偏移量
 			var movementDelta = controller.CalculateMovementDelta(Time.deltaTime);
 			pos += movementDelta;
 

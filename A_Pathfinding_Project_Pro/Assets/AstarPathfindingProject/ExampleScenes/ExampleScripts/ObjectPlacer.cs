@@ -42,7 +42,7 @@ namespace Pathfinding.Examples {
 					GraphUpdateObject guo = new GraphUpdateObject(b);
 					AstarPath.active.UpdateGraphs(guo);
 					if (direct) {
-						AstarPath.active.FlushGraphUpdates();
+						AstarPath.active.FlushGraphUpdates(); //同一帧立即刷新
 					}
 				}
 			}
