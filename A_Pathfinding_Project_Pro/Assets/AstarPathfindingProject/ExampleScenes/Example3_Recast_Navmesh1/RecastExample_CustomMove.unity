@@ -1648,7 +1648,7 @@ MonoBehaviour:
   radius: 0.35
   height: 0.87
   canMove: 1
-  maxSpeed: 4
+  maxSpeed: 10
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -1779,7 +1779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &119
 Transform:
   m_ObjectHideFlags: 0

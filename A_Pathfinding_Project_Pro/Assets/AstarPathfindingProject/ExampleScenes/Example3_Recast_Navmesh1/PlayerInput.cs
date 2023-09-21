@@ -27,10 +27,28 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            //用射线计算目标点TODO
-            Vector3 targetPos = PlayerMoveTargetTransform.position + new Vector3(h, 0, v) * ai.maxSpeed * Time.deltaTime;
-            PlayerMoveTargetTransform.position = targetPos;
-            ai.enabled = true;
+            //用射线计算目标点
+            var dir = new Vector3(h, 0, v).normalized;
+            var offset = ai.maxSpeed * Time.deltaTime;
+            var targetTPos = PlayerMoveTargetTransform.position +  dir * offset;
+            var raySourcePos = targetTPos + Vector3.up * 3;
+            RaycastHit hit;
+            bool positionFound = false;
+            if (Physics.Raycast(raySourcePos, Vector3.down, out hit, Mathf.Infinity, 1<<LayerMask.NameToLayer("Default"))) {
+                targetTPos = hit.point;
+                positionFound = true;
+            }
+
+            if (positionFound)
+            {
+                var curAIPos = ai.position;
+                if (Vector3.Distance(curAIPos, targetTPos) < 1.0f)
+                {
+                    PlayerMoveTargetTransform.position = targetTPos;
+                }
+                ai.enabled = true;
+            }
+            
         }
 
         
