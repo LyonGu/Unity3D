@@ -1045,8 +1045,8 @@
 						◆当检测到新材质时，CPU收集所有属性，并在GPU内存中设置不同的常量缓冲区
 
 					我们希望將数据能够一次性放进去，减少CPU反复的读写操作，对于使用相同shadert的物体，它们需要的信息结构是相同的，因此可以合在一起共同写入，这些物体就合成了一个Batch
-					在这样一个批次中例如光源、几何信息这些属性每个物体都不一样，CPU会使用一个专用的代码路径將它们合在一个大的GPU缓冲区，如PerDraw
-					而材质信息有些物体可能是一样的，合成大的Buffer就有些浪费了，所以可以将它们各自合成一个小的Buffer，称为PerMaterial
+					在这样一个批次中例如【光源、几何信息】这些属性每个物体都不一样，CPU会使用一个专用的代码路径將它们合在一个大的GPU缓冲区，如PerDraw
+					而【材质信息】有些物体可能是一样的，合成大的Buffer就有些浪费了，所以可以将它们各自合成一个小的Buffer，称为PerMaterial
 
 
 					SRP Batcheri渲染工作流：
@@ -1057,7 +1057,7 @@
 						如果材质设有变化CPU就不需要揉作，如果发生了改变CPU用通过专用的代码路径将其上传到GPU的缓冲区中
 						传统上、我们倾向于减少Draw Cal的数量来优化CPU渲染成本，不过Drawcall本身只是推入GPU命令缓冲区的一些字节，真正的CPU成本来自Draw Call之前的许多设置（渲染状态设置）
 						传统的流程中每遇到一个新的材质就会重新设置各种信息而SRP Batcher则是要遇到一个新的Shader才进行新的设置
-						SRP Batcher在每个Batch开始的时候会通过memory copy的方式一次性传递Uniform Buffer，之后在Batch的内部只需要不断的绑定和绘制就行
+						【SRP Batcher在每个Batch开始的时候会通过memory copy的方式一次性传递Uniform Buffer，之后在Batch的内部只需要不断的绑定和绘制就行】
 						CPU会提供一个OffSet的数据来告诉GPU从buffer中去取不同物体的数据，这就省去了GPU写入的擦作
 						所以SRP Batchere虽然没有降低Draw Cal的数量，但是大大降低了Draw Call之间的设置成本
 
