@@ -123,7 +123,7 @@ namespace UnityChan
 		// 現在のベースレイヤーがjumpStateの時
 		else if (currentBaseState.nameHash == jumpState) {
 				cameraObject.SendMessage ("setCameraPositionJumpView");	// ジャンプ中のカメラに変更
-				// ステートがトランジション中でない場合
+				// ステートがトランジション中でない場合 如果状态未处于过渡状态
 				if (!anim.IsInTransition (0)) {
 				
 					// 以下、カーブ調整をする場合の処理
@@ -136,9 +136,10 @@ namespace UnityChan
 						if (gravityControl > 0)
 							rb.useGravity = false;	//ジャンプ中の重力の影響を切る
 										
-						// レイキャストをキャラクターのセンターから落とす
+						// レイキャストをキャラクターのセンターから落とす 从角色中心放置光线投射
 						Ray ray = new Ray (transform.position + Vector3.up, -Vector3.up);
 						RaycastHit hitInfo = new RaycastHit ();
+						//仅当高度大于或等于 useCurvesHeight 时，才使用 JUMP00 动画附带的曲线调整碰撞体的高度和中心
 						// 高さが useCurvesHeight 以上ある時のみ、コライダーの高さと中心をJUMP00アニメーションについているカーブで調整する
 						if (Physics.Raycast (ray, out hitInfo)) {
 							if (hitInfo.distance > useCurvesHeight) {

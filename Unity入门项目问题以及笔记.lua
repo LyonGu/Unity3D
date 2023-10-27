@@ -57,6 +57,10 @@
 	        Vector3 cross = Vector3.Cross(transform.forward, v1);
 	        float angle = Vector3.Angle(transform.forward, v1);
 	        transform.Rotate(cross, Mathf.Min(turnSpeed, Mathf.Abs(angle)));
+
+
+			float h = Input.GetAxis ("Horizontal");	
+	        transform.Rotate (0, h * rotateSpeed, 0);	
 		}
 
 		transform.rotation --> 返回的是四元数 this.transform.rotation = Quaternion.Euler(0f, 60.0f, 0f); //用四元素效率更高点
@@ -618,7 +622,69 @@
 
 Physics.OverlapBox 方法使用
 {
-	
+	   //BoxCollider.size 跟 localScale 不同步啊！！！！！， Scene窗口里绘制又考虑了scale影响
+        //第三个参数用transform.rotation就行  
+        //https://blog.csdn.net/qq_39162826/article/details/120198438
+        // Physics.OverlapBox(transform.position, transform.GetComponent<BoxCollider>().size, transform.rotation)
+		
+		private Vector3 checkCenter = new Vector3(0, -0.45f, 0);
+		private Vector3 checkSize = new Vector3(1, 0.1f, 1);
+		
+		void FixedUpdate()
+		{
+        
+			// Collider[] _colliders = Physics.OverlapBox(transform.position + checkCenter, checkSize*0.5f, transform.rotation, 1<<LayerMask.NameToLayer("Ground"));
+			// if (_colliders.Length > 0)
+			// {
+			//     Debug.Log($"{Time.frameCount} ==== 碰到了物体个数  {_colliders.Length}");
+			//     for (int i = 0; i < _colliders.Length; i++)
+			//     {
+			//         Debug.Log($"{Time.frameCount} ==== 碰到了物体名字 {_colliders[i].transform.name}");
+			//     }
+			// }
+			
+			// int count = Physics.OverlapBoxNonAlloc(transform.position + checkCenter, checkSize*0.5f, _colliders, transform.rotation, 1<<LayerMask.NameToLayer("Ground"));
+			// if (count > 0)
+			// {
+			//     Debug.Log($"{Time.frameCount} ==== 碰到了物体个数  {count}");
+			//     for (int i = 0; i < count; i++)
+			//     {
+			//         Debug.Log($"{Time.frameCount} ==== 碰到了物体名字 {_colliders[i].transform.name}");
+			//     }
+			// }
+			
+			// rigidbody.position跟transform.position是相等的
+			// Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+			// Debug.Log($"{Time.frameCount} ==== rigidbodyPos {rigidbody.position}  transformPos {transform.position}");
+        
+		}
+		
+		
+		 
+    /*
+     *    var matrix = Gizmos.matrix;
+            Color color = Gizmos.color;   
+            Gizmos.color = Color.yellow;  
+            Gizmos.matrix = transform.localToWorldMatrix;
+            //这里的m_localCenter是本地坐标系下的中心坐标
+            Gizmos.DrawWireCube(m_localCenter, m_size);
+            Gizmos.color = color;
+            Gizmos.matrix = matrix;
+                 * 
+     */
+	 
+	 
+	     private void OnDrawGizmos()
+		{
+			var matrix = Gizmos.matrix;
+			Gizmos.matrix = transform.localToWorldMatrix;
+			Gizmos.color = Color.red;
+			//Scene窗口里绘制考虑了scale影响,但Physics.OverlapBox接口transform.GetComponent<BoxCollider>().size跟scale不同步的，checkSize也要缩小一半
+			// Gizmos.DrawWireCube(Vector3.zero, transform.GetComponent<BoxCollider>().size);
+			Gizmos.DrawWireCube(checkCenter, checkSize);
+			Gizmos.matrix = matrix;
+		}
+
 }
 
 ]==============]
